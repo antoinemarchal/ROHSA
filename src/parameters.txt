@@ -1,0 +1,19 @@
+&user_parameters
+   filename = '/data/glx-calcul3/data1/amarchal/DRAO/SPIDER/DHIGLS_DF_Tb_512.dat'
+   ,fileout = '/data/glx-calcul3/data1/amarchal/DRAO/SPIDER/ROHSA/DHIGLS_DF_Tb_512_lbd1_gauss.dat'
+   ,filename_noise = ''
+   ,n_gauss = 8   	 
+   ,lambda_amp = 1.d0
+   ,lambda_mu = 1.d0
+   ,lambda_sig = 1.d0
+   ,maxiter_init = 15000
+   ,maxiter = 800
+   ,m = 10
+   ,noise = .false.
+   ,regul = .true.
+   ,lstd = 160
+   ,ustd = 198
+   ,iprint = -1
+   ,iprint_init = -1
+   /
+

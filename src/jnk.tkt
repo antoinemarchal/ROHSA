@@ -1,0 +1,79 @@
+!   subroutine update(cube, fit_params, algorithm)
+!     implicit none
+!     ! load package
+!     include 'nlopt.f'
+
+!     real(xp), intent(in), dimension(:,:,:), allocatable :: cube !mean cube over spatial axis
+!     real(xp), intent(inout), dimension(:,:,:), allocatable :: fit_params !fit parameters
+
+!     ! test nlopt package
+!     integer :: opt, ires
+!     integer :: nn
+!     real(xp) :: minf
+!     real(xp), dimension(:), allocatable :: x, lb, ub
+!     character(len=32), intent(in) :: algorithm
+
+!     write(*,*) shape(cube), shape(fit_params)
+!     nn = 3 !number of parameter to minimize
+!     ! allocate memory more upper and lower bound
+!     allocate(x(nn), lb(nn), ub(nn))
+    
+!     opt = 0
+!     call nlo_create(opt, algorithm, nn)    
+
+!     ! Define bounds
+!     ! Get infinite bounds
+!     call nlo_get_lower_bounds(ires, opt, lb)
+!     call nlo_get_upper_bounds(ires, opt, ub)
+
+!     ! Define our bounds
+!     lb(:) = 1. 
+!     ub(:) = 10. 
+    
+!     ! Set our bounds
+!     call nlo_set_lower_bounds(ires, opt, lb)
+!     call nlo_set_upper_bounds(ires, opt, ub)
+    
+!     !   call nlo_set_min_objective(ires, opt, f, f_data)
+    
+!     ! Set tolerance
+!     call nlo_set_xtol_rel(ires, opt, 1.D-4)
+
+!     x(1) = 1.234
+!     x(2) = 5.678
+!     x(3) = 2.6
+    
+!     call nlo_optimize(ires, opt, x, minf)
+    
+!     if (ires.lt.0) then
+!        write(*,*) 'nlopt failed!'
+!     else
+!        write(*,*) 'found min at ', x(1), x(2)
+!        write(*,*) 'min val = ', minf
+!     endif
+    
+!     call nlo_destroy(opt)
+!   end subroutine update  
+
+! ! TEST
+! real(xp), dimension(:,:), allocatable :: image
+! real(xp), dimension(:,:), allocatable :: conv
+! ! TEST
+
+
+! ! TEST
+! allocate(image(dim_data(2), dim_data(3)))
+! allocate(conv(dim_data(2), dim_data(3)))
+
+! image = data(101,:,:)
+
+! call convolution_2D_mirror(image, conv, dim_data(2), dim_data(3), kernel, 3)
+! ! FIXME
+! write(*,*) image(2, 2)
+! write(*,*) conv(20, 20)
+! call convolution_2D_mirror(image, conv, dim_data(2), dim_data(3), kernel, 3)
+! write(*,*) conv(20, 20)
+
+! stop
+! ! TEST
+
