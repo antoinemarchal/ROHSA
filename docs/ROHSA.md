@@ -11,7 +11,6 @@ summary: ![ROHSA](|media|/LogoMakr_0dTJ9B.png)
          {: style="text-align: center" }
 author: Antoine Marchal
 author_description: PhD Student in Astrophysics at IAS/CEA
-author_pic: /Users/antoinemarchal/Desktop/ROHSA/docs/media/perso_resize.png
 github: https://github.com/antoinemarchal/
 email: antoine.marchal@ias.u-psud.fr
 fpp_extensions: fpp
