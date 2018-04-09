@@ -1,0 +1,4 @@
+*.o
+*.dat
+*~
+.DS_Store
