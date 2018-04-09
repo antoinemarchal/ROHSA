@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	 
+	 <meta name="description" content="">
+    
+    <meta name="author" content="Antoine Marchal" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>mod_array.f90 &ndash; ROHSA</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+    
+    
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">ROHSA <small>1.1.0</small></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+				
+            <li><a href='../page/index.html'>User Guide</a></li>
+	    
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+		 aria-expanded="false">Contents <span class="caret"></span></a>
+	      <ul class="dropdown-menu">
+              
+            <li><a href="../lists/files.html">Source Files</a></li>
+				
+				
+            <li><a href="../lists/modules.html">Modules</a></li>
+				
+            
+                                
+            <li><a href="../lists/procedures.html">Procedures</a></li>
+				
+								
+				
+            <li><a href="../program/rohsa.html">Program</a></li>
+	    
+            </ul>
+            </li>
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
+
+                             
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../program/rohsa.html">Program</a></li>
+
+          </ul>
+        
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+    
+  
+  <div class="row">
+    <h1>mod_array.f90
+    <small>Source File</small>
+    
+    </h1>
+    
+<div class="row">
+  <div class="col-lg-12">
+<div class="well well-sm">
+  <ul class="list-inline" style="margin-bottom:0px;display:inline">
+     
+     
+     
+     
+    
+    
+     <li><i class="fa fa-list-ol"></i>
+       <a data-toggle="tooltip"
+	  data-placement="bottom" data-html="true"
+	  title=" 3.8% of total for source files.">106 statements</a>
+     </li> 
+     
+     
+    <li><i class="fa fa-code"></i><a href="../src/mod_array.f90"> Source File</a></li>
+     
+  </ul>
+  <ol class="breadcrumb in-well text-right">
+  
+     <li class="active">mod_array.f90</li>
+  </ol>
+</div>
+</div>
+</div>
+<script>
+  $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+
+  </div>
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+    
+<div id="sidebar">
+  
+<h3>Contents</h3>
+ 
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#mods-0">Modules</a></h3></div>
+  <div id="mods-0" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/mod_array.html">mod_array</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  <div class="list-group">
+    <a class="list-group-item" href="../sourcefile/mod_array.f90.html#src">mod_array.f90</a>
+  </div>
+</div>
+
+
+
+</div>
+
+    </div>
+    <div class="col-md-9" id='text'>
+      
+      <br>
+    
+    <div class="panel panel-default">
+      <div class="panel-heading">
+	<h3 class="panel-title">This file depends on</h3>
+      </div>
+      <div class="panel-body">
+	<div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: sourcefile~~mod_array.f90~~EfferentGraph Pages: 1 -->
+<svg id="sourcefilemod_arrayf90EfferentGraph" width="186pt" height="32pt"
+ viewBox="0.00 0.00 186.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="sourcefile~~mod_array.f90~~EfferentGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>sourcefile~~mod_array.f90~~EfferentGraph</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-28 182,-28 182,4 -4,4"/>
+<!-- sourcefile~mod_array.f90 -->
+<g id="sourcefile~~mod_array.f90~~EfferentGraph_node1" class="node">
+<title>sourcefile~mod_array.f90</title>
+<polygon fill="none" stroke="#000000" points="178,-24 115,-24 115,0 178,0 178,-24"/>
+<text text-anchor="middle" x="146.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">mod_array.f90</text>
+</g>
+<!-- sourcefile~mod_constants.f90 -->
+<g id="sourcefile~~mod_array.f90~~EfferentGraph_node2" class="node">
+<title>sourcefile~mod_constants.f90</title>
+<g id="a_sourcefile~~mod_array.f90~~EfferentGraph_node2"><a xlink:href=".././sourcefile/mod_constants.f90.html" xlink:title="mod_constants.f90">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="79,-24 0,-24 0,0 79,0 79,-24"/>
+<text text-anchor="middle" x="39.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">mod_constants.f90</text>
+</a>
+</g>
+</g>
+<!-- sourcefile~mod_array.f90&#45;&gt;sourcefile~mod_constants.f90 -->
+<g id="sourcefile~~mod_array.f90~~EfferentGraph_edge1" class="edge">
+<title>sourcefile~mod_array.f90&#45;&gt;sourcefile~mod_constants.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M114.9752,-12C106.9112,-12 98.0411,-12 89.303,-12"/>
+<polygon fill="#000000" stroke="#000000" points="89.1623,-8.5001 79.1623,-12 89.1623,-15.5001 89.1623,-8.5001"/>
+</g>
+</g>
+</svg>
+</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
+    <p>Nodes of different colours represent the following: </p>
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="156pt" height="32pt"
+ viewBox="0.00 0.00 155.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-28 151.5,-28 151.5,4 -4,4"/>
+<!-- Source File -->
+<g id="node1" class="node">
+<title>Source File</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Source File</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node2" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="#000000" points="147.5,-24 72.5,-24 72.5,0 147.5,0 147.5,-24"/>
+<text text-anchor="middle" x="110" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+    
+    <p>Solid arrows point from a file to a file which it depends on. A file
+    is dependent upon another if the latter must be compiled before the former
+    can be.
+    </p>
+    </div></div></div></div>
+      </div>
+    </div>
+    
+      
+    <div class="panel panel-default">
+      <div class="panel-heading">
+	<h3 class="panel-title">Files dependent on this one</h3>
+      </div>
+      <div class="panel-body">
+	<div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: sourcefile~~mod_array.f90~~AfferentGraph Pages: 1 -->
+<svg id="sourcefilemod_arrayf90AfferentGraph" width="385pt" height="73pt"
+ viewBox="0.00 0.00 385.00 73.12" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="sourcefile~~mod_array.f90~~AfferentGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 69.1216)">
+<title>sourcefile~~mod_array.f90~~AfferentGraph</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-69.1216 381,-69.1216 381,4 -4,4"/>
+<!-- sourcefile~mod_array.f90 -->
+<g id="sourcefile~~mod_array.f90~~AfferentGraph_node1" class="node">
+<title>sourcefile~mod_array.f90</title>
+<polygon fill="none" stroke="#000000" points="63,-56.9276 0,-56.9276 0,-32.9276 63,-32.9276 63,-56.9276"/>
+<text text-anchor="middle" x="31.5" y="-42.5276" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">mod_array.f90</text>
+</g>
+<!-- sourcefile~mod_functions.f90 -->
+<g id="sourcefile~~mod_array.f90~~AfferentGraph_node2" class="node">
+<title>sourcefile~mod_functions.f90</title>
+<g id="a_sourcefile~~mod_array.f90~~AfferentGraph_node2"><a xlink:href=".././sourcefile/mod_functions.f90.html" xlink:title="mod_functions.f90">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="287,-36.9276 210,-36.9276 210,-12.9276 287,-12.9276 287,-36.9276"/>
+<text text-anchor="middle" x="248.5" y="-22.5276" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">mod_functions.f90</text>
+</a>
+</g>
+</g>
+<!-- sourcefile~mod_functions.f90&#45;&gt;sourcefile~mod_array.f90 -->
+<g id="sourcefile~~mod_array.f90~~AfferentGraph_edge1" class="edge">
+<title>sourcefile~mod_functions.f90&#45;&gt;sourcefile~mod_array.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M228.2208,-37.0056C206.3582,-48.8519 170.1546,-65.1213 136.5,-64.9276"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M136.5,-64.9276C115.4223,-64.8062 92.3779,-60.8553 73.2615,-56.4969"/>
+<polygon fill="#000000" stroke="#000000" points="73.9095,-53.0532 63.3693,-54.1274 72.2789,-59.8607 73.9095,-53.0532"/>
+</g>
+<!-- sourcefile~mod_optimize.f90 -->
+<g id="sourcefile~~mod_array.f90~~AfferentGraph_node4" class="node">
+<title>sourcefile~mod_optimize.f90</title>
+<g id="a_sourcefile~~mod_array.f90~~AfferentGraph_node4"><a xlink:href=".././sourcefile/mod_optimize.f90.html" xlink:title="mod_optimize.f90">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="174,-36.9276 99,-36.9276 99,-12.9276 174,-12.9276 174,-36.9276"/>
+<text text-anchor="middle" x="136.5" y="-22.5276" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">mod_optimize.f90</text>
+</a>
+</g>
+</g>
+<!-- sourcefile~mod_functions.f90&#45;&gt;sourcefile~mod_optimize.f90 -->
+<g id="sourcefile~~mod_array.f90~~AfferentGraph_edge5" class="edge">
+<title>sourcefile~mod_functions.f90&#45;&gt;sourcefile~mod_optimize.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M209.956,-24.9276C201.7686,-24.9276 193.028,-24.9276 184.5369,-24.9276"/>
+<polygon fill="#000000" stroke="#000000" points="184.3571,-21.4277 174.3571,-24.9276 184.357,-28.4277 184.3571,-21.4277"/>
+</g>
+<!-- sourcefile~main.f90 -->
+<g id="sourcefile~~mod_array.f90~~AfferentGraph_node3" class="node">
+<title>sourcefile~main.f90</title>
+<g id="a_sourcefile~~mod_array.f90~~AfferentGraph_node3"><a xlink:href=".././sourcefile/main.f90.html" xlink:title="main.f90">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="377,-36.9276 323,-36.9276 323,-12.9276 377,-12.9276 377,-36.9276"/>
+<text text-anchor="middle" x="350" y="-22.5276" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">main.f90</text>
+</a>
+</g>
+</g>
+<!-- sourcefile~main.f90&#45;&gt;sourcefile~mod_array.f90 -->
+<g id="sourcefile~~mod_array.f90~~AfferentGraph_edge2" class="edge">
+<title>sourcefile~main.f90&#45;&gt;sourcefile~mod_array.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M322.7325,-35.316C311.7658,-39.1506 298.9165,-43.2169 287,-45.9276 221.2596,-60.8817 203.9187,-65.3157 136.5,-64.9276"/>
+</g>
+<!-- sourcefile~main.f90&#45;&gt;sourcefile~mod_functions.f90 -->
+<g id="sourcefile~~mod_array.f90~~AfferentGraph_edge4" class="edge">
+<title>sourcefile~main.f90&#45;&gt;sourcefile~mod_functions.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M322.7999,-24.9276C314.9495,-24.9276 306.1331,-24.9276 297.3905,-24.9276"/>
+<polygon fill="#000000" stroke="#000000" points="297.2235,-21.4277 287.2235,-24.9276 297.2234,-28.4277 297.2235,-21.4277"/>
+</g>
+<!-- sourcefile~main.f90&#45;&gt;sourcefile~mod_optimize.f90 -->
+<g id="sourcefile~~mod_array.f90~~AfferentGraph_edge6" class="edge">
+<title>sourcefile~main.f90&#45;&gt;sourcefile~mod_optimize.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M322.8835,-13.7634C311.9376,-9.822 299.0631,-5.8851 287,-3.9276 253.2197,1.5542 243.8914,.8191 210,-3.9276 200.4407,-5.2664 190.3802,-7.5396 180.8749,-10.1083"/>
+<polygon fill="#000000" stroke="#000000" points="179.8702,-6.7552 171.2147,-12.8652 181.7913,-13.4864 179.8702,-6.7552"/>
+</g>
+<!-- sourcefile~mod_optimize.f90&#45;&gt;sourcefile~mod_array.f90 -->
+<g id="sourcefile~~mod_array.f90~~AfferentGraph_edge3" class="edge">
+<title>sourcefile~mod_optimize.f90&#45;&gt;sourcefile~mod_array.f90</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M98.8892,-32.0915C90.6058,-33.6693 81.7834,-35.3498 73.3444,-36.9572"/>
+<polygon fill="#000000" stroke="#000000" points="72.4714,-33.5605 63.3029,-38.8699 73.7812,-40.4369 72.4714,-33.5605"/>
+</g>
+</g>
+</svg>
+</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
+    <p>Nodes of different colours represent the following: </p>
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="156pt" height="32pt"
+ viewBox="0.00 0.00 155.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-28 151.5,-28 151.5,4 -4,4"/>
+<!-- Source File -->
+<g id="node1" class="node">
+<title>Source File</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Source File</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node2" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="#000000" points="147.5,-24 72.5,-24 72.5,0 147.5,0 147.5,-24"/>
+<text text-anchor="middle" x="110" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+    
+    <p>Solid arrows point from a file to a file which it depends on. A file
+    is dependent upon another if the latter must be compiled before the former
+    can be.
+    </p>
+    </div></div></div></div>
+      </div>
+    </div>
+      
+      <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+      
+<h3>Contents</h3>
+ 
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#mods-1">Modules</a></h3></div>
+  <div id="mods-1" class="panel-collapse collapse">
+    <div class="list-group">
+      
+      <a class="list-group-item" href="../module/mod_array.html">mod_array</a>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  <div class="list-group">
+    <a class="list-group-item" href="../sourcefile/mod_array.f90.html#src">mod_array.f90</a>
+  </div>
+</div>
+
+
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+    <section>
+      <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl"><pre><span></span><a name="ln-1"></a><span class="k">module </span><span class="n">mod_array</span>
+<a name="ln-2"></a>  <span class="k">use </span><span class="n">mod_constants</span>
+<a name="ln-3"></a>  <span class="k">implicit none</span>
+<a name="ln-4"></a>
+<a name="ln-5"></a><span class="k">  private</span>
+<a name="ln-6"></a>
+<a name="ln-7"></a><span class="k">  public</span> <span class="kd">::</span> <span class="n">convolution_2D_mirror</span><span class="p">,</span> <span class="n">ravel_3D</span><span class="p">,</span> <span class="n">unravel_3D</span>
+<a name="ln-8"></a>  
+<a name="ln-9"></a><span class="k">contains</span>
+<a name="ln-10"></a>
+<a name="ln-11"></a><span class="k">  subroutine </span><span class="n">convolution_2D_mirror</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">conv</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">dim_k</span><span class="p">)</span>
+<a name="ln-12"></a>    <span class="k">implicit none</span>
+<a name="ln-13"></a>
+<a name="ln-14"></a><span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">image</span>
+<a name="ln-15"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">conv</span>
+<a name="ln-16"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">kernel</span>
+<a name="ln-17"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">dim_k</span>
+<a name="ln-18"></a>
+<a name="ln-19"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">mm</span><span class="p">,</span> <span class="n">nn</span>
+<a name="ln-20"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">kCenterY</span><span class="p">,</span> <span class="n">kCenterX</span>
+<a name="ln-21"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">ext_conv</span><span class="p">,</span> <span class="n">extended</span>
+<a name="ln-22"></a>
+<a name="ln-23"></a>    <span class="k">allocate</span><span class="p">(</span><span class="n">ext_conv</span><span class="p">(</span><span class="n">dim_y</span><span class="o">+</span><span class="mi">4</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">4</span><span class="p">))</span>
+<a name="ln-24"></a>    <span class="k">allocate</span><span class="p">(</span><span class="n">extended</span><span class="p">(</span><span class="n">dim_y</span><span class="o">+</span><span class="mi">4</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">4</span><span class="p">))</span>
+<a name="ln-25"></a>
+<a name="ln-26"></a>    <span class="n">ii</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jj</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">mm</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">nn</span> <span class="o">=</span> <span class="mi">0</span>
+<a name="ln-27"></a>    <span class="n">kCenterY</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">kCenterX</span> <span class="o">=</span> <span class="mi">0</span>
+<a name="ln-28"></a>    <span class="n">ext_conv</span> <span class="o">=</span> <span class="mf">0._xp</span>
+<a name="ln-29"></a>    <span class="n">extended</span> <span class="o">=</span> <span class="mf">0._xp</span>
+<a name="ln-30"></a>    
+<a name="ln-31"></a>    <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-32"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-33"></a>          <span class="n">extended</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+<a name="ln-34"></a>       <span class="k">end do</span>
+<a name="ln-35"></a><span class="k">    end do</span>
+<a name="ln-36"></a>
+<a name="ln-37"></a><span class="k">    do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+<a name="ln-38"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-39"></a>          <span class="n">extended</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+<a name="ln-40"></a>       <span class="k">end do</span>
+<a name="ln-41"></a><span class="k">    end do</span>
+<a name="ln-42"></a><span class="k">    </span>
+<a name="ln-43"></a><span class="k">    do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+<a name="ln-44"></a>       <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-45"></a>          <span class="n">extended</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+<a name="ln-46"></a>       <span class="k">end do</span>
+<a name="ln-47"></a><span class="k">    end do</span>
+<a name="ln-48"></a>
+<a name="ln-49"></a><span class="k">    do </span><span class="n">j</span><span class="o">=</span><span class="n">dim_x</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">2</span>
+<a name="ln-50"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-51"></a>          <span class="n">extended</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<a name="ln-52"></a>       <span class="k">end do</span>
+<a name="ln-53"></a><span class="k">    end do</span>
+<a name="ln-54"></a>
+<a name="ln-55"></a><span class="k">    do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-56"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="n">dim_y</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span><span class="o">+</span><span class="mi">2</span>
+<a name="ln-57"></a>          <span class="n">extended</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+<a name="ln-58"></a>       <span class="k">end do</span>
+<a name="ln-59"></a><span class="k">    end do</span>
+<a name="ln-60"></a><span class="k">    </span>
+<a name="ln-61"></a><span class="k">    </span><span class="n">kCenterY</span> <span class="o">=</span> <span class="n">dim_k</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
+<a name="ln-62"></a>    <span class="n">kCenterX</span> <span class="o">=</span> <span class="n">kCenterY</span>
+<a name="ln-63"></a>
+<a name="ln-64"></a>    <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">4</span>
+<a name="ln-65"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span><span class="o">+</span><span class="mi">4</span>
+<a name="ln-66"></a>          <span class="k">do </span><span class="n">m</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_k</span>
+<a name="ln-67"></a>             <span class="n">mm</span> <span class="o">=</span> <span class="n">dim_k</span> <span class="o">-</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span>
+<a name="ln-68"></a>             
+<a name="ln-69"></a>             <span class="k">do </span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_k</span>
+<a name="ln-70"></a>                <span class="n">nn</span> <span class="o">=</span> <span class="n">dim_k</span> <span class="o">-</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+<a name="ln-71"></a>
+<a name="ln-72"></a>                <span class="n">ii</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">m</span> <span class="o">-</span> <span class="n">kCenterY</span><span class="p">)</span>
+<a name="ln-73"></a>                <span class="n">jj</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">kCenterX</span><span class="p">)</span>
+<a name="ln-74"></a>                
+<a name="ln-75"></a>                <span class="k">if</span><span class="p">(</span> <span class="n">ii</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">ii</span> <span class="o">&lt;</span> <span class="n">dim_y</span><span class="o">+</span><span class="mi">4</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">jj</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">jj</span> <span class="o">&lt;</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">4</span> <span class="p">)</span> <span class="k">then</span>
+<a name="ln-76"></a><span class="k">                   </span><span class="n">ext_conv</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">ext_conv</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="n">extended</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">)</span> <span class="o">*</span> <span class="n">kernel</span><span class="p">(</span><span class="n">mm</span><span class="p">,</span><span class="n">nn</span><span class="p">)</span>
+<a name="ln-77"></a>                <span class="k">end if</span>
+<a name="ln-78"></a><span class="k">             end do</span>
+<a name="ln-79"></a><span class="k">             </span>
+<a name="ln-80"></a><span class="k">          end do</span>
+<a name="ln-81"></a><span class="k">       end do</span>
+<a name="ln-82"></a><span class="k">    end do</span>
+<a name="ln-83"></a>
+<a name="ln-84"></a><span class="k">    do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-85"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-86"></a>          <span class="n">conv</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">ext_conv</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span>
+<a name="ln-87"></a>       <span class="k">end do</span>
+<a name="ln-88"></a><span class="k">    end do    </span>
+<a name="ln-89"></a><span class="k">    </span>
+<a name="ln-90"></a><span class="k">  end subroutine </span><span class="n">convolution_2D_mirror</span>
+<a name="ln-91"></a>
+<a name="ln-92"></a>
+<a name="ln-93"></a>  <span class="c">! Return a contiguous flattened 1D array from a 3D array</span>
+<a name="ln-94"></a>  <span class="k">subroutine </span><span class="n">ravel_3D</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span> <span class="n">vector</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
+<a name="ln-95"></a>    <span class="k">implicit none</span>
+<a name="ln-96"></a>
+<a name="ln-97"></a><span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-98"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>
+<a name="ln-99"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">vector</span>
+<a name="ln-100"></a>
+<a name="ln-101"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">i__</span>
+<a name="ln-102"></a>
+<a name="ln-103"></a>    <span class="n">i__</span> <span class="o">=</span> <span class="mi">1</span>
+<a name="ln-104"></a>    
+<a name="ln-105"></a>    <span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-106"></a>       <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-107"></a>          <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_v</span>
+<a name="ln-108"></a>             <span class="n">vector</span><span class="p">(</span><span class="n">i__</span><span class="p">)</span> <span class="o">=</span> <span class="n">cube</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">)</span>
+<a name="ln-109"></a>             <span class="n">i__</span> <span class="o">=</span> <span class="n">i__</span> <span class="o">+</span> <span class="mi">1</span>
+<a name="ln-110"></a>          <span class="k">end do</span>
+<a name="ln-111"></a><span class="k">       end do</span>
+<a name="ln-112"></a><span class="k">    end do</span>
+<a name="ln-113"></a><span class="k">  end subroutine </span><span class="n">ravel_3D</span>
+<a name="ln-114"></a>
+<a name="ln-115"></a>  <span class="c">! Return a 3D array from a contiguous flattened 1D array </span>
+<a name="ln-116"></a>  <span class="k">subroutine </span><span class="n">unravel_3D</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
+<a name="ln-117"></a>    <span class="k">implicit none</span>
+<a name="ln-118"></a>
+<a name="ln-119"></a><span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-120"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">vector</span>
+<a name="ln-121"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>
+<a name="ln-122"></a>
+<a name="ln-123"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">i__</span>
+<a name="ln-124"></a>
+<a name="ln-125"></a>    <span class="n">i__</span> <span class="o">=</span> <span class="mi">1</span>
+<a name="ln-126"></a>    
+<a name="ln-127"></a>    <span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-128"></a>       <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-129"></a>          <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_v</span>
+<a name="ln-130"></a>             <span class="n">cube</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">)</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">i__</span><span class="p">)</span>
+<a name="ln-131"></a>             <span class="n">i__</span> <span class="o">=</span> <span class="n">i__</span> <span class="o">+</span> <span class="mi">1</span>
+<a name="ln-132"></a>          <span class="k">end do</span>
+<a name="ln-133"></a><span class="k">       end do</span>
+<a name="ln-134"></a><span class="k">    end do</span>
+<a name="ln-135"></a><span class="k">  end subroutine </span><span class="n">unravel_3D</span>
+<a name="ln-136"></a>
+<a name="ln-137"></a><span class="k">end module </span><span class="n">mod_array</span>
+</pre></div>
+
+    </section>
+    </div>
+  </div>
+
+  
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-4"><p>&copy; 2018 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a>
+                                          </p></div>
+        <div class="col-xs-6 col-md-4 col-md-push-4">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/cmacmackin/ford">FORD</a>
+            
+          </p>
+        </div>
+        <div class="col-xs-12 col-md-4 col-md-pull-4"><p class="text-center"> ROHSA was developed by Antoine Marchal</p></div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+    
+  </body>
+</html>
