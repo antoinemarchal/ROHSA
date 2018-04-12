@@ -1,6 +1,6 @@
 &user_parameters
-   filename = '/data/glx-calcul3/data1/amarchal/DRAO/SPIDER/DHIGLS_DF_Tb_512.dat'
-   ,fileout = '/data/glx-calcul3/data1/amarchal/DRAO/SPIDER/ROHSA/DHIGLS_DF_Tb_512_lbd1_gauss.dat'
+   filename = ''
+   ,fileout = ''
    ,filename_noise = ''
    ,n_gauss = 8   	 
    ,lambda_amp = 1.d0
