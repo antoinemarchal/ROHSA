@@ -6,7 +6,7 @@ output_dir: ./Doc
 src_dir: /Users/antoinemarchal/Desktop/ROHSA/src/
 page_dir: /Users/antoinemarchal/Desktop/ROHSA/docs/user_guide/
 project_github: https://github.com/antoinemarchal/
-project_download: https://github.com/antoinemarchal/
+project_download: https://github.com/antoinemarchal/ROHSA/releases/
 summary: ![ROHSA](|media|/LogoMakr_0dTJ9B.png)
          {: style="text-align: center" }
 author: Antoine Marchal
