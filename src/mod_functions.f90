@@ -1,3 +1,4 @@
+!! Module function of ROHSA
 module mod_functions
 
   use mod_constants
@@ -13,12 +14,12 @@ module mod_functions
 
 contains
     
-  ! Compute nside value depending on dim_y and dim_x 
   pure function dim2nside(dim_cube)
+  !! Compute nside value from \(dim_y\) and \(dim_x\) 
     implicit none
 
-    integer :: dim2nside
-    integer, intent(in), dimension(3) :: dim_cube
+    integer :: dim2nside !! Nside of the cube
+    integer, intent(in), dimension(3) :: dim_cube !! Cube dimension
     dim2nside = max(0,int(ceiling(log(real(dim_cube(2))) / log(2.))), int(ceiling(log(real(dim_cube(3))) / log(2.))))
     return
   end function dim2nside
@@ -37,14 +38,14 @@ contains
   end subroutine dim_data2dim_cube
 
 
-  ! Reshape the data in a grid of 2**nside 
   subroutine reshape_up(data, cube, dim_data, dim_cube)
+  !! Reshape the data in a grid of \( 2^{nside} \)
     implicit none
     
-    real(xp), intent(in), dimension(:,:,:), allocatable    :: data
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: cube
-    integer, intent(in), dimension(3) :: dim_data
-    integer, intent(in), dimension(3) :: dim_cube
+    real(xp), intent(in), dimension(:,:,:), allocatable    :: data !! original cube
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: cube !! reshape cube
+    integer, intent(in), dimension(3) :: dim_data !! original cube dimension
+    integer, intent(in), dimension(3) :: dim_cube !! new cube dimension
  
     integer :: offset_w, offset_h
  
@@ -53,14 +54,14 @@ contains
     cube(:, offset_w+1:offset_w+dim_data(2), offset_h+1:offset_h+dim_data(3)) = data
   end subroutine reshape_up
 
-  ! Reshape the data in a grid with original dimension 
   subroutine reshape_down(cube, data, dim_cube, dim_data)
+    !! Reshape the cube (\( 2^{nside} \)) into a grid with original dimension (opposite of reshape_up)
     implicit none
 
-    real(xp), intent(in), dimension(:,:,:), allocatable :: cube
-    real(xp), intent(inout), dimension(:,:,:), allocatable    :: data
-    integer, intent(in), dimension(3) :: dim_data
-    integer, intent(in), dimension(3) :: dim_cube
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! original cube
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: data !! reshape cube
+    integer, intent(in), dimension(3) :: dim_data !! original cube dimension
+    integer, intent(in), dimension(3) :: dim_cube !! new cube dimension
  
     integer :: offset_w, offset_h
  
@@ -70,13 +71,13 @@ contains
   end subroutine reshape_down
 
 
-  ! Average cube depending on level n 
   subroutine mean_array(nside, cube, cube_mean)
+    !! Average cube along spatial axis depending on level n 
     implicit none
 
-    integer, intent(in) :: nside
-    real(xp), intent(in), dimension(:,:,:), allocatable :: cube
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: cube_mean
+    integer, intent(in) :: nside !! nside of the cube
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: cube_mean !! average cube
 
     integer :: i, j, k, l, n
     real(xp), dimension(:), allocatable :: spectrum
@@ -102,13 +103,13 @@ contains
   end subroutine mean_array
 
   
-  ! Average map depending on level n 
   subroutine mean_map(nside, map, map_mean)
+    !! Average map depending on level nside 
     implicit none
 
-    integer, intent(in) :: nside
-    real(xp), intent(in), dimension(:,:), allocatable :: map
-    real(xp), intent(inout), dimension(:,:), allocatable :: map_mean
+    integer, intent(in) :: nside !! nside
+    real(xp), intent(in), dimension(:,:), allocatable :: map !! map
+    real(xp), intent(inout), dimension(:,:), allocatable :: map_mean !! avarage map
 
     integer :: i, j, k, l, n
     real(xp) :: val
@@ -133,14 +134,14 @@ contains
   end subroutine mean_map
 
 
-  ! Projection of the solution at next level 
   subroutine go_up_level(cube_params)
+    !! Projection of the solution at next level (nside += 1)
     implicit none
 
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: cube_params
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: cube_params !! cube of parameters
 
     integer :: i, j, k, l
-    real(xp), dimension(:,:,:), allocatable :: cube_params_down
+    real(xp), dimension(:,:,:), allocatable :: cube_params_down 
     integer, dimension(3) :: dim
 
     dim = shape(cube_params)
@@ -166,13 +167,18 @@ contains
   end subroutine go_up_level
 
   
-  ! Init mean spreturm with N Gaussian
   subroutine init_spectrum(n_gauss, params, dim_v, line, maxiter, m, iprint)
+    !! Initialization of the mean spreturm with N Gaussian
     implicit none
     
-    integer, intent(in) :: n_gauss, dim_v, maxiter, m, iprint
-    real(xp), intent(in), dimension(dim_v) :: line
-    real(xp), intent(inout), dimension(3*n_gauss)  :: params
+    integer, intent(in) :: n_gauss !! Number of Gaussian
+    integer, intent(in) :: dim_v !! dimension along v axis
+    integer, intent(in) :: maxiter !! Max number of iteration
+    integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
+    integer, intent(in) :: iprint !! print option
+
+    real(xp), intent(in), dimension(dim_v) :: line !! spectrum
+    real(xp), intent(inout), dimension(3*n_gauss)  :: params !! params to optimize
 
     integer :: i, j, k, p
     real(xp), dimension(:), allocatable :: lb, ub
@@ -218,13 +224,15 @@ contains
   end subroutine init_spectrum
   
 
-  ! Init bounds for optimization
   subroutine init_bounds(line, n_gauss, dim_v, lb, ub)
+    !! Initialize parameters bounds for optimization
     implicit none
     
-    integer, intent(in) :: n_gauss, dim_v
-    real(xp), intent(in), dimension(dim_v) :: line    
-    real(xp), intent(inout), dimension(3*n_gauss) :: lb, ub
+    integer, intent(in) :: n_gauss !! number of Gaussian
+    integer, intent(in) :: dim_v !! dimension along v axis
+    real(xp), intent(in), dimension(dim_v) :: line !! spectrum   
+    real(xp), intent(inout), dimension(3*n_gauss) :: lb !! lower bounds
+    real(xp), intent(inout), dimension(3*n_gauss) :: ub !! upper bounds
     
     integer :: i
     real(xp) :: max_line
@@ -248,12 +256,18 @@ contains
   end subroutine init_bounds
 
 
-  ! Upgrade parameters using minimize function (here based on L-BFGS-B optimization module)
   subroutine upgrade(cube, params, power, n_gauss, dim_v, maxiter, m, iprint)
+    !! Upgrade parameters using minimize function (here based on L-BFGS-B optimization module)
     implicit none
 
-    real(xp), intent(in), dimension(:,:,:), allocatable :: cube
-    integer, intent(in) :: power, n_gauss, dim_v, maxiter, m, iprint
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube
+    integer, intent(in) :: power !! nside of the cube
+    integer, intent(in) :: n_gauss !! number of Gaussian
+    integer, intent(in) :: dim_v !! dimension along v axis
+    integer, intent(in) :: maxiter !! max number of iteration
+    integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
+    integer, intent(in) :: iprint !! print option
+
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params
 
     integer :: i,j
@@ -281,17 +295,25 @@ contains
     end do
   end subroutine upgrade
 
-  ! Update parameters using minimize function (here based on L-BFGS-B optimization module)
+
   subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, maxiter, m, kernel, &
        iprint, std_map)
+    !! Update parameters using minimize function (here based on L-BFGS-B optimization module)
     implicit none
-
+    
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(in), dimension(:,:), allocatable :: std_map
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
-    integer, intent(in) :: dim_v, dim_y, dim_x
-    integer, intent(in) :: n_gauss, maxiter, m, iprint
-    real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
+    integer, intent(in) :: dim_v
+    integer, intent(in) :: dim_y
+    integer, intent(in) :: dim_x
+    integer, intent(in) :: n_gauss
+    integer, intent(in) :: maxiter
+    integer, intent(in) :: m
+    integer, intent(in) :: iprint
+    real(xp), intent(in) :: lambda_amp
+    real(xp), intent(in) :: lambda_mu
+    real(xp), intent(in) :: lambda_sig
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params
     
     integer :: i,j
@@ -323,11 +345,12 @@ contains
   end subroutine update
 
 
-  ! Compute the STD map of a 3D array
   subroutine set_stdmap(std_map, cube, lb, ub)
+    !! Compute the STD map of a 3D array
     implicit none
 
-    integer, intent(in) :: lb, ub
+    integer, intent(in) :: lb
+    integer, intent(in) :: ub
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(inout), dimension(:,:), allocatable :: std_map
     real(xp), dimension(:), allocatable :: line
@@ -346,8 +369,8 @@ contains
   end subroutine set_stdmap
 
 
-  ! Compute the STD of a 1D array
   pure function std(array)
+    !! Compute the STD of a 1D array
     implicit none
 
     real(xp) :: std
