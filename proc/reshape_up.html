@@ -203,6 +203,9 @@ public subroutine reshape_up(data, cube, dim_data, dim_cube)
 
 
     
+    <p>Reshape the data in a grid of <script type="math/tex"> 2^{nside} </script>
+</p>
+    
 
     <h3>Arguments</h3>
     
@@ -227,7 +230,7 @@ public subroutine reshape_up(data, cube, dim_data, dim_cube)
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>data</strong></td><td></td>
+  <td><strong>data</strong></td><td><p>original cube</p></td>
   
 </tr>
 
@@ -242,7 +245,7 @@ public subroutine reshape_up(data, cube, dim_data, dim_cube)
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube</strong></td><td></td>
+  <td><strong>cube</strong></td><td><p>reshape cube</p></td>
   
 </tr>
 
@@ -257,7 +260,7 @@ public subroutine reshape_up(data, cube, dim_data, dim_cube)
   <td></td>
   
   <td>dimension(3)</td><td>::</td>
-  <td><strong>dim_data</strong></td><td></td>
+  <td><strong>dim_data</strong></td><td><p>original cube dimension</p></td>
   
 </tr>
 
@@ -272,7 +275,7 @@ public subroutine reshape_up(data, cube, dim_data, dim_cube)
   <td></td>
   
   <td>dimension(3)</td><td>::</td>
-  <td><strong>dim_cube</strong></td><td></td>
+  <td><strong>dim_cube</strong></td><td><p>new cube dimension</p></td>
   
 </tr>
 
@@ -447,12 +450,13 @@ public subroutine reshape_up(data, cube, dim_data, dim_cube)
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">reshape_up</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">)</span>
+  <span class="c">!! Reshape the data in a grid of \( 2^{nside} \)</span>
     <span class="k">implicit none</span>
 <span class="k">    </span>
-<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span>    <span class="kd">::</span> <span class="k">data</span>
-<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>
-    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_data</span>
-    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_cube</span>
+<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span>    <span class="kd">::</span> <span class="k">data</span> <span class="c">!! original cube</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span> <span class="c">!! reshape cube</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_data</span> <span class="c">!! original cube dimension</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_cube</span> <span class="c">!! new cube dimension</span>
  
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">offset_w</span><span class="p">,</span> <span class="n">offset_h</span>
  

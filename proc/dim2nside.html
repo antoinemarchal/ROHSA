@@ -203,6 +203,9 @@ public pure function dim2nside(dim_cube)
 
 
     
+    <p>Compute nside value from <script type="math/tex">dim_y</script> and <script type="math/tex">dim_x</script>
+</p>
+    
 
     <h3>Arguments</h3>
     
@@ -227,7 +230,7 @@ public pure function dim2nside(dim_cube)
   <td></td>
   
   <td>dimension(3)</td><td>::</td>
-  <td><strong>dim_cube</strong></td><td></td>
+  <td><strong>dim_cube</strong></td><td><p>cube dimension</p></td>
   
 </tr>
 
@@ -243,7 +246,7 @@ public pure function dim2nside(dim_cube)
     
 	 <h3>Return Value <small><span class="anchor" id="variable-dim2nside"></span>integer
   </small></h3>
-    
+    <p>nside of the cube</p>
     
     
     <br>
@@ -411,10 +414,11 @@ public pure function dim2nside(dim_cube)
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="highlight"><pre><span></span>  <span class="k">pure function </span><span class="n">dim2nside</span><span class="p">(</span><span class="n">dim_cube</span><span class="p">)</span>
+  <span class="c">!! Compute nside value from \(dim_y\) and \(dim_x\) </span>
     <span class="k">implicit none</span>
 
-<span class="k">    </span><span class="kt">integer</span> <span class="kd">::</span> <span class="n">dim2nside</span>
-    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_cube</span>
+<span class="k">    </span><span class="kt">integer</span> <span class="kd">::</span> <span class="n">dim2nside</span> <span class="c">!! nside of the cube</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_cube</span> <span class="c">!! cube dimension</span>
     <span class="n">dim2nside</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="nb">ceiling</span><span class="p">(</span><span class="nb">log</span><span class="p">(</span><span class="kt">real</span><span class="p">(</span><span class="n">dim_cube</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span> <span class="o">/</span> <span class="nb">log</span><span class="p">(</span><span class="mf">2.</span><span class="p">))),</span> <span class="nb">int</span><span class="p">(</span><span class="nb">ceiling</span><span class="p">(</span><span class="nb">log</span><span class="p">(</span><span class="kt">real</span><span class="p">(</span><span class="n">dim_cube</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span> <span class="o">/</span> <span class="nb">log</span><span class="p">(</span><span class="mf">2.</span><span class="p">))))</span>
     <span class="k">return</span>
 <span class="k">  end function </span><span class="n">dim2nside</span>

@@ -124,7 +124,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title=" 1.1% of total for procedures.">28 statements</a>
+	  title=" 1.4% of total for procedures.">35 statements</a>
      </li> 
      
      
@@ -203,6 +203,8 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
 
 
     
+    <p>Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)</p>
+    
 
     <h3>Arguments</h3>
     
@@ -227,7 +229,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube</strong></td><td></td>
+  <td><strong>cube</strong></td><td><p>cube </p></td>
   
 </tr>
 
@@ -242,7 +244,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>params</strong></td><td></td>
+  <td><strong>params</strong></td><td><p>parameters cube to update</p></td>
   
 </tr>
 
@@ -257,7 +259,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>n_gauss</strong></td><td></td>
+  <td><strong>n_gauss</strong></td><td><p>Number of Gaussian</p></td>
   
 </tr>
 
@@ -272,7 +274,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>dim_v</strong></td><td></td>
+  <td><strong>dim_v</strong></td><td><p>dimension along v axis</p></td>
   
 </tr>
 
@@ -287,7 +289,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>dim_y</strong></td><td></td>
+  <td><strong>dim_y</strong></td><td><p>dimension along spatial axis y </p></td>
   
 </tr>
 
@@ -302,7 +304,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>dim_x</strong></td><td></td>
+  <td><strong>dim_x</strong></td><td><p>dimension along spatial axis x</p></td>
   
 </tr>
 
@@ -317,7 +319,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>lambda_amp</strong></td><td></td>
+  <td><strong>lambda_amp</strong></td><td><p>lambda for amplitude parameter</p></td>
   
 </tr>
 
@@ -332,7 +334,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>lambda_mu</strong></td><td></td>
+  <td><strong>lambda_mu</strong></td><td><p>lambda for mean position parameter</p></td>
   
 </tr>
 
@@ -347,7 +349,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>lambda_sig</strong></td><td></td>
+  <td><strong>lambda_sig</strong></td><td><p>lambda for dispersion parameter</p></td>
   
 </tr>
 
@@ -362,7 +364,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>maxiter</strong></td><td></td>
+  <td><strong>maxiter</strong></td><td><p>max number of iteration</p></td>
   
 </tr>
 
@@ -377,7 +379,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>m</strong></td><td></td>
+  <td><strong>m</strong></td><td><p>number of corrections used in the limited memory matrix by LBFGS-B</p></td>
   
 </tr>
 
@@ -392,7 +394,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td>dimension(:,:), allocatable</td><td>::</td>
-  <td><strong>kernel</strong></td><td></td>
+  <td><strong>kernel</strong></td><td><p>convolution kernel</p></td>
   
 </tr>
 
@@ -407,7 +409,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>iprint</strong></td><td></td>
+  <td><strong>iprint</strong></td><td><p>print option</p></td>
   
 </tr>
 
@@ -422,7 +424,7 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
   <td></td>
   
   <td>dimension(:,:), allocatable</td><td>::</td>
-  <td><strong>std_map</strong></td><td></td>
+  <td><strong>std_map</strong></td><td><p>Standard deviation map </p></td>
   
 </tr>
 
@@ -700,15 +702,24 @@ public subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp,
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">update</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="p">&amp;</span>
        <span class="n">iprint</span><span class="p">,</span> <span class="n">std_map</span><span class="p">)</span>
+    <span class="c">!! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)</span>
     <span class="k">implicit none</span>
+<span class="k">    </span>
+<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span> <span class="c">!! cube </span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">std_map</span> <span class="c">!! Standard deviation map </span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">kernel</span> <span class="c">!! convolution kernel</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span> <span class="c">!! dimension along v axis</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span> <span class="c">!! dimension along spatial axis y </span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_x</span> <span class="c">!! dimension along spatial axis x</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n_gauss</span> <span class="c">!! Number of Gaussian</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">maxiter</span> <span class="c">!! max number of iteration</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">m</span> <span class="c">!! number of corrections used in the limited memory matrix by LBFGS-B</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">iprint</span> <span class="c">!! print option</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_amp</span> <span class="c">!! lambda for amplitude parameter</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_mu</span> <span class="c">!! lambda for mean position parameter</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_sig</span> <span class="c">!! lambda for dispersion parameter</span>
 
-<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">std_map</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">kernel</span>
-    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span>
-    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">params</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">params</span> <span class="c">!! parameters cube to update</span>
     
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span>
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">n_beta</span>

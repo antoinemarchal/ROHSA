@@ -124,7 +124,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title="33.6% of total for modules and submodules.">257 statements</a>
+	  title="34.9% of total for modules and submodules.">277 statements</a>
      </li> 
      
      
@@ -228,7 +228,7 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    
+    <p>This module contains the main routines of ROHSA</p>
       <br>
     
   
@@ -627,6 +627,15 @@ public pure function <a href='../proc/dim2nside.html'>dim2nside</a>(dim_cube)
   <div class="panel-body">
        
     
+
+
+
+
+
+
+
+<p>Compute nside value from <script type="math/tex">dim_y</script> and <script type="math/tex">dim_x</script>
+</p>
     
     <h4>Arguments</h4>
     
@@ -652,7 +661,7 @@ public pure function <a href='../proc/dim2nside.html'>dim2nside</a>(dim_cube)
   <td></td>
   
   <td>dimension(3)</td><td>::</td>
-  <td><strong>dim_cube</strong></td><td></td>
+  <td><strong>dim_cube</strong></td><td><p>cube dimension</p></td>
   
 </tr>
 
@@ -669,7 +678,7 @@ public pure function <a href='../proc/dim2nside.html'>dim2nside</a>(dim_cube)
   
      <h4>Return Value <small>integer
   </small></h4>
-  
+  <p>nside of the cube</p>
     
 
   </div>
@@ -687,6 +696,14 @@ private pure function <a href='../proc/std.html'>std</a>(array)
   <div class="panel-body">
        
     
+
+
+
+
+
+
+
+<p>Compute the STD of a 1D array</p>
     
     <h4>Arguments</h4>
     
@@ -712,7 +729,7 @@ private pure function <a href='../proc/std.html'>std</a>(array)
   <td></td>
   
   <td>dimension(:)</td><td>::</td>
-  <td><strong>array</strong></td><td></td>
+  <td><strong>array</strong></td><td><p>1D array</p></td>
   
 </tr>
 
@@ -729,7 +746,7 @@ private pure function <a href='../proc/std.html'>std</a>(array)
   
      <h4>Return Value <small>real(kind=xp)
   </small></h4>
-  
+  <p>standard deviation </p>
     
 
   </div>
@@ -836,6 +853,15 @@ public subroutine <a href='../proc/reshape_up.html'>reshape_up</a>(data, cube, d
   <div class="panel-body">
        
     
+
+
+
+
+
+
+
+<p>Reshape the data in a grid of <script type="math/tex"> 2^{nside} </script>
+</p>
     
     <h4>Arguments</h4>
     
@@ -861,7 +887,7 @@ public subroutine <a href='../proc/reshape_up.html'>reshape_up</a>(data, cube, d
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>data</strong></td><td></td>
+  <td><strong>data</strong></td><td><p>original cube</p></td>
   
 </tr>
 
@@ -876,7 +902,7 @@ public subroutine <a href='../proc/reshape_up.html'>reshape_up</a>(data, cube, d
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube</strong></td><td></td>
+  <td><strong>cube</strong></td><td><p>reshape cube</p></td>
   
 </tr>
 
@@ -891,7 +917,7 @@ public subroutine <a href='../proc/reshape_up.html'>reshape_up</a>(data, cube, d
   <td></td>
   
   <td>dimension(3)</td><td>::</td>
-  <td><strong>dim_data</strong></td><td></td>
+  <td><strong>dim_data</strong></td><td><p>original cube dimension</p></td>
   
 </tr>
 
@@ -906,7 +932,7 @@ public subroutine <a href='../proc/reshape_up.html'>reshape_up</a>(data, cube, d
   <td></td>
   
   <td>dimension(3)</td><td>::</td>
-  <td><strong>dim_cube</strong></td><td></td>
+  <td><strong>dim_cube</strong></td><td><p>new cube dimension</p></td>
   
 </tr>
 
@@ -932,6 +958,14 @@ public subroutine <a href='../proc/reshape_down.html'>reshape_down</a>(cube, dat
   <div class="panel-body">
        
     
+
+
+
+
+
+
+
+<p>Reshape the cube (<script type="math/tex"> 2^{nside} </script>) into a grid with original dimension (opposite of reshape_up)</p>
     
     <h4>Arguments</h4>
     
@@ -957,7 +991,7 @@ public subroutine <a href='../proc/reshape_down.html'>reshape_down</a>(cube, dat
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube</strong></td><td></td>
+  <td><strong>cube</strong></td><td><p>original cube</p></td>
   
 </tr>
 
@@ -972,7 +1006,7 @@ public subroutine <a href='../proc/reshape_down.html'>reshape_down</a>(cube, dat
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>data</strong></td><td></td>
+  <td><strong>data</strong></td><td><p>reshape cube</p></td>
   
 </tr>
 
@@ -987,7 +1021,7 @@ public subroutine <a href='../proc/reshape_down.html'>reshape_down</a>(cube, dat
   <td></td>
   
   <td>dimension(3)</td><td>::</td>
-  <td><strong>dim_cube</strong></td><td></td>
+  <td><strong>dim_cube</strong></td><td><p>new cube dimension</p></td>
   
 </tr>
 
@@ -1002,7 +1036,7 @@ public subroutine <a href='../proc/reshape_down.html'>reshape_down</a>(cube, dat
   <td></td>
   
   <td>dimension(3)</td><td>::</td>
-  <td><strong>dim_data</strong></td><td></td>
+  <td><strong>dim_data</strong></td><td><p>original cube dimension</p></td>
   
 </tr>
 
@@ -1028,6 +1062,14 @@ public subroutine <a href='../proc/mean_array.html'>mean_array</a>(nside, cube, 
   <div class="panel-body">
        
     
+
+
+
+
+
+
+
+<p>Average cube along spatial axis depending on level n </p>
     
     <h4>Arguments</h4>
     
@@ -1053,7 +1095,7 @@ public subroutine <a href='../proc/mean_array.html'>mean_array</a>(nside, cube, 
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>nside</strong></td><td></td>
+  <td><strong>nside</strong></td><td><p>nside of the cube</p></td>
   
 </tr>
 
@@ -1068,7 +1110,7 @@ public subroutine <a href='../proc/mean_array.html'>mean_array</a>(nside, cube, 
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube</strong></td><td></td>
+  <td><strong>cube</strong></td><td><p>cube</p></td>
   
 </tr>
 
@@ -1083,7 +1125,7 @@ public subroutine <a href='../proc/mean_array.html'>mean_array</a>(nside, cube, 
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube_mean</strong></td><td></td>
+  <td><strong>cube_mean</strong></td><td><p>average cube</p></td>
   
 </tr>
 
@@ -1109,6 +1151,14 @@ public subroutine <a href='../proc/mean_map.html'>mean_map</a>(nside, map, map_m
   <div class="panel-body">
        
     
+
+
+
+
+
+
+
+<p>Average map depending on level nside </p>
     
     <h4>Arguments</h4>
     
@@ -1134,7 +1184,7 @@ public subroutine <a href='../proc/mean_map.html'>mean_map</a>(nside, map, map_m
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>nside</strong></td><td></td>
+  <td><strong>nside</strong></td><td><p>nside</p></td>
   
 </tr>
 
@@ -1149,7 +1199,7 @@ public subroutine <a href='../proc/mean_map.html'>mean_map</a>(nside, map, map_m
   <td></td>
   
   <td>dimension(:,:), allocatable</td><td>::</td>
-  <td><strong>map</strong></td><td></td>
+  <td><strong>map</strong></td><td><p>map</p></td>
   
 </tr>
 
@@ -1164,7 +1214,7 @@ public subroutine <a href='../proc/mean_map.html'>mean_map</a>(nside, map, map_m
   <td></td>
   
   <td>dimension(:,:), allocatable</td><td>::</td>
-  <td><strong>map_mean</strong></td><td></td>
+  <td><strong>map_mean</strong></td><td><p>avarage map</p></td>
   
 </tr>
 
@@ -1190,6 +1240,14 @@ public subroutine <a href='../proc/go_up_level.html'>go_up_level</a>(cube_params
   <div class="panel-body">
        
     
+
+
+
+
+
+
+
+<p>Projection of the solution at next level (nside += 1)</p>
     
     <h4>Arguments</h4>
     
@@ -1215,7 +1273,7 @@ public subroutine <a href='../proc/go_up_level.html'>go_up_level</a>(cube_params
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube_params</strong></td><td></td>
+  <td><strong>cube_params</strong></td><td><p>cube of parameters</p></td>
   
 </tr>
 
@@ -1241,6 +1299,14 @@ public subroutine <a href='../proc/init_spectrum.html'>init_spectrum</a>(n_gauss
   <div class="panel-body">
        
     
+
+
+
+
+
+
+
+<p>Initialization of the mean sprectrum with N Gaussian</p>
     
     <h4>Arguments</h4>
     
@@ -1266,7 +1332,7 @@ public subroutine <a href='../proc/init_spectrum.html'>init_spectrum</a>(n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>n_gauss</strong></td><td></td>
+  <td><strong>n_gauss</strong></td><td><p>number of Gaussian</p></td>
   
 </tr>
 
@@ -1281,7 +1347,7 @@ public subroutine <a href='../proc/init_spectrum.html'>init_spectrum</a>(n_gauss
   <td></td>
   
   <td>dimension(3*n_gauss)</td><td>::</td>
-  <td><strong>params</strong></td><td></td>
+  <td><strong>params</strong></td><td><p>params to optimize</p></td>
   
 </tr>
 
@@ -1296,7 +1362,7 @@ public subroutine <a href='../proc/init_spectrum.html'>init_spectrum</a>(n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>dim_v</strong></td><td></td>
+  <td><strong>dim_v</strong></td><td><p>dimension along v axis</p></td>
   
 </tr>
 
@@ -1311,7 +1377,7 @@ public subroutine <a href='../proc/init_spectrum.html'>init_spectrum</a>(n_gauss
   <td></td>
   
   <td>dimension(dim_v)</td><td>::</td>
-  <td><strong>line</strong></td><td></td>
+  <td><strong>line</strong></td><td><p>spectrum</p></td>
   
 </tr>
 
@@ -1326,7 +1392,7 @@ public subroutine <a href='../proc/init_spectrum.html'>init_spectrum</a>(n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>maxiter</strong></td><td></td>
+  <td><strong>maxiter</strong></td><td><p>Max number of iteration</p></td>
   
 </tr>
 
@@ -1341,7 +1407,7 @@ public subroutine <a href='../proc/init_spectrum.html'>init_spectrum</a>(n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>m</strong></td><td></td>
+  <td><strong>m</strong></td><td><p>number of corrections used in the limited memory matrix by LBFGS-B</p></td>
   
 </tr>
 
@@ -1356,7 +1422,7 @@ public subroutine <a href='../proc/init_spectrum.html'>init_spectrum</a>(n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>iprint</strong></td><td></td>
+  <td><strong>iprint</strong></td><td><p>print option</p></td>
   
 </tr>
 
@@ -1382,6 +1448,14 @@ private subroutine <a href='../proc/init_bounds.html'>init_bounds</a>(line, n_ga
   <div class="panel-body">
        
     
+
+
+
+
+
+
+
+<p>Initialize parameters bounds for optimization</p>
     
     <h4>Arguments</h4>
     
@@ -1407,7 +1481,7 @@ private subroutine <a href='../proc/init_bounds.html'>init_bounds</a>(line, n_ga
   <td></td>
   
   <td>dimension(dim_v)</td><td>::</td>
-  <td><strong>line</strong></td><td></td>
+  <td><strong>line</strong></td><td><p>spectrum   </p></td>
   
 </tr>
 
@@ -1422,7 +1496,7 @@ private subroutine <a href='../proc/init_bounds.html'>init_bounds</a>(line, n_ga
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>n_gauss</strong></td><td></td>
+  <td><strong>n_gauss</strong></td><td><p>number of Gaussian</p></td>
   
 </tr>
 
@@ -1437,7 +1511,7 @@ private subroutine <a href='../proc/init_bounds.html'>init_bounds</a>(line, n_ga
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>dim_v</strong></td><td></td>
+  <td><strong>dim_v</strong></td><td><p>dimension along v axis</p></td>
   
 </tr>
 
@@ -1452,7 +1526,7 @@ private subroutine <a href='../proc/init_bounds.html'>init_bounds</a>(line, n_ga
   <td></td>
   
   <td>dimension(3*n_gauss)</td><td>::</td>
-  <td><strong>lb</strong></td><td></td>
+  <td><strong>lb</strong></td><td><p>lower bounds</p></td>
   
 </tr>
 
@@ -1467,7 +1541,7 @@ private subroutine <a href='../proc/init_bounds.html'>init_bounds</a>(line, n_ga
   <td></td>
   
   <td>dimension(3*n_gauss)</td><td>::</td>
-  <td><strong>ub</strong></td><td></td>
+  <td><strong>ub</strong></td><td><p>upper bounds</p></td>
   
 </tr>
 
@@ -1493,6 +1567,14 @@ public subroutine <a href='../proc/upgrade.html'>upgrade</a>(cube, params, power
   <div class="panel-body">
        
     
+
+
+
+
+
+
+
+<p>Upgrade parameters (spectra to spectra) using minimize function (here based on L-BFGS-B optimization module)</p>
     
     <h4>Arguments</h4>
     
@@ -1518,7 +1600,7 @@ public subroutine <a href='../proc/upgrade.html'>upgrade</a>(cube, params, power
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube</strong></td><td></td>
+  <td><strong>cube</strong></td><td><p>cube</p></td>
   
 </tr>
 
@@ -1533,7 +1615,7 @@ public subroutine <a href='../proc/upgrade.html'>upgrade</a>(cube, params, power
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>params</strong></td><td></td>
+  <td><strong>params</strong></td><td><p>cube parameters to update</p></td>
   
 </tr>
 
@@ -1548,7 +1630,7 @@ public subroutine <a href='../proc/upgrade.html'>upgrade</a>(cube, params, power
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>power</strong></td><td></td>
+  <td><strong>power</strong></td><td><p>nside of the cube</p></td>
   
 </tr>
 
@@ -1563,7 +1645,7 @@ public subroutine <a href='../proc/upgrade.html'>upgrade</a>(cube, params, power
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>n_gauss</strong></td><td></td>
+  <td><strong>n_gauss</strong></td><td><p>number of Gaussian</p></td>
   
 </tr>
 
@@ -1578,7 +1660,7 @@ public subroutine <a href='../proc/upgrade.html'>upgrade</a>(cube, params, power
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>dim_v</strong></td><td></td>
+  <td><strong>dim_v</strong></td><td><p>dimension along v axis</p></td>
   
 </tr>
 
@@ -1593,7 +1675,7 @@ public subroutine <a href='../proc/upgrade.html'>upgrade</a>(cube, params, power
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>maxiter</strong></td><td></td>
+  <td><strong>maxiter</strong></td><td><p>max number of iteration</p></td>
   
 </tr>
 
@@ -1608,7 +1690,7 @@ public subroutine <a href='../proc/upgrade.html'>upgrade</a>(cube, params, power
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>m</strong></td><td></td>
+  <td><strong>m</strong></td><td><p>number of corrections used in the limited memory matrix by LBFGS-B</p></td>
   
 </tr>
 
@@ -1623,7 +1705,7 @@ public subroutine <a href='../proc/upgrade.html'>upgrade</a>(cube, params, power
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>iprint</strong></td><td></td>
+  <td><strong>iprint</strong></td><td><p>print option</p></td>
   
 </tr>
 
@@ -1649,6 +1731,14 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <div class="panel-body">
        
     
+
+
+
+
+
+
+
+<p>Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)</p>
     
     <h4>Arguments</h4>
     
@@ -1674,7 +1764,7 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube</strong></td><td></td>
+  <td><strong>cube</strong></td><td><p>cube </p></td>
   
 </tr>
 
@@ -1689,7 +1779,7 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>params</strong></td><td></td>
+  <td><strong>params</strong></td><td><p>parameters cube to update</p></td>
   
 </tr>
 
@@ -1704,7 +1794,7 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>n_gauss</strong></td><td></td>
+  <td><strong>n_gauss</strong></td><td><p>Number of Gaussian</p></td>
   
 </tr>
 
@@ -1719,7 +1809,7 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>dim_v</strong></td><td></td>
+  <td><strong>dim_v</strong></td><td><p>dimension along v axis</p></td>
   
 </tr>
 
@@ -1734,7 +1824,7 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>dim_y</strong></td><td></td>
+  <td><strong>dim_y</strong></td><td><p>dimension along spatial axis y </p></td>
   
 </tr>
 
@@ -1749,7 +1839,7 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>dim_x</strong></td><td></td>
+  <td><strong>dim_x</strong></td><td><p>dimension along spatial axis x</p></td>
   
 </tr>
 
@@ -1764,7 +1854,7 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>lambda_amp</strong></td><td></td>
+  <td><strong>lambda_amp</strong></td><td><p>lambda for amplitude parameter</p></td>
   
 </tr>
 
@@ -1779,7 +1869,7 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>lambda_mu</strong></td><td></td>
+  <td><strong>lambda_mu</strong></td><td><p>lambda for mean position parameter</p></td>
   
 </tr>
 
@@ -1794,7 +1884,7 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>lambda_sig</strong></td><td></td>
+  <td><strong>lambda_sig</strong></td><td><p>lambda for dispersion parameter</p></td>
   
 </tr>
 
@@ -1809,7 +1899,7 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>maxiter</strong></td><td></td>
+  <td><strong>maxiter</strong></td><td><p>max number of iteration</p></td>
   
 </tr>
 
@@ -1824,37 +1914,7 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>m</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" ></span>real(kind=xp),</td>
-  <td>intent(in),</td>
-  <td></td>
-  
-  <td>dimension(:,:), allocatable</td><td>::</td>
-  <td><strong>kernel</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" ></span>integer,</td>
-  <td>intent(in)</td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>iprint</strong></td><td></td>
+  <td><strong>m</strong></td><td><p>number of corrections used in the limited memory matrix by LBFGS-B</p></td>
   
 </tr>
 
@@ -1869,7 +1929,37 @@ public subroutine <a href='../proc/update.html'>update</a>(cube, params, n_gauss
   <td></td>
   
   <td>dimension(:,:), allocatable</td><td>::</td>
-  <td><strong>std_map</strong></td><td></td>
+  <td><strong>kernel</strong></td><td><p>convolution kernel</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>iprint</strong></td><td><p>print option</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>dimension(:,:), allocatable</td><td>::</td>
+  <td><strong>std_map</strong></td><td><p>Standard deviation map </p></td>
   
 </tr>
 
@@ -1895,6 +1985,14 @@ public subroutine <a href='../proc/set_stdmap.html'>set_stdmap</a>(std_map, cube
   <div class="panel-body">
        
     
+
+
+
+
+
+
+
+<p>Compute the STD map of a 3D array</p>
     
     <h4>Arguments</h4>
     
@@ -1920,7 +2018,7 @@ public subroutine <a href='../proc/set_stdmap.html'>set_stdmap</a>(std_map, cube
   <td></td>
   
   <td>dimension(:,:), allocatable</td><td>::</td>
-  <td><strong>std_map</strong></td><td></td>
+  <td><strong>std_map</strong></td><td><p>standard deviation map of the cube</p></td>
   
 </tr>
 
@@ -1935,7 +2033,7 @@ public subroutine <a href='../proc/set_stdmap.html'>set_stdmap</a>(std_map, cube
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube</strong></td><td></td>
+  <td><strong>cube</strong></td><td><p>cube</p></td>
   
 </tr>
 
@@ -1950,7 +2048,7 @@ public subroutine <a href='../proc/set_stdmap.html'>set_stdmap</a>(std_map, cube
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>lb</strong></td><td></td>
+  <td><strong>lb</strong></td><td><p>lower bound </p></td>
   
 </tr>
 
@@ -1965,7 +2063,7 @@ public subroutine <a href='../proc/set_stdmap.html'>set_stdmap</a>(std_map, cube
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>ub</strong></td><td></td>
+  <td><strong>ub</strong></td><td><p>upper bound</p></td>
   
 </tr>
 

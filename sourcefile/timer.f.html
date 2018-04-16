@@ -198,11 +198,11 @@
 
     </div>
     <div class="col-md-9" id='text'>
-      
+      <p>L-BFGS-B submodule</p>
       <br>
     
       
-      
+      <br>
 
     <section class="visible-xs visible-sm hidden-md">
       
@@ -255,38 +255,39 @@
 
     <section>
       <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl"><pre><span></span><a name="ln-1"></a><span class="c">c                                                                                      </span>
-<a name="ln-2"></a><span class="c">c  L-BFGS-B is released under the “New BSD License” (aka “Modified BSD License”        </span>
-<a name="ln-3"></a><span class="c">c  or “3-clause license”)                                                              </span>
-<a name="ln-4"></a><span class="c">c  Please read attached file License.txt                                               </span>
-<a name="ln-5"></a><span class="c">c                                        </span>
-<a name="ln-6"></a><span class="nl">     </span> <span class="k">subroutine </span><span class="n">timer</span><span class="p">(</span><span class="n">ttime</span><span class="p">)</span>
-<a name="ln-7"></a><span class="nl">     </span> <span class="kt">double precision </span><span class="n">ttime</span>
-<a name="ln-8"></a><span class="c">c</span>
-<a name="ln-9"></a><span class="nl">     </span> <span class="kt">real </span><span class="n">temp</span>
-<a name="ln-10"></a><span class="c">c</span>
-<a name="ln-11"></a><span class="c">c     This routine computes cpu time in double precision; it makes use of </span>
-<a name="ln-12"></a><span class="c">c     the intrinsic f90 cpu_time therefore a conversion type is</span>
-<a name="ln-13"></a><span class="c">c     needed.</span>
-<a name="ln-14"></a><span class="c">c</span>
-<a name="ln-15"></a><span class="c">c           J.L Morales  Departamento de Matematicas, </span>
-<a name="ln-16"></a><span class="c">c                        Instituto Tecnologico Autonomo de Mexico</span>
-<a name="ln-17"></a><span class="c">c                        Mexico D.F.</span>
-<a name="ln-18"></a><span class="c">c</span>
-<a name="ln-19"></a><span class="c">c           J.L Nocedal  Department of Electrical Engineering and</span>
-<a name="ln-20"></a><span class="c">c                        Computer Science.</span>
-<a name="ln-21"></a><span class="c">c                        Northwestern University. Evanston, IL. USA</span>
-<a name="ln-22"></a><span class="c">c                         </span>
-<a name="ln-23"></a><span class="c">c                        January 21, 2011</span>
-<a name="ln-24"></a><span class="c">c</span>
-<a name="ln-25"></a><span class="nl">     </span> <span class="n">temp</span> <span class="o">=</span> <span class="nb">sngl</span><span class="p">(</span><span class="n">ttime</span><span class="p">)</span>
-<a name="ln-26"></a><span class="nl">     </span> <span class="k">call </span><span class="nb">cpu_time</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
-<a name="ln-27"></a><span class="nl">     </span> <span class="n">ttime</span> <span class="o">=</span> <span class="nb">dble</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span> 
-<a name="ln-28"></a>
-<a name="ln-29"></a><span class="nl">     </span> <span class="k">return</span>
-<a name="ln-30"></a>
-<a name="ln-31"></a><span class="nl">     </span> <span class="k">end</span>
-<a name="ln-32"></a><span class="nl">     </span> 
+    <div class="hl"><pre><span></span><a name="ln-1"></a><span class="c">!! L-BFGS-B submodule</span>
+<a name="ln-2"></a><span class="c">c                                                                                      </span>
+<a name="ln-3"></a><span class="c">c  L-BFGS-B is released under the “New BSD License” (aka “Modified BSD License”        </span>
+<a name="ln-4"></a><span class="c">c  or “3-clause license”)                                                              </span>
+<a name="ln-5"></a><span class="c">c  Please read attached file License.txt                                               </span>
+<a name="ln-6"></a><span class="c">c                                        </span>
+<a name="ln-7"></a><span class="nl">     </span> <span class="k">subroutine </span><span class="n">timer</span><span class="p">(</span><span class="n">ttime</span><span class="p">)</span>
+<a name="ln-8"></a><span class="nl">     </span> <span class="kt">double precision </span><span class="n">ttime</span>
+<a name="ln-9"></a><span class="c">c</span>
+<a name="ln-10"></a><span class="nl">     </span> <span class="kt">real </span><span class="n">temp</span>
+<a name="ln-11"></a><span class="c">c</span>
+<a name="ln-12"></a><span class="c">c     This routine computes cpu time in double precision; it makes use of </span>
+<a name="ln-13"></a><span class="c">c     the intrinsic f90 cpu_time therefore a conversion type is</span>
+<a name="ln-14"></a><span class="c">c     needed.</span>
+<a name="ln-15"></a><span class="c">c</span>
+<a name="ln-16"></a><span class="c">c           J.L Morales  Departamento de Matematicas, </span>
+<a name="ln-17"></a><span class="c">c                        Instituto Tecnologico Autonomo de Mexico</span>
+<a name="ln-18"></a><span class="c">c                        Mexico D.F.</span>
+<a name="ln-19"></a><span class="c">c</span>
+<a name="ln-20"></a><span class="c">c           J.L Nocedal  Department of Electrical Engineering and</span>
+<a name="ln-21"></a><span class="c">c                        Computer Science.</span>
+<a name="ln-22"></a><span class="c">c                        Northwestern University. Evanston, IL. USA</span>
+<a name="ln-23"></a><span class="c">c                         </span>
+<a name="ln-24"></a><span class="c">c                        January 21, 2011</span>
+<a name="ln-25"></a><span class="c">c</span>
+<a name="ln-26"></a><span class="nl">     </span> <span class="n">temp</span> <span class="o">=</span> <span class="nb">sngl</span><span class="p">(</span><span class="n">ttime</span><span class="p">)</span>
+<a name="ln-27"></a><span class="nl">     </span> <span class="k">call </span><span class="nb">cpu_time</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+<a name="ln-28"></a><span class="nl">     </span> <span class="n">ttime</span> <span class="o">=</span> <span class="nb">dble</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span> 
+<a name="ln-29"></a>
+<a name="ln-30"></a><span class="nl">     </span> <span class="k">return</span>
+<a name="ln-31"></a>
+<a name="ln-32"></a><span class="nl">     </span> <span class="k">end</span>
+<a name="ln-33"></a><span class="nl">     </span> 
 </pre></div>
 
     </section>

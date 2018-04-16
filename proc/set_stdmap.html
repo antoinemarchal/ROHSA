@@ -124,7 +124,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title=" 0.6% of total for procedures.">16 statements</a>
+	  title=" 0.7% of total for procedures.">17 statements</a>
      </li> 
      
      
@@ -203,6 +203,8 @@ public subroutine set_stdmap(std_map, cube, lb, ub)
 
 
     
+    <p>Compute the STD map of a 3D array</p>
+    
 
     <h3>Arguments</h3>
     
@@ -227,7 +229,7 @@ public subroutine set_stdmap(std_map, cube, lb, ub)
   <td></td>
   
   <td>dimension(:,:), allocatable</td><td>::</td>
-  <td><strong>std_map</strong></td><td></td>
+  <td><strong>std_map</strong></td><td><p>standard deviation map of the cube</p></td>
   
 </tr>
 
@@ -242,7 +244,7 @@ public subroutine set_stdmap(std_map, cube, lb, ub)
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube</strong></td><td></td>
+  <td><strong>cube</strong></td><td><p>cube</p></td>
   
 </tr>
 
@@ -257,7 +259,7 @@ public subroutine set_stdmap(std_map, cube, lb, ub)
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>lb</strong></td><td></td>
+  <td><strong>lb</strong></td><td><p>lower bound </p></td>
   
 </tr>
 
@@ -272,7 +274,7 @@ public subroutine set_stdmap(std_map, cube, lb, ub)
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>ub</strong></td><td></td>
+  <td><strong>ub</strong></td><td><p>upper bound</p></td>
   
 </tr>
 
@@ -548,12 +550,16 @@ public subroutine set_stdmap(std_map, cube, lb, ub)
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">set_stdmap</span><span class="p">(</span><span class="n">std_map</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+    <span class="c">!! Compute the STD map of a 3D array</span>
     <span class="k">implicit none</span>
 
-<span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">std_map</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">line</span>
+<span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lb</span> <span class="c">!! lower bound </span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">ub</span> <span class="c">!! upper bound</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span> <span class="c">!! cube</span>
+
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">std_map</span> <span class="c">!! standard deviation map of the cube</span>
+
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">line</span> 
     <span class="kt">integer</span><span class="p">,</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_cube</span>
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> 
 

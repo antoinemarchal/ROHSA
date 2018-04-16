@@ -198,7 +198,7 @@
 
     </div>
     <div class="col-md-9" id='text'>
-      
+      <p>This module contains tools (convolution/ravel) to manipulate 2D/3Darray </p>
       <br>
     
     <div class="panel panel-default">
@@ -326,7 +326,7 @@
 </g>
 </g>
 <!-- sourcefile~mod_functions.f90&#45;&gt;sourcefile~mod_optimize.f90 -->
-<g id="sourcefile~~mod_array.f90~~AfferentGraph_edge5" class="edge">
+<g id="sourcefile~~mod_array.f90~~AfferentGraph_edge6" class="edge">
 <title>sourcefile~mod_functions.f90&#45;&gt;sourcefile~mod_optimize.f90</title>
 <path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M209.956,-24.9276C201.7686,-24.9276 193.028,-24.9276 184.5369,-24.9276"/>
 <polygon fill="#000000" stroke="#000000" points="184.3571,-21.4277 174.3571,-24.9276 184.357,-28.4277 184.3571,-21.4277"/>
@@ -352,7 +352,7 @@
 <polygon fill="#000000" stroke="#000000" points="297.2235,-21.4277 287.2235,-24.9276 297.2234,-28.4277 297.2235,-21.4277"/>
 </g>
 <!-- sourcefile~main.f90&#45;&gt;sourcefile~mod_optimize.f90 -->
-<g id="sourcefile~~mod_array.f90~~AfferentGraph_edge6" class="edge">
+<g id="sourcefile~~mod_array.f90~~AfferentGraph_edge5" class="edge">
 <title>sourcefile~main.f90&#45;&gt;sourcefile~mod_optimize.f90</title>
 <path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M322.8835,-13.7634C311.9376,-9.822 299.0631,-5.8851 287,-3.9276 253.2197,1.5542 243.8914,.8191 210,-3.9276 200.4407,-5.2664 190.3802,-7.5396 180.8749,-10.1083"/>
 <polygon fill="#000000" stroke="#000000" points="179.8702,-6.7552 171.2147,-12.8652 181.7913,-13.4864 179.8702,-6.7552"/>
@@ -455,143 +455,145 @@
 
     <section>
       <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl"><pre><span></span><a name="ln-1"></a><span class="k">module </span><span class="n">mod_array</span>
-<a name="ln-2"></a>  <span class="k">use </span><span class="n">mod_constants</span>
-<a name="ln-3"></a>  <span class="k">implicit none</span>
-<a name="ln-4"></a>
-<a name="ln-5"></a><span class="k">  private</span>
+    <div class="hl"><pre><span></span><a name="ln-1"></a><span class="c">!! This module contains tools (convolution/ravel) to manipulate 2D/3Darray </span>
+<a name="ln-2"></a><span class="k">module </span><span class="n">mod_array</span>
+<a name="ln-3"></a>  <span class="c">!! This module contains tools (convolution/ravel) to manipulate 2D/3Darray </span>
+<a name="ln-4"></a>  <span class="k">use </span><span class="n">mod_constants</span>
+<a name="ln-5"></a>  <span class="k">implicit none</span>
 <a name="ln-6"></a>
-<a name="ln-7"></a><span class="k">  public</span> <span class="kd">::</span> <span class="n">convolution_2D_mirror</span><span class="p">,</span> <span class="n">ravel_3D</span><span class="p">,</span> <span class="n">unravel_3D</span>
-<a name="ln-8"></a>  
-<a name="ln-9"></a><span class="k">contains</span>
-<a name="ln-10"></a>
-<a name="ln-11"></a><span class="k">  subroutine </span><span class="n">convolution_2D_mirror</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">conv</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">dim_k</span><span class="p">)</span>
-<a name="ln-12"></a>    <span class="k">implicit none</span>
-<a name="ln-13"></a>
-<a name="ln-14"></a><span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">image</span>
-<a name="ln-15"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">conv</span>
-<a name="ln-16"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">kernel</span>
-<a name="ln-17"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">dim_k</span>
-<a name="ln-18"></a>
-<a name="ln-19"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">mm</span><span class="p">,</span> <span class="n">nn</span>
-<a name="ln-20"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">kCenterY</span><span class="p">,</span> <span class="n">kCenterX</span>
-<a name="ln-21"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">ext_conv</span><span class="p">,</span> <span class="n">extended</span>
-<a name="ln-22"></a>
-<a name="ln-23"></a>    <span class="k">allocate</span><span class="p">(</span><span class="n">ext_conv</span><span class="p">(</span><span class="n">dim_y</span><span class="o">+</span><span class="mi">4</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">4</span><span class="p">))</span>
-<a name="ln-24"></a>    <span class="k">allocate</span><span class="p">(</span><span class="n">extended</span><span class="p">(</span><span class="n">dim_y</span><span class="o">+</span><span class="mi">4</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">4</span><span class="p">))</span>
-<a name="ln-25"></a>
-<a name="ln-26"></a>    <span class="n">ii</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jj</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">mm</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">nn</span> <span class="o">=</span> <span class="mi">0</span>
-<a name="ln-27"></a>    <span class="n">kCenterY</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">kCenterX</span> <span class="o">=</span> <span class="mi">0</span>
-<a name="ln-28"></a>    <span class="n">ext_conv</span> <span class="o">=</span> <span class="mf">0._xp</span>
-<a name="ln-29"></a>    <span class="n">extended</span> <span class="o">=</span> <span class="mf">0._xp</span>
-<a name="ln-30"></a>    
-<a name="ln-31"></a>    <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
-<a name="ln-32"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
-<a name="ln-33"></a>          <span class="n">extended</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
-<a name="ln-34"></a>       <span class="k">end do</span>
-<a name="ln-35"></a><span class="k">    end do</span>
-<a name="ln-36"></a>
-<a name="ln-37"></a><span class="k">    do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
-<a name="ln-38"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
-<a name="ln-39"></a>          <span class="n">extended</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
-<a name="ln-40"></a>       <span class="k">end do</span>
-<a name="ln-41"></a><span class="k">    end do</span>
-<a name="ln-42"></a><span class="k">    </span>
-<a name="ln-43"></a><span class="k">    do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
-<a name="ln-44"></a>       <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
-<a name="ln-45"></a>          <span class="n">extended</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
-<a name="ln-46"></a>       <span class="k">end do</span>
-<a name="ln-47"></a><span class="k">    end do</span>
-<a name="ln-48"></a>
-<a name="ln-49"></a><span class="k">    do </span><span class="n">j</span><span class="o">=</span><span class="n">dim_x</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">2</span>
-<a name="ln-50"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
-<a name="ln-51"></a>          <span class="n">extended</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
-<a name="ln-52"></a>       <span class="k">end do</span>
-<a name="ln-53"></a><span class="k">    end do</span>
-<a name="ln-54"></a>
-<a name="ln-55"></a><span class="k">    do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
-<a name="ln-56"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="n">dim_y</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span><span class="o">+</span><span class="mi">2</span>
-<a name="ln-57"></a>          <span class="n">extended</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
-<a name="ln-58"></a>       <span class="k">end do</span>
-<a name="ln-59"></a><span class="k">    end do</span>
-<a name="ln-60"></a><span class="k">    </span>
-<a name="ln-61"></a><span class="k">    </span><span class="n">kCenterY</span> <span class="o">=</span> <span class="n">dim_k</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
-<a name="ln-62"></a>    <span class="n">kCenterX</span> <span class="o">=</span> <span class="n">kCenterY</span>
-<a name="ln-63"></a>
-<a name="ln-64"></a>    <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">4</span>
-<a name="ln-65"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span><span class="o">+</span><span class="mi">4</span>
-<a name="ln-66"></a>          <span class="k">do </span><span class="n">m</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_k</span>
-<a name="ln-67"></a>             <span class="n">mm</span> <span class="o">=</span> <span class="n">dim_k</span> <span class="o">-</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span>
-<a name="ln-68"></a>             
-<a name="ln-69"></a>             <span class="k">do </span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_k</span>
-<a name="ln-70"></a>                <span class="n">nn</span> <span class="o">=</span> <span class="n">dim_k</span> <span class="o">-</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
-<a name="ln-71"></a>
-<a name="ln-72"></a>                <span class="n">ii</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">m</span> <span class="o">-</span> <span class="n">kCenterY</span><span class="p">)</span>
-<a name="ln-73"></a>                <span class="n">jj</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">kCenterX</span><span class="p">)</span>
-<a name="ln-74"></a>                
-<a name="ln-75"></a>                <span class="k">if</span><span class="p">(</span> <span class="n">ii</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">ii</span> <span class="o">&lt;</span> <span class="n">dim_y</span><span class="o">+</span><span class="mi">4</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">jj</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">jj</span> <span class="o">&lt;</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">4</span> <span class="p">)</span> <span class="k">then</span>
-<a name="ln-76"></a><span class="k">                   </span><span class="n">ext_conv</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">ext_conv</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="n">extended</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">)</span> <span class="o">*</span> <span class="n">kernel</span><span class="p">(</span><span class="n">mm</span><span class="p">,</span><span class="n">nn</span><span class="p">)</span>
-<a name="ln-77"></a>                <span class="k">end if</span>
-<a name="ln-78"></a><span class="k">             end do</span>
-<a name="ln-79"></a><span class="k">             </span>
-<a name="ln-80"></a><span class="k">          end do</span>
-<a name="ln-81"></a><span class="k">       end do</span>
-<a name="ln-82"></a><span class="k">    end do</span>
-<a name="ln-83"></a>
-<a name="ln-84"></a><span class="k">    do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
-<a name="ln-85"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
-<a name="ln-86"></a>          <span class="n">conv</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">ext_conv</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span>
-<a name="ln-87"></a>       <span class="k">end do</span>
-<a name="ln-88"></a><span class="k">    end do    </span>
-<a name="ln-89"></a><span class="k">    </span>
-<a name="ln-90"></a><span class="k">  end subroutine </span><span class="n">convolution_2D_mirror</span>
-<a name="ln-91"></a>
-<a name="ln-92"></a>
-<a name="ln-93"></a>  <span class="c">! Return a contiguous flattened 1D array from a 3D array</span>
-<a name="ln-94"></a>  <span class="k">subroutine </span><span class="n">ravel_3D</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span> <span class="n">vector</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
-<a name="ln-95"></a>    <span class="k">implicit none</span>
-<a name="ln-96"></a>
-<a name="ln-97"></a><span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span>
-<a name="ln-98"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>
-<a name="ln-99"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">vector</span>
-<a name="ln-100"></a>
-<a name="ln-101"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">i__</span>
+<a name="ln-7"></a><span class="k">  private</span>
+<a name="ln-8"></a>
+<a name="ln-9"></a><span class="k">  public</span> <span class="kd">::</span> <span class="n">convolution_2D_mirror</span><span class="p">,</span> <span class="n">ravel_3D</span><span class="p">,</span> <span class="n">unravel_3D</span>
+<a name="ln-10"></a>  
+<a name="ln-11"></a><span class="k">contains</span>
+<a name="ln-12"></a>
+<a name="ln-13"></a><span class="k">  subroutine </span><span class="n">convolution_2D_mirror</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">conv</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">dim_k</span><span class="p">)</span>
+<a name="ln-14"></a>    <span class="k">implicit none</span>
+<a name="ln-15"></a>
+<a name="ln-16"></a><span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">image</span>
+<a name="ln-17"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">conv</span>
+<a name="ln-18"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">kernel</span>
+<a name="ln-19"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">dim_k</span>
+<a name="ln-20"></a>
+<a name="ln-21"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">ii</span><span class="p">,</span> <span class="n">jj</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">mm</span><span class="p">,</span> <span class="n">nn</span>
+<a name="ln-22"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">kCenterY</span><span class="p">,</span> <span class="n">kCenterX</span>
+<a name="ln-23"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">ext_conv</span><span class="p">,</span> <span class="n">extended</span>
+<a name="ln-24"></a>
+<a name="ln-25"></a>    <span class="k">allocate</span><span class="p">(</span><span class="n">ext_conv</span><span class="p">(</span><span class="n">dim_y</span><span class="o">+</span><span class="mi">4</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">4</span><span class="p">))</span>
+<a name="ln-26"></a>    <span class="k">allocate</span><span class="p">(</span><span class="n">extended</span><span class="p">(</span><span class="n">dim_y</span><span class="o">+</span><span class="mi">4</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">4</span><span class="p">))</span>
+<a name="ln-27"></a>
+<a name="ln-28"></a>    <span class="n">ii</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jj</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">mm</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">nn</span> <span class="o">=</span> <span class="mi">0</span>
+<a name="ln-29"></a>    <span class="n">kCenterY</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">kCenterX</span> <span class="o">=</span> <span class="mi">0</span>
+<a name="ln-30"></a>    <span class="n">ext_conv</span> <span class="o">=</span> <span class="mf">0._xp</span>
+<a name="ln-31"></a>    <span class="n">extended</span> <span class="o">=</span> <span class="mf">0._xp</span>
+<a name="ln-32"></a>    
+<a name="ln-33"></a>    <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-34"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-35"></a>          <span class="n">extended</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+<a name="ln-36"></a>       <span class="k">end do</span>
+<a name="ln-37"></a><span class="k">    end do</span>
+<a name="ln-38"></a>
+<a name="ln-39"></a><span class="k">    do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+<a name="ln-40"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-41"></a>          <span class="n">extended</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+<a name="ln-42"></a>       <span class="k">end do</span>
+<a name="ln-43"></a><span class="k">    end do</span>
+<a name="ln-44"></a><span class="k">    </span>
+<a name="ln-45"></a><span class="k">    do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+<a name="ln-46"></a>       <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-47"></a>          <span class="n">extended</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+<a name="ln-48"></a>       <span class="k">end do</span>
+<a name="ln-49"></a><span class="k">    end do</span>
+<a name="ln-50"></a>
+<a name="ln-51"></a><span class="k">    do </span><span class="n">j</span><span class="o">=</span><span class="n">dim_x</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">2</span>
+<a name="ln-52"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-53"></a>          <span class="n">extended</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<a name="ln-54"></a>       <span class="k">end do</span>
+<a name="ln-55"></a><span class="k">    end do</span>
+<a name="ln-56"></a>
+<a name="ln-57"></a><span class="k">    do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-58"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="n">dim_y</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span><span class="o">+</span><span class="mi">2</span>
+<a name="ln-59"></a>          <span class="n">extended</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+<a name="ln-60"></a>       <span class="k">end do</span>
+<a name="ln-61"></a><span class="k">    end do</span>
+<a name="ln-62"></a><span class="k">    </span>
+<a name="ln-63"></a><span class="k">    </span><span class="n">kCenterY</span> <span class="o">=</span> <span class="n">dim_k</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
+<a name="ln-64"></a>    <span class="n">kCenterX</span> <span class="o">=</span> <span class="n">kCenterY</span>
+<a name="ln-65"></a>
+<a name="ln-66"></a>    <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">4</span>
+<a name="ln-67"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span><span class="o">+</span><span class="mi">4</span>
+<a name="ln-68"></a>          <span class="k">do </span><span class="n">m</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_k</span>
+<a name="ln-69"></a>             <span class="n">mm</span> <span class="o">=</span> <span class="n">dim_k</span> <span class="o">-</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span>
+<a name="ln-70"></a>             
+<a name="ln-71"></a>             <span class="k">do </span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_k</span>
+<a name="ln-72"></a>                <span class="n">nn</span> <span class="o">=</span> <span class="n">dim_k</span> <span class="o">-</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+<a name="ln-73"></a>
+<a name="ln-74"></a>                <span class="n">ii</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">m</span> <span class="o">-</span> <span class="n">kCenterY</span><span class="p">)</span>
+<a name="ln-75"></a>                <span class="n">jj</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">kCenterX</span><span class="p">)</span>
+<a name="ln-76"></a>                
+<a name="ln-77"></a>                <span class="k">if</span><span class="p">(</span> <span class="n">ii</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">ii</span> <span class="o">&lt;</span> <span class="n">dim_y</span><span class="o">+</span><span class="mi">4</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">jj</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">jj</span> <span class="o">&lt;</span> <span class="n">dim_x</span><span class="o">+</span><span class="mi">4</span> <span class="p">)</span> <span class="k">then</span>
+<a name="ln-78"></a><span class="k">                   </span><span class="n">ext_conv</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">ext_conv</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="n">extended</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">)</span> <span class="o">*</span> <span class="n">kernel</span><span class="p">(</span><span class="n">mm</span><span class="p">,</span><span class="n">nn</span><span class="p">)</span>
+<a name="ln-79"></a>                <span class="k">end if</span>
+<a name="ln-80"></a><span class="k">             end do</span>
+<a name="ln-81"></a><span class="k">             </span>
+<a name="ln-82"></a><span class="k">          end do</span>
+<a name="ln-83"></a><span class="k">       end do</span>
+<a name="ln-84"></a><span class="k">    end do</span>
+<a name="ln-85"></a>
+<a name="ln-86"></a><span class="k">    do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-87"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-88"></a>          <span class="n">conv</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">ext_conv</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="o">+</span><span class="n">j</span><span class="p">)</span>
+<a name="ln-89"></a>       <span class="k">end do</span>
+<a name="ln-90"></a><span class="k">    end do    </span>
+<a name="ln-91"></a><span class="k">    </span>
+<a name="ln-92"></a><span class="k">  end subroutine </span><span class="n">convolution_2D_mirror</span>
+<a name="ln-93"></a>
+<a name="ln-94"></a>
+<a name="ln-95"></a>  <span class="c">! Return a contiguous flattened 1D array from a 3D array</span>
+<a name="ln-96"></a>  <span class="k">subroutine </span><span class="n">ravel_3D</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span> <span class="n">vector</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
+<a name="ln-97"></a>    <span class="k">implicit none</span>
+<a name="ln-98"></a>
+<a name="ln-99"></a><span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-100"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>
+<a name="ln-101"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">vector</span>
 <a name="ln-102"></a>
-<a name="ln-103"></a>    <span class="n">i__</span> <span class="o">=</span> <span class="mi">1</span>
-<a name="ln-104"></a>    
-<a name="ln-105"></a>    <span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
-<a name="ln-106"></a>       <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
-<a name="ln-107"></a>          <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_v</span>
-<a name="ln-108"></a>             <span class="n">vector</span><span class="p">(</span><span class="n">i__</span><span class="p">)</span> <span class="o">=</span> <span class="n">cube</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">)</span>
-<a name="ln-109"></a>             <span class="n">i__</span> <span class="o">=</span> <span class="n">i__</span> <span class="o">+</span> <span class="mi">1</span>
-<a name="ln-110"></a>          <span class="k">end do</span>
-<a name="ln-111"></a><span class="k">       end do</span>
-<a name="ln-112"></a><span class="k">    end do</span>
-<a name="ln-113"></a><span class="k">  end subroutine </span><span class="n">ravel_3D</span>
-<a name="ln-114"></a>
-<a name="ln-115"></a>  <span class="c">! Return a 3D array from a contiguous flattened 1D array </span>
-<a name="ln-116"></a>  <span class="k">subroutine </span><span class="n">unravel_3D</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
-<a name="ln-117"></a>    <span class="k">implicit none</span>
-<a name="ln-118"></a>
-<a name="ln-119"></a><span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span>
-<a name="ln-120"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">vector</span>
-<a name="ln-121"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>
-<a name="ln-122"></a>
-<a name="ln-123"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">i__</span>
+<a name="ln-103"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">i__</span>
+<a name="ln-104"></a>
+<a name="ln-105"></a>    <span class="n">i__</span> <span class="o">=</span> <span class="mi">1</span>
+<a name="ln-106"></a>    
+<a name="ln-107"></a>    <span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-108"></a>       <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-109"></a>          <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_v</span>
+<a name="ln-110"></a>             <span class="n">vector</span><span class="p">(</span><span class="n">i__</span><span class="p">)</span> <span class="o">=</span> <span class="n">cube</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">)</span>
+<a name="ln-111"></a>             <span class="n">i__</span> <span class="o">=</span> <span class="n">i__</span> <span class="o">+</span> <span class="mi">1</span>
+<a name="ln-112"></a>          <span class="k">end do</span>
+<a name="ln-113"></a><span class="k">       end do</span>
+<a name="ln-114"></a><span class="k">    end do</span>
+<a name="ln-115"></a><span class="k">  end subroutine </span><span class="n">ravel_3D</span>
+<a name="ln-116"></a>
+<a name="ln-117"></a>  <span class="c">! Return a 3D array from a contiguous flattened 1D array </span>
+<a name="ln-118"></a>  <span class="k">subroutine </span><span class="n">unravel_3D</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
+<a name="ln-119"></a>    <span class="k">implicit none</span>
+<a name="ln-120"></a>
+<a name="ln-121"></a><span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-122"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">vector</span>
+<a name="ln-123"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>
 <a name="ln-124"></a>
-<a name="ln-125"></a>    <span class="n">i__</span> <span class="o">=</span> <span class="mi">1</span>
-<a name="ln-126"></a>    
-<a name="ln-127"></a>    <span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
-<a name="ln-128"></a>       <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
-<a name="ln-129"></a>          <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_v</span>
-<a name="ln-130"></a>             <span class="n">cube</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">)</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">i__</span><span class="p">)</span>
-<a name="ln-131"></a>             <span class="n">i__</span> <span class="o">=</span> <span class="n">i__</span> <span class="o">+</span> <span class="mi">1</span>
-<a name="ln-132"></a>          <span class="k">end do</span>
-<a name="ln-133"></a><span class="k">       end do</span>
-<a name="ln-134"></a><span class="k">    end do</span>
-<a name="ln-135"></a><span class="k">  end subroutine </span><span class="n">unravel_3D</span>
-<a name="ln-136"></a>
-<a name="ln-137"></a><span class="k">end module </span><span class="n">mod_array</span>
+<a name="ln-125"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">i__</span>
+<a name="ln-126"></a>
+<a name="ln-127"></a>    <span class="n">i__</span> <span class="o">=</span> <span class="mi">1</span>
+<a name="ln-128"></a>    
+<a name="ln-129"></a>    <span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-130"></a>       <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-131"></a>          <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_v</span>
+<a name="ln-132"></a>             <span class="n">cube</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">)</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">i__</span><span class="p">)</span>
+<a name="ln-133"></a>             <span class="n">i__</span> <span class="o">=</span> <span class="n">i__</span> <span class="o">+</span> <span class="mi">1</span>
+<a name="ln-134"></a>          <span class="k">end do</span>
+<a name="ln-135"></a><span class="k">       end do</span>
+<a name="ln-136"></a><span class="k">    end do</span>
+<a name="ln-137"></a><span class="k">  end subroutine </span><span class="n">unravel_3D</span>
+<a name="ln-138"></a>
+<a name="ln-139"></a><span class="k">end module </span><span class="n">mod_array</span>
 </pre></div>
 
     </section>

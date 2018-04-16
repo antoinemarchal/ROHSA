@@ -1,3 +1,4 @@
+!! L-BFGS-B submodule
 c                                                                                      
 c  L-BFGS-B is released under the “New BSD License” (aka “Modified BSD License”        
 c  or “3-clause license”)                                                              
@@ -11,8 +12,7 @@ c     **********
 c
 c     Function dnrm2
 c
-c     Given a vector x of length n, this function calculates the
-c     Euclidean norm of x with stride incx.
+!!     Given a vector x of length n, this function calculates the Euclidean norm of x with stride incx.
 c
 c     The function statement is
 c
@@ -62,11 +62,10 @@ c     **********
 c====================== The end of dnrm2 ===============================
 
       subroutine daxpy(n,da,dx,incx,dy,incy)
-c
-c     constant times a vector plus a vector.
-c     uses unrolled loops for increments equal to one.
-c     jack dongarra, linpack, 3/11/78.
-c
+         !! constant times a vector plus a vector.
+         !! uses unrolled loops for increments equal to one.
+         !!     jack dongarra, linpack, 3/11/78.
+c     
       double precision dx(*),dy(*),da
       integer i,incx,incy,ix,iy,m,mp1,n
 c

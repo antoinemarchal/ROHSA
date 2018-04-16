@@ -1,3 +1,4 @@
+!! Regularized Optimization for Hypers-spectral Analysis (ROHSA)
 program ROHSA
 
   use mod_constants
@@ -9,36 +10,45 @@ program ROHSA
   
   implicit none
 
-  real(xp), dimension(:,:,:), allocatable :: data       !initial fits data
-  real(xp), dimension(:,:,:), allocatable :: cube       !reshape data with nside --> cube
-  real(xp), dimension(:,:,:), allocatable :: cube_mean  !mean cube over spatial axis
-  real(xp), dimension(:,:,:), allocatable :: fit_params !fit parameters
-  real(xp), dimension(:,:,:), allocatable :: grid_params
-  real(xp), dimension(:,:), allocatable :: std_map
-  real(xp), dimension(:,:), allocatable :: std_cube
+  real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
+  real(xp), dimension(:,:,:), allocatable :: cube        !! reshape data with nside --> cube
+  real(xp), dimension(:,:,:), allocatable :: cube_mean   !! mean cube over spatial axis
+  real(xp), dimension(:,:,:), allocatable :: fit_params  !! parameters to optimize with cube mean at each iteration
+  real(xp), dimension(:,:,:), allocatable :: grid_params !! parameters to optimize at final step (dim of initial cube)
+  real(xp), dimension(:,:), allocatable :: std_map       !! standard deviation map fo the cube computed by ROHSA with lb and ub
+  real(xp), dimension(:,:), allocatable :: std_cube      !! standard deviation map fo the cube is given by the user 
 
-  integer, dimension(3) :: dim_data !dimension of original data
-  integer, dimension(3) :: dim_cube !dimension of reshape cube
+  integer, dimension(3) :: dim_data !! dimension of original data
+  integer, dimension(3) :: dim_cube !! dimension of reshape cube
 
-  real(xp), dimension(:,:), allocatable :: kernel
+  real(xp), dimension(:,:), allocatable :: kernel !! convolution kernel 
 
-  integer :: nside !size of the reshaped data (2**nside)
-  integer :: n, power
-  integer :: n_gauss !max number of gaussian to fit
-  integer :: m
-  integer :: lstd, ustd
-  integer :: iprint, iprint_init
-  integer :: maxiter, maxiter_init ! max iter for L-BFGS-B alogorithm
-  real(xp) :: lambda_amp, lambda_mu, lambda_sig
+  integer :: ios=0 !! ios integer
+  integer :: i     !! loop index
+  integer :: j     !! loop index
+  integer :: k     !! loop index
 
-  character(len=512) :: filename_parameters
-  character(len=512) :: filename
-  character(len=512) :: fileout
-  character(len=512) :: filename_noise
+  logical :: noise        !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
+  logical :: regul        !! if true --> activate regulation
+  integer :: nside        !! size of the reshaped data \(2^{nside}\)
+  integer :: n            !! loop index
+  integer :: power        !! loop index
+  integer :: n_gauss      !! number of gaussian to fit
+  integer :: m            !! number of corrections used in the limited memory matrix by LBFGS-B
+  integer :: lstd         !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
+  integer :: ustd         !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
+  integer :: iprint       !! print option 
+  integer :: iprint_init  !! print option init
+  integer :: maxiter      !! max iteration for L-BFGS-B alogorithm
+  integer :: maxiter_init !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
+  real(xp) :: lambda_amp  !! lambda for amplitude parameter
+  real(xp) :: lambda_mu   !! lamnda for mean position parameter
+  real(xp) :: lambda_sig  !! lambda for dispersion parameter
 
-  logical :: noise, regul
-
-  integer :: ios=0, i, j, k
+  character(len=512) :: filename_parameters !! name of the parameters file (default parameters.txt)
+  character(len=512) :: filename            !! name of the data file
+  character(len=512) :: fileout             !! name of the output result
+  character(len=512) :: filename_noise      !! name of the file with STD map (if noise .eq. true)
 
   !Print header and get filename in argument
   call header()

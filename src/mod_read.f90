@@ -1,4 +1,6 @@
+!! This module read the input user parameters (parameters.txt file / data / noise if true)
 module mod_read
+  !! This module read the input user parameters (parameters.txt file / data / noise if true)
   use mod_constants
   
   implicit none

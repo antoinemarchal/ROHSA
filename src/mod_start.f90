@@ -1,4 +1,6 @@
+!! Header/ender call module
 module mod_start
+  !! Header/ender call module
   implicit none
   
   private
@@ -10,12 +12,21 @@ contains
   subroutine header()
     implicit none
 
-    write(*,*) "##################################################################"
+    write(*,*) "-------------------------------------------------------------------------"
     call timestamp()
     write(*,*) ""
-    write(*,*) "                        ROHSA ALGORITHM"                   
+    write(*,*) "  ____     ___    _   _   ____       _    "
+    write(*,*) " |  _ \   / _ \  | | | | / ___|     / \   "
+    write(*,*) " | |_) | | | | | | |_| | \___ \    / _ \  "
+    write(*,*) " |  _ <  | |_| | |  _  |  ___) |  / ___ \ "
+    write(*,*) " |_| \_\  \___/  |_| |_| |____/  /_/   \_\ "
     write(*,*) ""
-    write(*,*) "##################################################################"
+    write(*,*) " Version 1.0.0"
+    write(*,*) " ROHSA is released as open source code"
+    write(*,*) " Check out the documentation: https://antoinemarchal.github.io/ROHSA/"
+    write(*,*) ""
+    write(*,*) "run: ./ROHSA parameters.txt"
+    write(*,*) "-------------------------------------------------------------------------"
   end subroutine header
 
   

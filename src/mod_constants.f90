@@ -1,4 +1,6 @@
+!! This module define physical and numerical constant used by ROHSA
 module mod_constants
+  !! This module define physical and numerical constant used by ROHSA
   use, intrinsic :: iso_fortran_env
   implicit none
 

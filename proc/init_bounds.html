@@ -124,7 +124,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title=" 0.7% of total for procedures.">18 statements</a>
+	  title=" 0.8% of total for procedures.">20 statements</a>
      </li> 
      
      
@@ -203,6 +203,8 @@ private subroutine init_bounds(line, n_gauss, dim_v, lb, ub)
 
 
     
+    <p>Initialize parameters bounds for optimization</p>
+    
 
     <h3>Arguments</h3>
     
@@ -227,7 +229,7 @@ private subroutine init_bounds(line, n_gauss, dim_v, lb, ub)
   <td></td>
   
   <td>dimension(dim_v)</td><td>::</td>
-  <td><strong>line</strong></td><td></td>
+  <td><strong>line</strong></td><td><p>spectrum   </p></td>
   
 </tr>
 
@@ -242,7 +244,7 @@ private subroutine init_bounds(line, n_gauss, dim_v, lb, ub)
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>n_gauss</strong></td><td></td>
+  <td><strong>n_gauss</strong></td><td><p>number of Gaussian</p></td>
   
 </tr>
 
@@ -257,7 +259,7 @@ private subroutine init_bounds(line, n_gauss, dim_v, lb, ub)
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>dim_v</strong></td><td></td>
+  <td><strong>dim_v</strong></td><td><p>dimension along v axis</p></td>
   
 </tr>
 
@@ -272,7 +274,7 @@ private subroutine init_bounds(line, n_gauss, dim_v, lb, ub)
   <td></td>
   
   <td>dimension(3*n_gauss)</td><td>::</td>
-  <td><strong>lb</strong></td><td></td>
+  <td><strong>lb</strong></td><td><p>lower bounds</p></td>
   
 </tr>
 
@@ -287,7 +289,7 @@ private subroutine init_bounds(line, n_gauss, dim_v, lb, ub)
   <td></td>
   
   <td>dimension(3*n_gauss)</td><td>::</td>
-  <td><strong>ub</strong></td><td></td>
+  <td><strong>ub</strong></td><td><p>upper bounds</p></td>
   
 </tr>
 
@@ -477,11 +479,14 @@ private subroutine init_bounds(line, n_gauss, dim_v, lb, ub)
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">init_bounds</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+    <span class="c">!! Initialize parameters bounds for optimization</span>
     <span class="k">implicit none</span>
 <span class="k">    </span>
-<span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_v</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(</span><span class="n">dim_v</span><span class="p">)</span> <span class="kd">::</span> <span class="n">line</span>    
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span>
+<span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n_gauss</span> <span class="c">!! number of Gaussian</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span> <span class="c">!! dimension along v axis</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(</span><span class="n">dim_v</span><span class="p">)</span> <span class="kd">::</span> <span class="n">line</span> <span class="c">!! spectrum   </span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lb</span> <span class="c">!! lower bounds</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">)</span> <span class="kd">::</span> <span class="n">ub</span> <span class="c">!! upper bounds</span>
     
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span> <span class="kd">::</span> <span class="n">max_line</span>

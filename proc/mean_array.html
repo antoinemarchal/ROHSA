@@ -203,6 +203,8 @@ public subroutine mean_array(nside, cube, cube_mean)
 
 
     
+    <p>Average cube along spatial axis depending on level n </p>
+    
 
     <h3>Arguments</h3>
     
@@ -227,7 +229,7 @@ public subroutine mean_array(nside, cube, cube_mean)
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>nside</strong></td><td></td>
+  <td><strong>nside</strong></td><td><p>nside of the cube</p></td>
   
 </tr>
 
@@ -242,7 +244,7 @@ public subroutine mean_array(nside, cube, cube_mean)
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube</strong></td><td></td>
+  <td><strong>cube</strong></td><td><p>cube</p></td>
   
 </tr>
 
@@ -257,7 +259,7 @@ public subroutine mean_array(nside, cube, cube_mean)
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube_mean</strong></td><td></td>
+  <td><strong>cube_mean</strong></td><td><p>average cube</p></td>
   
 </tr>
 
@@ -432,11 +434,12 @@ public subroutine mean_array(nside, cube, cube_mean)
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">mean_array</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">cube_mean</span><span class="p">)</span>
+    <span class="c">!! Average cube along spatial axis depending on level n </span>
     <span class="k">implicit none</span>
 
-<span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">nside</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube_mean</span>
+<span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">nside</span> <span class="c">!! nside of the cube</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span> <span class="c">!! cube</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube_mean</span> <span class="c">!! average cube</span>
 
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">n</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">spectrum</span>

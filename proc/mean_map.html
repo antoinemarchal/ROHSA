@@ -203,6 +203,8 @@ public subroutine mean_map(nside, map, map_mean)
 
 
     
+    <p>Average map depending on level nside </p>
+    
 
     <h3>Arguments</h3>
     
@@ -227,7 +229,7 @@ public subroutine mean_map(nside, map, map_mean)
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>nside</strong></td><td></td>
+  <td><strong>nside</strong></td><td><p>nside</p></td>
   
 </tr>
 
@@ -242,7 +244,7 @@ public subroutine mean_map(nside, map, map_mean)
   <td></td>
   
   <td>dimension(:,:), allocatable</td><td>::</td>
-  <td><strong>map</strong></td><td></td>
+  <td><strong>map</strong></td><td><p>map</p></td>
   
 </tr>
 
@@ -257,7 +259,7 @@ public subroutine mean_map(nside, map, map_mean)
   <td></td>
   
   <td>dimension(:,:), allocatable</td><td>::</td>
-  <td><strong>map_mean</strong></td><td></td>
+  <td><strong>map_mean</strong></td><td><p>avarage map</p></td>
   
 </tr>
 
@@ -432,11 +434,12 @@ public subroutine mean_map(nside, map, map_mean)
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">mean_map</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">map</span><span class="p">,</span> <span class="n">map_mean</span><span class="p">)</span>
+    <span class="c">!! Average map depending on level nside </span>
     <span class="k">implicit none</span>
 
-<span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">nside</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">map</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">map_mean</span>
+<span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">nside</span> <span class="c">!! nside</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">map</span> <span class="c">!! map</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">map_mean</span> <span class="c">!! avarage map</span>
 
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">n</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span> <span class="kd">::</span> <span class="n">val</span>

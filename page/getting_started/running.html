@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	 
+	 <meta name="description" content="">
+    
+    <meta name="author" content="Antoine Marchal" >
+    <link rel="icon" href="../../favicon.png">
+
+    <title>Running ROHSA &ndash; ROHSA</title>
+
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+    <link href="../../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../css/local.css" rel="stylesheet">
+    
+    <link  href="../../tipuesearch/tipuesearch.css" rel="stylesheet">
+    
+    
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../../js/jquery-2.1.3.min.js"></script>
+    <script src="../../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">ROHSA <small>1.1.0</small></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+				
+            <li><a href='../../page/index.html'>User Guide</a></li>
+	    
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+		 aria-expanded="false">Contents <span class="caret"></span></a>
+	      <ul class="dropdown-menu">
+              
+            <li><a href="../../lists/files.html">Source Files</a></li>
+				
+				
+            <li><a href="../../lists/modules.html">Modules</a></li>
+				
+            
+                                
+            <li><a href="../../lists/procedures.html">Procedures</a></li>
+				
+								
+				
+            <li><a href="../../program/rohsa.html">Program</a></li>
+	    
+            </ul>
+            </li>
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../../lists/files.html">Source Files</a></li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../../lists/modules.html">Modules</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../../lists/procedures.html">Procedures</a></li>
+
+                             
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../../program/rohsa.html">Program</a></li>
+
+          </ul>
+        
+        <form action="../../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+    
+  <div class="row">
+    <h1>Running ROHSA</h1>
+    <div class="row">
+    <div class="col-lg-12">
+    <div class="well well-sm" style="min-height: 40px;">
+      <ul class="list-inline" style="margin-bottom:0px; display:inline">
+         
+         
+<!--
+        
+-->
+      </ul>
+        <ol class="breadcrumb in-well">
+      
+         <li><a href='../../page/index.html'>User Guide</a></li>
+      
+         <li><a href='../../page/getting_started/index.html'>Getting Started</a></li>
+      
+         <li class="active">Running ROHSA</li>
+      </ol>
+    </div>
+    </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-9 col-md-push-3" id='text'>
+      <h1>Running ROHSA</h1>
+<hr>
+<div class="codehilite"><pre><span></span><span class="p">&amp;</span>user_parameters
+   <span class="nv">filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>         !! name of the data file
+   ,fileout <span class="o">=</span> <span class="s1">&#39;&#39;</span>         !! name of the output result
+   ,filename_noise <span class="o">=</span> <span class="s1">&#39;&#39;</span>  !! name of the file with STD map <span class="o">(</span><span class="k">if</span> noise .eq. <span class="nb">true</span><span class="o">)</span>
+   ,n_gauss <span class="o">=</span> <span class="m">8</span>          !! number of gaussian to fit
+   ,lambda_amp <span class="o">=</span> <span class="m">1</span>.d0    !! lambda <span class="k">for</span> amplitude parameter
+   ,lambda_mu <span class="o">=</span> <span class="m">1</span>.d0     !! lamnda <span class="k">for</span> mean position parameter
+   ,lambda_sig <span class="o">=</span> <span class="m">1</span>.d0    !! lambda <span class="k">for</span> dispersion parameter
+   ,maxiter_init <span class="o">=</span> <span class="m">15000</span> !! max iteration <span class="k">for</span> L-BFGS-B alogorithm <span class="o">(</span>init mean spectrum<span class="o">)</span>
+   ,maxiter <span class="o">=</span> <span class="m">800</span>        !! max iteration <span class="k">for</span> L-BFGS-B alogorithm
+   ,m <span class="o">=</span> <span class="m">10</span>               !! number of corrections used in the limited memory matrix by LBFGS-B
+   ,noise <span class="o">=</span> .false.      !! <span class="k">if</span> <span class="nb">false</span> --&gt; STD map computed by ROHSA with lstd and ustd <span class="o">(</span><span class="k">if</span> <span class="nb">true</span> given by the user<span class="o">)</span>
+   ,regul <span class="o">=</span> .true.       !! <span class="k">if</span> <span class="nb">true</span> --&gt; activate regulation
+   ,lstd <span class="o">=</span> <span class="m">160</span>           !! lower bound to compute the standard deviation map of the cube <span class="o">(</span><span class="k">if</span> noise .eq. <span class="nb">false</span><span class="o">)</span>
+   ,ustd <span class="o">=</span> <span class="m">198</span>           !! upper bound to compute the standrad deviation map of the cube <span class="o">(</span><span class="k">if</span> noise .eq. <span class="nb">false</span><span class="o">)</span>
+   ,iprint <span class="o">=</span> -1          !! print option
+   ,iprint_init <span class="o">=</span> -1     !! print option init
+   /
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span><span class="o">(</span>marchalenv<span class="o">)</span> Antoines-MacBook-Pro:src antoinemarchal$ ./ROHSA parameters.txt 
+ -------------------------------------------------------------------------
+<span class="m">16</span> April <span class="m">2018</span>  <span class="m">11</span>:23:06.413 AM
+
+   ____     ___    _   _   ____       _    
+  <span class="p">|</span>  _ <span class="se">\ </span>  / _ <span class="se">\ </span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> / ___<span class="p">|</span>     / <span class="se">\ </span>  
+  <span class="p">|</span> <span class="p">|</span>_<span class="o">)</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span> <span class="se">\_</span>__ <span class="se">\ </span>   / _ <span class="se">\ </span> 
+  <span class="p">|</span>  _ &lt;  <span class="p">|</span> <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>  _  <span class="p">|</span>  ___<span class="o">)</span> <span class="p">|</span>  / ___ <span class="se">\ </span>
+  <span class="p">|</span>_<span class="p">|</span> <span class="se">\_\ </span> <span class="se">\_</span>__/  <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span>____/  /_/   <span class="se">\_\ </span>
+
+  Version <span class="m">1</span>.0.0
+  ROHSA is released as open <span class="nb">source</span> code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+
+ <span class="nv">filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+ <span class="nv">fileout</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+ ______Parameters_____
+
+ <span class="nv">n_gauss</span> <span class="o">=</span>            <span class="m">8</span>
+ <span class="nv">lambda_amp</span> <span class="o">=</span>    <span class="m">1</span>.0000000000000000     
+ <span class="nv">lambda_mu</span> <span class="o">=</span>    <span class="m">1</span>.0000000000000000     
+ <span class="nv">lambda_sig</span> <span class="o">=</span>    <span class="m">1</span>.0000000000000000     
+ <span class="nv">maxiter_itit</span> <span class="o">=</span>        <span class="m">15000</span>
+ <span class="nv">maxiter</span> <span class="o">=</span>          <span class="m">800</span>
+ <span class="nv">lstd</span> <span class="o">=</span>          <span class="m">160</span>
+ <span class="nv">ustd</span> <span class="o">=</span>          <span class="m">198</span>
+ <span class="nv">noise</span> <span class="o">=</span>  F
+ <span class="nv">regul</span> <span class="o">=</span>  T
+
+STOP opening file error
+</pre></div>
+    </div>
+    
+    <div class="col-md-3 col-md-pull-9">
+      <hr class="visible-xs visible-sm">
+        <div class="well toc">
+          <ul class="nav nav-stacked nav-pills">
+            <li role="presentation" class="title"><a href='../../page/index.html'>User Guide</a></li>
+          </ul>
+          <hr>
+          <ul class="nav nav-stacked nav-pills">
+            
+            <li role="presentation">
+            <a href='../../page/getting_started/index.html'>Getting Started</a>
+            
+            <ul class="nav nav-stacked nav-pills">
+              
+            <li role="presentation">
+            <a href='../../page/getting_started/install.html'>Installation</a>
+            
+            </li>
+            
+            <li role="presentation" class="disabled">
+            <a href='../../page/getting_started/running.html'>Running ROHSA</a>
+            
+            </li>
+            
+            </ul>
+            
+            </li>
+            
+          </ul>
+        </div>
+    </div>
+    
+  </div>
+
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-4"><p>&copy; 2018 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a>
+                                          </p></div>
+        <div class="col-xs-6 col-md-4 col-md-push-4">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/cmacmackin/ford">FORD</a>
+            
+          </p>
+        </div>
+        <div class="col-xs-12 col-md-4 col-md-pull-4"><p class="text-center"> ROHSA was developed by Antoine Marchal</p></div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+    <script src="../../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../../tipuesearch/tipuesearch.js"></script>
+    
+    
+  </body>
+</html>

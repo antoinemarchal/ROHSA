@@ -203,6 +203,8 @@ public subroutine go_up_level(cube_params)
 
 
     
+    <p>Projection of the solution at next level (nside += 1)</p>
+    
 
     <h3>Arguments</h3>
     
@@ -227,7 +229,7 @@ public subroutine go_up_level(cube_params)
   <td></td>
   
   <td>dimension(:,:,:), allocatable</td><td>::</td>
-  <td><strong>cube_params</strong></td><td></td>
+  <td><strong>cube_params</strong></td><td><p>cube of parameters</p></td>
   
 </tr>
 
@@ -402,12 +404,13 @@ public subroutine go_up_level(cube_params)
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">go_up_level</span><span class="p">(</span><span class="n">cube_params</span><span class="p">)</span>
+    <span class="c">!! Projection of the solution at next level (nside += 1)</span>
     <span class="k">implicit none</span>
 
-<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube_params</span>
+<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube_params</span> <span class="c">!! cube of parameters</span>
 
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube_params_down</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube_params_down</span> 
     <span class="kt">integer</span><span class="p">,</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="kd">::</span> <span class="nb">dim</span>
 
 <span class="nb">    dim</span> <span class="o">=</span> <span class="nb">shape</span><span class="p">(</span><span class="n">cube_params</span><span class="p">)</span>

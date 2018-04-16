@@ -1,5 +1,6 @@
+!! This module contains optimization subroutine and parametric model
 module mod_optimize
-
+  !! This module contains optimization subroutine and parametric model
   use mod_constants
   use mod_array
 
@@ -11,8 +12,8 @@ module mod_optimize
   
 contains
   
-  ! Gaussian function   
   pure function gaussian(x, a, m, s)
+    !! Gaussian function   
     implicit none
     
     integer, intent(in) :: x
@@ -23,8 +24,8 @@ contains
   end function gaussian
 
 
-  ! Minimize alogorithn for a specturm
   subroutine minimize_spec(n, m, x, lb, ub, line, dim_v, n_gauss, maxiter, iprint)
+    !! Minimize algorithn for a specturm
     implicit none      
 
     integer, intent(in) :: n

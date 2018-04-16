@@ -1,4 +1,6 @@
+!! This module contains tools (convolution/ravel) to manipulate 2D/3Darray 
 module mod_array
+  !! This module contains tools (convolution/ravel) to manipulate 2D/3Darray 
   use mod_constants
   implicit none
 

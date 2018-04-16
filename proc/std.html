@@ -124,7 +124,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title=" 0.7% of total for procedures.">19 statements</a>
+	  title=" 0.8% of total for procedures.">20 statements</a>
      </li> 
      
      
@@ -203,6 +203,8 @@ private pure function std(array)
 
 
     
+    <p>Compute the STD of a 1D array</p>
+    
 
     <h3>Arguments</h3>
     
@@ -227,7 +229,7 @@ private pure function std(array)
   <td></td>
   
   <td>dimension(:)</td><td>::</td>
-  <td><strong>array</strong></td><td></td>
+  <td><strong>array</strong></td><td><p>1D array</p></td>
   
 </tr>
 
@@ -243,7 +245,7 @@ private pure function std(array)
     
 	 <h3>Return Value <small><span class="anchor" id="variable-std"></span>real(kind=xp)
   </small></h3>
-    
+    <p>standard deviation </p>
     
     
     <br>
@@ -426,13 +428,15 @@ private pure function std(array)
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="highlight"><pre><span></span>  <span class="k">pure function </span><span class="n">std</span><span class="p">(</span><span class="k">array</span><span class="p">)</span>
+    <span class="c">!! Compute the STD of a 1D array</span>
     <span class="k">implicit none</span>
 
-<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span> <span class="kd">::</span> <span class="n">std</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:)</span> <span class="kd">::</span> <span class="k">array</span>
-<span class="k">    </span><span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span>
+<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:)</span> <span class="kd">::</span> <span class="k">array</span> <span class="c">!! 1D array</span>
+    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span>
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">n</span>
-    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span> <span class="kd">::</span> <span class="n">mean</span><span class="p">,</span> <span class="n">var</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span> <span class="kd">::</span> <span class="n">std</span> <span class="c">!! standard deviation </span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span> <span class="kd">::</span> <span class="n">mean</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span> <span class="kd">::</span> <span class="n">var</span>
 
     <span class="n">mean</span> <span class="o">=</span> <span class="mf">0._xp</span><span class="p">;</span> <span class="n">var</span> <span class="o">=</span> <span class="mf">0._xp</span>
     <span class="n">std</span> <span class="o">=</span> <span class="mf">0._xp</span>
