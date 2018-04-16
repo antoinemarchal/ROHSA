@@ -1,6 +1,6 @@
-!! Module function of ROHSA
+!! This module contains the main routines of ROHSA
 module mod_functions
-
+  !! This module contains the main routines of ROHSA
   use mod_constants
   use mod_optimize
   use mod_array
@@ -18,8 +18,8 @@ contains
   !! Compute nside value from \(dim_y\) and \(dim_x\) 
     implicit none
 
-    integer :: dim2nside !! Nside of the cube
-    integer, intent(in), dimension(3) :: dim_cube !! Cube dimension
+    integer :: dim2nside !! nside of the cube
+    integer, intent(in), dimension(3) :: dim_cube !! cube dimension
     dim2nside = max(0,int(ceiling(log(real(dim_cube(2))) / log(2.))), int(ceiling(log(real(dim_cube(3))) / log(2.))))
     return
   end function dim2nside
@@ -168,10 +168,10 @@ contains
 
   
   subroutine init_spectrum(n_gauss, params, dim_v, line, maxiter, m, iprint)
-    !! Initialization of the mean spreturm with N Gaussian
+    !! Initialization of the mean sprectrum with N Gaussian
     implicit none
     
-    integer, intent(in) :: n_gauss !! Number of Gaussian
+    integer, intent(in) :: n_gauss !! number of Gaussian
     integer, intent(in) :: dim_v !! dimension along v axis
     integer, intent(in) :: maxiter !! Max number of iteration
     integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
@@ -257,7 +257,7 @@ contains
 
 
   subroutine upgrade(cube, params, power, n_gauss, dim_v, maxiter, m, iprint)
-    !! Upgrade parameters using minimize function (here based on L-BFGS-B optimization module)
+    !! Upgrade parameters (spectra to spectra) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
 
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube
@@ -268,7 +268,7 @@ contains
     integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: iprint !! print option
 
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: params
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! cube parameters to update
 
     integer :: i,j
     real(xp), dimension(:), allocatable :: line
@@ -298,23 +298,24 @@ contains
 
   subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, maxiter, m, kernel, &
        iprint, std_map)
-    !! Update parameters using minimize function (here based on L-BFGS-B optimization module)
+    !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
-    real(xp), intent(in), dimension(:,:,:), allocatable :: cube
-    real(xp), intent(in), dimension(:,:), allocatable :: std_map
-    real(xp), intent(in), dimension(:,:), allocatable :: kernel
-    integer, intent(in) :: dim_v
-    integer, intent(in) :: dim_y
-    integer, intent(in) :: dim_x
-    integer, intent(in) :: n_gauss
-    integer, intent(in) :: maxiter
-    integer, intent(in) :: m
-    integer, intent(in) :: iprint
-    real(xp), intent(in) :: lambda_amp
-    real(xp), intent(in) :: lambda_mu
-    real(xp), intent(in) :: lambda_sig
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: params
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube 
+    real(xp), intent(in), dimension(:,:), allocatable :: std_map !! Standard deviation map 
+    real(xp), intent(in), dimension(:,:), allocatable :: kernel !! convolution kernel
+    integer, intent(in) :: dim_v !! dimension along v axis
+    integer, intent(in) :: dim_y !! dimension along spatial axis y 
+    integer, intent(in) :: dim_x !! dimension along spatial axis x
+    integer, intent(in) :: n_gauss !! Number of Gaussian
+    integer, intent(in) :: maxiter !! max number of iteration
+    integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
+    integer, intent(in) :: iprint !! print option
+    real(xp), intent(in) :: lambda_amp !! lambda for amplitude parameter
+    real(xp), intent(in) :: lambda_mu !! lambda for mean position parameter
+    real(xp), intent(in) :: lambda_sig !! lambda for dispersion parameter
+
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
     
     integer :: i,j
     integer :: n_beta
@@ -349,11 +350,13 @@ contains
     !! Compute the STD map of a 3D array
     implicit none
 
-    integer, intent(in) :: lb
-    integer, intent(in) :: ub
-    real(xp), intent(in), dimension(:,:,:), allocatable :: cube
-    real(xp), intent(inout), dimension(:,:), allocatable :: std_map
-    real(xp), dimension(:), allocatable :: line
+    integer, intent(in) :: lb !! lower bound 
+    integer, intent(in) :: ub !! upper bound
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube
+
+    real(xp), intent(inout), dimension(:,:), allocatable :: std_map !! standard deviation map of the cube
+
+    real(xp), dimension(:), allocatable :: line 
     integer, dimension(3) :: dim_cube
     integer :: i, j 
 
@@ -373,11 +376,12 @@ contains
     !! Compute the STD of a 1D array
     implicit none
 
-    real(xp) :: std
-    real(xp), intent(in), dimension(:) :: array
+    real(xp), intent(in), dimension(:) :: array !! 1D array
     integer :: i
     integer :: n
-    real(xp) :: mean, var
+    real(xp) :: std !! standard deviation 
+    real(xp) :: mean
+    real(xp) :: var
 
     mean = 0._xp; var = 0._xp
     std = 0._xp
