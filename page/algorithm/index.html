@@ -10,7 +10,7 @@
     <meta name="author" content="Antoine Marchal" >
     <link rel="icon" href="../../favicon.png">
 
-    <title>Getting Started &ndash; ROHSA</title>
+    <title>Algorithm &ndash; ROHSA</title>
 
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/pygments.css" rel="stylesheet">
@@ -105,7 +105,7 @@
     <div class="container">
     
   <div class="row">
-    <h1>Getting Started</h1>
+    <h1>Algorithm</h1>
     <div class="row">
     <div class="col-lg-12">
     <div class="well well-sm" style="min-height: 40px;">
@@ -114,20 +114,13 @@
          
 <!--
         
-        <li><i class="fa fa-sitemap"></i> Subsections:</li>
-        
-        <li><a href='../../page/getting_started/install.html'>Installation</a></li>
-        
-        <li><a href='../../page/getting_started/running.html'>Running ROHSA</a></li>
-        
-        
 -->
       </ul>
         <ol class="breadcrumb in-well">
       
          <li><a href='../../page/index.html'>User Guide</a></li>
       
-         <li class="active">Getting Started</li>
+         <li class="active">Algorithm</li>
       </ol>
     </div>
     </div>
@@ -136,12 +129,29 @@
   
   <div class="row">
     <div class="col-md-9 col-md-push-3" id='text'>
-      <h1>Getting Started</h1>
+      <h1>Algorithm</h1>
 <p style="text-align: center"><img alt="ROHSA" src="../../media/LogoMakr_0dTJ9B.png"></p>
-<ol>
-<li><a href="./install.html">Installation</a></li>
-<li><a href="./running.html">Running ROHSA</a></li>
-</ol>
+<h2>ROHSA algorithm</h2>
+<p>To initiate the model parameters, we chose a hierarchical approach. Since the fluctuation along the velocity axis 
+are weak from one spectrum to its neighbors, it is possible to go from the highest resolution (initial resolution) 
+to the lowest resolution (mean spectrum of the observation) averaging at each step, along the velocity axis, over four neighbors. 
+Starting now from the lower one, we adopt the following algorithm : we optimize N Gaussian on the single mean spectrum. 
+Then we propagate the solution as initialization of the optimization at the next level which contains four spectra. 
+We repeat the process until we reach the highest resolution, i.e. the initial one. Figure 1 and Algorithm 1 shows a graphic 
+visualization and the pseudo-code of the algo- rithm. It is important to maintain the regularization at each step of 
+the descent to link the amplitude, the position and the dispersion of each Gaussian over the two spatial dimensions.</p>
+<p style="text-align: left"><img alt="ROHSA graphic visu" src="../../media/ROHSA_graph.png" title="RHOSA gphafic visu" width="350"></p>
+<p style="text-align: right"><img alt="pseudo_code" src="../../media/pseudo_code.png" title="pseudo_code" width="400"></p>
+<h2>Optimization algorithm</h2>
+<p>We used a quasi-Newton method, the L-BFGS-B (Limited-memory Broyden–Fletcher–Goldfarb–Shanno with Bounds) 
+algorithm (see <a href="https://dl.acm.org/citation.cfm?doid=279232.279236">Zhu et al. 1997</a> to perform the optimization. 
+L-BFGS-B uses an estimation to the inverse Hessian matrix H (the second derivative of f(β)) to identify the direction 
+of steepest descent and to update the input parameters at each iteration. 
+If the problem has n parameters to optimize, H takes nxn values in memory. 
+L-BFGS-B allows us to estimate H storing considerably 
+less variables. Since we are already locked by the huge amount of data, we want to minimize the allocated memory in order to 
+compute the larger field we can. Finally, since we want the positivity of each amplitude of the Gaussian, 
+we used L-BFGS-B to support boundary conditions.</p>
     </div>
     
     <div class="col-md-3 col-md-pull-9">
@@ -153,12 +163,12 @@
           <hr>
           <ul class="nav nav-stacked nav-pills">
             
-            <li role="presentation">
+            <li role="presentation" class="disabled">
             <a href='../../page/algorithm/index.html'>Algorithm</a>
             
             </li>
             
-            <li role="presentation" class="disabled">
+            <li role="presentation">
             <a href='../../page/getting_started/index.html'>Getting Started</a>
             
             <ul class="nav nav-stacked nav-pills">

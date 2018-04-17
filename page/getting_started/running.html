@@ -132,7 +132,11 @@
   <div class="row">
     <div class="col-md-9 col-md-push-3" id='text'>
       <h1>Running ROHSA</h1>
+<p style="text-align: center"><img alt="ROHSA" src="../../media/LogoMakr_0dTJ9B.png"></p>
 <hr>
+<h2>User Parameters</h2>
+<h3>Input file</h3>
+<p>Once the source code is compiled, you can run ROHSA using the <code>parameters.txt</code> file. </p>
 <div class="codehilite"><pre><span></span><span class="p">&amp;</span>user_parameters
    <span class="nv">filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>         !! name of the data file
    ,fileout <span class="o">=</span> <span class="s1">&#39;&#39;</span>         !! name of the output result
@@ -154,9 +158,33 @@
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span><span class="o">(</span>marchalenv<span class="o">)</span> Antoines-MacBook-Pro:src antoinemarchal$ ./ROHSA parameters.txt 
+<p><code>parameters.txt</code> contains all the free parameters of ROHSA. </p>
+<p></p><div class="alert alert-warning" role="alert"><h4>Warning</h4><p>If one of the parameters if missing, ROHSA wil take the default value encoded in the <code>main.f90</code> source file.</p></div>
+<h3>Print option (L-BFGS-B argument)</h3>
+<p>iprint is an INTEGER variable that must be set by the user. It controls the frequency and type of output generated:</p>
+<div class="codehilite"><pre><span></span>iprint&lt;<span class="m">0</span>    no output is generated<span class="p">;</span>
+<span class="nv">iprint</span><span class="o">=</span><span class="m">0</span>    print only one line at the last iteration<span class="p">;</span>
+<span class="m">0</span>&lt;iprint&lt;<span class="m">99</span> print also f and <span class="p">|</span>proj g<span class="p">|</span> every iprint iterations<span class="p">;</span>
+<span class="nv">iprint</span><span class="o">=</span><span class="m">99</span>   print details of every iteration except n-vectors<span class="p">;</span>
+<span class="nv">iprint</span><span class="o">=</span><span class="m">100</span>  print also the changes of active <span class="nb">set</span> and final x<span class="p">;</span>
+iprint&gt;100  print details of every iteration including x and g<span class="p">;</span>
+When iprint &gt; <span class="m">0</span>, the file iterate.dat will be created to summarize the iteration.
+</pre></div>
+
+
+<p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p>For any question about the parameters, please contact us at the following address : antoine.marchal@ias.u-psud.fr</p></div>
+<h3>Data format</h3>
+<p>ROHSA does not support FITS file in version 1.1.0. It wiil be added in a next release. 
+You can find a python code : <code>fits2dat.py</code> in <code>src/</code> directory to convert your <code>.fits</code> file into a <code>.dat</code> file. </p>
+<h2>Running ROHSA</h2>
+<p>You can now run your Gaussian decomposition with ROHSA. Enjoy !</p>
+<div class="codehilite"><pre><span></span>./ROHSA parameters.txt 
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span><span class="o">(</span>Clumpix<span class="o">)</span> amarchal@glx-calcul3:~/ROHSA/src$ ./ROHSA parameters.txt 
  -------------------------------------------------------------------------
-<span class="m">16</span> April <span class="m">2018</span>  <span class="m">11</span>:23:06.413 AM
+<span class="m">17</span> April <span class="m">2018</span>   <span class="m">9</span>:45:45.824 AM
 
    ____     ___    _   _   ____       _    
   <span class="p">|</span>  _ <span class="se">\ </span>  / _ <span class="se">\ </span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> / ___<span class="p">|</span>     / <span class="se">\ </span>  
@@ -164,15 +192,15 @@
   <span class="p">|</span>  _ &lt;  <span class="p">|</span> <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>  _  <span class="p">|</span>  ___<span class="o">)</span> <span class="p">|</span>  / ___ <span class="se">\ </span>
   <span class="p">|</span>_<span class="p">|</span> <span class="se">\_\ </span> <span class="se">\_</span>__/  <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span>____/  /_/   <span class="se">\_\ </span>
 
-  Version <span class="m">1</span>.0.0
+  Version <span class="m">1</span>.1.0
   ROHSA is released as open <span class="nb">source</span> code
   Check out the documentation: https://antoinemarchal.github.io/ROHSA/
 
  run: ./ROHSA parameters.txt
  -------------------------------------------------------------------------
 
- <span class="nv">filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
- <span class="nv">fileout</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+ <span class="nv">filename</span> <span class="o">=</span> <span class="s1">&#39;./data.dat&#39;</span>
+ <span class="nv">fileout</span> <span class="o">=</span> <span class="s1">&#39;./result.dat&#39;</span>
 
  ______Parameters_____
 
@@ -187,7 +215,35 @@
  <span class="nv">noise</span> <span class="o">=</span>  F
  <span class="nv">regul</span> <span class="o">=</span>  T
 
-STOP opening file error
+
+ opening file and reading data
+ dim_v, dim_y, <span class="nv">dim_x</span> <span class="o">=</span>          <span class="m">395</span>          <span class="m">94</span>          <span class="m">67</span>
+
+ number of <span class="nv">los</span> <span class="o">=</span>         <span class="m">6298</span>
+ <span class="nv">nside</span> <span class="o">=</span>            <span class="m">7</span>
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, <span class="nv">dim_x</span> <span class="o">=</span>          <span class="m">395</span>         <span class="m">128</span>         <span class="m">128</span>
+
+                     Start iteration
+
+ Init mean spectrum
+
+ Update parameters level            <span class="m">0</span> &gt;           <span class="m">1</span>
+RUNNING THE L-BFGS-B CODE
+
+           * * *
+
+Machine <span class="nv">precision</span> <span class="o">=</span> <span class="m">2</span>.220D-16
+ <span class="nv">N</span> <span class="o">=</span>           <span class="m">24</span>     <span class="nv">M</span> <span class="o">=</span>           <span class="m">10</span>
+
+At X0         <span class="m">3</span> variables are exactly at the bounds
+
+At iterate    <span class="m">0</span>    <span class="nv">f</span><span class="o">=</span>  <span class="m">1</span>.29989D-02    <span class="p">|</span>proj g<span class="p">|</span><span class="o">=</span>  <span class="m">4</span>.42658D-05
+
+At iterate    <span class="m">1</span>    <span class="nv">f</span><span class="o">=</span>  <span class="m">1</span>.29989D-02    <span class="p">|</span>proj g<span class="p">|</span><span class="o">=</span>  <span class="m">6</span>.62203D-05
+
+...
 </pre></div>
     </div>
     
@@ -199,6 +255,11 @@ STOP opening file error
           </ul>
           <hr>
           <ul class="nav nav-stacked nav-pills">
+            
+            <li role="presentation">
+            <a href='../../page/algorithm/index.html'>Algorithm</a>
+            
+            </li>
             
             <li role="presentation">
             <a href='../../page/getting_started/index.html'>Getting Started</a>
