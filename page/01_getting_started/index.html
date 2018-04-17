@@ -10,7 +10,7 @@
     <meta name="author" content="Antoine Marchal" >
     <link rel="icon" href="../../favicon.png">
 
-    <title>Installation &ndash; ROHSA</title>
+    <title>Getting Started &ndash; ROHSA</title>
 
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/pygments.css" rel="stylesheet">
@@ -105,7 +105,7 @@
     <div class="container">
     
   <div class="row">
-    <h1>Installation</h1>
+    <h1>Getting Started</h1>
     <div class="row">
     <div class="col-lg-12">
     <div class="well well-sm" style="min-height: 40px;">
@@ -114,15 +114,20 @@
          
 <!--
         
+        <li><i class="fa fa-sitemap"></i> Subsections:</li>
+        
+        <li><a href='../../page/01_getting_started/install.html'>Installation</a></li>
+        
+        <li><a href='../../page/01_getting_started/running.html'>Running ROHSA</a></li>
+        
+        
 -->
       </ul>
         <ol class="breadcrumb in-well">
       
          <li><a href='../../page/index.html'>User Guide</a></li>
       
-         <li><a href='../../page/getting_started/index.html'>Getting Started</a></li>
-      
-         <li class="active">Installation</li>
+         <li class="active">Getting Started</li>
       </ol>
     </div>
     </div>
@@ -131,65 +136,10 @@
   
   <div class="row">
     <div class="col-md-9 col-md-push-3" id='text'>
-      <h1>Installing ROHSA</h1>
+      <h1>Getting Started</h1>
 <p style="text-align: center"><img alt="ROHSA" src="../../media/LogoMakr_0dTJ9B.png"></p>
-<hr>
-<h2>Dependencies</h2>
-<p>ROHSA has the following dependencies:</p>
-<ul>
-<li><a href="https://www.gnu.org/software/make/">Make</a> for building FIDASIM. (Required)</li>
-<li><a href="https://gcc.gnu.org/">Fortran</a> (Required)</li>
-<li><a href="https://git-scm.com/">git</a> for version control (Optional)</li>
-<li><a href="https://github.com/cmacmackin/ford">Ford</a> for creating HTML documentation (Optional)</li>
-</ul>
-<h2>Download the code source</h2>
-<p>The last version of ROHSA (1.1.0) can be downloaded from <a href="https://github.com/antoinemarchal/ROHSA/releases/">here</a>
-Once you have downloaded the <code>.tar.gz</code> or <code>.zip</code> file unpack it using the following commands.</p>
-<div class="codehilite"><pre><span></span>tar -zxf ROHSA-1.1.0.tar.gz
-</pre></div>
-
-
-<p>or if you downloaded the <code>.zip</code> file</p>
-<div class="codehilite"><pre><span></span>unzip ROHSA-1.1.0.zip
-</pre></div>
-
-
-<h2>Get the git repository</h2>
-<p>You can also use git if you want to follow the developement of the code</p>
-<div class="codehilite"><pre><span></span>git clone https://github.com/antoinemarchal/ROHSA.git ROHSA
-</pre></div>
-
-
-<h2>Building ROHSA</h2>
-<p>Once you are in the src/ directory you are now able to build the code running the following</p>
-<div class="codehilite"><pre><span></span><span class="nb">cd</span> ROHSA/src/
-</pre></div>
-
-
-<div class="codehilite"><pre><span></span>make
-</pre></div>
-
-
-<p>You can now check if ROHSA is bluit correctly</p>
-<div class="codehilite"><pre><span></span><span class="o">(</span>marchalenv<span class="o">)</span> Antoines-MacBook-Pro:src antoinemarchal$ ./ROHSA 
- -------------------------------------------------------------------------
-<span class="m">16</span> April <span class="m">2018</span>  <span class="m">11</span>:08:50.786 AM
-
-   ____     ___    _   _   ____       _    
-  <span class="p">|</span>  _ <span class="se">\ </span>  / _ <span class="se">\ </span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> / ___<span class="p">|</span>     / <span class="se">\ </span>  
-  <span class="p">|</span> <span class="p">|</span>_<span class="o">)</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span> <span class="se">\_</span>__ <span class="se">\ </span>   / _ <span class="se">\ </span> 
-  <span class="p">|</span>  _ &lt;  <span class="p">|</span> <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>  _  <span class="p">|</span>  ___<span class="o">)</span> <span class="p">|</span>  / ___ <span class="se">\ </span>
-  <span class="p">|</span>_<span class="p">|</span> <span class="se">\_\ </span> <span class="se">\_</span>__/  <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span>____/  /_/   <span class="se">\_\ </span>
-
-  Version <span class="m">1</span>.1.0
-  ROHSA is released as open <span class="nb">source</span> code
-  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
-
- run: ./ROHSA parameters.txt
- -------------------------------------------------------------------------
-
-STOP opening file error
-</pre></div>
+<h4>1. <a href="./install.html">Installation</a></h4>
+<h4>2. <a href="./running.html">Running ROHSA</a></h4>
     </div>
     
     <div class="col-md-3 col-md-pull-9">
@@ -201,27 +151,32 @@ STOP opening file error
           <hr>
           <ul class="nav nav-stacked nav-pills">
             
-            <li role="presentation">
-            <a href='../../page/algorithm/index.html'>Algorithm</a>
-            
-            </li>
-            
-            <li role="presentation">
-            <a href='../../page/getting_started/index.html'>Getting Started</a>
+            <li role="presentation" class="disabled">
+            <a href='../../page/01_getting_started/index.html'>Getting Started</a>
             
             <ul class="nav nav-stacked nav-pills">
               
-            <li role="presentation" class="disabled">
-            <a href='../../page/getting_started/install.html'>Installation</a>
+            <li role="presentation">
+            <a href='../../page/01_getting_started/install.html'>Installation</a>
             
             </li>
             
             <li role="presentation">
-            <a href='../../page/getting_started/running.html'>Running ROHSA</a>
+            <a href='../../page/01_getting_started/running.html'>Running ROHSA</a>
             
             </li>
             
             </ul>
+            
+            </li>
+            
+            <li role="presentation">
+            <a href='../../page/02_model/index.html'>Model</a>
+            
+            </li>
+            
+            <li role="presentation">
+            <a href='../../page/03_algorithm/index.html'>Algorithm</a>
             
             </li>
             

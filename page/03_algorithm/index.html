@@ -131,8 +131,10 @@
     <div class="col-md-9 col-md-push-3" id='text'>
       <h1>Algorithm</h1>
 <p style="text-align: center"><img alt="ROHSA" src="../../media/LogoMakr_0dTJ9B.png"></p>
+<p style="float: left"><img alt="" src="../../media/ROHSA+pseudo_code.png" width="400"></p>
 <h2>ROHSA algorithm</h2>
-<p>To initiate the model parameters, we chose a hierarchical approach. Since the fluctuation along the velocity axis 
+<p><p style="text-align:justify;">
+To initiate the model parameters, we chose a hierarchical approach. Since the fluctuation along the velocity axis 
 are weak from one spectrum to its neighbors, it is possible to go from the highest resolution (initial resolution) 
 to the lowest resolution (mean spectrum of the observation) averaging at each step, along the velocity axis, over four neighbors. 
 Starting now from the lower one, we adopt the following algorithm : we optimize N Gaussian on the single mean spectrum. 
@@ -140,10 +142,9 @@ Then we propagate the solution as initialization of the optimization at the next
 We repeat the process until we reach the highest resolution, i.e. the initial one. Figure 1 and Algorithm 1 shows a graphic 
 visualization and the pseudo-code of the algo- rithm. It is important to maintain the regularization at each step of 
 the descent to link the amplitude, the position and the dispersion of each Gaussian over the two spatial dimensions.</p>
-<p style="text-align: left"><img alt="ROHSA graphic visu" src="../../media/ROHSA_graph.png" title="RHOSA gphafic visu" width="350"></p>
-<p style="text-align: right"><img alt="pseudo_code" src="../../media/pseudo_code.png" title="pseudo_code" width="400"></p>
 <h2>Optimization algorithm</h2>
-<p>We used a quasi-Newton method, the L-BFGS-B (Limited-memory Broyden–Fletcher–Goldfarb–Shanno with Bounds) 
+<p><p style="text-align:justify;">
+We used a quasi-Newton method, the L-BFGS-B (Limited-memory Broyden–Fletcher–Goldfarb–Shanno with Bounds) 
 algorithm (see <a href="https://dl.acm.org/citation.cfm?doid=279232.279236">Zhu et al. 1997</a> to perform the optimization. 
 L-BFGS-B uses an estimation to the inverse Hessian matrix H (the second derivative of f(β)) to identify the direction 
 of steepest descent and to update the input parameters at each iteration. 
@@ -163,27 +164,32 @@ we used L-BFGS-B to support boundary conditions.</p>
           <hr>
           <ul class="nav nav-stacked nav-pills">
             
-            <li role="presentation" class="disabled">
-            <a href='../../page/algorithm/index.html'>Algorithm</a>
-            
-            </li>
-            
             <li role="presentation">
-            <a href='../../page/getting_started/index.html'>Getting Started</a>
+            <a href='../../page/01_getting_started/index.html'>Getting Started</a>
             
             <ul class="nav nav-stacked nav-pills">
               
             <li role="presentation">
-            <a href='../../page/getting_started/install.html'>Installation</a>
+            <a href='../../page/01_getting_started/install.html'>Installation</a>
             
             </li>
             
             <li role="presentation">
-            <a href='../../page/getting_started/running.html'>Running ROHSA</a>
+            <a href='../../page/01_getting_started/running.html'>Running ROHSA</a>
             
             </li>
             
             </ul>
+            
+            </li>
+            
+            <li role="presentation">
+            <a href='../../page/02_model/index.html'>Model</a>
+            
+            </li>
+            
+            <li role="presentation" class="disabled">
+            <a href='../../page/03_algorithm/index.html'>Algorithm</a>
             
             </li>
             

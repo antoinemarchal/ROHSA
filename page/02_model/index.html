@@ -10,7 +10,7 @@
     <meta name="author" content="Antoine Marchal" >
     <link rel="icon" href="../../favicon.png">
 
-    <title>Getting Started &ndash; ROHSA</title>
+    <title>Model &ndash; ROHSA</title>
 
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/pygments.css" rel="stylesheet">
@@ -105,7 +105,7 @@
     <div class="container">
     
   <div class="row">
-    <h1>Getting Started</h1>
+    <h1>Model</h1>
     <div class="row">
     <div class="col-lg-12">
     <div class="well well-sm" style="min-height: 40px;">
@@ -114,20 +114,13 @@
          
 <!--
         
-        <li><i class="fa fa-sitemap"></i> Subsections:</li>
-        
-        <li><a href='../../page/getting_started/install.html'>Installation</a></li>
-        
-        <li><a href='../../page/getting_started/running.html'>Running ROHSA</a></li>
-        
-        
 -->
       </ul>
         <ol class="breadcrumb in-well">
       
          <li><a href='../../page/index.html'>User Guide</a></li>
       
-         <li class="active">Getting Started</li>
+         <li class="active">Model</li>
       </ol>
     </div>
     </div>
@@ -136,12 +129,95 @@
   
   <div class="row">
     <div class="col-md-9 col-md-push-3" id='text'>
-      <h1>Getting Started</h1>
+      <h1>Model</h1>
 <p style="text-align: center"><img alt="ROHSA" src="../../media/LogoMakr_0dTJ9B.png"></p>
-<ol>
-<li><a href="./install.html">Installation</a></li>
-<li><a href="./running.html">Running ROHSA</a></li>
-</ol>
+<p>The two dimensional vector expressing the line of sight is denoted by <script type="math/tex">(l, b)</script>.</p>
+<p>Lets start with a non linear least square formulation of the optimization problem. 
+We have <script type="math/tex">p</script> empirical pairs <script type="math/tex">(x_u^{l,b}, y_u^{l,b})</script> and we want to find the parameters <script type="math/tex">\mathbf{\beta}</script> of the model curve <script type="math/tex">G(\mathbf{\beta})</script>
+so that the sum of the squares of deviations <script type="math/tex">f(\mathbf{\beta})</script> is minimized. </p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+  \hat{\mathbf{\beta}} = \underset{\beta}{argmin} \, f(\mathbf{\beta})
+\end{align}</script>
+</p>
+<p>Let's define the model G as a sum of Gaussian characterized by three parameters, i.e. amplitude <script type="math/tex">A : \, q = 3k+1</script>, 
+position <script type="math/tex">\mu : \, q = 3k+2</script> and dispersion <script type="math/tex">\sigma : \, q = 3k+3</script> with <script type="math/tex">k \in \left\{ 0, ..., N \right\}</script>
+</p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+  G(x_u^{l,b}, \mathbf{\beta_q^{l,b}}) = \sum_{k=1}^{N} \left ( \beta_{3k}^{l,b} \, exp \left \{  \frac{- \, (x_u^{l,b} \, - \,
+    \beta_{3k+1}^{l,b})^2}{2 (\beta_{3k+2}^{l,b})^2}
+    \right\} \right)
+\end{align}</script>
+</p>
+<p>We define the residual function <script type="math/tex">F</script> of each pairs <script type="math/tex">(x_u^{l,b}, y_u^{l,b})</script> :</p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+  F(x_u^{l,b}, y_u^{l,b}, \mathbf{\beta^{l,b}}) = G(x_u^{l,b}, \mathbf{\beta^{l,b}}) \, - \, y_u^{l,b}
+\end{align}</script>
+</p>
+<p>For a non linear least square formulation, the objective function <script type="math/tex">f</script> is :</p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+  f(\mathbf{\beta}) = \frac{1}{2} \, \sum_{l=1}^L \, \sum_{b=1}^B \left [ \sum_{u=1}^{U} \, F^2(x_u^{l,b}, y_u^{l,b}, \mathbf{\beta^{l,b}}) \right ]
+  \, + \, \underbrace{\sum_{q=1}^{3n} \, \lambda_q \, R_q(\mathbf{\beta_q})}_{regularization}
+\end{align}</script>
+</p>
+<p>Note that we add a regularization term in order to minimize <script type="math/tex">f(\mathbf{\beta_q})</script> considering spatial constraints. </p>
+<p>If we regularize over 4 neighbors <script type="math/tex">R_q(\mathbf{\beta})</script> is equal to,</p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+  R_q(\mathbf{\beta_q}) = \frac{1}{2} \, \sum_{l=1}^L \, \sum_{b=1}^B \left[ Y_q^{l,b} \right]^2
+\end{align}</script>
+</p>
+<p>with 
+<script type="math/tex; mode=display">\begin{align}
+    Y_q^{l,b} = \frac{1}{4} \, \left ( 4 \, \beta_q^{l,b} \, - \,
+    \beta_q^{l+1,b} \, - \, \beta_q^{l,b+1} \, - \, \beta_q^{l,b-1} \, - \, \beta_q^{l-1,b} \right ) 
+\end{align}</script>
+</p>
+<p>In order to consider the boundary of the cube, we use a mirror conditions.</p>
+<p>Furthermore, it is convenient to express <script type="math/tex">R_q(\mathbf{\beta_q})</script> as a convolution product :</p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+  \mathbf{Y_q} = \mathbf{K} \, * \, \mathbf{\beta_q}
+\end{align}</script>
+</p>
+<p>\noindent
+with the kernel <script type="math/tex">\textbf{K}</script>,</p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+  \mathbf{K} =
+  \left[
+  \begin{array}{ccc}
+    0 & -1 & 0 \\
+    -1 & 4 & -1 \\
+    0 & -1 & 0 \\
+  \end{array}
+  \right] \, / \, 4
+\end{align}</script>
+</p>
+<p>The gradient of the objective function that we need to use the optimization algorithm of our choice is then : </p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+  \nabla f(\mathbf{\beta}) &= \frac{\partial f(\mathbf{\beta})}{\partial \beta_q^{l,b}} 
+  &= \sum_{u=1}^U \, \frac{\partial F_u^{l,b}}{\partial \beta_q^{l,b}} \, \times \,
+  F_u^{l,b} \, + \, \lambda_q \, \frac{\partial}{\partial \beta_q^{l,b}} \left[ \frac{1}{2} \, \sum_{l=1}^L \, \sum_{b=1}^B \left[ Y_q^{l,b} \right]^2
+    \right]
+\end{align}</script>
+</p>
+<p>Finally, the gradient of the objective function can be written as follows : </p>
+<p>
+<script type="math/tex; mode=display">\begin{align}
+  \nabla f(\mathbf{\beta}) = \frac{\partial f(\mathbf{\beta})}{\partial \beta_q^{l,b}} = \sum_{u=1}^U \, \frac{\partial F_u^{l,b}}{\partial \beta_q^{l,b}} \, \times \,
+  F_u^{l,b} \, + \, \lambda_q \, Z_q^{l,b}
+\end{align}</script>
+</p>
+<p>with, 
+<script type="math/tex; mode=display">\begin{align}
+    \mathbf{Z_q} = \mathbf{K} \, * \, \mathbf{Y_q}
+\end{align}</script>
+</p>
     </div>
     
     <div class="col-md-3 col-md-pull-9">
@@ -154,26 +230,31 @@
           <ul class="nav nav-stacked nav-pills">
             
             <li role="presentation">
-            <a href='../../page/algorithm/index.html'>Algorithm</a>
-            
-            </li>
-            
-            <li role="presentation" class="disabled">
-            <a href='../../page/getting_started/index.html'>Getting Started</a>
+            <a href='../../page/01_getting_started/index.html'>Getting Started</a>
             
             <ul class="nav nav-stacked nav-pills">
               
             <li role="presentation">
-            <a href='../../page/getting_started/install.html'>Installation</a>
+            <a href='../../page/01_getting_started/install.html'>Installation</a>
             
             </li>
             
             <li role="presentation">
-            <a href='../../page/getting_started/running.html'>Running ROHSA</a>
+            <a href='../../page/01_getting_started/running.html'>Running ROHSA</a>
             
             </li>
             
             </ul>
+            
+            </li>
+            
+            <li role="presentation" class="disabled">
+            <a href='../../page/02_model/index.html'>Model</a>
+            
+            </li>
+            
+            <li role="presentation">
+            <a href='../../page/03_algorithm/index.html'>Algorithm</a>
             
             </li>
             
