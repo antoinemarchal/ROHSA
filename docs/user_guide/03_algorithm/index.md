@@ -5,7 +5,10 @@ title: Algorithm
 ![ROHSA](|media|/LogoMakr_0dTJ9B.png)
 {: style="text-align: center" }
 
+![](|media|/ROHSA+pseudo_code.png){: width="400" }
+{: style="float: left"}
 ## ROHSA algorithm
+<p style="text-align:justify;">
 To initiate the model parameters, we chose a hierarchical approach. Since the fluctuation along the velocity axis 
 are weak from one spectrum to its neighbors, it is possible to go from the highest resolution (initial resolution) 
 to the lowest resolution (mean spectrum of the observation) averaging at each step, along the velocity axis, over four neighbors. 
@@ -15,13 +18,8 @@ We repeat the process until we reach the highest resolution, i.e. the initial on
 visualization and the pseudo-code of the algo- rithm. It is important to maintain the regularization at each step of 
 the descent to link the amplitude, the position and the dispersion of each Gaussian over the two spatial dimensions.
 
-![ROHSA graphic visu](|media|/ROHSA_graph.png "RHOSA gphafic visu"){: width="350" }
-{: style="text-align: left" }
-
-![pseudo_code](|media|/pseudo_code.png "pseudo_code"){: width="400" }
-{: style="text-align: right" }
-
 ## Optimization algorithm
+<p style="text-align:justify;">
 We used a quasi-Newton method, the L-BFGS-B (Limited-memory Broyden–Fletcher–Goldfarb–Shanno with Bounds) 
 algorithm (see [Zhu et al. 1997](https://dl.acm.org/citation.cfm?doid=279232.279236) to perform the optimization. 
 L-BFGS-B uses an estimation to the inverse Hessian matrix H (the second derivative of f(β)) to identify the direction 
