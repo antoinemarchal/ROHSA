@@ -22,7 +22,7 @@ display: public
          protected
          private
 source: true
-graph: true
+graph: false
 search: true
 macro: TEST
        LOGIC=.true.

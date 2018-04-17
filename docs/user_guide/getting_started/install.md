@@ -2,6 +2,9 @@ title: Installation
 
 #Installing ROHSA
 
+![ROHSA](|media|/LogoMakr_0dTJ9B.png)
+{: style="text-align: center" }
+
 ---
 ##Dependencies
 ROHSA has the following dependencies:
@@ -49,7 +52,7 @@ You can now check if ROHSA is bluit correctly
   |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
   |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
  
-  Version 1.0.0
+  Version {!../version!}
   ROHSA is released as open source code
   Check out the documentation: https://antoinemarchal.github.io/ROHSA/
  
