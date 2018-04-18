@@ -7,7 +7,7 @@ module mod_read
   
   private
   
-  public :: read_cube, read_map, read_parameters
+  public :: read_cube, read_map, read_parameters!, read_fits
 
 contains
   
@@ -99,6 +99,19 @@ contains
 
 !   subroutine read_fits()
 !     implicit none
+!     integer status, unit, readwrite, blocksize, naxes, nfound, naxis 
+!     integer group, firstpix, nbuffer, npixels, i
+!     real datamin, datamax, nullval, buffer
+!     logical anynull
+!     character filename   
 
+!     print*, "Start"
+!     status = 0
+!     filename = "GHIGLS_DFN_Tb.fits"
+!     readwrite = 0 
+    
+!     call ftgiou(unit, status)
+!     call ftopen(unit, filename, readwrite, blocksize, status)  
+   
 !   end subroutine read_fits
 end Module mod_read

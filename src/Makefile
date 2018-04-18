@@ -6,6 +6,7 @@ FC=gfortran
 GFLAGS= -O -Wall -fbounds-check -g -Wno-uninitialized -I/usr/local/include
 
 CFLAGS=-openmp -llapack -lcfitsio -lm -g -O2
+# -L/Users/antoinemarchal/mylib/cfitsio-master
 
 OUT=ROHSA
 
