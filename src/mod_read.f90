@@ -7,7 +7,7 @@ module mod_read
   
   private
   
-  public :: read_cube, read_map, read_parameters, read_fits
+  public :: read_cube, read_map, read_parameters
 
 contains
   
@@ -97,11 +97,8 @@ contains
     close(11)
   end subroutine read_map
 
-  subroutine read_fits()
-    implicit none
-!     call readimage()
-    print *
-    print *,"All the fitsio cookbook routines ran successfully."
+!   subroutine read_fits()
+!     implicit none
 
-  end subroutine read_fits
+!   end subroutine read_fits
 end Module mod_read

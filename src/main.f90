@@ -55,8 +55,6 @@ program ROHSA
   call get_command_argument(1, filename_parameters)
   print*, ""
 
-  call read_fits()
-
   !Default user parameters
   n_gauss = 3
   lambda_amp = 1._xp
