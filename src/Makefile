@@ -3,7 +3,7 @@ FC=gfortran
 # FC=mpif90
 
 # GFLAGS=-Wall -Wextra -pedantic -std=f2008 -g -O2 -fno-second-underscore -Wno-compare-reals -fcheck=all -fimplicit-none -fbacktrace -gdwarf-2 -fall-intrinsics -Wno-unused-function -fcheck=bounds -I/usr/local/include
-GFLAGS= -O -Wall -fbounds-check -g -Wno-uninitialized  -I/usr/local/include
+GFLAGS= -O -Wall -fbounds-check -g -Wno-uninitialized -I/usr/local/include
 
 CFLAGS=-openmp -llapack -lcfitsio -lm -g -O2
 
