@@ -34,6 +34,7 @@ program ROHSA
   integer :: n            !! loop index
   integer :: power        !! loop index
   integer :: n_gauss      !! number of gaussian to fit
+  integer :: n_gauss_add  !! number of gaussian to add at each step
   integer :: m            !! number of corrections used in the limited memory matrix by LBFGS-B
   integer :: lstd         !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
   integer :: ustd         !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
@@ -55,11 +56,12 @@ program ROHSA
   call header()
   call get_command_argument(1, filename_parameters)
   print*, ""
-
+  
 !   call read_fits()
 
   !Default user parameters
-  n_gauss = 3
+  n_gauss = 1
+  n_gauss_add = 1
   lambda_amp = 1._xp
   lambda_mu = 1._xp
   lambda_sig = 1._xp
@@ -73,8 +75,9 @@ program ROHSA
   iprint = -1
   iprint_init = -1
 
-  call read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_sig, maxiter_init, maxiter, m, noise, regul, lstd, ustd, iprint, iprint_init)
+  call read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, n_gauss_add, &
+       lambda_amp, lambda_mu, lambda_sig, lambda_var_sig, maxiter_init, maxiter, m, noise, regul, &
+       lstd, ustd, iprint, iprint_init)
     
   print*, "filename = '",trim(filename),"'"
   print*, "fileout = '",trim(fileout),"'"
@@ -83,6 +86,7 @@ program ROHSA
   print*, "______Parameters_____"
   print*,
   print*, "n_gauss = ", n_gauss
+  print*, "n_gauss_add = ", n_gauss_add
   print*, "lambda_amp = ", lambda_amp
   print*, "lambda_mu = ", lambda_mu
   print*, "lambda_sig = ", lambda_sig

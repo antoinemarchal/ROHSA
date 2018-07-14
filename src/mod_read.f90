@@ -11,15 +11,16 @@ module mod_read
 
 contains
   
-  subroutine read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, lambda_amp, lambda_mu, &
-       lambda_sig, lambda_var_sig, maxiter_init, maxiter, m, noise, regul, lstd, ustd, iprint, iprint_init)
+  subroutine read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, n_gauss_add, &
+       lambda_amp, lambda_mu, lambda_sig, lambda_var_sig, maxiter_init, maxiter, m, noise, regul, lstd, ustd, &
+       iprint, iprint_init)
     implicit none
 
     integer :: ios=0
 
     character(len=512), intent(in) :: filename_parameters
 
-    integer, intent(inout) :: n_gauss
+    integer, intent(inout) :: n_gauss, n_gauss_add
     integer, intent(inout) :: m 
     integer, intent(inout) :: lstd, ustd
     integer, intent(inout) :: iprint, iprint_init
@@ -31,7 +32,7 @@ contains
     character(len=512), intent(inout) :: fileout
     character(len=512), intent(inout) :: filename_noise
 
-    namelist /user_parameters/ filename, fileout, filename_noise, n_gauss, lambda_amp, lambda_mu, &
+    namelist /user_parameters/ filename, fileout, filename_noise, n_gauss, n_gauss_add, lambda_amp, lambda_mu, &
          & lambda_sig, lambda_var_sig, maxiter_init, maxiter, m, noise, regul, lstd, ustd, iprint, iprint_init
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)

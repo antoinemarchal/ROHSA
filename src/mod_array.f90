@@ -6,7 +6,7 @@ module mod_array
 
   private
 
-  public :: convolution_2D_mirror, ravel_3D, unravel_3D
+  public :: convolution_2D_mirror, ravel_2D, ravel_3D, unravel_3D, mean
   
 contains
 
@@ -92,6 +92,27 @@ contains
   end subroutine convolution_2D_mirror
 
 
+  ! Return a contiguous flattened 1D array from a 2D array
+  subroutine ravel_2D(map, vector, dim_y, dim_x)
+    implicit none
+
+    integer, intent(in) :: dim_y, dim_x
+    real(xp), intent(in), dimension(:,:), allocatable :: map
+    real(xp), intent(inout), dimension(:), allocatable :: vector
+
+    integer :: j, k, i__
+
+    i__ = 1
+    
+    do k=1, dim_x
+       do j=1, dim_y
+             vector(i__) = map(j,k)
+             i__ = i__ + 1
+       end do
+    end do
+  end subroutine ravel_2D
+
+  
   ! Return a contiguous flattened 1D array from a 3D array
   subroutine ravel_3D(cube, vector, dim_v, dim_y, dim_x)
     implicit none
@@ -135,5 +156,18 @@ contains
        end do
     end do
   end subroutine unravel_3D
+
+
+  pure function mean(array)
+    !! Compute the mean of a 1D array
+    implicit none
+
+    real(xp), intent(in), dimension(:) :: array !! 1D array
+    real(xp) :: mean
+
+    mean = sum(array)/(max(1,size(array)))
+    
+    return
+  end function mean    
 
 end module mod_array

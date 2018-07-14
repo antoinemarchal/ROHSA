@@ -323,11 +323,18 @@ contains
     real(xp), dimension(:,:,:), allocatable :: lb_3D, ub_3D
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(:), allocatable :: beta
+    real(xp), dimension(:), allocatable :: ravel_sig
+    real(xp), dimension(:), allocatable :: mean_sig    
+    real(xp), dimension(:,:), allocatable :: image_sig
+
 
     n_beta = 3*n_gauss * dim_y * dim_x
 
     allocate(lb(n_beta), ub(n_beta), beta(n_beta))
     allocate(lb_3D(3*n_gauss,dim_y,dim_x), ub_3D(3*n_gauss,dim_y,dim_x))
+    allocate(mean_sig(n_gauss))
+    allocate(image_sig(dim_y, dim_x))
+    allocate(ravel_sig(dim_y*dim_x))
 
     do j=1, dim_x
        do i=1, dim_y
@@ -339,8 +346,15 @@ contains
     call ravel_3D(ub_3D, ub, 3*n_gauss, dim_y, dim_x)
     call ravel_3D(params, beta, 3*n_gauss, dim_y, dim_x)
 
+    !Compute mean sig vector    
+    do i=1,n_gauss
+       image_sig = params(3+(3*(i-1)),:,:)
+       call ravel_2D(image_sig, ravel_sig, dim_y, dim_x)
+       mean_sig(i) = mean(ravel_sig)
+    end do
+
     call minimize(n_beta, m, beta, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-         lambda_var_sig, maxiter, kernel, iprint, std_map)
+         lambda_var_sig, maxiter, kernel, iprint, std_map, mean_sig)
 
     call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)
         
