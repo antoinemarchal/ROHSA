@@ -177,8 +177,8 @@ contains
 
   
   ! Minimize algorithn for a cube with regularization
-  subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, maxiter, &
-       kernel, iprint, std_map)
+  subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
+       lambda_var_sig, maxiter, kernel, iprint, std_map)
     implicit none      
 
     integer, intent(in) :: n
@@ -187,7 +187,7 @@ contains
     integer, intent(in) :: n_gauss, maxiter
     integer, intent(in) :: iprint
     
-    real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
+    real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig, lambda_var_sig
     real(xp), intent(in), dimension(:), allocatable :: lb, ub
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
@@ -233,7 +233,8 @@ contains
        
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
-          call f_g_cube(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, std_map)
+          call f_g_cube(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
+               lambda_var_sig, std_map)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations
@@ -252,12 +253,12 @@ contains
   
   ! Compute the objective function for a cube and the gradient of the obkective function
   subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
-       std_map)
+       lambda_var_sig, std_map)
     implicit none
 
     integer, intent(in) :: n_gauss
     integer, intent(in) :: dim_v, dim_y, dim_x
-    real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
+    real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig, lambda_var_sig
     real(xp), intent(in), dimension(:), allocatable :: beta
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
@@ -276,7 +277,6 @@ contains
     real(xp), dimension(:,:,:,:), allocatable :: dF_over_dB
     real(xp), dimension(:,:,:), allocatable :: dR_over_dB
     real(xp), dimension(:,:,:), allocatable :: deriv
-
 
     allocate(dR_over_dB(3*n_gauss, dim_y, dim_x))
     allocate(dF_over_dB(3*n_gauss, dim_v, dim_y, dim_x))

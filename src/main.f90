@@ -86,6 +86,7 @@ program ROHSA
   print*, "lambda_amp = ", lambda_amp
   print*, "lambda_mu = ", lambda_mu
   print*, "lambda_sig = ", lambda_sig
+  print*, "lambda_var_sig = ", lambda_var_sig
   print*, "maxiter_itit = ", maxiter_init
   print*, "maxiter = ", maxiter
   print*, "lstd = ", lstd
@@ -184,7 +185,7 @@ program ROHSA
            end if
            
            call update(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, lambda_sig, &
-                maxiter, m, kernel, iprint, std_map)        
+                lambda_var_sig, maxiter, m, kernel, iprint, std_map)        
            deallocate(std_map)
         end if
      end if
@@ -214,7 +215,7 @@ program ROHSA
 
   if (regul .eqv. .true.) then
      call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, lambda_sig, &
-          maxiter, m, kernel, iprint, std_map)
+          lambda_var_sig, maxiter, m, kernel, iprint, std_map)
   end if
 
   print*,

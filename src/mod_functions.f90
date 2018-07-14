@@ -296,8 +296,8 @@ contains
   end subroutine upgrade
 
 
-  subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, maxiter, m, kernel, &
-       iprint, std_map)
+  subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, lambda_var_sig, maxiter, &
+       m, kernel, iprint, std_map)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
@@ -314,6 +314,7 @@ contains
     real(xp), intent(in) :: lambda_amp !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_mu !! lambda for mean position parameter
     real(xp), intent(in) :: lambda_sig !! lambda for dispersion parameter
+    real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
 
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
     
@@ -338,8 +339,8 @@ contains
     call ravel_3D(ub_3D, ub, 3*n_gauss, dim_y, dim_x)
     call ravel_3D(params, beta, 3*n_gauss, dim_y, dim_x)
 
-    call minimize(n_beta, m, beta, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, maxiter, &
-         kernel, iprint, std_map)
+    call minimize(n_beta, m, beta, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
+         lambda_var_sig, maxiter, kernel, iprint, std_map)
 
     call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)
         
