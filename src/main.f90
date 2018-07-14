@@ -44,6 +44,7 @@ program ROHSA
   real(xp) :: lambda_amp  !! lambda for amplitude parameter
   real(xp) :: lambda_mu   !! lamnda for mean position parameter
   real(xp) :: lambda_sig  !! lambda for dispersion parameter
+  real(xp) :: lambda_var_sig  !! lambda for variance dispersion parameter
 
   character(len=512) :: filename_parameters !! name of the parameters file (default parameters.txt)
   character(len=512) :: filename            !! name of the data file
@@ -62,6 +63,7 @@ program ROHSA
   lambda_amp = 1._xp
   lambda_mu = 1._xp
   lambda_sig = 1._xp
+  lambda_var_sig = 1._xp
   maxiter_init = 15000
   maxiter = 800
   m = 10
@@ -72,7 +74,7 @@ program ROHSA
   iprint_init = -1
 
   call read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, lambda_amp, lambda_mu, lambda_sig, &
-       maxiter_init, maxiter, m, noise, regul, lstd, ustd, iprint, iprint_init)
+       lambda_var_sig, maxiter_init, maxiter, m, noise, regul, lstd, ustd, iprint, iprint_init)
     
   print*, "filename = '",trim(filename),"'"
   print*, "fileout = '",trim(fileout),"'"
