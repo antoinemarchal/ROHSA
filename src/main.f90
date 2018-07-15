@@ -148,8 +148,8 @@ program ROHSA
   call reshape_up(data, cube, dim_data, dim_cube)
 
   !Allocate memory for fit_params array
-  allocate(fit_params(3*n_gauss, 1, 1))
-
+  allocate(fit_params(3*(n_gauss+(nside*n_gauss_add)), 1, 1))
+  
   print*, "                    Start iteration"
   print*,
   
