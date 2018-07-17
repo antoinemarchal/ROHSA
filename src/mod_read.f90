@@ -7,7 +7,7 @@ module mod_read
   
   private
   
-  public :: read_cube, read_map, read_parameters, read_fits_real_3d
+  public :: read_cube, read_map, read_parameters!, read_fits_real_3d
 
 contains
   
@@ -117,84 +117,84 @@ contains
     
   ! end subroutine read_fits
 
-  subroutine read_fits_real_3d (filename, arr, status, dim1, dim2, dim3, indfmt)
-    !
-    character(*),                intent(in)  :: filename
-    real(xp), dimension(:,:,:), allocatable  :: arr
-    real(xp), dimension(:,:), allocatable  :: foo
-    integer,            intent(out) :: status
-    integer,  optional, intent(out) :: dim1
-    integer,  optional, intent(out) :: dim2
-    integer,  optional, intent(out) :: dim3
-    integer,  optional, intent(in)  :: indfmt
-    !
-    character(len=80)   :: comm
-    integer :: unit, blk, i, d1, d2, d3, nele, ifmt
-    logical          :: anyf
-    ! ----------------------------------------------------------------------------
-    ifmt = 0
-    if (present(indfmt)) ifmt = indfmt
-    !
-    !			open the fits file.
-    !
-    status = 0
-    i      = 0
-    call ftgiou (unit, status)
-    call ftopen (unit, filename, i, blk, status)
-    !
-    !			allocate space for the array in the primary hdu.
-    !
-    call ftgidm (unit, d1, status)
-    if ((status .ne. 0) .or. (d1 .lt. 3)) then
-       if (d1 .lt. 3) print 1, status, 'primary hdu has insufficient axes.'
-       return
-    end if
-    !
-    call ftgkyj (unit, 'naxis1', d1, comm, status)
-    call ftgkyj (unit, 'naxis2', d2, comm, status)
-    call ftgkyj (unit, 'naxis3', d3, comm, status)
-    if (status .ne. 0) return
-    if (present(dim1)) dim1 = d1
-    if (present(dim2)) dim2 = d2
-    if (present(dim3)) dim3 = d3
-    !
-    ! if (.not. associated(arr)) then
-    !    select case (ifmt)
-    !    case (7)
-    !       allocate (arr(1:d1,     1:d2,     1:d3    ), stat=status)
-    !    case (6)
-    !       allocate (arr(0:(d1-1), 1:d2,     1:d3    ), stat=status)
-    !    case (5)
-    !       allocate (arr(1:d1,     0:(d2-1), 1:d3    ), stat=status)
-    !    case (4)
-    !       allocate (arr(0:(d1-1), 0:(d2-1), 1:d3    ), stat=status)
-    !    case (3)
-    !       allocate (arr(1:d1,     1:d2,     0:(d3-1)), stat=status)
-    !    case (2)
-    !       allocate (arr(0:(d1-1), 1:d2,     0:(d3-1)), stat=status)
-    !    case (1)
-    !       allocate (arr(1:d1,     0:(d2-1), 0:(d3-1)), stat=status)
-    !    case default
-    allocate (arr(0:(d1-1), 0:(d2-1), 0:(d3-1)), stat=status)
-    !    end select
-    !    if (status .ne. 0) return
-    ! end if
-    !
-    !			fill the array.
-    !
-    allocate(foo(d1,d2))
-    nele = d1 * d2
-    call ftgpve (unit, 0, 1, nele, 0, foo, anyf, status)
-    print*, foo
-    !
-    !			close the fits file.
-    !
-    call ftclos (unit, status)
-    if (unit .ge. 50) call ftfiou (unit, status)
-    !
-    return
-    ! ----------------------------------------------------------------------------
-1   format ('read_fits_real_3d:  status = ',i10,3x,a)
-    !
-  end subroutine read_fits_real_3d
+!   subroutine read_fits_real_3d (filename, arr, status, dim1, dim2, dim3, indfmt)
+!     !
+!     character(*),                intent(in)  :: filename
+!     real(xp), dimension(:,:,:), allocatable  :: arr
+!     real(xp), dimension(:,:), allocatable  :: foo
+!     integer,            intent(out) :: status
+!     integer,  optional, intent(out) :: dim1
+!     integer,  optional, intent(out) :: dim2
+!     integer,  optional, intent(out) :: dim3
+!     integer,  optional, intent(in)  :: indfmt
+!     !
+!     character(len=80)   :: comm
+!     integer :: unit, blk, i, d1, d2, d3, nele, ifmt
+!     logical          :: anyf
+!     ! ----------------------------------------------------------------------------
+!     ifmt = 0
+!     if (present(indfmt)) ifmt = indfmt
+!     !
+!     !			open the fits file.
+!     !
+!     status = 0
+!     i      = 0
+!     call ftgiou (unit, status)
+!     call ftopen (unit, filename, i, blk, status)
+!     !
+!     !			allocate space for the array in the primary hdu.
+!     !
+!     call ftgidm (unit, d1, status)
+!     if ((status .ne. 0) .or. (d1 .lt. 3)) then
+!        if (d1 .lt. 3) print 1, status, 'primary hdu has insufficient axes.'
+!        return
+!     end if
+!     !
+!     call ftgkyj (unit, 'naxis1', d1, comm, status)
+!     call ftgkyj (unit, 'naxis2', d2, comm, status)
+!     call ftgkyj (unit, 'naxis3', d3, comm, status)
+!     if (status .ne. 0) return
+!     if (present(dim1)) dim1 = d1
+!     if (present(dim2)) dim2 = d2
+!     if (present(dim3)) dim3 = d3
+!     !
+!     ! if (.not. associated(arr)) then
+!     !    select case (ifmt)
+!     !    case (7)
+!     !       allocate (arr(1:d1,     1:d2,     1:d3    ), stat=status)
+!     !    case (6)
+!     !       allocate (arr(0:(d1-1), 1:d2,     1:d3    ), stat=status)
+!     !    case (5)
+!     !       allocate (arr(1:d1,     0:(d2-1), 1:d3    ), stat=status)
+!     !    case (4)
+!     !       allocate (arr(0:(d1-1), 0:(d2-1), 1:d3    ), stat=status)
+!     !    case (3)
+!     !       allocate (arr(1:d1,     1:d2,     0:(d3-1)), stat=status)
+!     !    case (2)
+!     !       allocate (arr(0:(d1-1), 1:d2,     0:(d3-1)), stat=status)
+!     !    case (1)
+!     !       allocate (arr(1:d1,     0:(d2-1), 0:(d3-1)), stat=status)
+!     !    case default
+!     allocate (arr(0:(d1-1), 0:(d2-1), 0:(d3-1)), stat=status)
+!     !    end select
+!     !    if (status .ne. 0) return
+!     ! end if
+!     !
+!     !			fill the array.
+!     !
+!     allocate(foo(d1,d2))
+!     nele = d1 * d2
+!     call ftgpve (unit, 0, 1, nele, 0, foo, anyf, status)
+!     print*, foo
+!     !
+!     !			close the fits file.
+!     !
+!     call ftclos (unit, status)
+!     if (unit .ge. 50) call ftfiou (unit, status)
+!     !
+!     return
+!     ! ----------------------------------------------------------------------------
+! 1   format ('read_fits_real_3d:  status = ',i10,3x,a)
+!     !
+!   end subroutine read_fits_real_3d
 end Module mod_read
