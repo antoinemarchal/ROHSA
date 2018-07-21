@@ -68,7 +68,7 @@ program ROHSA
   
   !Default user parameters
   n_gauss = 1
-  n_gauss_add = 1
+  n_gauss_add = 0
   lambda_amp = 1._xp
   lambda_mu = 1._xp
   lambda_sig = 1._xp
