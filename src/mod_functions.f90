@@ -167,7 +167,7 @@ contains
   end subroutine go_up_level
 
   
-  subroutine init_spectrum(n_gauss, params, dim_v, line, maxiter, m, iprint)
+  subroutine init_spectrum(n_gauss, params, dim_v, line, amp_fact_init, sig_init, maxiter, m, iprint)
     !! Initialization of the mean sprectrum with N Gaussian
     implicit none
     
@@ -178,6 +178,9 @@ contains
     integer, intent(in) :: iprint !! print option
 
     real(xp), intent(in), dimension(dim_v) :: line !! spectrum
+    real(xp), intent(in) :: amp_fact_init !! times max amplitude of additional Gaussian
+    real(xp), intent(in) :: sig_init !! dispersion of additional Gaussian
+
     real(xp), intent(inout), dimension(3*n_gauss)  :: params !! params to optimize
 
     integer :: i, j, k, p
@@ -209,8 +212,8 @@ contains
        end do
        
        x(2+(3*(i-1))) = minloc(residual, dim_v)
-       x(1+(3*(i-1))) = line(int(x(2+(3*(i-1))))) * 2._xp/3._xp
-       x(3+(3*(i-1))) = 5._xp;
+       x(1+(3*(i-1))) = line(int(x(2+(3*(i-1))))) * amp_fact_init
+       x(3+(3*(i-1))) = sig_init;
        
        call minimize_spec(3*i, m, x, lb, ub, line, dim_v, i, maxiter, iprint)
        

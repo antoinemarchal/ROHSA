@@ -46,6 +46,8 @@ program ROHSA
   real(xp) :: lambda_mu   !! lamnda for mean position parameter
   real(xp) :: lambda_sig  !! lambda for dispersion parameter
   real(xp) :: lambda_var_sig  !! lambda for variance dispersion parameter
+  real(xp) :: amp_fact_init !! times max amplitude of additional Gaussian
+  real(xp) :: sig_init !! dispersion of additional Gaussian
 
   character(len=512) :: filename_parameters !! name of the parameters file (default parameters.txt)
   character(len=512) :: filename            !! name of the data file
@@ -71,6 +73,8 @@ program ROHSA
   lambda_mu = 1._xp
   lambda_sig = 1._xp
   lambda_var_sig = 1._xp
+  amp_fact_init = 2._xp/3._xp
+  sig_init = 5._xp
   maxiter_init = 15000
   maxiter = 800
   m = 10
@@ -81,8 +85,8 @@ program ROHSA
   iprint_init = -1
 
   call read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, n_gauss_add, &
-       lambda_amp, lambda_mu, lambda_sig, lambda_var_sig, maxiter_init, maxiter, m, noise, regul, &
-       lstd, ustd, iprint, iprint_init)
+       lambda_amp, lambda_mu, lambda_sig, lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, &
+       m, noise, regul, lstd, ustd, iprint, iprint_init)
     
   print*, "filename = '",trim(filename),"'"
   print*, "fileout = '",trim(fileout),"'"
@@ -96,6 +100,8 @@ program ROHSA
   print*, "lambda_mu = ", lambda_mu
   print*, "lambda_sig = ", lambda_sig
   print*, "lambda_var_sig = ", lambda_var_sig
+  print*, "amp_fact_init = ", amp_fact_init
+  print*, "sig_init = ", sig_init
   print*, "maxiter_itit = ", maxiter_init
   print*, "maxiter = ", maxiter
   print*, "lstd = ", lstd
@@ -168,7 +174,8 @@ program ROHSA
      
      if (n == 0) then
         print*, "Init mean spectrum"        
-        call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), maxiter_init, m, iprint_init)
+        call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, sig_init, &
+             maxiter_init, m, iprint_init)
      end if
      
      call go_up_level(fit_params)
@@ -245,6 +252,8 @@ program ROHSA
   write(12,fmt=*) "# lambda_mu = ", lambda_mu
   write(12,fmt=*) "# lambda_sig = ", lambda_sig
   write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
+  write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
+  write(12,fmt=*) "# sig_init = ", sig_init
   write(12,fmt=*) "# maxiter_itit = ", maxiter_init
   write(12,fmt=*) "# maxiter = ", maxiter
   write(12,fmt=*) "# lstd = ", lstd
