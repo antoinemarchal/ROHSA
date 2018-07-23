@@ -382,5 +382,4 @@ contains
     call ravel_3D(g_3D, g, 3*n_gauss, dim_y, dim_x)
   end subroutine f_g_cube
 
-  
 end module mod_optimize
