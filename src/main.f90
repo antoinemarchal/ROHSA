@@ -2,6 +2,7 @@
 program ROHSA
 
   use mod_constants
+  use mod_start
   use mod_inout
   use mod_rohsa
   
@@ -35,7 +36,6 @@ program ROHSA
 
   !Print header and get filename in argument
   call get_command_argument(1, filename_parameters)
-  print*, ""
     
   !Default user parameters
   n_gauss = 1
@@ -61,7 +61,7 @@ program ROHSA
        m, noise, regul, lstd, ustd, iprint, iprint_init)
 
   !Load data
-  print*, "filename = '",trim(filename),"'"
+!   print*, "filename = '",trim(filename),"'"
   call read_cube(filename, data)
   
   if (noise .eqv. .true.) then
