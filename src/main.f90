@@ -53,19 +53,12 @@ program ROHSA
   character(len=512) :: filename            !! name of the data file
   character(len=512) :: fileout             !! name of the output result
   character(len=512) :: filename_noise      !! name of the file with STD map (if noise .eq. true)
-
-  ! real(xp), dimension(:,:,:), allocatable :: test
-  ! integer :: status, dim1,dim2,dim3
   
   !Print header and get filename in argument
   call header()
   call get_command_argument(1, filename_parameters)
   print*, ""
-  
-  ! call read_fits_real_3d("GHIGLS_DFN_Tb.fits", test, status, dim1,dim2,dim3)
-  ! print*, test(:,:,1)
-  ! stop
-  
+    
   !Default user parameters
   n_gauss = 1
   n_gauss_add = 0
