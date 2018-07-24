@@ -6,7 +6,7 @@ module mod_array
 
   private
 
-  public :: convolution_2D_mirror, ravel_2D, ravel_3D, unravel_3D, mean
+  public :: convolution_2D_mirror, ravel_2D, ravel_3D, unravel_3D, mean, std, std_2D
   
 contains
 
@@ -169,5 +169,54 @@ contains
     
     return
   end function mean    
+
+
+  pure function std(array)
+    !! Compute the STD of a 1D array
+    implicit none
+
+    real(xp), intent(in), dimension(:) :: array !! 1D array
+    integer :: i
+    integer :: n
+    real(xp) :: std !! standard deviation 
+    real(xp) :: mean
+    real(xp) :: var
+
+    mean = 0._xp; var = 0._xp
+    std = 0._xp
+
+    n = size(array)
+    mean = sum(array) / n
+
+    do i=1, n
+       var = var + (array(i) - mean)**2._xp
+    end do
+    
+    var = var / (n - 1)
+    std = sqrt(var)
+    
+    return
+  end function std
+
+
+  function std_2D(map, dim_y, dim_x)
+    !! Compute the STD of a 2D map
+    implicit none
+
+    integer, intent(in) :: dim_y !! dimension along spatial axis y
+    integer, intent(in) :: dim_x !! dimension along spatial axis x
+    real(xp), intent(in), dimension(:,:), allocatable :: map !! 2D array
+    real(xp), dimension(:), allocatable :: vector !! 1D array 
+    real(xp) :: std_2D
+
+    allocate(vector(dim_y*dim_x))
+
+    call ravel_2D(map, vector, dim_y, dim_x)
+    std_2D = std(vector)
+
+    deallocate(vector)
+
+  end function std_2D
+
 
 end module mod_array

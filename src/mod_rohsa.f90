@@ -53,6 +53,7 @@ contains
     real(xp), dimension(:,:,:), allocatable :: fit_params  !! parameters to optimize with cube mean at each iteration
     real(xp), dimension(:,:,:), allocatable :: grid_params !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:), allocatable :: std_map       !! standard deviation map fo the cube computed by ROHSA with lb and ub
+    real(xp), dimension(:), allocatable :: std_spect       !! std spectrum of the observation
     
     integer, dimension(3) :: dim_data !! dimension of original data
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
@@ -119,6 +120,10 @@ contains
     write(*,*) "Reshape cube, new dimensions :"
     write(*,*) "dim_v, dim_y, dim_x = ", dim_cube
     print*, 
+
+    print*, "Compute std spectrum"
+    allocate(std_spect(dim_data(1)))
+    call std_spectrum(data, std_spect, dim_data(1), dim_data(2), dim_data(3))
     
     call reshape_up(data, cube, dim_data, dim_cube)
     
@@ -140,6 +145,8 @@ contains
           print*, "Init mean spectrum"        
           call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, sig_init, &
                maxiter_init, m, iprint_init)
+!           call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, sig_init, &
+!                maxiter_init, m, iprint_init)
        end if
        
        call go_up_level(fit_params)

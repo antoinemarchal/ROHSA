@@ -10,7 +10,7 @@ module mod_functions
   private
   
   public :: mean_array, mean_map, dim2nside, dim_data2dim_cube, reshape_up, reshape_down, go_up_level, init_spectrum, &
-       upgrade, update, set_stdmap
+       upgrade, update, set_stdmap, std_spectrum
 
 contains
     
@@ -389,32 +389,29 @@ contains
     
   end subroutine set_stdmap
 
-
-  pure function std(array)
-    !! Compute the STD of a 1D array
+  
+  subroutine std_spectrum(data, spectrum, dim_v, dim_y, dim_x)
+    !! Compute the STD spectrum of a cube along the spatial axis
     implicit none
+    
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data !! initial fits data
+    integer, intent(in) :: dim_v !! dimension along v axis
+    integer, intent(in) :: dim_y !! dimension along spatial axis y 
+    integer, intent(in) :: dim_x !! dimension along spatial axis x
 
-    real(xp), intent(in), dimension(:) :: array !! 1D array
-    integer :: i
-    integer :: n
-    real(xp) :: std !! standard deviation 
-    real(xp) :: mean
-    real(xp) :: var
+    real(xp), intent(inout), dimension(:), allocatable :: spectrum !! std_spectrum of the observation
+    real(xp), dimension(:,:), allocatable :: map !! 2D array
 
-    mean = 0._xp; var = 0._xp
-    std = 0._xp
+    integer :: i !! loop index
 
-    n = size(array)
-    mean = sum(array) / n
-
-    do i=1, n
-       var = var + (array(i) - mean)**2._xp
+    do i=1,dim_v
+       allocate(map(dim_y,dim_x))
+       map = data(i,:,:)
+       spectrum(i) = std_2D(map, dim_y, dim_x)
+       deallocate(map)
     end do
     
-    var = var / (n - 1)
-    std = sqrt(var)
-    
-    return
-  end function std
-  
+  end subroutine std_spectrum  
+
+
 end module mod_functions
