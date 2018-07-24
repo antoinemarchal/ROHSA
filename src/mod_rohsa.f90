@@ -16,13 +16,14 @@ module mod_rohsa
 contains
 
   subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, noise, regul, lstd, ustd, init_option, &
-       iprint, iprint_init)
+       lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, &
+       init_option, iprint, iprint_init)
     
     implicit none
     
     logical, intent(in) :: noise        !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
     logical, intent(in) :: regul        !! if true --> activate regulation
+    logical, intent(in) :: descent      !! if true --> activate hierarchical descent to initiate the optimization
     integer, intent(in) :: n_gauss      !! number of gaussian to fit
     integer, intent(in) :: n_gauss_add  !! number of gaussian to add at each step
     integer, intent(in) :: m            !! number of corrections used in the limited memory matrix by LBFGS-B
@@ -55,6 +56,7 @@ contains
     real(xp), dimension(:,:,:), allocatable :: grid_params !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:), allocatable :: std_map       !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: std_spect       !! std spectrum of the observation
+    real(xp), dimension(:), allocatable :: guess_std_spect !! params obtain fi the optimization of the std spectrum of the observation
     
     integer, dimension(3) :: dim_data !! dimension of original data
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
@@ -122,81 +124,92 @@ contains
     write(*,*) "Reshape cube, new dimensions :"
     write(*,*) "dim_v, dim_y, dim_x = ", dim_cube
     print*, 
-
+    
     print*, "Compute std spectrum"
     allocate(std_spect(dim_data(1)))
     call std_spectrum(data, std_spect, dim_data(1), dim_data(2), dim_data(3))
     
     call reshape_up(data, cube, dim_data, dim_cube)
     
-    !Allocate memory for fit_params array
+    !Allocate memory for parameters grids
+    allocate(grid_params(3*n_gauss, dim_data(2), dim_data(3)))
     allocate(fit_params(3*(n_gauss+(nside*n_gauss_add)), 1, 1))
     
     print*, "                    Start iteration"
     print*,
     
-    !Start iteration
-    do n=0,nside
-       power = 2**n
-       
-       allocate(cube_mean(dim_cube(1), power, power))
-       
-       call mean_array(power, cube, cube_mean)
-       
-       if (n == 0) then
-          if (init_option .eq. "mean") then
-             print*, "Init mean spectrum"        
-             call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, sig_init, &
-                  maxiter_init, m, iprint_init)
-          elseif (init_option .eq. "std") then
-             call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, sig_init, &
-                  maxiter_init, m, iprint_init)
-          else 
-             print*, "init_option keyword should be 'mean' of 'std'"
-             stop
-          end if
-       end if
-       
-       call go_up_level(fit_params)
-       write(*,*) ""
-       write(*,*) "Update parameters level ", n, ">", power
-       
-       if (regul .eqv. .false.) then
-          call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), maxiter, m, iprint)
-       end if
-       
-       if (regul .eqv. .true.) then
+    if (descent .eqv. .true.) then
+       print*, "Start hierarchical descent"
+       !Start iteration
+       do n=0,nside
+          power = 2**n
+          
+          allocate(cube_mean(dim_cube(1), power, power))
+          
+          call mean_array(power, cube, cube_mean)
+          
           if (n == 0) then
+             if (init_option .eq. "mean") then
+                print*, "Init mean spectrum"        
+                call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, sig_init, &
+                     maxiter_init, m, iprint_init)
+             elseif (init_option .eq. "std") then
+                call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, sig_init, &
+                     maxiter_init, m, iprint_init)
+             else 
+                print*, "init_option keyword should be 'mean' of 'std'"
+                stop
+             end if
+          end if
+          
+          call go_up_level(fit_params)
+          write(*,*) ""
+          write(*,*) "Update parameters level ", n, ">", power
+          
+          if (regul .eqv. .false.) then
              call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), maxiter, m, iprint)
           end if
           
-          if (n > 0 .and. n < nside) then
-             allocate(std_map(power, power))
-             
-             if (noise .eqv. .true.) then
-                call mean_map(power, std_cube, std_map)           
-             else
-                call set_stdmap(std_map, cube_mean, lstd, ustd)
+          if (regul .eqv. .true.) then
+             if (n == 0) then
+                call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), maxiter, m, iprint)
              end if
              
-             call update(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, lambda_sig, &
-                  lambda_var_sig, maxiter, m, kernel, iprint, std_map)        
-             deallocate(std_map)
+             if (n > 0 .and. n < nside) then
+                allocate(std_map(power, power))
+                
+                if (noise .eqv. .true.) then
+                   call mean_map(power, std_cube, std_map)           
+                else
+                   call set_stdmap(std_map, cube_mean, lstd, ustd)
+                end if
+                
+                call update(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, lambda_sig, &
+                     lambda_var_sig, maxiter, m, kernel, iprint, std_map)        
+                deallocate(std_map)
+             end if
           end if
-       end if
+          
+          deallocate(cube_mean)
+       enddo
        
-       deallocate(cube_mean)
-    enddo
+       print*,
+       write(*,*) "Reshape cube, restore initial dimensions :"
+       write(*,*) "dim_v, dim_y, dim_x = ", dim_data
+              
+       call reshape_down(fit_params, grid_params,  (/ 3*n_gauss, dim_cube(2), dim_cube(3)/), &
+            (/ 3*n_gauss, dim_data(2), dim_data(3)/))       
+
+       else
+          print*, "Use of the std spectrum to initialize each los"
+          allocate(guess_std_spect(3*n_gauss))
+          call init_spectrum(n_gauss, guess_std_spect, dim_cube(1), std_spect, amp_fact_init, sig_init, &
+               maxiter_init, m, iprint_init)
+          call init_grid_params(grid_params, guess_std_spect, dim_data(2), dim_data(3))
+          deallocate(guess_std_spect)
+    end if
     
-    print*,
-    write(*,*) "Reshape cube, restore initial dimensions :"
-    write(*,*) "dim_v, dim_y, dim_x = ", dim_data
-    
-    allocate(grid_params(3*n_gauss, dim_data(2), dim_data(3)))
-    
-    call reshape_down(fit_params, grid_params,  (/ 3*n_gauss, dim_cube(2), dim_cube(3)/), &
-         (/ 3*n_gauss, dim_data(2), dim_data(3)/))
-    
+    !Update last level
     print*,
     print*, "Update last level ..."
     print*,

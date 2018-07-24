@@ -10,6 +10,7 @@ program ROHSA
 
   logical :: noise        !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
   logical :: regul        !! if true --> activate regulation
+  logical :: descent      !! if true --> activate hierarchical descent to initiate the optimization
   integer :: n_gauss      !! number of gaussian to fit
   integer :: n_gauss_add  !! number of gaussian to add at each step
   integer :: m            !! number of corrections used in the limited memory matrix by LBFGS-B
@@ -52,6 +53,7 @@ program ROHSA
   m = 10
   noise = .false.
   regul = .true.
+  descent = .false.
   lstd = 0; ustd = 20
   init_option = "mean"
   iprint = -1
@@ -60,7 +62,7 @@ program ROHSA
   !Read parameters
   call read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, n_gauss_add, &
        lambda_amp, lambda_mu, lambda_sig, lambda_var_sig, amp_fact_init, sig_init, init_option, maxiter_init, &
-       maxiter, m, noise, regul, lstd, ustd, iprint, iprint_init)
+       maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init)
 
   !Load data
 !   print*, "filename = '",trim(filename),"'"
@@ -78,7 +80,7 @@ program ROHSA
   
   !Call ROHSA subroutine
   call main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, noise, regul, lstd, ustd, &
-       init_option, iprint, iprint_init)  
+       lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, noise, regul, descent, & 
+       lstd, ustd, init_option, iprint, iprint_init)  
    
 end program ROHSA

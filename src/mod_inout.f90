@@ -13,7 +13,7 @@ contains
   
   subroutine read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, n_gauss_add, &
        lambda_amp, lambda_mu, lambda_sig, lambda_var_sig, amp_fact_init, sig_init, init_option, maxiter_init, &
-       maxiter, m, noise, regul, lstd, ustd, iprint, iprint_init)
+       maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init)
     implicit none
 
     integer :: ios=0
@@ -27,7 +27,7 @@ contains
     integer, intent(inout) :: maxiter, maxiter_init
     real(xp), intent(inout) :: lambda_amp, lambda_mu, lambda_sig, lambda_var_sig
     real(xp), intent(inout) :: amp_fact_init, sig_init
-    logical, intent(inout) :: noise, regul
+    logical, intent(inout) :: noise, regul, descent
 
     character(len=512), intent(inout) :: filename
     character(len=512), intent(inout) :: fileout
@@ -36,7 +36,7 @@ contains
 
     namelist /user_parameters/ filename, fileout, filename_noise, n_gauss, n_gauss_add, lambda_amp, lambda_mu, &
          & lambda_sig, lambda_var_sig, amp_fact_init, sig_init, init_option, maxiter_init, maxiter, m, noise, &
-         regul, lstd, ustd, iprint, iprint_init
+         regul, descent, lstd, ustd, iprint, iprint_init
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
     if (ios /= 0) stop "opening file error"

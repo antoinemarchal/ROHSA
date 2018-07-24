@@ -10,7 +10,7 @@ module mod_functions
   private
   
   public :: mean_array, mean_map, dim2nside, dim_data2dim_cube, reshape_up, reshape_down, go_up_level, init_spectrum, &
-       upgrade, update, set_stdmap, std_spectrum
+       upgrade, update, set_stdmap, std_spectrum, init_grid_params
 
 contains
     
@@ -412,6 +412,27 @@ contains
     end do
     
   end subroutine std_spectrum  
+
+
+  subroutine init_grid_params(params, guess_spectrum, dim_y, dim_x)
+    !! Set up a grid params array with std spectrum at each spatial position
+    implicit none
+ 
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! grid of paramters
+    real(xp), intent(in), dimension(:), allocatable :: guess_spectrum !! std spectrum of the observation
+    integer, intent(in) :: dim_y !! dimension along spatial axis y 
+    integer, intent(in) :: dim_x !! dimension along spatial axis x
+
+    integer :: i !! index loop
+    integer :: j !! index loop
+
+    do j=1, dim_x
+       do i=1, dim_y
+          params(:,i,j) = guess_spectrum
+       end do
+    end do
+
+  end subroutine init_grid_params
 
 
 end module mod_functions
