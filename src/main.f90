@@ -30,6 +30,7 @@ program ROHSA
   character(len=512) :: filename            !! name of the data file
   character(len=512) :: fileout             !! name of the output result
   character(len=512) :: filename_noise      !! name of the file with STD map (if noise .eq. true)
+  character(len=8)   :: init_option !!Init ROHSA with the mean or the std spectrum    
 
   real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
   real(xp), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
@@ -52,6 +53,7 @@ program ROHSA
   noise = .false.
   regul = .true.
   lstd = 0; ustd = 20
+  init_option = "mean"
   iprint = -1
   iprint_init = -1
  
@@ -76,7 +78,7 @@ program ROHSA
   
   !Call ROHSA subroutine
   call main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, noise, regul, lstd, ustd, iprint, &
-       iprint_init)  
+       lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, noise, regul, lstd, ustd, &
+       init_option, iprint, iprint_init)  
    
 end program ROHSA

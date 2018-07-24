@@ -16,8 +16,8 @@ module mod_rohsa
 contains
 
   subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, noise, regul, lstd, ustd, iprint, &
-       iprint_init)
+       lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, noise, regul, lstd, ustd, init_option, &
+       iprint, iprint_init)
     
     implicit none
     
@@ -36,10 +36,11 @@ contains
     real(xp), intent(in) :: lambda_mu   !! lamnda for mean position parameter
     real(xp), intent(in) :: lambda_sig  !! lambda for dispersion parameter
     real(xp), intent(in) :: lambda_var_sig  !! lambda for variance dispersion parameter
-    real(xp), intent(in) :: amp_fact_init !! times max amplitude of additional Gaussian
-    real(xp), intent(in) :: sig_init !! dispersion of additional Gaussian
-    
-    character(len=512), intent(in) :: fileout             !! name of the output result
+    real(xp), intent(in) :: amp_fact_init   !! times max amplitude of additional Gaussian
+    real(xp), intent(in) :: sig_init        !! dispersion of additional Gaussian
+
+    character(len=8), intent(in) :: init_option !!Init ROHSA with the mean or the std spectrum    
+    character(len=512), intent(in) :: fileout   !! name of the output result
 
     integer :: nside        !! size of the reshaped data \(2^{nside}\)
     integer :: n            !! loop index
@@ -81,6 +82,7 @@ contains
     print*, "amp_fact_init = ", amp_fact_init
     print*, "sig_init = ", sig_init
     print*, "maxiter_itit = ", maxiter_init
+    print*, "init_option = ", init_option
     print*, "maxiter = ", maxiter
     print*, "lstd = ", lstd
     print*, "ustd = ", ustd
@@ -142,11 +144,17 @@ contains
        call mean_array(power, cube, cube_mean)
        
        if (n == 0) then
-          print*, "Init mean spectrum"        
-          call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, sig_init, &
-               maxiter_init, m, iprint_init)
-!           call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, sig_init, &
-!                maxiter_init, m, iprint_init)
+          if (init_option .eq. "mean") then
+             print*, "Init mean spectrum"        
+             call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, sig_init, &
+                  maxiter_init, m, iprint_init)
+          elseif (init_option .eq. "std") then
+             call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, sig_init, &
+                  maxiter_init, m, iprint_init)
+          else 
+             print*, "init_option keyword should be 'mean' of 'std'"
+             stop
+          end if
        end if
        
        call go_up_level(fit_params)
