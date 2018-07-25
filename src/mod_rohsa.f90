@@ -218,7 +218,6 @@ contains
              print*, "init_option keyword should be 'mean' of 'std'"
              stop
           end if
-          print*, guess_spect
           call init_grid_params(grid_params, guess_spect, dim_data(2), dim_data(3))
           deallocate(guess_spect)      
     end if
