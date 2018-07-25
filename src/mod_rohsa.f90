@@ -56,7 +56,8 @@ contains
     real(xp), dimension(:,:,:), allocatable :: grid_params !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:), allocatable :: std_map       !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: std_spect       !! std spectrum of the observation
-    real(xp), dimension(:), allocatable :: guess_std_spect !! params obtain fi the optimization of the std spectrum of the observation
+    real(xp), dimension(:), allocatable :: mean_spect      !! mean spectrum of the observation
+    real(xp), dimension(:), allocatable :: guess_spect !! params obtain fi the optimization of the std spectrum of the observation
     
     integer, dimension(3) :: dim_data !! dimension of original data
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
@@ -125,9 +126,12 @@ contains
     write(*,*) "dim_v, dim_y, dim_x = ", dim_cube
     print*, 
     
-    print*, "Compute std spectrum"
+    print*, "Compute mean and std spectrum"
     allocate(std_spect(dim_data(1)))
+    allocate(mean_spect(dim_data(1)))
+
     call std_spectrum(data, std_spect, dim_data(1), dim_data(2), dim_data(3))
+    call mean_spectrum(data, mean_spect, dim_data(1), dim_data(2), dim_data(3))
     
     call reshape_up(data, cube, dim_data, dim_cube)
     
@@ -201,12 +205,22 @@ contains
             (/ 3*n_gauss, dim_data(2), dim_data(3)/))       
 
        else
-          print*, "Use of the std spectrum to initialize each los"
-          allocate(guess_std_spect(3*n_gauss))
-          call init_spectrum(n_gauss, guess_std_spect, dim_cube(1), std_spect, amp_fact_init, sig_init, &
-               maxiter_init, m, iprint_init)
-          call init_grid_params(grid_params, guess_std_spect, dim_data(2), dim_data(3))
-          deallocate(guess_std_spect)
+          allocate(guess_spect(3*n_gauss))
+          if (init_option .eq. "mean") then
+             print*, "Use of the mean spectrum to initialize each los"
+             call init_spectrum(n_gauss, guess_spect, dim_cube(1), mean_spect, amp_fact_init, sig_init, &
+                  maxiter_init, m, iprint_init)
+          else if (init_option .eq. "std") then
+             print*, "Use of the std spectrum to initialize each los"
+             call init_spectrum(n_gauss, guess_spect, dim_cube(1), std_spect, amp_fact_init, sig_init, &
+                  maxiter_init, m, iprint_init)
+          else
+             print*, "init_option keyword should be 'mean' of 'std'"
+             stop
+          end if
+          print*, guess_spect
+          call init_grid_params(grid_params, guess_spect, dim_data(2), dim_data(3))
+          deallocate(guess_spect)      
     end if
     
     !Update last level
