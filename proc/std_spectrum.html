@@ -10,7 +10,7 @@
     <meta name="author" content="Antoine Marchal" >
     <link rel="icon" href="../favicon.png">
 
-    <title>errclb &ndash; ROHSA</title>
+    <title>std_spectrum &ndash; ROHSA</title>
 
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/pygments.css" rel="stylesheet">
@@ -106,7 +106,7 @@
     
   
   <div class="row">
-    <h1>errclb
+    <h1>std_spectrum
       <small>Subroutine</small>
     
     </h1>
@@ -124,18 +124,20 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title=" 0.9% of total for procedures.">26 statements</a>
+	  title=" 0.6% of total for procedures.">16 statements</a>
      </li> 
      
      
-    <li><i class="fa fa-code"></i><a href="../src/lbfgsb.f"> Source File</a></li>
+    <li><i class="fa fa-code"></i><a href="../src/mod_functions.f90"> Source File</a></li>
      
   </ul>
   <ol class="breadcrumb in-well text-right">
   
-     <li><a href='../sourcefile/lbfgsb.f.html'>lbfgsb.f</a></li>
+     <li><a href='../sourcefile/mod_functions.f90.html'>mod_functions.f90</a></li>
   
-     <li class="active">errclb</li>
+     <li><a href='../module/mod_functions.html'>mod_functions</a></li>
+  
+     <li class="active">std_spectrum</li>
   </ol>
 </div>
 </div>
@@ -176,7 +178,13 @@
 
 
 
-<em>None</em>
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  <div class="list-group">
+    <a class="list-group-item" href="../proc/std_spectrum.html#src">std_spectrum</a>
+  </div>
+</div>
+
 
 
 </div>
@@ -185,7 +193,7 @@
     
     <div class="col-md-9" id='text'>
     <h2>
-subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
+public subroutine std_spectrum(data, spectrum, dim_v, dim_y, dim_x)
     
     
 	 
@@ -194,6 +202,8 @@ subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
   
 
 
+    
+    <p>Compute the STD spectrum of a cube along the spatial axis</p>
     
 
     <h3>Arguments</h3>
@@ -214,12 +224,12 @@ subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
   
 <tr>
   
-  <td><span class="anchor" id="variable-n%7E13"></span>integer</td>
-  <td></td>
+  <td><span class="anchor" id="variable-data%7E4"></span>real(kind=xp),</td>
+  <td>intent(in),</td>
   <td></td>
   
-  <td></td><td>::</td>
-  <td><strong>n</strong></td><td></td>
+  <td>dimension(:,:,:), allocatable</td><td>::</td>
+  <td><strong>data</strong></td><td><p>initial fits data</p></td>
   
 </tr>
 
@@ -229,12 +239,12 @@ subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
   
 <tr>
   
-  <td><span class="anchor" id="variable-m%7E6"></span>integer</td>
-  <td></td>
+  <td><span class="anchor" id="variable-spectrum"></span>real(kind=xp),</td>
+  <td>intent(inout),</td>
   <td></td>
   
-  <td></td><td>::</td>
-  <td><strong>m</strong></td><td></td>
+  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>spectrum</strong></td><td><p>std_spectrum of the observation</p></td>
   
 </tr>
 
@@ -244,12 +254,12 @@ subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
   
 <tr>
   
-  <td><span class="anchor" id="variable-factr%7E3"></span>double precision</td>
-  <td></td>
+  <td><span class="anchor" id="variable-dim_v%7E10"></span>integer,</td>
+  <td>intent(in)</td>
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>factr</strong></td><td></td>
+  <td><strong>dim_v</strong></td><td><p>dimension along v axis</p></td>
   
 </tr>
 
@@ -259,12 +269,12 @@ subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
   
 <tr>
   
-  <td><span class="anchor" id="variable-l%7E5"></span>double precision</td>
-  <td></td>
+  <td><span class="anchor" id="variable-dim_y%7E4"></span>integer,</td>
+  <td>intent(in)</td>
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>l</strong>(n)</td><td></td>
+  <td><strong>dim_y</strong></td><td><p>dimension along spatial axis y </p></td>
   
 </tr>
 
@@ -274,72 +284,12 @@ subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
   
 <tr>
   
-  <td><span class="anchor" id="variable-u%7E5"></span>double precision</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>u</strong>(n)</td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-nbd%7E5"></span>integer</td>
-  <td></td>
+  <td><span class="anchor" id="variable-dim_x%7E4"></span>integer,</td>
+  <td>intent(in)</td>
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>nbd</strong>(n)</td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-task%7E3"></span>character(len=60)</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>task</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-info%7E6"></span>integer</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>info</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-k"></span>integer</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>k</strong></td><td></td>
+  <td><strong>dim_x</strong></td><td><p>dimension along spatial axis x</p></td>
   
 </tr>
 
@@ -352,10 +302,9 @@ subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
     <br>
     
     
-     
     <div class="panel panel-default">
       <div class="panel-heading">
-	<h3 class="panel-title">Called by</h3>
+	<h3 class="panel-title">Calls</h3>
       </div>
       <div class="panel-body">
 	<div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -363,32 +312,62 @@ subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
-<!-- Title: proc~~errclb~~CalledByGraph Pages: 1 -->
-<svg id="procerrclbCalledByGraph" width="152pt" height="31pt"
- viewBox="0.00 0.00 152.00 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~errclb~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
-<title>proc~~errclb~~CalledByGraph</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 148,-26.5 148,4 -4,4"/>
-<!-- proc~errclb -->
-<g id="proc~~errclb~~CalledByGraph_node1" class="node">
-<title>proc~errclb</title>
-<polygon fill="none" stroke="#000000" points="144,-22.2554 90,-22.2554 90,-.2446 144,-.2446 144,-22.2554"/>
-<text text-anchor="middle" x="117" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">errclb</text>
+<!-- Title: proc~~std_spectrum~~CallsGraph Pages: 1 -->
+<svg id="procstd_spectrumCallsGraph" width="263pt" height="72pt"
+ viewBox="0.00 0.00 263.05 71.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~std_spectrum~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 67.5)">
+<title>proc~~std_spectrum~~CallsGraph</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-67.5 259.0461,-67.5 259.0461,4 -4,4"/>
+<!-- proc~std_spectrum -->
+<g id="proc~~std_spectrum~~CallsGraph_node1" class="node">
+<title>proc~std_spectrum</title>
+<polygon fill="none" stroke="#000000" points="75.0385,-42.2554 -.0128,-42.2554 -.0128,-20.2446 75.0385,-20.2446 75.0385,-42.2554"/>
+<text text-anchor="middle" x="37.5128" y="-28.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">std_spectrum</text>
 </g>
-<!-- proc~mainlb -->
-<g id="proc~~errclb~~CalledByGraph_node2" class="node">
-<title>proc~mainlb</title>
-<g id="a_proc~~errclb~~CalledByGraph_node2"><a xlink:href=".././proc/mainlb.html" xlink:title="mainlb">
-<polygon fill="#d9534f" stroke="#d9534f" points="54,-22.2554 0,-22.2554 0,-.2446 54,-.2446 54,-22.2554"/>
-<text text-anchor="middle" x="27" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">mainlb</text>
+<!-- proc~std_2d -->
+<g id="proc~~std_spectrum~~CallsGraph_node2" class="node">
+<title>proc~std_2d</title>
+<g id="a_proc~~std_spectrum~~CallsGraph_node2"><a xlink:href=".././proc/std_2d.html" xlink:title="std_2D">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="165.0256,-42.2554 111.0256,-42.2554 111.0256,-20.2446 165.0256,-20.2446 165.0256,-42.2554"/>
+<text text-anchor="middle" x="138.0256" y="-28.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">std_2D</text>
 </a>
 </g>
 </g>
-<!-- proc~mainlb&#45;&gt;proc~errclb -->
-<g id="proc~~errclb~~CalledByGraph_edge1" class="edge">
-<title>proc~mainlb&#45;&gt;proc~errclb</title>
-<path fill="none" stroke="#000000" d="M54.003,-11.25C62.0277,-11.25 70.9665,-11.25 79.5309,-11.25"/>
-<polygon fill="#000000" stroke="#000000" points="79.7051,-14.7501 89.705,-11.25 79.705,-7.7501 79.7051,-14.7501"/>
+<!-- proc~std_spectrum&#45;&gt;proc~std_2d -->
+<g id="proc~~std_spectrum~~CallsGraph_edge1" class="edge">
+<title>proc~std_spectrum&#45;&gt;proc~std_2d</title>
+<path fill="none" stroke="#000000" d="M75.226,-31.25C83.5296,-31.25 92.3211,-31.25 100.6127,-31.25"/>
+<polygon fill="#000000" stroke="#000000" points="100.7737,-34.7501 110.7736,-31.25 100.7736,-27.7501 100.7737,-34.7501"/>
+</g>
+<!-- proc~std -->
+<g id="proc~~std_spectrum~~CallsGraph_node3" class="node">
+<title>proc~std</title>
+<g id="a_proc~~std_spectrum~~CallsGraph_node3"><a xlink:href=".././proc/std.html" xlink:title="std">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="255.0359,-63.2554 201.0359,-63.2554 201.0359,-41.2446 255.0359,-41.2446 255.0359,-63.2554"/>
+<text text-anchor="middle" x="228.0359" y="-49.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">std</text>
+</a>
+</g>
+</g>
+<!-- proc~std_2d&#45;&gt;proc~std -->
+<g id="proc~~std_spectrum~~CallsGraph_edge2" class="edge">
+<title>proc~std_2d&#45;&gt;proc~std</title>
+<path fill="none" stroke="#000000" d="M165.0317,-37.5507C173.1455,-39.4437 182.1938,-41.5547 190.8447,-43.573"/>
+<polygon fill="#000000" stroke="#000000" points="190.2041,-47.0175 200.7378,-45.8812 191.7946,-40.2006 190.2041,-47.0175"/>
+</g>
+<!-- proc~ravel_2d -->
+<g id="proc~~std_spectrum~~CallsGraph_node4" class="node">
+<title>proc~ravel_2d</title>
+<g id="a_proc~~std_spectrum~~CallsGraph_node4"><a xlink:href=".././proc/ravel_2d.html" xlink:title="ravel_2D">
+<polygon fill="#d9534f" stroke="#d9534f" points="255.0564,-22.2554 201.0154,-22.2554 201.0154,-.2446 255.0564,-.2446 255.0564,-22.2554"/>
+<text text-anchor="middle" x="228.0359" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">ravel_2D</text>
+</a>
+</g>
+</g>
+<!-- proc~std_2d&#45;&gt;proc~ravel_2d -->
+<g id="proc~~std_spectrum~~CallsGraph_edge3" class="edge">
+<title>proc~std_2d&#45;&gt;proc~ravel_2d</title>
+<path fill="none" stroke="#000000" d="M165.0317,-25.2493C173.1455,-23.4465 182.1938,-21.436 190.8447,-19.5138"/>
+<polygon fill="#000000" stroke="#000000" points="191.7351,-22.9014 200.7378,-17.3155 190.2167,-16.068 191.7351,-22.9014"/>
 </g>
 </g>
 </svg>
@@ -454,6 +433,7 @@ subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
       </div>
     </div>
      
+     
     <br>
 
     <section class="visible-xs visible-sm hidden-md">
@@ -481,7 +461,13 @@ subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
 
 
 
-<em>None</em>
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  <div class="list-group">
+    <a class="list-group-item" href="../proc/std_spectrum.html#src">std_spectrum</a>
+  </div>
+</div>
+
 
 
     </section>
@@ -504,6 +490,35 @@ subroutine errclb(n, m, factr, l, u, nbd, task, info, k)
 
     
     
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">std_spectrum</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
+    <span class="c">!! Compute the STD spectrum of a cube along the spatial axis</span>
+    <span class="k">implicit none</span>
+<span class="k">    </span>
+<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="k">data</span> <span class="c">!! initial fits data</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span> <span class="c">!! dimension along v axis</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span> <span class="c">!! dimension along spatial axis y </span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_x</span> <span class="c">!! dimension along spatial axis x</span>
+
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">spectrum</span> <span class="c">!! std_spectrum of the observation</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">map</span> <span class="c">!! 2D array</span>
+
+    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span> <span class="c">!! loop index</span>
+
+    <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">dim_v</span>
+       <span class="k">allocate</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span><span class="n">dim_x</span><span class="p">))</span>
+       <span class="n">map</span> <span class="o">=</span> <span class="k">data</span><span class="p">(</span><span class="n">i</span><span class="p">,:,:)</span>
+       <span class="n">spectrum</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">std_2D</span><span class="p">(</span><span class="n">map</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
+       <span class="k">deallocate</span><span class="p">(</span><span class="n">map</span><span class="p">)</span>
+    <span class="k">end do</span>
+<span class="k">    </span>
+<span class="k">  end subroutine </span><span class="n">std_spectrum</span>  
+</pre></div>
+
+    </section>
+    <br>
     
     
     </div>

@@ -124,18 +124,18 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title=" 0.8% of total for procedures.">20 statements</a>
+	  title=" 0.8% of total for procedures.">23 statements</a>
      </li> 
      
      
-    <li><i class="fa fa-code"></i><a href="../src/mod_read.f90"> Source File</a></li>
+    <li><i class="fa fa-code"></i><a href="../src/mod_inout.f90"> Source File</a></li>
      
   </ul>
   <ol class="breadcrumb in-well text-right">
   
-     <li><a href='../sourcefile/mod_read.f90.html'>mod_read.f90</a></li>
+     <li><a href='../sourcefile/mod_inout.f90.html'>mod_inout.f90</a></li>
   
-     <li><a href='../module/mod_read.html'>mod_read</a></li>
+     <li><a href='../module/mod_inout.html'>mod_inout</a></li>
   
      <li class="active">read_parameters</li>
   </ol>
@@ -193,7 +193,7 @@
     
     <div class="col-md-9" id='text'>
     <h2>
-public subroutine read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, lambda_amp, lambda_mu, lambda_sig, maxiter_init, maxiter, m, noise, regul, lstd, ustd, iprint, iprint_init)
+public subroutine read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init)
     
     
 	 
@@ -252,7 +252,7 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
   
 <tr>
   
-  <td><span class="anchor" id="variable-fileout"></span>character(len=512),</td>
+  <td><span class="anchor" id="variable-fileout%7E2"></span>character(len=512),</td>
   <td>intent(inout)</td>
   <td></td>
   
@@ -282,12 +282,27 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
   
 <tr>
   
-  <td><span class="anchor" id="variable-n_gauss%7E10"></span>integer,</td>
+  <td><span class="anchor" id="variable-n_gauss%7E7"></span>integer,</td>
   <td>intent(inout)</td>
   <td></td>
   
   <td></td><td>::</td>
   <td><strong>n_gauss</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-n_gauss_add%7E2"></span>integer,</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>n_gauss_add</strong></td><td></td>
   
 </tr>
 
@@ -342,7 +357,97 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
   
 <tr>
   
-  <td><span class="anchor" id="variable-maxiter_init"></span>integer,</td>
+  <td><span class="anchor" id="variable-lambda_var_amp%7E4"></span>real(kind=xp),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_var_amp</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lambda_var_mu%7E4"></span>real(kind=xp),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_var_mu</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lambda_var_sig%7E4"></span>real(kind=xp),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_var_sig</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-amp_fact_init%7E2"></span>real(kind=xp),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>amp_fact_init</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-sig_init%7E2"></span>real(kind=xp),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>sig_init</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-init_option%7E2"></span>character(len=8),</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>init_option</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-maxiter_init%7E2"></span>integer,</td>
   <td>intent(inout)</td>
   <td></td>
   
@@ -357,7 +462,7 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
   
 <tr>
   
-  <td><span class="anchor" id="variable-maxiter%7E6"></span>integer,</td>
+  <td><span class="anchor" id="variable-maxiter%7E4"></span>integer,</td>
   <td>intent(inout)</td>
   <td></td>
   
@@ -372,7 +477,7 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
   
 <tr>
   
-  <td><span class="anchor" id="variable-m%7E18"></span>integer,</td>
+  <td><span class="anchor" id="variable-m%7E16"></span>integer,</td>
   <td>intent(inout)</td>
   <td></td>
   
@@ -387,7 +492,7 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
   
 <tr>
   
-  <td><span class="anchor" id="variable-noise"></span>logical,</td>
+  <td><span class="anchor" id="variable-noise%7E2"></span>logical,</td>
   <td>intent(inout)</td>
   <td></td>
   
@@ -402,7 +507,7 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
   
 <tr>
   
-  <td><span class="anchor" id="variable-regul"></span>logical,</td>
+  <td><span class="anchor" id="variable-regul%7E2"></span>logical,</td>
   <td>intent(inout)</td>
   <td></td>
   
@@ -417,7 +522,22 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
   
 <tr>
   
-  <td><span class="anchor" id="variable-lstd"></span>integer,</td>
+  <td><span class="anchor" id="variable-descent%7E2"></span>logical,</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>descent</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lstd%7E2"></span>integer,</td>
   <td>intent(inout)</td>
   <td></td>
   
@@ -432,7 +552,7 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
   
 <tr>
   
-  <td><span class="anchor" id="variable-ustd"></span>integer,</td>
+  <td><span class="anchor" id="variable-ustd%7E2"></span>integer,</td>
   <td>intent(inout)</td>
   <td></td>
   
@@ -447,7 +567,7 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
   
 <tr>
   
-  <td><span class="anchor" id="variable-iprint%7E15"></span>integer,</td>
+  <td><span class="anchor" id="variable-iprint%7E13"></span>integer,</td>
   <td>intent(inout)</td>
   <td></td>
   
@@ -462,7 +582,7 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
   
 <tr>
   
-  <td><span class="anchor" id="variable-iprint_init"></span>integer,</td>
+  <td><span class="anchor" id="variable-iprint_init%7E2"></span>integer,</td>
   <td>intent(inout)</td>
   <td></td>
   
@@ -492,31 +612,31 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
 <!-- Title: proc~~read_parameters~~CalledByGraph Pages: 1 -->
-<svg id="procread_parametersCalledByGraph" width="170pt" height="32pt"
- viewBox="0.00 0.00 170.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~read_parameters~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg id="procread_parametersCalledByGraph" width="190pt" height="31pt"
+ viewBox="0.00 0.00 189.96 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~read_parameters~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
 <title>proc~~read_parameters~~CalledByGraph</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-28 166,-28 166,4 -4,4"/>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 185.96,-26.5 185.96,4 -4,4"/>
 <!-- proc~read_parameters -->
 <g id="proc~~read_parameters~~CalledByGraph_node1" class="node">
 <title>proc~read_parameters</title>
-<polygon fill="none" stroke="#000000" points="162,-24 90,-24 90,0 162,0 162,-24"/>
-<text text-anchor="middle" x="126" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">read_parameters</text>
+<polygon fill="none" stroke="#000000" points="181.94,-22.2554 90.02,-22.2554 90.02,-.2446 181.94,-.2446 181.94,-22.2554"/>
+<text text-anchor="middle" x="135.98" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">read_parameters</text>
 </g>
 <!-- program~rohsa -->
 <g id="proc~~read_parameters~~CalledByGraph_node2" class="node">
 <title>program~rohsa</title>
 <g id="a_proc~~read_parameters~~CalledByGraph_node2"><a xlink:href=".././program/rohsa.html" xlink:title="ROHSA">
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="54,-24 0,-24 0,0 54,0 54,-24"/>
-<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">ROHSA</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="54,-22.2554 0,-22.2554 0,-.2446 54,-.2446 54,-22.2554"/>
+<text text-anchor="middle" x="27" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">ROHSA</text>
 </a>
 </g>
 </g>
 <!-- program~rohsa&#45;&gt;proc~read_parameters -->
 <g id="proc~~read_parameters~~CalledByGraph_edge1" class="edge">
 <title>program~rohsa&#45;&gt;proc~read_parameters</title>
-<path fill="none" stroke="#000000" d="M54.0522,-12C61.9527,-12 70.8212,-12 79.5618,-12"/>
-<polygon fill="#000000" stroke="#000000" points="79.6982,-15.5001 89.6982,-12 79.6982,-8.5001 79.6982,-15.5001"/>
+<path fill="none" stroke="#000000" d="M54.2191,-11.25C61.9225,-11.25 70.6055,-11.25 79.362,-11.25"/>
+<polygon fill="#000000" stroke="#000000" points="79.6207,-14.7501 89.6207,-11.25 79.6207,-7.7501 79.6207,-14.7501"/>
 </g>
 </g>
 </svg>
@@ -528,46 +648,46 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="494pt" height="32pt"
- viewBox="0.00 0.00 493.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="550pt" height="31pt"
+ viewBox="0.00 0.00 550.25 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
 <title>Graph Key</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-28 489.5,-28 489.5,4 -4,4"/>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 546.2477,-26.5 546.2477,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
-<polygon fill="#d9534f" stroke="#d9534f" points="54,-24 0,-24 0,0 54,0 54,-24"/>
-<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="62.6818,-22.2554 .1058,-22.2554 .1058,-.2446 62.6818,-.2446 62.6818,-22.2554"/>
+<text text-anchor="middle" x="31.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
 </g>
 <!-- Function -->
 <g id="node2" class="node">
 <title>Function</title>
-<polygon fill="#d94e8f" stroke="#d94e8f" points="126,-24 72,-24 72,0 126,0 126,-24"/>
-<text text-anchor="middle" x="99" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="134.3938,-22.2554 80.3938,-22.2554 80.3938,-.2446 134.3938,-.2446 134.3938,-22.2554"/>
+<text text-anchor="middle" x="107.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
 </g>
 <!-- Interface -->
 <g id="node3" class="node">
 <title>Interface</title>
-<polygon fill="#a7506f" stroke="#a7506f" points="198,-24 144,-24 144,0 198,0 198,-24"/>
-<text text-anchor="middle" x="171" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
+<polygon fill="#a7506f" stroke="#a7506f" points="206.3938,-22.2554 152.3938,-22.2554 152.3938,-.2446 206.3938,-.2446 206.3938,-22.2554"/>
+<text text-anchor="middle" x="179.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
 </g>
 <!-- Unknown Procedure Type -->
 <g id="node4" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="320,-24 216,-24 216,0 320,0 320,-24"/>
-<text text-anchor="middle" x="268" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="356.5315,-22.2554 224.2561,-22.2554 224.2561,-.2446 356.5315,-.2446 356.5315,-22.2554"/>
+<text text-anchor="middle" x="290.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
 <g id="node5" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="392,-24 338,-24 338,0 392,0 392,-24"/>
-<text text-anchor="middle" x="365" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="428.3938,-22.2554 374.3938,-22.2554 374.3938,-.2446 428.3938,-.2446 428.3938,-22.2554"/>
+<text text-anchor="middle" x="401.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
 <g id="node6" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="#000000" points="485.5,-24 410.5,-24 410.5,0 485.5,0 485.5,-24"/>
-<text text-anchor="middle" x="448" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="#000000" points="542.102,-22.2554 446.6856,-22.2554 446.6856,-.2446 542.102,-.2446 542.102,-22.2554"/>
+<text text-anchor="middle" x="494.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -641,28 +761,33 @@ public subroutine read_parameters(filename_parameters, filename, fileout, filena
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">read_parameters</span><span class="p">(</span><span class="n">filename_parameters</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">fileout</span><span class="p">,</span> <span class="n">filename_noise</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="p">&amp;</span>
-       <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">noise</span><span class="p">,</span> <span class="n">regul</span><span class="p">,</span> <span class="n">lstd</span><span class="p">,</span> <span class="n">ustd</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">read_parameters</span><span class="p">(</span><span class="n">filename_parameters</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">fileout</span><span class="p">,</span> <span class="n">filename_noise</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">n_gauss_add</span><span class="p">,</span> <span class="p">&amp;</span>
+       <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="p">&amp;</span>
+       <span class="n">sig_init</span><span class="p">,</span> <span class="n">init_option</span><span class="p">,</span> <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">noise</span><span class="p">,</span> <span class="n">regul</span><span class="p">,</span> <span class="n">descent</span><span class="p">,</span> <span class="n">lstd</span><span class="p">,</span> <span class="n">ustd</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
     <span class="k">implicit none</span>
 
 <span class="k">    </span><span class="kt">integer</span> <span class="kd">::</span> <span class="n">ios</span><span class="o">=</span><span class="mi">0</span>
 
     <span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">512</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">filename_parameters</span>
 
-    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n_gauss</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">n_gauss_add</span>
     <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">m</span> 
     <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lstd</span><span class="p">,</span> <span class="n">ustd</span>
     <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">iprint_init</span>
     <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">maxiter_init</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span>
-    <span class="kt">logical</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">noise</span><span class="p">,</span> <span class="n">regul</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span>
+    <span class="kt">logical</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">noise</span><span class="p">,</span> <span class="n">regul</span><span class="p">,</span> <span class="n">descent</span>
 
     <span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">512</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">filename</span>
     <span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">512</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">fileout</span>
     <span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">512</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">filename_noise</span>
+    <span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">init_option</span>
 
-    <span class="k">namelist</span> <span class="o">/</span><span class="n">user_parameters</span><span class="o">/</span> <span class="n">filename</span><span class="p">,</span> <span class="n">fileout</span><span class="p">,</span> <span class="n">filename_noise</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="p">&amp;</span>
-         <span class="p">&amp;</span> <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">noise</span><span class="p">,</span> <span class="n">regul</span><span class="p">,</span> <span class="n">lstd</span><span class="p">,</span> <span class="n">ustd</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">iprint_init</span>
+    <span class="k">namelist</span> <span class="o">/</span><span class="n">user_parameters</span><span class="o">/</span> <span class="n">filename</span><span class="p">,</span> <span class="n">fileout</span><span class="p">,</span> <span class="n">filename_noise</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">n_gauss_add</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="p">&amp;</span>
+         <span class="p">&amp;</span> <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="n">init_option</span><span class="p">,</span> <span class="p">&amp;</span>
+         <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">noise</span><span class="p">,</span> <span class="n">regul</span><span class="p">,</span> <span class="n">descent</span><span class="p">,</span> <span class="n">lstd</span><span class="p">,</span> <span class="n">ustd</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">iprint_init</span>
     
     <span class="k">open</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="k">file</span><span class="o">=</span><span class="n">filename_parameters</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;old&quot;</span><span class="p">,</span> <span class="n">iostat</span><span class="o">=</span><span class="n">ios</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">ios</span> <span class="o">/=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">stop</span> <span class="s2">&quot;opening file error&quot;</span>

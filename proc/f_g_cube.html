@@ -124,7 +124,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title=" 4.2% of total for procedures.">107 statements</a>
+	  title=" 3.8% of total for procedures.">109 statements</a>
      </li> 
      
      
@@ -193,7 +193,7 @@
     
     <div class="col-md-9" id='text'>
     <h2>
-private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, std_map)
+private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map, mean_amp, mean_mu, mean_sig)
     
     
 	 
@@ -252,7 +252,7 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
   
 <tr>
   
-  <td><span class="anchor" id="variable-cube%7E10"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-cube%7E2"></span>real(kind=xp),</td>
   <td>intent(in),</td>
   <td></td>
   
@@ -282,7 +282,7 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
   
 <tr>
   
-  <td><span class="anchor" id="variable-dim_v%7E11"></span>integer,</td>
+  <td><span class="anchor" id="variable-dim_v%7E5"></span>integer,</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -297,7 +297,7 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
   
 <tr>
   
-  <td><span class="anchor" id="variable-dim_y%7E6"></span>integer,</td>
+  <td><span class="anchor" id="variable-dim_y%7E2"></span>integer,</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -312,7 +312,7 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
   
 <tr>
   
-  <td><span class="anchor" id="variable-dim_x%7E6"></span>integer,</td>
+  <td><span class="anchor" id="variable-dim_x%7E2"></span>integer,</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -327,7 +327,7 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
   
 <tr>
   
-  <td><span class="anchor" id="variable-n_gauss%7E9"></span>integer,</td>
+  <td><span class="anchor" id="variable-n_gauss%7E5"></span>integer,</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -342,7 +342,7 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
   
 <tr>
   
-  <td><span class="anchor" id="variable-kernel%7E4"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-kernel%7E2"></span>real(kind=xp),</td>
   <td>intent(in),</td>
   <td></td>
   
@@ -357,7 +357,7 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
   
 <tr>
   
-  <td><span class="anchor" id="variable-lambda_amp%7E3"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-lambda_amp%7E2"></span>real(kind=xp),</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -372,7 +372,7 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
   
 <tr>
   
-  <td><span class="anchor" id="variable-lambda_mu%7E3"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-lambda_mu%7E2"></span>real(kind=xp),</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -387,7 +387,7 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
   
 <tr>
   
-  <td><span class="anchor" id="variable-lambda_sig%7E3"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-lambda_sig%7E2"></span>real(kind=xp),</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -402,12 +402,102 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
   
 <tr>
   
-  <td><span class="anchor" id="variable-std_map%7E4"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-lambda_var_amp%7E2"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_var_amp</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lambda_var_mu%7E2"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_var_mu</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lambda_var_sig%7E2"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_var_sig</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-std_map%7E2"></span>real(kind=xp),</td>
   <td>intent(in),</td>
   <td></td>
   
   <td>dimension(:,:), allocatable</td><td>::</td>
   <td><strong>std_map</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-mean_amp%7E2"></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>mean_amp</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-mean_mu%7E2"></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>mean_mu</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-mean_sig%7E2"></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>mean_sig</strong></td><td></td>
   
 </tr>
 
@@ -431,76 +521,76 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
 <!-- Title: proc~~f_g_cube~~CallsGraph Pages: 1 -->
-<svg id="procf_g_cubeCallsGraph" width="190pt" height="158pt"
- viewBox="0.00 0.00 190.00 158.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~f_g_cube~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 154)">
+<svg id="procf_g_cubeCallsGraph" width="217pt" height="154pt"
+ viewBox="0.00 0.00 216.84 153.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~f_g_cube~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 149.5)">
 <title>proc~~f_g_cube~~CallsGraph</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-154 186,-154 186,4 -4,4"/>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-149.5 212.8354,-149.5 212.8354,4 -4,4"/>
 <!-- proc~f_g_cube -->
 <g id="proc~~f_g_cube~~CallsGraph_node1" class="node">
 <title>proc~f_g_cube</title>
-<polygon fill="none" stroke="#000000" points="54,-87 0,-87 0,-63 54,-63 54,-87"/>
-<text text-anchor="middle" x="27" y="-72.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">f_g_cube</text>
+<polygon fill="none" stroke="#000000" points="55.3076,-83.2554 -.1028,-83.2554 -.1028,-61.2446 55.3076,-61.2446 55.3076,-83.2554"/>
+<text text-anchor="middle" x="27.6024" y="-69.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">f_g_cube</text>
 </g>
 <!-- proc~myfunc_spec -->
 <g id="proc~~f_g_cube~~CallsGraph_node2" class="node">
 <title>proc~myfunc_spec</title>
 <g id="a_proc~~f_g_cube~~CallsGraph_node2"><a xlink:href=".././proc/myfunc_spec.html" xlink:title="myfunc_spec">
-<polygon fill="#d94e8f" stroke="#d94e8f" points="165.5,-150 106.5,-150 106.5,-126 165.5,-126 165.5,-150"/>
-<text text-anchor="middle" x="136" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">myfunc_spec</text>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="186.8821,-145.2554 113.1582,-145.2554 113.1582,-123.2446 186.8821,-123.2446 186.8821,-145.2554"/>
+<text text-anchor="middle" x="150.0201" y="-131.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">myfunc_spec</text>
 </a>
 </g>
 </g>
 <!-- proc~f_g_cube&#45;&gt;proc~myfunc_spec -->
 <g id="proc~~f_g_cube~~CallsGraph_edge1" class="edge">
 <title>proc~f_g_cube&#45;&gt;proc~myfunc_spec</title>
-<path fill="none" stroke="#000000" d="M43.6509,-87.1655C56.0921,-95.9889 73.6922,-107.918 90,-117 92.6748,-118.4896 95.4746,-119.9631 98.3156,-121.3973"/>
-<polygon fill="#000000" stroke="#000000" points="96.9025,-124.6018 107.4276,-125.8153 99.9565,-118.3031 96.9025,-124.6018"/>
+<path fill="none" stroke="#000000" d="M42.6982,-83.3963C55.2307,-92.2963 73.7632,-104.657 91.2048,-113.25 95.7685,-115.4984 100.6351,-117.628 105.5403,-119.6069"/>
+<polygon fill="#000000" stroke="#000000" points="104.3611,-122.9033 114.9512,-123.2183 106.869,-116.3679 104.3611,-122.9033"/>
 </g>
 <!-- proc~ravel_3d -->
 <g id="proc~~f_g_cube~~CallsGraph_node3" class="node">
 <title>proc~ravel_3d</title>
 <g id="a_proc~~f_g_cube~~CallsGraph_node3"><a xlink:href=".././proc/ravel_3d.html" xlink:title="ravel_3D">
-<polygon fill="#d9534f" stroke="#d9534f" points="163,-108 109,-108 109,-84 163,-84 163,-108"/>
-<text text-anchor="middle" x="136" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">ravel_3D</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="177.0407,-104.2554 122.9996,-104.2554 122.9996,-82.2446 177.0407,-82.2446 177.0407,-104.2554"/>
+<text text-anchor="middle" x="150.0201" y="-90.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">ravel_3D</text>
 </a>
 </g>
 </g>
 <!-- proc~f_g_cube&#45;&gt;proc~ravel_3d -->
 <g id="proc~~f_g_cube~~CallsGraph_edge2" class="edge">
 <title>proc~f_g_cube&#45;&gt;proc~ravel_3d</title>
-<path fill="none" stroke="#000000" d="M54.2241,-80.245C67.6197,-82.8258 83.9774,-85.9773 98.533,-88.7816"/>
-<polygon fill="#000000" stroke="#000000" points="98.2636,-92.294 108.7452,-90.7491 99.5879,-85.4204 98.2636,-92.294"/>
+<path fill="none" stroke="#000000" d="M55.3809,-77.0152C72.404,-79.9354 94.4035,-83.7093 112.907,-86.8835"/>
+<polygon fill="#000000" stroke="#000000" points="112.3255,-90.3348 122.7733,-88.576 113.509,-83.4355 112.3255,-90.3348"/>
 </g>
 <!-- proc~convolution_2d_mirror -->
 <g id="proc~~f_g_cube~~CallsGraph_node4" class="node">
 <title>proc~convolution_2d_mirror</title>
 <g id="a_proc~~f_g_cube~~CallsGraph_node4"><a xlink:href=".././proc/convolution_2d_mirror.html" xlink:title="convolution_2D_mirror">
-<polygon fill="#d9534f" stroke="#d9534f" points="182,-66 90,-66 90,-42 182,-42 182,-66"/>
-<text text-anchor="middle" x="136" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">convolution_2D_mirror</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="208.6513,-63.2554 91.3889,-63.2554 91.3889,-41.2446 208.6513,-41.2446 208.6513,-63.2554"/>
+<text text-anchor="middle" x="150.0201" y="-49.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">convolution_2D_mirror</text>
 </a>
 </g>
 </g>
 <!-- proc~f_g_cube&#45;&gt;proc~convolution_2d_mirror -->
 <g id="proc~~f_g_cube~~CallsGraph_edge3" class="edge">
 <title>proc~f_g_cube&#45;&gt;proc~convolution_2d_mirror</title>
-<path fill="none" stroke="#000000" d="M54.2241,-69.755C62.0126,-68.2544 70.8024,-66.561 79.6572,-64.855"/>
-<polygon fill="#000000" stroke="#000000" points="80.4749,-68.2619 89.6322,-62.9332 79.1506,-61.3883 80.4749,-68.2619"/>
+<path fill="none" stroke="#000000" d="M55.3809,-67.7117C63.2553,-66.4252 72.1946,-64.9648 81.3601,-63.4673"/>
+<polygon fill="#000000" stroke="#000000" points="82.05,-66.9011 91.3548,-61.8345 80.9213,-59.9927 82.05,-66.9011"/>
 </g>
 <!-- proc~unravel_3d -->
 <g id="proc~~f_g_cube~~CallsGraph_node5" class="node">
 <title>proc~unravel_3d</title>
 <g id="a_proc~~f_g_cube~~CallsGraph_node5"><a xlink:href=".././proc/unravel_3d.html" xlink:title="unravel_3D">
-<polygon fill="#d9534f" stroke="#d9534f" points="163,-24 109,-24 109,0 163,0 163,-24"/>
-<text text-anchor="middle" x="136" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">unravel_3D</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="182.7205,-22.2554 117.3198,-22.2554 117.3198,-.2446 182.7205,-.2446 182.7205,-22.2554"/>
+<text text-anchor="middle" x="150.0201" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">unravel_3D</text>
 </a>
 </g>
 </g>
 <!-- proc~f_g_cube&#45;&gt;proc~unravel_3d -->
 <g id="proc~~f_g_cube~~CallsGraph_edge4" class="edge">
 <title>proc~f_g_cube&#45;&gt;proc~unravel_3d</title>
-<path fill="none" stroke="#000000" d="M43.6509,-62.8345C56.0921,-54.0111 73.6922,-42.082 90,-33 93.0847,-31.2821 96.3355,-29.5857 99.6241,-27.9464"/>
-<polygon fill="#000000" stroke="#000000" points="101.3808,-30.9857 108.8857,-23.5072 98.3552,-24.6733 101.3808,-30.9857"/>
+<path fill="none" stroke="#000000" d="M42.9943,-61.2269C55.5457,-52.5735 73.9569,-40.628 91.2048,-32.25 96.453,-29.7008 102.0936,-27.2954 107.7298,-25.0859"/>
+<polygon fill="#000000" stroke="#000000" points="109.0032,-28.3465 117.1408,-21.5619 106.5484,-21.791 109.0032,-28.3465"/>
 </g>
 </g>
 </svg>
@@ -512,46 +602,46 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="494pt" height="32pt"
- viewBox="0.00 0.00 493.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="550pt" height="31pt"
+ viewBox="0.00 0.00 550.25 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
 <title>Graph Key</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-28 489.5,-28 489.5,4 -4,4"/>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 546.2477,-26.5 546.2477,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
-<polygon fill="#d9534f" stroke="#d9534f" points="54,-24 0,-24 0,0 54,0 54,-24"/>
-<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="62.6818,-22.2554 .1058,-22.2554 .1058,-.2446 62.6818,-.2446 62.6818,-22.2554"/>
+<text text-anchor="middle" x="31.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
 </g>
 <!-- Function -->
 <g id="node2" class="node">
 <title>Function</title>
-<polygon fill="#d94e8f" stroke="#d94e8f" points="126,-24 72,-24 72,0 126,0 126,-24"/>
-<text text-anchor="middle" x="99" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="134.3938,-22.2554 80.3938,-22.2554 80.3938,-.2446 134.3938,-.2446 134.3938,-22.2554"/>
+<text text-anchor="middle" x="107.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
 </g>
 <!-- Interface -->
 <g id="node3" class="node">
 <title>Interface</title>
-<polygon fill="#a7506f" stroke="#a7506f" points="198,-24 144,-24 144,0 198,0 198,-24"/>
-<text text-anchor="middle" x="171" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
+<polygon fill="#a7506f" stroke="#a7506f" points="206.3938,-22.2554 152.3938,-22.2554 152.3938,-.2446 206.3938,-.2446 206.3938,-22.2554"/>
+<text text-anchor="middle" x="179.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
 </g>
 <!-- Unknown Procedure Type -->
 <g id="node4" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="320,-24 216,-24 216,0 320,0 320,-24"/>
-<text text-anchor="middle" x="268" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="356.5315,-22.2554 224.2561,-22.2554 224.2561,-.2446 356.5315,-.2446 356.5315,-22.2554"/>
+<text text-anchor="middle" x="290.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
 <g id="node5" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="392,-24 338,-24 338,0 392,0 392,-24"/>
-<text text-anchor="middle" x="365" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="428.3938,-22.2554 374.3938,-22.2554 374.3938,-.2446 428.3938,-.2446 428.3938,-22.2554"/>
+<text text-anchor="middle" x="401.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
 <g id="node6" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="#000000" points="485.5,-24 410.5,-24 410.5,0 485.5,0 485.5,-24"/>
-<text text-anchor="middle" x="448" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="#000000" points="542.102,-22.2554 446.6856,-22.2554 446.6856,-.2446 542.102,-.2446 542.102,-22.2554"/>
+<text text-anchor="middle" x="494.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -578,46 +668,46 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
 <!-- Title: proc~~f_g_cube~~CalledByGraph Pages: 1 -->
-<svg id="procf_g_cubeCalledByGraph" width="242pt" height="32pt"
- viewBox="0.00 0.00 242.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~f_g_cube~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg id="procf_g_cubeCalledByGraph" width="243pt" height="31pt"
+ viewBox="0.00 0.00 243.20 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~f_g_cube~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
 <title>proc~~f_g_cube~~CalledByGraph</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-28 238,-28 238,4 -4,4"/>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 239.2048,-26.5 239.2048,4 -4,4"/>
 <!-- proc~f_g_cube -->
 <g id="proc~~f_g_cube~~CalledByGraph_node1" class="node">
 <title>proc~f_g_cube</title>
-<polygon fill="none" stroke="#000000" points="234,-24 180,-24 180,0 234,0 234,-24"/>
-<text text-anchor="middle" x="207" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">f_g_cube</text>
+<polygon fill="none" stroke="#000000" points="235.3076,-22.2554 179.8972,-22.2554 179.8972,-.2446 235.3076,-.2446 235.3076,-22.2554"/>
+<text text-anchor="middle" x="207.6024" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">f_g_cube</text>
 </g>
 <!-- proc~minimize -->
 <g id="proc~~f_g_cube~~CalledByGraph_node2" class="node">
 <title>proc~minimize</title>
 <g id="a_proc~~f_g_cube~~CalledByGraph_node2"><a xlink:href=".././proc/minimize.html" xlink:title="minimize">
-<polygon fill="#d9534f" stroke="#d9534f" points="144,-24 90,-24 90,0 144,0 144,-24"/>
-<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">minimize</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="144,-22.2554 90,-22.2554 90,-.2446 144,-.2446 144,-22.2554"/>
+<text text-anchor="middle" x="117" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">minimize</text>
 </a>
 </g>
 </g>
 <!-- proc~minimize&#45;&gt;proc~f_g_cube -->
 <g id="proc~~f_g_cube~~CalledByGraph_edge1" class="edge">
 <title>proc~minimize&#45;&gt;proc~f_g_cube</title>
-<path fill="none" stroke="#000000" d="M144.003,-12C152.0277,-12 160.9665,-12 169.5309,-12"/>
-<polygon fill="#000000" stroke="#000000" points="169.7051,-15.5001 179.705,-12 169.705,-8.5001 169.7051,-15.5001"/>
+<path fill="none" stroke="#000000" d="M144.1837,-11.25C152.188,-11.25 161.0958,-11.25 169.6451,-11.25"/>
+<polygon fill="#000000" stroke="#000000" points="169.8107,-14.7501 179.8107,-11.25 169.8107,-7.7501 169.8107,-14.7501"/>
 </g>
 <!-- proc~update -->
 <g id="proc~~f_g_cube~~CalledByGraph_node3" class="node">
 <title>proc~update</title>
 <g id="a_proc~~f_g_cube~~CalledByGraph_node3"><a xlink:href=".././proc/update.html" xlink:title="update">
-<polygon fill="#d9534f" stroke="#d9534f" points="54,-24 0,-24 0,0 54,0 54,-24"/>
-<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">update</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="54,-22.2554 0,-22.2554 0,-.2446 54,-.2446 54,-22.2554"/>
+<text text-anchor="middle" x="27" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">update</text>
 </a>
 </g>
 </g>
 <!-- proc~update&#45;&gt;proc~minimize -->
 <g id="proc~~f_g_cube~~CalledByGraph_edge2" class="edge">
 <title>proc~update&#45;&gt;proc~minimize</title>
-<path fill="none" stroke="#000000" d="M54.003,-12C62.0277,-12 70.9665,-12 79.5309,-12"/>
-<polygon fill="#000000" stroke="#000000" points="79.7051,-15.5001 89.705,-12 79.705,-8.5001 79.7051,-15.5001"/>
+<path fill="none" stroke="#000000" d="M54.003,-11.25C62.0277,-11.25 70.9665,-11.25 79.5309,-11.25"/>
+<polygon fill="#000000" stroke="#000000" points="79.7051,-14.7501 89.705,-11.25 79.705,-7.7501 79.7051,-14.7501"/>
 </g>
 </g>
 </svg>
@@ -629,46 +719,46 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="494pt" height="32pt"
- viewBox="0.00 0.00 493.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="550pt" height="31pt"
+ viewBox="0.00 0.00 550.25 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
 <title>Graph Key</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-28 489.5,-28 489.5,4 -4,4"/>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 546.2477,-26.5 546.2477,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
-<polygon fill="#d9534f" stroke="#d9534f" points="54,-24 0,-24 0,0 54,0 54,-24"/>
-<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="62.6818,-22.2554 .1058,-22.2554 .1058,-.2446 62.6818,-.2446 62.6818,-22.2554"/>
+<text text-anchor="middle" x="31.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
 </g>
 <!-- Function -->
 <g id="node2" class="node">
 <title>Function</title>
-<polygon fill="#d94e8f" stroke="#d94e8f" points="126,-24 72,-24 72,0 126,0 126,-24"/>
-<text text-anchor="middle" x="99" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="134.3938,-22.2554 80.3938,-22.2554 80.3938,-.2446 134.3938,-.2446 134.3938,-22.2554"/>
+<text text-anchor="middle" x="107.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
 </g>
 <!-- Interface -->
 <g id="node3" class="node">
 <title>Interface</title>
-<polygon fill="#a7506f" stroke="#a7506f" points="198,-24 144,-24 144,0 198,0 198,-24"/>
-<text text-anchor="middle" x="171" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
+<polygon fill="#a7506f" stroke="#a7506f" points="206.3938,-22.2554 152.3938,-22.2554 152.3938,-.2446 206.3938,-.2446 206.3938,-22.2554"/>
+<text text-anchor="middle" x="179.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
 </g>
 <!-- Unknown Procedure Type -->
 <g id="node4" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="320,-24 216,-24 216,0 320,0 320,-24"/>
-<text text-anchor="middle" x="268" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="356.5315,-22.2554 224.2561,-22.2554 224.2561,-.2446 356.5315,-.2446 356.5315,-22.2554"/>
+<text text-anchor="middle" x="290.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
 <g id="node5" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="392,-24 338,-24 338,0 392,0 392,-24"/>
-<text text-anchor="middle" x="365" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="428.3938,-22.2554 374.3938,-22.2554 374.3938,-.2446 428.3938,-.2446 428.3938,-22.2554"/>
+<text text-anchor="middle" x="401.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
 <g id="node6" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="#000000" points="485.5,-24 410.5,-24 410.5,0 485.5,0 485.5,-24"/>
-<text text-anchor="middle" x="448" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="#000000" points="542.102,-22.2554 446.6856,-22.2554 446.6856,-.2446 542.102,-.2446 542.102,-22.2554"/>
+<text text-anchor="middle" x="494.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -743,16 +833,18 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">f_g_cube</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span><span class="p">,</span> <span class="p">&amp;</span>
-       <span class="n">std_map</span><span class="p">)</span>
+       <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">std_map</span><span class="p">,</span> <span class="n">mean_amp</span><span class="p">,</span> <span class="n">mean_mu</span><span class="p">,</span> <span class="n">mean_sig</span><span class="p">)</span>
     <span class="k">implicit none</span>
 
 <span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n_gauss</span>
     <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">beta</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">kernel</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">std_map</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">mean_amp</span><span class="p">,</span> <span class="n">mean_mu</span><span class="p">,</span> <span class="n">mean_sig</span>    
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">f</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">g</span>
 
@@ -768,7 +860,6 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">dR_over_dB</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">deriv</span>
 
-
     <span class="k">allocate</span><span class="p">(</span><span class="n">dR_over_dB</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
     <span class="k">allocate</span><span class="p">(</span><span class="n">dF_over_dB</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
     <span class="k">allocate</span><span class="p">(</span><span class="n">deriv</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
@@ -778,7 +869,7 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
     <span class="k">allocate</span><span class="p">(</span><span class="n">conv_amp</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">),</span> <span class="n">conv_mu</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">),</span> <span class="n">conv_sig</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
     <span class="k">allocate</span><span class="p">(</span><span class="n">conv_conv_amp</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">),</span> <span class="n">conv_conv_mu</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">),</span> <span class="n">conv_conv_sig</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
     <span class="k">allocate</span><span class="p">(</span><span class="n">image_amp</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">),</span> <span class="n">image_mu</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">),</span> <span class="n">image_sig</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
-
+    
     <span class="n">dR_over_dB</span> <span class="o">=</span> <span class="mf">0._xp</span>
     <span class="n">dF_over_dB</span> <span class="o">=</span> <span class="mf">0._xp</span>
     <span class="n">deriv</span> <span class="o">=</span> <span class="mf">0._xp</span>
@@ -843,7 +934,7 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
        <span class="n">image_amp</span> <span class="o">=</span> <span class="n">params</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)),:,:)</span>
        <span class="n">image_mu</span> <span class="o">=</span> <span class="n">params</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)),:,:)</span>
        <span class="n">image_sig</span> <span class="o">=</span> <span class="n">params</span><span class="p">(</span><span class="mi">3</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)),:,:)</span>
-
+       
        <span class="k">call </span><span class="n">convolution_2D_mirror</span><span class="p">(</span><span class="n">image_amp</span><span class="p">,</span> <span class="n">conv_amp</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
        <span class="k">call </span><span class="n">convolution_2D_mirror</span><span class="p">(</span><span class="n">image_mu</span><span class="p">,</span> <span class="n">conv_mu</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
        <span class="k">call </span><span class="n">convolution_2D_mirror</span><span class="p">(</span><span class="n">image_sig</span><span class="p">,</span> <span class="n">conv_sig</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
@@ -852,15 +943,16 @@ private subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kern
        <span class="k">call </span><span class="n">convolution_2D_mirror</span><span class="p">(</span><span class="n">conv_mu</span><span class="p">,</span> <span class="n">conv_conv_mu</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
        <span class="k">call </span><span class="n">convolution_2D_mirror</span><span class="p">(</span><span class="n">conv_sig</span><span class="p">,</span> <span class="n">conv_conv_sig</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
+       <span class="c">!New term on sig</span>
        <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
           <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
-             <span class="n">f</span> <span class="o">=</span> <span class="n">f</span> <span class="o">+</span> <span class="mf">0.5_xp</span> <span class="o">*</span> <span class="n">lambda_amp</span> <span class="o">*</span> <span class="n">conv_amp</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-             <span class="n">f</span> <span class="o">=</span> <span class="n">f</span> <span class="o">+</span> <span class="mf">0.5_xp</span> <span class="o">*</span> <span class="n">lambda_mu</span> <span class="o">*</span> <span class="n">conv_mu</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-             <span class="n">f</span> <span class="o">=</span> <span class="n">f</span> <span class="o">+</span> <span class="mf">0.5_xp</span> <span class="o">*</span> <span class="n">lambda_sig</span> <span class="o">*</span> <span class="n">conv_sig</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-             
-             <span class="n">dR_over_dB</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">lambda_amp</span> <span class="o">*</span> <span class="n">conv_conv_amp</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
-             <span class="n">dR_over_dB</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">lambda_mu</span> <span class="o">*</span> <span class="n">conv_conv_mu</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
-             <span class="n">dR_over_dB</span><span class="p">(</span><span class="mi">3</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">lambda_sig</span> <span class="o">*</span> <span class="n">conv_conv_sig</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+             <span class="n">f</span> <span class="o">=</span> <span class="n">f</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5_xp</span> <span class="o">*</span> <span class="n">lambda_amp</span> <span class="o">*</span> <span class="n">conv_amp</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5_xp</span> <span class="o">*</span> <span class="n">lambda_var_amp</span> <span class="o">*</span> <span class="p">(</span><span class="n">image_amp</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean_amp</span><span class="p">(</span><span class="n">k</span><span class="p">))</span><span class="o">**</span><span class="mf">2._xp</span><span class="p">)</span>
+             <span class="n">f</span> <span class="o">=</span> <span class="n">f</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5_xp</span> <span class="o">*</span> <span class="n">lambda_mu</span> <span class="o">*</span> <span class="n">conv_mu</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5_xp</span> <span class="o">*</span> <span class="n">lambda_var_mu</span> <span class="o">*</span> <span class="p">(</span><span class="n">image_mu</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean_mu</span><span class="p">(</span><span class="n">k</span><span class="p">))</span><span class="o">**</span><span class="mf">2._xp</span><span class="p">)</span>
+             <span class="n">f</span> <span class="o">=</span> <span class="n">f</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5_xp</span> <span class="o">*</span> <span class="n">lambda_sig</span> <span class="o">*</span> <span class="n">conv_sig</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5_xp</span> <span class="o">*</span> <span class="n">lambda_var_sig</span> <span class="o">*</span> <span class="p">(</span><span class="n">image_sig</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean_sig</span><span class="p">(</span><span class="n">k</span><span class="p">))</span><span class="o">**</span><span class="mf">2._xp</span><span class="p">)</span>
+                          
+             <span class="n">dR_over_dB</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">lambda_amp</span> <span class="o">*</span> <span class="n">conv_conv_amp</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">lambda_var_amp</span> <span class="o">*</span> <span class="p">(</span><span class="n">image_amp</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean_amp</span><span class="p">(</span><span class="n">k</span><span class="p">)))</span>
+             <span class="n">dR_over_dB</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">lambda_mu</span> <span class="o">*</span> <span class="n">conv_conv_mu</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">lambda_var_mu</span> <span class="o">*</span> <span class="p">(</span><span class="n">image_mu</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean_mu</span><span class="p">(</span><span class="n">k</span><span class="p">)))</span>
+             <span class="n">dR_over_dB</span><span class="p">(</span><span class="mi">3</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">lambda_sig</span> <span class="o">*</span> <span class="n">conv_conv_sig</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">lambda_var_sig</span> <span class="o">*</span> <span class="p">(</span><span class="n">image_sig</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean_sig</span><span class="p">(</span><span class="n">k</span><span class="p">)))</span>
           <span class="k">end do</span>
 <span class="k">       end do       </span>
 <span class="k">    end do</span>

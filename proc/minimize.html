@@ -124,7 +124,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title=" 1.6% of total for procedures.">41 statements</a>
+	  title=" 1.5% of total for procedures.">43 statements</a>
      </li> 
      
      
@@ -193,7 +193,7 @@
     
     <div class="col-md-9" id='text'>
     <h2>
-public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, maxiter, kernel, iprint, std_map)
+public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map, mean_amp, mean_mu, mean_sig)
     
     
 	 
@@ -237,7 +237,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-m%7E17"></span>integer,</td>
+  <td><span class="anchor" id="variable-m%7E14"></span>integer,</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -267,7 +267,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-lb%7E4"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-lb%7E2"></span>real(kind=xp),</td>
   <td>intent(in),</td>
   <td></td>
   
@@ -282,7 +282,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-ub%7E4"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-ub%7E2"></span>real(kind=xp),</td>
   <td>intent(in),</td>
   <td></td>
   
@@ -297,7 +297,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-cube%7E9"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-cube"></span>real(kind=xp),</td>
   <td>intent(in),</td>
   <td></td>
   
@@ -312,7 +312,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-n_gauss%7E8"></span>integer,</td>
+  <td><span class="anchor" id="variable-n_gauss%7E4"></span>integer,</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -327,7 +327,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-dim_v%7E10"></span>integer,</td>
+  <td><span class="anchor" id="variable-dim_v%7E4"></span>integer,</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -342,7 +342,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-dim_y%7E5"></span>integer,</td>
+  <td><span class="anchor" id="variable-dim_y"></span>integer,</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -357,7 +357,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-dim_x%7E5"></span>integer,</td>
+  <td><span class="anchor" id="variable-dim_x"></span>integer,</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -372,7 +372,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-lambda_amp%7E2"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-lambda_amp"></span>real(kind=xp),</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -387,7 +387,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-lambda_mu%7E2"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-lambda_mu"></span>real(kind=xp),</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -402,7 +402,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-lambda_sig%7E2"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-lambda_sig"></span>real(kind=xp),</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -417,7 +417,52 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-maxiter%7E5"></span>integer,</td>
+  <td><span class="anchor" id="variable-lambda_var_amp"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_var_amp</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lambda_var_mu"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_var_mu</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lambda_var_sig"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_var_sig</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-maxiter%7E2"></span>integer,</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -432,7 +477,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-kernel%7E3"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-kernel"></span>real(kind=xp),</td>
   <td>intent(in),</td>
   <td></td>
   
@@ -447,7 +492,7 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-iprint%7E14"></span>integer,</td>
+  <td><span class="anchor" id="variable-iprint%7E11"></span>integer,</td>
   <td>intent(in)</td>
   <td></td>
   
@@ -462,12 +507,57 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
   
 <tr>
   
-  <td><span class="anchor" id="variable-std_map%7E3"></span>real(kind=xp),</td>
+  <td><span class="anchor" id="variable-std_map"></span>real(kind=xp),</td>
   <td>intent(in),</td>
   <td></td>
   
   <td>dimension(:,:), allocatable</td><td>::</td>
   <td><strong>std_map</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-mean_amp"></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>mean_amp</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-mean_mu"></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>mean_mu</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-mean_sig"></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>mean_sig</strong></td><td></td>
   
 </tr>
 
@@ -491,106 +581,106 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
 <!-- Title: proc~~minimize~~CallsGraph Pages: 1 -->
-<svg id="procminimizeCallsGraph" width="280pt" height="158pt"
- viewBox="0.00 0.00 280.00 158.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~minimize~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 154)">
+<svg id="procminimizeCallsGraph" width="307pt" height="154pt"
+ viewBox="0.00 0.00 306.84 153.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~minimize~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 149.5)">
 <title>proc~~minimize~~CallsGraph</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-154 276,-154 276,4 -4,4"/>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-149.5 302.8354,-149.5 302.8354,4 -4,4"/>
 <!-- proc~minimize -->
 <g id="proc~~minimize~~CallsGraph_node1" class="node">
 <title>proc~minimize</title>
-<polygon fill="none" stroke="#000000" points="54,-108 0,-108 0,-84 54,-84 54,-108"/>
-<text text-anchor="middle" x="27" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">minimize</text>
+<polygon fill="none" stroke="#000000" points="54,-103.2554 0,-103.2554 0,-81.2446 54,-81.2446 54,-103.2554"/>
+<text text-anchor="middle" x="27" y="-89.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">minimize</text>
 </g>
 <!-- proc~setulb -->
 <g id="proc~~minimize~~CallsGraph_node2" class="node">
 <title>proc~setulb</title>
 <g id="a_proc~~minimize~~CallsGraph_node2"><a xlink:href=".././proc/setulb.html" xlink:title="setulb">
-<polygon fill="#d9534f" stroke="#d9534f" points="144,-129 90,-129 90,-105 144,-105 144,-129"/>
-<text text-anchor="middle" x="117" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">setulb</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="144.6024,-124.2554 90.6024,-124.2554 90.6024,-102.2446 144.6024,-102.2446 144.6024,-124.2554"/>
+<text text-anchor="middle" x="117.6024" y="-110.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">setulb</text>
 </a>
 </g>
 </g>
 <!-- proc~minimize&#45;&gt;proc~setulb -->
 <g id="proc~~minimize~~CallsGraph_edge1" class="edge">
 <title>proc~minimize&#45;&gt;proc~setulb</title>
-<path fill="none" stroke="#000000" d="M54.003,-102.3007C62.1158,-104.1937 71.1631,-106.3047 79.8131,-108.323"/>
-<polygon fill="#000000" stroke="#000000" points="79.1713,-111.7672 89.705,-110.6312 80.7619,-104.9504 79.1713,-111.7672"/>
+<path fill="none" stroke="#000000" d="M54.1837,-98.5507C62.5154,-100.4818 71.826,-102.6399 80.6923,-104.6949"/>
+<polygon fill="#000000" stroke="#000000" points="79.9058,-108.1053 90.4379,-106.9538 81.4865,-101.2861 79.9058,-108.1053"/>
 </g>
 <!-- proc~f_g_cube -->
 <g id="proc~~minimize~~CallsGraph_node3" class="node">
 <title>proc~f_g_cube</title>
 <g id="a_proc~~minimize~~CallsGraph_node3"><a xlink:href=".././proc/f_g_cube.html" xlink:title="f_g_cube">
-<polygon fill="#d9534f" stroke="#d9534f" points="144,-87 90,-87 90,-63 144,-63 144,-87"/>
-<text text-anchor="middle" x="117" y="-72.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">f_g_cube</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="145.3076,-83.2554 89.8972,-83.2554 89.8972,-61.2446 145.3076,-61.2446 145.3076,-83.2554"/>
+<text text-anchor="middle" x="117.6024" y="-69.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">f_g_cube</text>
 </a>
 </g>
 </g>
 <!-- proc~minimize&#45;&gt;proc~f_g_cube -->
 <g id="proc~~minimize~~CallsGraph_edge2" class="edge">
 <title>proc~minimize&#45;&gt;proc~f_g_cube</title>
-<path fill="none" stroke="#000000" d="M54.003,-89.6993C62.1158,-87.8063 71.1631,-85.6953 79.8131,-83.677"/>
-<polygon fill="#000000" stroke="#000000" points="80.7619,-87.0496 89.705,-81.3688 79.1713,-80.2328 80.7619,-87.0496"/>
+<path fill="none" stroke="#000000" d="M54.1837,-86.2493C62.276,-84.463 71.2917,-82.4728 79.9268,-80.5667"/>
+<polygon fill="#000000" stroke="#000000" points="80.8002,-83.9582 89.8107,-78.3849 79.2913,-77.1228 80.8002,-83.9582"/>
 </g>
 <!-- proc~myfunc_spec -->
 <g id="proc~~minimize~~CallsGraph_node4" class="node">
 <title>proc~myfunc_spec</title>
 <g id="a_proc~~minimize~~CallsGraph_node4"><a xlink:href=".././proc/myfunc_spec.html" xlink:title="myfunc_spec">
-<polygon fill="#d94e8f" stroke="#d94e8f" points="255.5,-150 196.5,-150 196.5,-126 255.5,-126 255.5,-150"/>
-<text text-anchor="middle" x="226" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">myfunc_spec</text>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="276.8821,-145.2554 203.1582,-145.2554 203.1582,-123.2446 276.8821,-123.2446 276.8821,-145.2554"/>
+<text text-anchor="middle" x="240.0201" y="-131.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">myfunc_spec</text>
 </a>
 </g>
 </g>
 <!-- proc~f_g_cube&#45;&gt;proc~myfunc_spec -->
 <g id="proc~~minimize~~CallsGraph_edge3" class="edge">
 <title>proc~f_g_cube&#45;&gt;proc~myfunc_spec</title>
-<path fill="none" stroke="#000000" d="M133.6509,-87.1655C146.0921,-95.9889 163.6922,-107.918 180,-117 182.6748,-118.4896 185.4746,-119.9631 188.3156,-121.3973"/>
-<polygon fill="#000000" stroke="#000000" points="186.9025,-124.6018 197.4276,-125.8153 189.9565,-118.3031 186.9025,-124.6018"/>
+<path fill="none" stroke="#000000" d="M132.6982,-83.3963C145.2307,-92.2963 163.7632,-104.657 181.2048,-113.25 185.7685,-115.4984 190.6351,-117.628 195.5403,-119.6069"/>
+<polygon fill="#000000" stroke="#000000" points="194.3611,-122.9033 204.9512,-123.2183 196.869,-116.3679 194.3611,-122.9033"/>
 </g>
 <!-- proc~ravel_3d -->
 <g id="proc~~minimize~~CallsGraph_node5" class="node">
 <title>proc~ravel_3d</title>
 <g id="a_proc~~minimize~~CallsGraph_node5"><a xlink:href=".././proc/ravel_3d.html" xlink:title="ravel_3D">
-<polygon fill="#d9534f" stroke="#d9534f" points="253,-108 199,-108 199,-84 253,-84 253,-108"/>
-<text text-anchor="middle" x="226" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">ravel_3D</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="267.0407,-104.2554 212.9996,-104.2554 212.9996,-82.2446 267.0407,-82.2446 267.0407,-104.2554"/>
+<text text-anchor="middle" x="240.0201" y="-90.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">ravel_3D</text>
 </a>
 </g>
 </g>
 <!-- proc~f_g_cube&#45;&gt;proc~ravel_3d -->
 <g id="proc~~minimize~~CallsGraph_edge4" class="edge">
 <title>proc~f_g_cube&#45;&gt;proc~ravel_3d</title>
-<path fill="none" stroke="#000000" d="M144.2241,-80.245C157.6197,-82.8258 173.9774,-85.9773 188.533,-88.7816"/>
-<polygon fill="#000000" stroke="#000000" points="188.2636,-92.294 198.7452,-90.7491 189.5879,-85.4204 188.2636,-92.294"/>
+<path fill="none" stroke="#000000" d="M145.3809,-77.0152C162.404,-79.9354 184.4035,-83.7093 202.907,-86.8835"/>
+<polygon fill="#000000" stroke="#000000" points="202.3255,-90.3348 212.7733,-88.576 203.509,-83.4355 202.3255,-90.3348"/>
 </g>
 <!-- proc~convolution_2d_mirror -->
 <g id="proc~~minimize~~CallsGraph_node6" class="node">
 <title>proc~convolution_2d_mirror</title>
 <g id="a_proc~~minimize~~CallsGraph_node6"><a xlink:href=".././proc/convolution_2d_mirror.html" xlink:title="convolution_2D_mirror">
-<polygon fill="#d9534f" stroke="#d9534f" points="272,-66 180,-66 180,-42 272,-42 272,-66"/>
-<text text-anchor="middle" x="226" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">convolution_2D_mirror</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="298.6513,-63.2554 181.3889,-63.2554 181.3889,-41.2446 298.6513,-41.2446 298.6513,-63.2554"/>
+<text text-anchor="middle" x="240.0201" y="-49.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">convolution_2D_mirror</text>
 </a>
 </g>
 </g>
 <!-- proc~f_g_cube&#45;&gt;proc~convolution_2d_mirror -->
 <g id="proc~~minimize~~CallsGraph_edge5" class="edge">
 <title>proc~f_g_cube&#45;&gt;proc~convolution_2d_mirror</title>
-<path fill="none" stroke="#000000" d="M144.2241,-69.755C152.0126,-68.2544 160.8024,-66.561 169.6572,-64.855"/>
-<polygon fill="#000000" stroke="#000000" points="170.4749,-68.2619 179.6322,-62.9332 169.1506,-61.3883 170.4749,-68.2619"/>
+<path fill="none" stroke="#000000" d="M145.3809,-67.7117C153.2553,-66.4252 162.1946,-64.9648 171.3601,-63.4673"/>
+<polygon fill="#000000" stroke="#000000" points="172.05,-66.9011 181.3548,-61.8345 170.9213,-59.9927 172.05,-66.9011"/>
 </g>
 <!-- proc~unravel_3d -->
 <g id="proc~~minimize~~CallsGraph_node7" class="node">
 <title>proc~unravel_3d</title>
 <g id="a_proc~~minimize~~CallsGraph_node7"><a xlink:href=".././proc/unravel_3d.html" xlink:title="unravel_3D">
-<polygon fill="#d9534f" stroke="#d9534f" points="253,-24 199,-24 199,0 253,0 253,-24"/>
-<text text-anchor="middle" x="226" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">unravel_3D</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="272.7205,-22.2554 207.3198,-22.2554 207.3198,-.2446 272.7205,-.2446 272.7205,-22.2554"/>
+<text text-anchor="middle" x="240.0201" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">unravel_3D</text>
 </a>
 </g>
 </g>
 <!-- proc~f_g_cube&#45;&gt;proc~unravel_3d -->
 <g id="proc~~minimize~~CallsGraph_edge6" class="edge">
 <title>proc~f_g_cube&#45;&gt;proc~unravel_3d</title>
-<path fill="none" stroke="#000000" d="M133.6509,-62.8345C146.0921,-54.0111 163.6922,-42.082 180,-33 183.0847,-31.2821 186.3355,-29.5857 189.6241,-27.9464"/>
-<polygon fill="#000000" stroke="#000000" points="191.3808,-30.9857 198.8857,-23.5072 188.3552,-24.6733 191.3808,-30.9857"/>
+<path fill="none" stroke="#000000" d="M132.9943,-61.2269C145.5457,-52.5735 163.9569,-40.628 181.2048,-32.25 186.453,-29.7008 192.0936,-27.2954 197.7298,-25.0859"/>
+<polygon fill="#000000" stroke="#000000" points="199.0032,-28.3465 207.1408,-21.5619 196.5484,-21.791 199.0032,-28.3465"/>
 </g>
 </g>
 </svg>
@@ -602,46 +692,46 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="494pt" height="32pt"
- viewBox="0.00 0.00 493.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="550pt" height="31pt"
+ viewBox="0.00 0.00 550.25 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
 <title>Graph Key</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-28 489.5,-28 489.5,4 -4,4"/>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 546.2477,-26.5 546.2477,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
-<polygon fill="#d9534f" stroke="#d9534f" points="54,-24 0,-24 0,0 54,0 54,-24"/>
-<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="62.6818,-22.2554 .1058,-22.2554 .1058,-.2446 62.6818,-.2446 62.6818,-22.2554"/>
+<text text-anchor="middle" x="31.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
 </g>
 <!-- Function -->
 <g id="node2" class="node">
 <title>Function</title>
-<polygon fill="#d94e8f" stroke="#d94e8f" points="126,-24 72,-24 72,0 126,0 126,-24"/>
-<text text-anchor="middle" x="99" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="134.3938,-22.2554 80.3938,-22.2554 80.3938,-.2446 134.3938,-.2446 134.3938,-22.2554"/>
+<text text-anchor="middle" x="107.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
 </g>
 <!-- Interface -->
 <g id="node3" class="node">
 <title>Interface</title>
-<polygon fill="#a7506f" stroke="#a7506f" points="198,-24 144,-24 144,0 198,0 198,-24"/>
-<text text-anchor="middle" x="171" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
+<polygon fill="#a7506f" stroke="#a7506f" points="206.3938,-22.2554 152.3938,-22.2554 152.3938,-.2446 206.3938,-.2446 206.3938,-22.2554"/>
+<text text-anchor="middle" x="179.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
 </g>
 <!-- Unknown Procedure Type -->
 <g id="node4" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="320,-24 216,-24 216,0 320,0 320,-24"/>
-<text text-anchor="middle" x="268" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="356.5315,-22.2554 224.2561,-22.2554 224.2561,-.2446 356.5315,-.2446 356.5315,-22.2554"/>
+<text text-anchor="middle" x="290.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
 <g id="node5" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="392,-24 338,-24 338,0 392,0 392,-24"/>
-<text text-anchor="middle" x="365" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="428.3938,-22.2554 374.3938,-22.2554 374.3938,-.2446 428.3938,-.2446 428.3938,-22.2554"/>
+<text text-anchor="middle" x="401.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
 <g id="node6" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="#000000" points="485.5,-24 410.5,-24 410.5,0 485.5,0 485.5,-24"/>
-<text text-anchor="middle" x="448" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="#000000" points="542.102,-22.2554 446.6856,-22.2554 446.6856,-.2446 542.102,-.2446 542.102,-22.2554"/>
+<text text-anchor="middle" x="494.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -668,31 +758,31 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
 <!-- Title: proc~~minimize~~CalledByGraph Pages: 1 -->
-<svg id="procminimizeCalledByGraph" width="152pt" height="32pt"
- viewBox="0.00 0.00 152.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~minimize~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg id="procminimizeCalledByGraph" width="152pt" height="31pt"
+ viewBox="0.00 0.00 152.00 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~minimize~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
 <title>proc~~minimize~~CalledByGraph</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-28 148,-28 148,4 -4,4"/>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 148,-26.5 148,4 -4,4"/>
 <!-- proc~minimize -->
 <g id="proc~~minimize~~CalledByGraph_node1" class="node">
 <title>proc~minimize</title>
-<polygon fill="none" stroke="#000000" points="144,-24 90,-24 90,0 144,0 144,-24"/>
-<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">minimize</text>
+<polygon fill="none" stroke="#000000" points="144,-22.2554 90,-22.2554 90,-.2446 144,-.2446 144,-22.2554"/>
+<text text-anchor="middle" x="117" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">minimize</text>
 </g>
 <!-- proc~update -->
 <g id="proc~~minimize~~CalledByGraph_node2" class="node">
 <title>proc~update</title>
 <g id="a_proc~~minimize~~CalledByGraph_node2"><a xlink:href=".././proc/update.html" xlink:title="update">
-<polygon fill="#d9534f" stroke="#d9534f" points="54,-24 0,-24 0,0 54,0 54,-24"/>
-<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">update</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="54,-22.2554 0,-22.2554 0,-.2446 54,-.2446 54,-22.2554"/>
+<text text-anchor="middle" x="27" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">update</text>
 </a>
 </g>
 </g>
 <!-- proc~update&#45;&gt;proc~minimize -->
 <g id="proc~~minimize~~CalledByGraph_edge1" class="edge">
 <title>proc~update&#45;&gt;proc~minimize</title>
-<path fill="none" stroke="#000000" d="M54.003,-12C62.0277,-12 70.9665,-12 79.5309,-12"/>
-<polygon fill="#000000" stroke="#000000" points="79.7051,-15.5001 89.705,-12 79.705,-8.5001 79.7051,-15.5001"/>
+<path fill="none" stroke="#000000" d="M54.003,-11.25C62.0277,-11.25 70.9665,-11.25 79.5309,-11.25"/>
+<polygon fill="#000000" stroke="#000000" points="79.7051,-14.7501 89.705,-11.25 79.705,-7.7501 79.7051,-14.7501"/>
 </g>
 </g>
 </svg>
@@ -704,46 +794,46 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
 <!-- Title: Graph Key Pages: 1 -->
-<svg width="494pt" height="32pt"
- viewBox="0.00 0.00 493.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<svg width="550pt" height="31pt"
+ viewBox="0.00 0.00 550.25 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
 <title>Graph Key</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-28 489.5,-28 489.5,4 -4,4"/>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 546.2477,-26.5 546.2477,4 -4,4"/>
 <!-- Subroutine -->
 <g id="node1" class="node">
 <title>Subroutine</title>
-<polygon fill="#d9534f" stroke="#d9534f" points="54,-24 0,-24 0,0 54,0 54,-24"/>
-<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
+<polygon fill="#d9534f" stroke="#d9534f" points="62.6818,-22.2554 .1058,-22.2554 .1058,-.2446 62.6818,-.2446 62.6818,-22.2554"/>
+<text text-anchor="middle" x="31.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
 </g>
 <!-- Function -->
 <g id="node2" class="node">
 <title>Function</title>
-<polygon fill="#d94e8f" stroke="#d94e8f" points="126,-24 72,-24 72,0 126,0 126,-24"/>
-<text text-anchor="middle" x="99" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="134.3938,-22.2554 80.3938,-22.2554 80.3938,-.2446 134.3938,-.2446 134.3938,-22.2554"/>
+<text text-anchor="middle" x="107.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
 </g>
 <!-- Interface -->
 <g id="node3" class="node">
 <title>Interface</title>
-<polygon fill="#a7506f" stroke="#a7506f" points="198,-24 144,-24 144,0 198,0 198,-24"/>
-<text text-anchor="middle" x="171" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
+<polygon fill="#a7506f" stroke="#a7506f" points="206.3938,-22.2554 152.3938,-22.2554 152.3938,-.2446 206.3938,-.2446 206.3938,-22.2554"/>
+<text text-anchor="middle" x="179.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
 </g>
 <!-- Unknown Procedure Type -->
 <g id="node4" class="node">
 <title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="320,-24 216,-24 216,0 320,0 320,-24"/>
-<text text-anchor="middle" x="268" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
+<polygon fill="#777777" stroke="#777777" points="356.5315,-22.2554 224.2561,-22.2554 224.2561,-.2446 356.5315,-.2446 356.5315,-22.2554"/>
+<text text-anchor="middle" x="290.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
 </g>
 <!-- Program -->
 <g id="node5" class="node">
 <title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="392,-24 338,-24 338,0 392,0 392,-24"/>
-<text text-anchor="middle" x="365" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="428.3938,-22.2554 374.3938,-22.2554 374.3938,-.2446 428.3938,-.2446 428.3938,-22.2554"/>
+<text text-anchor="middle" x="401.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
 </g>
 <!-- This Page&#39;s Entity -->
 <g id="node6" class="node">
 <title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="#000000" points="485.5,-24 410.5,-24 410.5,0 485.5,0 485.5,-24"/>
-<text text-anchor="middle" x="448" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
+<polygon fill="none" stroke="#000000" points="542.102,-22.2554 446.6856,-22.2554 446.6856,-.2446 542.102,-.2446 542.102,-22.2554"/>
+<text text-anchor="middle" x="494.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
 </g>
 </g>
 </svg>
@@ -817,8 +907,8 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">minimize</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="p">&amp;</span>
-       <span class="n">kernel</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">std_map</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">minimize</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span><span class="p">,</span> <span class="p">&amp;</span>
+       <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">std_map</span><span class="p">,</span> <span class="n">mean_amp</span><span class="p">,</span> <span class="n">mean_mu</span><span class="p">,</span> <span class="n">mean_sig</span><span class="p">)</span>
     <span class="k">implicit none      </span>
 
 <span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n</span>
@@ -828,10 +918,12 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
     <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">iprint</span>
     
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">kernel</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">std_map</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">mean_amp</span><span class="p">,</span> <span class="n">mean_mu</span><span class="p">,</span> <span class="n">mean_sig</span>    
 
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">x</span>
     
@@ -873,7 +965,8 @@ public subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, 
        
        <span class="k">if</span> <span class="p">(</span><span class="n">task</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">)</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s1">&#39;FG&#39;</span><span class="p">)</span> <span class="k">then</span>          
           <span class="c">!     Compute function f and gradient g for the sample problem.</span>
-          <span class="k">call </span><span class="n">f_g_cube</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">std_map</span><span class="p">)</span>
+          <span class="k">call </span><span class="n">f_g_cube</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span><span class="p">,</span> <span class="p">&amp;</span>
+               <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">std_map</span><span class="p">,</span> <span class="n">mean_amp</span><span class="p">,</span> <span class="n">mean_mu</span><span class="p">,</span> <span class="n">mean_sig</span><span class="p">)</span>
           
        <span class="n">elseif</span> <span class="p">(</span><span class="n">task</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">)</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s1">&#39;NEW_X&#39;</span><span class="p">)</span> <span class="k">then</span>
           <span class="c">!        1) Terminate if the total number of f and g evaluations</span>

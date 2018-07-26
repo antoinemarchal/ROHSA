@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	 
+	 <meta name="description" content="">
+    
+    <meta name="author" content="Antoine Marchal" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>main_rohsa &ndash; ROHSA</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+    
+    
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">ROHSA <small>1.1.0</small></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+				
+            <li><a href='../page/index.html'>User Guide</a></li>
+	    
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+		 aria-expanded="false">Contents <span class="caret"></span></a>
+	      <ul class="dropdown-menu">
+              
+            <li><a href="../lists/files.html">Source Files</a></li>
+				
+				
+            <li><a href="../lists/modules.html">Modules</a></li>
+				
+            
+                                
+            <li><a href="../lists/procedures.html">Procedures</a></li>
+				
+								
+				
+            <li><a href="../program/rohsa.html">Program</a></li>
+	    
+            </ul>
+            </li>
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+
+
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
+
+                             
+
+<li class="visible-xs hidden-sm visible-lg"><a href="../program/rohsa.html">Program</a></li>
+
+          </ul>
+        
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+    
+  
+  <div class="row">
+    <h1>main_rohsa
+      <small>Subroutine</small>
+    
+    </h1>
+    
+<div class="row">
+  <div class="col-lg-12">
+<div class="well well-sm">
+  <ul class="list-inline" style="margin-bottom:0px;display:inline">
+     
+     
+     
+     
+    
+    
+     <li><i class="fa fa-list-ol"></i>
+       <a data-toggle="tooltip"
+	  data-placement="bottom" data-html="true"
+	  title=" 7.1% of total for procedures.">206 statements</a>
+     </li> 
+     
+     
+    <li><i class="fa fa-code"></i><a href="../src/mod_rohsa.f90"> Source File</a></li>
+     
+  </ul>
+  <ol class="breadcrumb in-well text-right">
+  
+     <li><a href='../sourcefile/mod_rohsa.f90.html'>mod_rohsa.f90</a></li>
+  
+     <li><a href='../module/mod_rohsa.html'>mod_rohsa</a></li>
+  
+     <li class="active">main_rohsa</li>
+  </ol>
+</div>
+</div>
+</div>
+<script>
+  $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+    
+<div id="sidebar">
+  
+<h3>Contents</h3>
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  <div class="list-group">
+    <a class="list-group-item" href="../proc/main_rohsa.html#src">main_rohsa</a>
+  </div>
+</div>
+
+
+
+</div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>
+public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init)
+    
+    
+	 
+</h2>
+    
+  
+
+
+    
+
+    <h3>Arguments</h3>
+    
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-data"></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>dimension(:,:,:), allocatable</td><td>::</td>
+  <td><strong>data</strong></td><td><p>initial fits data</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-std_cube"></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>dimension(:,:), allocatable</td><td>::</td>
+  <td><strong>std_cube</strong></td><td><p>standard deviation map fo the cube is given by the user </p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-fileout"></span>character(len=512),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>fileout</strong></td><td><p>name of the output result</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-n_gauss%7E6"></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>n_gauss</strong></td><td><p>number of gaussian to fit</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-n_gauss_add"></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>n_gauss_add</strong></td><td><p>number of gaussian to add at each step</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lambda_amp%7E3"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_amp</strong></td><td><p>lambda for amplitude parameter</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lambda_mu%7E3"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_mu</strong></td><td><p>lamnda for mean position parameter</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lambda_sig%7E3"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_sig</strong></td><td><p>lambda for dispersion parameter</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lambda_var_amp%7E3"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_var_amp</strong></td><td><p>lambda for amp dispersion parameter</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lambda_var_mu%7E3"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_var_mu</strong></td><td><p>lambda for mean position dispersion parameter</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lambda_var_sig%7E3"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lambda_var_sig</strong></td><td><p>lambda for variance dispersion parameter</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-amp_fact_init"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>amp_fact_init</strong></td><td><p>times max amplitude of additional Gaussian</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-sig_init"></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>sig_init</strong></td><td><p>dispersion of additional Gaussian</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-maxiter_init"></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>maxiter_init</strong></td><td><p>max iteration for L-BFGS-B alogorithm (init mean spectrum)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-maxiter%7E3"></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>maxiter</strong></td><td><p>max iteration for L-BFGS-B alogorithm</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-m%7E15"></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>m</strong></td><td><p>number of corrections used in the limited memory matrix by LBFGS-B</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-noise"></span>logical,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>noise</strong></td><td><p>if false --&gt; STD map computed by ROHSA with lstd and ustd (if true given by the user)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-regul"></span>logical,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>regul</strong></td><td><p>if true --&gt; activate regulation</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-descent"></span>logical,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>descent</strong></td><td><p>if true --&gt; activate hierarchical descent to initiate the optimization</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-lstd"></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>lstd</strong></td><td><p>lower bound to compute the standard deviation map of the cube (if noise .eq. false)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-ustd"></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>ustd</strong></td><td><p>upper bound to compute the standrad deviation map of the cube (if noise .eq. false)</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-init_option"></span>character(len=8),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>init_option</strong></td><td><p>Init ROHSA with the mean or the std spectrum    </p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-iprint%7E12"></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>iprint</strong></td><td><p>print option </p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" id="variable-iprint_init"></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>iprint_init</strong></td><td><p>print option init</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+    
+    
+    
+    <br>
+    
+    
+    <div class="panel panel-default">
+      <div class="panel-heading">
+	<h3 class="panel-title">Calls</h3>
+      </div>
+      <div class="panel-body">
+	<div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: proc~~main_rohsa~~CallsGraph Pages: 1 -->
+<svg id="procmain_rohsaCallsGraph" width="314pt" height="359pt"
+ viewBox="0.00 0.00 313.85 358.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~main_rohsa~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 354.5)">
+<title>proc~~main_rohsa~~CallsGraph</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-354.5 309.8542,-354.5 309.8542,4 -4,4"/>
+<!-- proc~main_rohsa -->
+<g id="proc~~main_rohsa~~CallsGraph_node1" class="node">
+<title>proc~main_rohsa</title>
+<polygon fill="none" stroke="#000000" points="66.7954,-186.2554 .0681,-186.2554 .0681,-164.2446 66.7954,-164.2446 66.7954,-186.2554"/>
+<text text-anchor="middle" x="33.4318" y="-172.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">main_rohsa</text>
+</g>
+<!-- proc~mean_array -->
+<g id="proc~~main_rohsa~~CallsGraph_node2" class="node">
+<title>proc~mean_array</title>
+<g id="a_proc~~main_rohsa~~CallsGraph_node2"><a xlink:href=".././proc/mean_array.html" xlink:title="mean_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="190.1716,-350.2554 122.1169,-350.2554 122.1169,-328.2446 190.1716,-328.2446 190.1716,-350.2554"/>
+<text text-anchor="middle" x="156.1443" y="-336.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">mean_array</text>
+</a>
+</g>
+</g>
+<!-- proc~main_rohsa&#45;&gt;proc~mean_array -->
+<g id="proc~~main_rohsa~~CallsGraph_edge1" class="edge">
+<title>proc~main_rohsa&#45;&gt;proc~mean_array</title>
+<path fill="none" stroke="#000000" d="M35.937,-186.5973C42.3794,-213.2339 61.9638,-280.3678 102.8635,-318.25 105.8554,-321.0211 109.2563,-323.4434 112.8583,-325.5574"/>
+<polygon fill="#000000" stroke="#000000" points="111.6005,-328.8421 122.1079,-330.2004 114.7409,-322.5861 111.6005,-328.8421"/>
+</g>
+<!-- proc~dim2nside -->
+<g id="proc~~main_rohsa~~CallsGraph_node3" class="node">
+<title>proc~dim2nside</title>
+<g id="a_proc~~main_rohsa~~CallsGraph_node3"><a xlink:href=".././proc/dim2nside.html" xlink:title="dim2nside">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="186.0046,-309.2554 126.284,-309.2554 126.284,-287.2446 186.0046,-287.2446 186.0046,-309.2554"/>
+<text text-anchor="middle" x="156.1443" y="-295.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">dim2nside</text>
+</a>
+</g>
+</g>
+<!-- proc~main_rohsa&#45;&gt;proc~dim2nside -->
+<g id="proc~~main_rohsa~~CallsGraph_edge8" class="edge">
+<title>proc~main_rohsa&#45;&gt;proc~dim2nside</title>
+<path fill="none" stroke="#000000" d="M38.2564,-186.3727C47.744,-207.0355 70.7352,-251.571 102.8635,-277.25 107.0284,-280.5789 111.7864,-283.4346 116.7061,-285.8693"/>
+<polygon fill="#000000" stroke="#000000" points="115.6887,-289.2444 126.2531,-290.0462 118.4945,-282.8313 115.6887,-289.2444"/>
+</g>
+<!-- proc~go_up_level -->
+<g id="proc~~main_rohsa~~CallsGraph_node4" class="node">
+<title>proc~go_up_level</title>
+<g id="a_proc~~main_rohsa~~CallsGraph_node4"><a xlink:href=".././proc/go_up_level.html" xlink:title="go_up_level">
+<polygon fill="#d9534f" stroke="#d9534f" points="190.2776,-268.2554 122.011,-268.2554 122.011,-246.2446 190.2776,-246.2446 190.2776,-268.2554"/>
+<text text-anchor="middle" x="156.1443" y="-254.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">go_up_level</text>
+</a>
+</g>
+</g>
+<!-- proc~main_rohsa&#45;&gt;proc~go_up_level -->
+<g id="proc~~main_rohsa~~CallsGraph_edge3" class="edge">
+<title>proc~main_rohsa&#45;&gt;proc~go_up_level</title>
+<path fill="none" stroke="#000000" d="M43.7921,-186.4646C56.6037,-199.8001 79.5826,-222.0357 102.8635,-236.25 106.2513,-238.3184 109.8782,-240.2524 113.5872,-242.0436"/>
+<polygon fill="#000000" stroke="#000000" points="112.3287,-245.3147 122.8867,-246.1971 115.1834,-238.9232 112.3287,-245.3147"/>
+</g>
+<!-- proc~set_stdmap -->
+<g id="proc~~main_rohsa~~CallsGraph_node5" class="node">
+<title>proc~set_stdmap</title>
+<g id="a_proc~~main_rohsa~~CallsGraph_node5"><a xlink:href=".././proc/set_stdmap.html" xlink:title="set_stdmap">
+<polygon fill="#d9534f" stroke="#d9534f" points="189.4239,-227.2554 122.8646,-227.2554 122.8646,-205.2446 189.4239,-205.2446 189.4239,-227.2554"/>
+<text text-anchor="middle" x="156.1443" y="-213.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">set_stdmap</text>
+</a>
+</g>
+</g>
+<!-- proc~main_rohsa&#45;&gt;proc~set_stdmap -->
+<g id="proc~~main_rohsa~~CallsGraph_edge5" class="edge">
+<title>proc~main_rohsa&#45;&gt;proc~set_stdmap</title>
+<path fill="none" stroke="#000000" d="M66.6395,-186.3452C80.9631,-191.1309 97.8997,-196.7897 113.1645,-201.8898"/>
+<polygon fill="#000000" stroke="#000000" points="112.3162,-205.2965 122.91,-205.1459 114.5345,-198.6573 112.3162,-205.2965"/>
+</g>
+<!-- proc~header -->
+<g id="proc~~main_rohsa~~CallsGraph_node6" class="node">
+<title>proc~header</title>
+<g id="a_proc~~main_rohsa~~CallsGraph_node6"><a xlink:href=".././proc/header.html" xlink:title="header">
+<polygon fill="#d9534f" stroke="#d9534f" points="183.1443,-186.2554 129.1443,-186.2554 129.1443,-164.2446 183.1443,-164.2446 183.1443,-186.2554"/>
+<text text-anchor="middle" x="156.1443" y="-172.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">header</text>
+</a>
+</g>
+</g>
+<!-- proc~main_rohsa&#45;&gt;proc~header -->
+<g id="proc~~main_rohsa~~CallsGraph_edge6" class="edge">
+<title>proc~main_rohsa&#45;&gt;proc~header</title>
+<path fill="none" stroke="#000000" d="M66.9635,-175.25C82.9135,-175.25 102.0462,-175.25 118.4934,-175.25"/>
+<polygon fill="#000000" stroke="#000000" points="118.8533,-178.7501 128.8533,-175.25 118.8532,-171.7501 118.8533,-178.7501"/>
+</g>
+<!-- proc~dim_data2dim_cube -->
+<g id="proc~~main_rohsa~~CallsGraph_node7" class="node">
+<title>proc~dim_data2dim_cube</title>
+<g id="a_proc~~main_rohsa~~CallsGraph_node7"><a xlink:href=".././proc/dim_data2dim_cube.html" xlink:title="dim_data2dim_cube">
+<polygon fill="#d9534f" stroke="#d9534f" points="209.2067,-145.2554 103.0819,-145.2554 103.0819,-123.2446 209.2067,-123.2446 209.2067,-145.2554"/>
+<text text-anchor="middle" x="156.1443" y="-131.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">dim_data2dim_cube</text>
+</a>
+</g>
+</g>
+<!-- proc~main_rohsa&#45;&gt;proc~dim_data2dim_cube -->
+<g id="proc~~main_rohsa~~CallsGraph_edge9" class="edge">
+<title>proc~main_rohsa&#45;&gt;proc~dim_data2dim_cube</title>
+<path fill="none" stroke="#000000" d="M66.6395,-164.1548C80.9631,-159.3691 97.8997,-153.7103 113.1645,-148.6102"/>
+<polygon fill="#000000" stroke="#000000" points="114.5345,-151.8427 122.91,-145.3541 112.3162,-145.2035 114.5345,-151.8427"/>
+</g>
+<!-- proc~ender -->
+<g id="proc~~main_rohsa~~CallsGraph_node8" class="node">
+<title>proc~ender</title>
+<g id="a_proc~~main_rohsa~~CallsGraph_node8"><a xlink:href=".././proc/ender.html" xlink:title="ender">
+<polygon fill="#d9534f" stroke="#d9534f" points="183.1443,-104.2554 129.1443,-104.2554 129.1443,-82.2446 183.1443,-82.2446 183.1443,-104.2554"/>
+<text text-anchor="middle" x="156.1443" y="-90.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">ender</text>
+</a>
+</g>
+</g>
+<!-- proc~main_rohsa&#45;&gt;proc~ender -->
+<g id="proc~~main_rohsa~~CallsGraph_edge7" class="edge">
+<title>proc~main_rohsa&#45;&gt;proc~ender</title>
+<path fill="none" stroke="#000000" d="M43.7921,-164.0354C56.6037,-150.6999 79.5826,-128.4643 102.8635,-114.25 108.0281,-111.0968 113.7483,-108.2559 119.4681,-105.7572"/>
+<polygon fill="#000000" stroke="#000000" points="121.0524,-108.8913 128.9956,-101.8802 118.4139,-102.4075 121.0524,-108.8913"/>
+</g>
+<!-- proc~reshape_up -->
+<g id="proc~~main_rohsa~~CallsGraph_node9" class="node">
+<title>proc~reshape_up</title>
+<g id="a_proc~~main_rohsa~~CallsGraph_node9"><a xlink:href=".././proc/reshape_up.html" xlink:title="reshape_up">
+<polygon fill="#d9534f" stroke="#d9534f" points="190.1093,-63.2554 122.1793,-63.2554 122.1793,-41.2446 190.1093,-41.2446 190.1093,-63.2554"/>
+<text text-anchor="middle" x="156.1443" y="-49.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">reshape_up</text>
+</a>
+</g>
+</g>
+<!-- proc~main_rohsa&#45;&gt;proc~reshape_up -->
+<g id="proc~~main_rohsa~~CallsGraph_edge4" class="edge">
+<title>proc~main_rohsa&#45;&gt;proc~reshape_up</title>
+<path fill="none" stroke="#000000" d="M38.2564,-164.1273C47.744,-143.4645 70.7352,-98.929 102.8635,-73.25 106.0066,-70.7378 109.4875,-68.4951 113.1207,-66.4995"/>
+<polygon fill="#000000" stroke="#000000" points="114.8791,-69.5371 122.3604,-62.035 111.8337,-63.2343 114.8791,-69.5371"/>
+</g>
+<!-- proc~mean_map -->
+<g id="proc~~main_rohsa~~CallsGraph_node10" class="node">
+<title>proc~mean_map</title>
+<g id="a_proc~~main_rohsa~~CallsGraph_node10"><a xlink:href=".././proc/mean_map.html" xlink:title="mean_map">
+<polygon fill="#d9534f" stroke="#d9534f" points="188.1767,-22.2554 124.1118,-22.2554 124.1118,-.2446 188.1767,-.2446 188.1767,-22.2554"/>
+<text text-anchor="middle" x="156.1443" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">mean_map</text>
+</a>
+</g>
+</g>
+<!-- proc~main_rohsa&#45;&gt;proc~mean_map -->
+<g id="proc~~main_rohsa~~CallsGraph_edge2" class="edge">
+<title>proc~main_rohsa&#45;&gt;proc~mean_map</title>
+<path fill="none" stroke="#000000" d="M35.937,-163.9027C42.3794,-137.2661 61.9638,-70.1322 102.8635,-32.25 106.415,-28.9605 110.5428,-26.1627 114.8993,-23.7885"/>
+<polygon fill="#000000" stroke="#000000" points="116.489,-26.9087 124.0512,-19.4882 113.512,-20.5732 116.489,-26.9087"/>
+</g>
+<!-- proc~std -->
+<g id="proc~~main_rohsa~~CallsGraph_node12" class="node">
+<title>proc~std</title>
+<g id="a_proc~~main_rohsa~~CallsGraph_node12"><a xlink:href=".././proc/std.html" xlink:title="std">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="302.6396,-227.2554 248.6396,-227.2554 248.6396,-205.2446 302.6396,-205.2446 302.6396,-227.2554"/>
+<text text-anchor="middle" x="275.6396" y="-213.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">std</text>
+</a>
+</g>
+</g>
+<!-- proc~set_stdmap&#45;&gt;proc~std -->
+<g id="proc~~main_rohsa~~CallsGraph_edge10" class="edge">
+<title>proc~set_stdmap&#45;&gt;proc~std</title>
+<path fill="none" stroke="#000000" d="M189.4304,-216.25C204.58,-216.25 222.574,-216.25 238.1938,-216.25"/>
+<polygon fill="#000000" stroke="#000000" points="238.564,-219.7501 248.564,-216.25 238.5639,-212.7501 238.564,-219.7501"/>
+</g>
+<!-- proc~timestamp -->
+<g id="proc~~main_rohsa~~CallsGraph_node11" class="node">
+<title>proc~timestamp</title>
+<g id="a_proc~~main_rohsa~~CallsGraph_node11"><a xlink:href=".././proc/timestamp.html" xlink:title="timestamp">
+<polygon fill="#d9534f" stroke="#d9534f" points="306.0704,-145.2554 245.2089,-145.2554 245.2089,-123.2446 306.0704,-123.2446 306.0704,-145.2554"/>
+<text text-anchor="middle" x="275.6396" y="-131.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">timestamp</text>
+</a>
+</g>
+</g>
+<!-- proc~header&#45;&gt;proc~timestamp -->
+<g id="proc~~main_rohsa~~CallsGraph_edge11" class="edge">
+<title>proc~header&#45;&gt;proc~timestamp</title>
+<path fill="none" stroke="#000000" d="M183.2596,-165.9465C198.6863,-160.6534 218.2998,-153.9238 235.4826,-148.0283"/>
+<polygon fill="#000000" stroke="#000000" points="236.9458,-151.2266 245.2686,-144.6706 234.674,-144.6055 236.9458,-151.2266"/>
+</g>
+<!-- proc~ender&#45;&gt;proc~timestamp -->
+<g id="proc~~main_rohsa~~CallsGraph_edge12" class="edge">
+<title>proc~ender&#45;&gt;proc~timestamp</title>
+<path fill="none" stroke="#000000" d="M183.2596,-102.5535C198.6863,-107.8466 218.2998,-114.5762 235.4826,-120.4717"/>
+<polygon fill="#000000" stroke="#000000" points="234.674,-123.8945 245.2686,-123.8294 236.9458,-117.2734 234.674,-123.8945"/>
+</g>
+</g>
+</svg>
+</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
+    <p>Nodes of different colours represent the following: </p>
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="550pt" height="31pt"
+ viewBox="0.00 0.00 550.25 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
+<title>Graph Key</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 546.2477,-26.5 546.2477,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="62.6818,-22.2554 .1058,-22.2554 .1058,-.2446 62.6818,-.2446 62.6818,-22.2554"/>
+<text text-anchor="middle" x="31.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="134.3938,-22.2554 80.3938,-22.2554 80.3938,-.2446 134.3938,-.2446 134.3938,-22.2554"/>
+<text text-anchor="middle" x="107.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="206.3938,-22.2554 152.3938,-22.2554 152.3938,-.2446 206.3938,-.2446 206.3938,-22.2554"/>
+<text text-anchor="middle" x="179.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node4" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="356.5315,-22.2554 224.2561,-22.2554 224.2561,-.2446 356.5315,-.2446 356.5315,-22.2554"/>
+<text text-anchor="middle" x="290.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="428.3938,-22.2554 374.3938,-22.2554 374.3938,-.2446 428.3938,-.2446 428.3938,-22.2554"/>
+<text text-anchor="middle" x="401.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="#000000" points="542.102,-22.2554 446.6856,-22.2554 446.6856,-.2446 542.102,-.2446 542.102,-22.2554"/>
+<text text-anchor="middle" x="494.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+    
+    <p>Solid arrows point from a procedure to one which it calls. Dashed 
+    arrows point from an interface to procedures which implement that interface.
+    This could include the module procedures in a generic interface or the
+    implementation in a submodule of an interface in a parent module.
+    </p>
+    </div></div></div></div>
+      </div>
+    </div>
+     
+     
+    <div class="panel panel-default">
+      <div class="panel-heading">
+	<h3 class="panel-title">Called by</h3>
+      </div>
+      <div class="panel-body">
+	<div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: proc~~main_rohsa~~CalledByGraph Pages: 1 -->
+<svg id="procmain_rohsaCalledByGraph" width="165pt" height="31pt"
+ viewBox="0.00 0.00 164.86 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~main_rohsa~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
+<title>proc~~main_rohsa~~CalledByGraph</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 160.8635,-26.5 160.8635,4 -4,4"/>
+<!-- proc~main_rohsa -->
+<g id="proc~~main_rohsa~~CalledByGraph_node1" class="node">
+<title>proc~main_rohsa</title>
+<polygon fill="none" stroke="#000000" points="156.7954,-22.2554 90.0681,-22.2554 90.0681,-.2446 156.7954,-.2446 156.7954,-22.2554"/>
+<text text-anchor="middle" x="123.4318" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">main_rohsa</text>
+</g>
+<!-- program~rohsa -->
+<g id="proc~~main_rohsa~~CalledByGraph_node2" class="node">
+<title>program~rohsa</title>
+<g id="a_proc~~main_rohsa~~CalledByGraph_node2"><a xlink:href=".././program/rohsa.html" xlink:title="ROHSA">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="54,-22.2554 0,-22.2554 0,-.2446 54,-.2446 54,-22.2554"/>
+<text text-anchor="middle" x="27" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">ROHSA</text>
+</a>
+</g>
+</g>
+<!-- program~rohsa&#45;&gt;proc~main_rohsa -->
+<g id="proc~~main_rohsa~~CalledByGraph_edge1" class="edge">
+<title>program~rohsa&#45;&gt;proc~main_rohsa</title>
+<path fill="none" stroke="#000000" d="M54.1182,-11.25C62.1262,-11.25 71.1012,-11.25 79.8691,-11.25"/>
+<polygon fill="#000000" stroke="#000000" points="79.9964,-14.7501 89.9964,-11.25 79.9963,-7.7501 79.9964,-14.7501"/>
+</g>
+</g>
+</svg>
+</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
+    <p>Nodes of different colours represent the following: </p>
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="550pt" height="31pt"
+ viewBox="0.00 0.00 550.25 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
+<title>Graph Key</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 546.2477,-26.5 546.2477,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="62.6818,-22.2554 .1058,-22.2554 .1058,-.2446 62.6818,-.2446 62.6818,-22.2554"/>
+<text text-anchor="middle" x="31.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="134.3938,-22.2554 80.3938,-22.2554 80.3938,-.2446 134.3938,-.2446 134.3938,-22.2554"/>
+<text text-anchor="middle" x="107.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="206.3938,-22.2554 152.3938,-22.2554 152.3938,-.2446 206.3938,-.2446 206.3938,-22.2554"/>
+<text text-anchor="middle" x="179.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node4" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="356.5315,-22.2554 224.2561,-22.2554 224.2561,-.2446 356.5315,-.2446 356.5315,-22.2554"/>
+<text text-anchor="middle" x="290.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="428.3938,-22.2554 374.3938,-22.2554 374.3938,-.2446 428.3938,-.2446 428.3938,-22.2554"/>
+<text text-anchor="middle" x="401.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="#000000" points="542.102,-22.2554 446.6856,-22.2554 446.6856,-.2446 542.102,-.2446 542.102,-22.2554"/>
+<text text-anchor="middle" x="494.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+    
+    <p>Solid arrows point from a procedure to one which it calls. Dashed 
+    arrows point from an interface to procedures which implement that interface.
+    This could include the module procedures in a generic interface or the
+    implementation in a submodule of an interface in a parent module.
+    </p>
+    </div></div></div></div>
+      </div>
+    </div>
+     
+    <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+      
+<h3>Contents</h3>
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  <div class="list-group">
+    <a class="list-group-item" href="../proc/main_rohsa.html#src">main_rohsa</a>
+  </div>
+</div>
+
+
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+
+    
+    
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">main_rohsa</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">std_cube</span><span class="p">,</span> <span class="n">fileout</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">n_gauss_add</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span><span class="p">,</span> <span class="p">&amp;</span>
+       <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="p">&amp;</span>
+       <span class="n">noise</span><span class="p">,</span> <span class="n">regul</span><span class="p">,</span> <span class="n">descent</span><span class="p">,</span> <span class="n">lstd</span><span class="p">,</span> <span class="n">ustd</span><span class="p">,</span> <span class="n">init_option</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
+    
+    <span class="k">implicit none</span>
+<span class="k">    </span>
+<span class="k">    </span><span class="kt">logical</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">noise</span>           <span class="c">!! if false --&gt; STD map computed by ROHSA with lstd and ustd (if true given by the user)</span>
+    <span class="kt">logical</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">regul</span>           <span class="c">!! if true --&gt; activate regulation</span>
+    <span class="kt">logical</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">descent</span>         <span class="c">!! if true --&gt; activate hierarchical descent to initiate the optimization</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n_gauss</span>         <span class="c">!! number of gaussian to fit</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n_gauss_add</span>     <span class="c">!! number of gaussian to add at each step</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">m</span>               <span class="c">!! number of corrections used in the limited memory matrix by LBFGS-B</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lstd</span>            <span class="c">!! lower bound to compute the standard deviation map of the cube (if noise .eq. false)</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">ustd</span>            <span class="c">!! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">iprint</span>          <span class="c">!! print option </span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">iprint_init</span>     <span class="c">!! print option init</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">maxiter</span>         <span class="c">!! max iteration for L-BFGS-B alogorithm</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">maxiter_init</span>    <span class="c">!! max iteration for L-BFGS-B alogorithm (init mean spectrum)</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_amp</span>     <span class="c">!! lambda for amplitude parameter</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_mu</span>      <span class="c">!! lamnda for mean position parameter</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_sig</span>     <span class="c">!! lambda for dispersion parameter</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_var_amp</span> <span class="c">!! lambda for amp dispersion parameter</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_var_mu</span>  <span class="c">!! lambda for mean position dispersion parameter</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lambda_var_sig</span> <span class="c">!! lambda for variance dispersion parameter</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">amp_fact_init</span>  <span class="c">!! times max amplitude of additional Gaussian</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">sig_init</span>       <span class="c">!! dispersion of additional Gaussian</span>
+
+    <span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">init_option</span> <span class="c">!!Init ROHSA with the mean or the std spectrum    </span>
+    <span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">512</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">fileout</span>   <span class="c">!! name of the output result</span>
+
+    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">nside</span>        <span class="c">!! size of the reshaped data \(2^{nside}\)</span>
+    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">n</span>            <span class="c">!! loop index</span>
+    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">power</span>        <span class="c">!! loop index</span>
+
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="k">data</span>        <span class="c">!! initial fits data</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span>   <span class="kd">::</span> <span class="n">std_cube</span>    <span class="c">!! standard deviation map fo the cube is given by the user </span>
+
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>        <span class="c">!! reshape data with nside --&gt; cube</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube_mean</span>   <span class="c">!! mean cube over spatial axis</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">fit_params</span>  <span class="c">!! parameters to optimize with cube mean at each iteration</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">grid_params</span> <span class="c">!! parameters to optimize at final step (dim of initial cube)</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">std_map</span>       <span class="c">!! standard deviation map fo the cube computed by ROHSA with lb and ub</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">std_spect</span>       <span class="c">!! std spectrum of the observation</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">mean_spect</span>      <span class="c">!! mean spectrum of the observation</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">guess_spect</span> <span class="c">!! params obtain fi the optimization of the std spectrum of the observation</span>
+    
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_data</span> <span class="c">!! dimension of original data</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_cube</span> <span class="c">!! dimension of reshape cube</span>
+    
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">kernel</span> <span class="c">!! convolution kernel </span>
+    
+    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">ios</span><span class="o">=</span><span class="mi">0</span> <span class="c">!! ios integer</span>
+    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span>     <span class="c">!! loop index</span>
+    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">j</span>     <span class="c">!! loop index</span>
+    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">k</span>     <span class="c">!! loop index</span>
+
+    <span class="k">call </span><span class="n">header</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;fileout = &#39;&quot;</span><span class="p">,</span><span class="nb">trim</span><span class="p">(</span><span class="n">fileout</span><span class="p">),</span><span class="s2">&quot;&#39;&quot;</span>
+    
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;______Parameters_____&quot;</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;n_gauss = &quot;</span><span class="p">,</span> <span class="n">n_gauss</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;n_gauss_add = &quot;</span><span class="p">,</span> <span class="n">n_gauss_add</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;lambda_amp = &quot;</span><span class="p">,</span> <span class="n">lambda_amp</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;lambda_mu = &quot;</span><span class="p">,</span> <span class="n">lambda_mu</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;lambda_sig = &quot;</span><span class="p">,</span> <span class="n">lambda_sig</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;lambda_var_amp = &quot;</span><span class="p">,</span> <span class="n">lambda_var_amp</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;lambda_var_mu = &quot;</span><span class="p">,</span> <span class="n">lambda_var_mu</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;lambda_var_sig = &quot;</span><span class="p">,</span> <span class="n">lambda_var_sig</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;amp_fact_init = &quot;</span><span class="p">,</span> <span class="n">amp_fact_init</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;sig_init = &quot;</span><span class="p">,</span> <span class="n">sig_init</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;maxiter_itit = &quot;</span><span class="p">,</span> <span class="n">maxiter_init</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;init_option = &quot;</span><span class="p">,</span> <span class="n">init_option</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;maxiter = &quot;</span><span class="p">,</span> <span class="n">maxiter</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;lstd = &quot;</span><span class="p">,</span> <span class="n">lstd</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;ustd = &quot;</span><span class="p">,</span> <span class="n">ustd</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;noise = &quot;</span><span class="p">,</span> <span class="n">noise</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;regul = &quot;</span><span class="p">,</span> <span class="n">regul</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span>
+    
+    <span class="k">allocate</span><span class="p">(</span><span class="n">kernel</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    
+    <span class="n">kernel</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0._xp</span>
+    <span class="n">kernel</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.25_xp</span>
+    <span class="n">kernel</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0._xp</span>
+    <span class="n">kernel</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.25_xp</span>
+    <span class="n">kernel</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mf">1._xp</span>
+    <span class="n">kernel</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.25_xp</span>
+    <span class="n">kernel</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0._xp</span>
+    <span class="n">kernel</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.25_xp</span>
+    <span class="n">kernel</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0._xp</span>
+        
+    <span class="n">dim_data</span> <span class="o">=</span> <span class="nb">shape</span><span class="p">(</span><span class="k">data</span><span class="p">)</span>
+    
+    <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s2">&quot;dim_v, dim_y, dim_x = &quot;</span><span class="p">,</span> <span class="n">dim_data</span>
+    <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s2">&quot;number of los = &quot;</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    
+    <span class="n">nside</span> <span class="o">=</span> <span class="n">dim2nside</span><span class="p">(</span><span class="n">dim_data</span><span class="p">)</span>
+    
+    <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s2">&quot;nside = &quot;</span><span class="p">,</span> <span class="n">nside</span>
+    
+    <span class="k">call </span><span class="n">dim_data2dim_cube</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">)</span>
+    
+    <span class="c">!Allocate moemory for cube</span>
+    <span class="k">allocate</span><span class="p">(</span><span class="n">cube</span><span class="p">(</span><span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+    
+    <span class="c">!Reshape the data (new cube of size nside)</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span>
+    <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s2">&quot;Reshape cube, new dimensions :&quot;</span>
+    <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s2">&quot;dim_v, dim_y, dim_x = &quot;</span><span class="p">,</span> <span class="n">dim_cube</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> 
+    
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;Compute mean and std spectrum&quot;</span>
+    <span class="k">allocate</span><span class="p">(</span><span class="n">std_spect</span><span class="p">(</span><span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+    <span class="k">allocate</span><span class="p">(</span><span class="n">mean_spect</span><span class="p">(</span><span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+
+    <span class="k">call </span><span class="n">std_spectrum</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">std_spect</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="k">call </span><span class="n">mean_spectrum</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">mean_spect</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    
+    <span class="k">call </span><span class="n">reshape_up</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">)</span>
+    
+    <span class="c">!Allocate memory for parameters grids</span>
+    <span class="k">allocate</span><span class="p">(</span><span class="n">grid_params</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+    <span class="k">allocate</span><span class="p">(</span><span class="n">fit_params</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">n_gauss</span><span class="o">+</span><span class="p">(</span><span class="n">nside</span><span class="o">*</span><span class="n">n_gauss_add</span><span class="p">)),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;                    Start iteration&quot;</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">descent</span> <span class="p">.</span><span class="n">eqv</span><span class="p">.</span> <span class="p">.</span><span class="n">true</span><span class="p">.)</span> <span class="k">then</span>
+<span class="k">       print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;Start hierarchical descent&quot;</span>
+       <span class="c">!Start iteration</span>
+       <span class="k">do </span><span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">nside</span>
+          <span class="n">power</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">n</span>
+          
+          <span class="k">allocate</span><span class="p">(</span><span class="n">cube_mean</span><span class="p">(</span><span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">power</span><span class="p">,</span> <span class="n">power</span><span class="p">))</span>
+          
+          <span class="k">call </span><span class="n">mean_array</span><span class="p">(</span><span class="n">power</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">cube_mean</span><span class="p">)</span>
+          
+          <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span>
+<span class="k">             if</span> <span class="p">(</span><span class="n">init_option</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s2">&quot;mean&quot;</span><span class="p">)</span> <span class="k">then</span>
+<span class="k">                print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;Init mean spectrum&quot;</span>        
+                <span class="k">call </span><span class="n">init_spectrum</span><span class="p">(</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">(:,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">cube_mean</span><span class="p">(:,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="p">&amp;</span>
+                     <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
+             <span class="n">elseif</span> <span class="p">(</span><span class="n">init_option</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s2">&quot;std&quot;</span><span class="p">)</span> <span class="k">then</span>
+<span class="k">                call </span><span class="n">init_spectrum</span><span class="p">(</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">(:,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">std_spect</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="p">&amp;</span>
+                     <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
+             <span class="k">else </span>
+<span class="k">                print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;init_option keyword should be &#39;mean&#39; of &#39;std&#39;&quot;</span>
+                <span class="k">stop</span>
+<span class="k">             end if</span>
+<span class="k">          end if</span>
+<span class="k">          </span>
+<span class="k">          call </span><span class="n">go_up_level</span><span class="p">(</span><span class="n">fit_params</span><span class="p">)</span>
+          <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s2">&quot;&quot;</span>
+          <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s2">&quot;Update parameters level &quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="n">power</span>
+          
+          <span class="k">if</span> <span class="p">(</span><span class="n">regul</span> <span class="p">.</span><span class="n">eqv</span><span class="p">.</span> <span class="p">.</span><span class="n">false</span><span class="p">.)</span> <span class="k">then</span>
+<span class="k">             call </span><span class="n">upgrade</span><span class="p">(</span><span class="n">cube_mean</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint</span><span class="p">)</span>
+          <span class="k">end if</span>
+<span class="k">          </span>
+<span class="k">          if</span> <span class="p">(</span><span class="n">regul</span> <span class="p">.</span><span class="n">eqv</span><span class="p">.</span> <span class="p">.</span><span class="n">true</span><span class="p">.)</span> <span class="k">then</span>
+<span class="k">             if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span>
+<span class="k">                call </span><span class="n">upgrade</span><span class="p">(</span><span class="n">cube_mean</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint</span><span class="p">)</span>
+             <span class="k">end if</span>
+<span class="k">             </span>
+<span class="k">             if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">nside</span><span class="p">)</span> <span class="k">then</span>
+<span class="k">                allocate</span><span class="p">(</span><span class="n">std_map</span><span class="p">(</span><span class="n">power</span><span class="p">,</span> <span class="n">power</span><span class="p">))</span>
+                
+                <span class="k">if</span> <span class="p">(</span><span class="n">noise</span> <span class="p">.</span><span class="n">eqv</span><span class="p">.</span> <span class="p">.</span><span class="n">true</span><span class="p">.)</span> <span class="k">then</span>
+<span class="k">                   call </span><span class="n">mean_map</span><span class="p">(</span><span class="n">power</span><span class="p">,</span> <span class="n">std_cube</span><span class="p">,</span> <span class="n">std_map</span><span class="p">)</span>           
+                <span class="k">else</span>
+<span class="k">                   call </span><span class="n">set_stdmap</span><span class="p">(</span><span class="n">std_map</span><span class="p">,</span> <span class="n">cube_mean</span><span class="p">,</span> <span class="n">lstd</span><span class="p">,</span> <span class="n">ustd</span><span class="p">)</span>
+                <span class="k">end if</span>
+<span class="k">                </span>
+<span class="k">                call </span><span class="n">update</span><span class="p">(</span><span class="n">cube_mean</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">power</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="p">&amp;</span>
+                     <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">std_map</span><span class="p">)</span>        
+                <span class="k">deallocate</span><span class="p">(</span><span class="n">std_map</span><span class="p">)</span>
+             <span class="k">end if</span>
+<span class="k">          end if</span>
+<span class="k">          </span>
+<span class="k">          deallocate</span><span class="p">(</span><span class="n">cube_mean</span><span class="p">)</span>
+       <span class="n">enddo</span>
+       
+       <span class="k">print</span><span class="o">*</span><span class="p">,</span>
+       <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s2">&quot;Reshape cube, restore initial dimensions :&quot;</span>
+       <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s2">&quot;dim_v, dim_y, dim_x = &quot;</span><span class="p">,</span> <span class="n">dim_data</span>
+              
+       <span class="k">call </span><span class="n">reshape_down</span><span class="p">(</span><span class="n">fit_params</span><span class="p">,</span> <span class="n">grid_params</span><span class="p">,</span>  <span class="p">(</span><span class="o">/</span> <span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">),</span> <span class="p">&amp;</span>
+            <span class="p">(</span><span class="o">/</span> <span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">))</span>       
+
+       <span class="k">else</span>
+<span class="k">          allocate</span><span class="p">(</span><span class="n">guess_spect</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">))</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">init_option</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s2">&quot;mean&quot;</span><span class="p">)</span> <span class="k">then</span>
+<span class="k">             print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;Use of the mean spectrum to initialize each los&quot;</span>
+             <span class="k">call </span><span class="n">init_spectrum</span><span class="p">(</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">guess_spect</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">mean_spect</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="p">&amp;</span>
+                  <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
+          <span class="k">else if</span> <span class="p">(</span><span class="n">init_option</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s2">&quot;std&quot;</span><span class="p">)</span> <span class="k">then</span>
+<span class="k">             print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;Use of the std spectrum to initialize each los&quot;</span>
+             <span class="k">call </span><span class="n">init_spectrum</span><span class="p">(</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">guess_spect</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">std_spect</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="p">&amp;</span>
+                  <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
+          <span class="k">else</span>
+<span class="k">             print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;init_option keyword should be &#39;mean&#39; of &#39;std&#39;&quot;</span>
+             <span class="k">stop</span>
+<span class="k">          end if</span>
+<span class="k">          call </span><span class="n">init_grid_params</span><span class="p">(</span><span class="n">grid_params</span><span class="p">,</span> <span class="n">guess_spect</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+          <span class="k">deallocate</span><span class="p">(</span><span class="n">guess_spect</span><span class="p">)</span>      
+    <span class="k">end if</span>
+    
+    <span class="c">!Update last level</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;Update last level ...&quot;</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span>
+    
+    <span class="k">allocate</span><span class="p">(</span><span class="n">std_map</span><span class="p">(</span><span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">noise</span> <span class="p">.</span><span class="n">eqv</span><span class="p">.</span> <span class="p">.</span><span class="n">true</span><span class="p">.)</span> <span class="k">then</span>
+<span class="k">       </span><span class="n">std_map</span> <span class="o">=</span> <span class="n">std_cube</span>
+    <span class="k">else   </span>
+<span class="k">       call </span><span class="n">set_stdmap</span><span class="p">(</span><span class="n">std_map</span><span class="p">,</span> <span class="k">data</span><span class="p">,</span> <span class="n">lstd</span><span class="p">,</span> <span class="n">ustd</span><span class="p">)</span>
+    <span class="k">end if</span>
+<span class="k">    </span>
+<span class="k">    if</span> <span class="p">(</span><span class="n">regul</span> <span class="p">.</span><span class="n">eqv</span><span class="p">.</span> <span class="p">.</span><span class="n">true</span><span class="p">.)</span> <span class="k">then</span>
+<span class="k">       call </span><span class="n">update</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">grid_params</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="p">&amp;</span>
+            <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">std_map</span><span class="p">)</span>
+    <span class="k">end if</span>
+<span class="k">    </span>
+<span class="k">    print</span><span class="o">*</span><span class="p">,</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;_____ Write output file _____&quot;</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> 
+    
+    <span class="c">! Open file</span>
+    <span class="k">open</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="k">file</span><span class="o">=</span><span class="n">fileout</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;write&quot;</span><span class="p">,</span> <span class="n">iostat</span><span class="o">=</span><span class="n">ios</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ios</span> <span class="o">/=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">stop</span> <span class="s2">&quot;opening file error&quot;</span>
+    
+    <span class="c">! Read cube dimension and compute the number of line</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# &quot;</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# ______Parameters_____&quot;</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# &quot;</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# n_gauss = &quot;</span><span class="p">,</span> <span class="n">n_gauss</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# n_gauss_add = &quot;</span><span class="p">,</span> <span class="n">n_gauss_add</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# lambda_amp = &quot;</span><span class="p">,</span> <span class="n">lambda_amp</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# lambda_mu = &quot;</span><span class="p">,</span> <span class="n">lambda_mu</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# lambda_sig = &quot;</span><span class="p">,</span> <span class="n">lambda_sig</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# lambda_var_amp = &quot;</span><span class="p">,</span> <span class="n">lambda_var_amp</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# lambda_var_mu = &quot;</span><span class="p">,</span> <span class="n">lambda_var_mu</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# lambda_var_sig = &quot;</span><span class="p">,</span> <span class="n">lambda_var_sig</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# amp_fact_init = &quot;</span><span class="p">,</span> <span class="n">amp_fact_init</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# sig_init = &quot;</span><span class="p">,</span> <span class="n">sig_init</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# maxiter_itit = &quot;</span><span class="p">,</span> <span class="n">maxiter_init</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# maxiter = &quot;</span><span class="p">,</span> <span class="n">maxiter</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# lstd = &quot;</span><span class="p">,</span> <span class="n">lstd</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# ustd = &quot;</span><span class="p">,</span> <span class="n">ustd</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# noise = &quot;</span><span class="p">,</span> <span class="n">noise</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# regul = &quot;</span><span class="p">,</span> <span class="n">regul</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# &quot;</span>
+    
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# i, j, A, mean, sigma&quot;</span>
+    
+    <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+       <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+          <span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_gauss</span>
+             <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">grid_params</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">((</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">3</span><span class="p">),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">),</span> <span class="n">grid_params</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="p">((</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">3</span><span class="p">),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">),</span> <span class="n">grid_params</span><span class="p">(</span><span class="mi">3</span><span class="o">+</span><span class="p">((</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">3</span><span class="p">),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+          <span class="n">enddo</span>
+       <span class="n">enddo</span>
+    <span class="n">enddo</span>
+    <span class="k">close</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+    
+    <span class="k">call </span><span class="n">ender</span><span class="p">()</span>
+    
+  <span class="k">end subroutine </span><span class="n">main_rohsa</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    
+    </div>
+  </div>
+
+
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-4"><p>&copy; 2018 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a>
+                                          </p></div>
+        <div class="col-xs-6 col-md-4 col-md-push-4">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/cmacmackin/ford">FORD</a>
+            
+          </p>
+        </div>
+        <div class="col-xs-12 col-md-4 col-md-pull-4"><p class="text-center"> ROHSA was developed by Antoine Marchal</p></div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+    
+  </body>
+</html>

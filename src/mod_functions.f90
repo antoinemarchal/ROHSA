@@ -10,7 +10,7 @@ module mod_functions
   private
   
   public :: mean_array, mean_map, dim2nside, dim_data2dim_cube, reshape_up, reshape_down, go_up_level, init_spectrum, &
-       upgrade, update, set_stdmap
+       upgrade, update, set_stdmap, std_spectrum, mean_spectrum, init_grid_params
 
 contains
     
@@ -167,7 +167,7 @@ contains
   end subroutine go_up_level
 
   
-  subroutine init_spectrum(n_gauss, params, dim_v, line, maxiter, m, iprint)
+  subroutine init_spectrum(n_gauss, params, dim_v, line, amp_fact_init, sig_init, maxiter, m, iprint)
     !! Initialization of the mean sprectrum with N Gaussian
     implicit none
     
@@ -178,6 +178,9 @@ contains
     integer, intent(in) :: iprint !! print option
 
     real(xp), intent(in), dimension(dim_v) :: line !! spectrum
+    real(xp), intent(in) :: amp_fact_init !! times max amplitude of additional Gaussian
+    real(xp), intent(in) :: sig_init !! dispersion of additional Gaussian
+
     real(xp), intent(inout), dimension(3*n_gauss)  :: params !! params to optimize
 
     integer :: i, j, k, p
@@ -209,8 +212,8 @@ contains
        end do
        
        x(2+(3*(i-1))) = minloc(residual, dim_v)
-       x(1+(3*(i-1))) = line(int(x(2+(3*(i-1))))) * 2._xp/3._xp
-       x(3+(3*(i-1))) = 5._xp;
+       x(1+(3*(i-1))) = line(int(x(2+(3*(i-1))))) * amp_fact_init
+       x(3+(3*(i-1))) = sig_init;
        
        call minimize_spec(3*i, m, x, lb, ub, line, dim_v, i, maxiter, iprint)
        
@@ -296,8 +299,8 @@ contains
   end subroutine upgrade
 
 
-  subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, maxiter, m, kernel, &
-       iprint, std_map)
+  subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, &
+       lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
@@ -314,6 +317,9 @@ contains
     real(xp), intent(in) :: lambda_amp !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_mu !! lambda for mean position parameter
     real(xp), intent(in) :: lambda_sig !! lambda for dispersion parameter
+    real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
+    real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
+    real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
 
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
     
@@ -322,11 +328,18 @@ contains
     real(xp), dimension(:,:,:), allocatable :: lb_3D, ub_3D
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(:), allocatable :: beta
+    real(xp), dimension(:), allocatable :: ravel_amp, ravel_mu, ravel_sig
+    real(xp), dimension(:), allocatable :: mean_amp, mean_mu, mean_sig    
+    real(xp), dimension(:,:), allocatable :: image_amp, image_mu, image_sig
+
 
     n_beta = 3*n_gauss * dim_y * dim_x
 
     allocate(lb(n_beta), ub(n_beta), beta(n_beta))
     allocate(lb_3D(3*n_gauss,dim_y,dim_x), ub_3D(3*n_gauss,dim_y,dim_x))
+    allocate(mean_amp(n_gauss), mean_mu(n_gauss), mean_sig(n_gauss))
+    allocate(image_amp(dim_y, dim_x), image_mu(dim_y, dim_x), image_sig(dim_y, dim_x))
+    allocate(ravel_amp(dim_y*dim_x), ravel_mu(dim_y*dim_x), ravel_sig(dim_y*dim_x))
 
     do j=1, dim_x
        do i=1, dim_y
@@ -338,8 +351,23 @@ contains
     call ravel_3D(ub_3D, ub, 3*n_gauss, dim_y, dim_x)
     call ravel_3D(params, beta, 3*n_gauss, dim_y, dim_x)
 
-    call minimize(n_beta, m, beta, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, maxiter, &
-         kernel, iprint, std_map)
+    !Compute mean sig vector    
+    do i=1,n_gauss
+       image_amp = params(1+(3*(i-1)),:,:)
+       image_mu = params(2+(3*(i-1)),:,:)
+       image_sig = params(3+(3*(i-1)),:,:)
+
+       call ravel_2D(image_amp, ravel_amp, dim_y, dim_x)
+       call ravel_2D(image_mu, ravel_mu, dim_y, dim_x)
+       call ravel_2D(image_sig, ravel_sig, dim_y, dim_x)
+
+       mean_amp(i) = mean(ravel_amp)
+       mean_mu(i) = mean(ravel_mu)
+       mean_sig(i) = mean(ravel_sig)
+    end do
+
+    call minimize(n_beta, m, beta, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
+         lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map, mean_amp, mean_mu, mean_sig)
 
     call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)
         
@@ -371,32 +399,74 @@ contains
     
   end subroutine set_stdmap
 
-
-  pure function std(array)
-    !! Compute the STD of a 1D array
+  
+  subroutine std_spectrum(data, spectrum, dim_v, dim_y, dim_x)
+    !! Compute the STD spectrum of a cube along the spatial axis
     implicit none
+    
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data !! initial fits data
+    integer, intent(in) :: dim_v !! dimension along v axis
+    integer, intent(in) :: dim_y !! dimension along spatial axis y 
+    integer, intent(in) :: dim_x !! dimension along spatial axis x
 
-    real(xp), intent(in), dimension(:) :: array !! 1D array
-    integer :: i
-    integer :: n
-    real(xp) :: std !! standard deviation 
-    real(xp) :: mean
-    real(xp) :: var
+    real(xp), intent(inout), dimension(:), allocatable :: spectrum !! std_spectrum of the observation
+    real(xp), dimension(:,:), allocatable :: map !! 2D array
 
-    mean = 0._xp; var = 0._xp
-    std = 0._xp
+    integer :: i !! loop index
 
-    n = size(array)
-    mean = sum(array) / n
-
-    do i=1, n
-       var = var + (array(i) - mean)**2._xp
+    do i=1,dim_v
+       allocate(map(dim_y,dim_x))
+       map = data(i,:,:)
+       spectrum(i) = std_2D(map, dim_y, dim_x)
+       deallocate(map)
     end do
     
-    var = var / (n - 1)
-    std = sqrt(var)
+  end subroutine std_spectrum  
+
+
+  subroutine mean_spectrum(data, spectrum, dim_v, dim_y, dim_x)
+    !! Compute the MEAN spectrum of a cube along the spatial axis
+    implicit none
     
-    return
-  end function std
-  
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data !! initial fits data
+    integer, intent(in) :: dim_v !! dimension along v axis
+    integer, intent(in) :: dim_y !! dimension along spatial axis y 
+    integer, intent(in) :: dim_x !! dimension along spatial axis x
+
+    real(xp), intent(inout), dimension(:), allocatable :: spectrum !! std_spectrum of the observation
+    real(xp), dimension(:,:), allocatable :: map !! 2D array
+
+    integer :: i !! loop index
+
+    do i=1,dim_v
+       allocate(map(dim_y,dim_x))
+       map = data(i,:,:)
+       spectrum(i) = mean_2D(map, dim_y, dim_x)
+       deallocate(map)
+    end do
+    
+  end subroutine mean_spectrum  
+
+
+  subroutine init_grid_params(params, guess_spectrum, dim_y, dim_x)
+    !! Set up a grid params array with std spectrum at each spatial position
+    implicit none
+ 
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! grid of paramters
+    real(xp), intent(in), dimension(:), allocatable :: guess_spectrum !! std spectrum of the observation
+    integer, intent(in) :: dim_y !! dimension along spatial axis y 
+    integer, intent(in) :: dim_x !! dimension along spatial axis x
+
+    integer :: i !! index loop
+    integer :: j !! index loop
+
+    do j=1, dim_x
+       do i=1, dim_y
+          params(:,i,j) = guess_spectrum
+       end do
+    end do
+
+  end subroutine init_grid_params
+
+
 end module mod_functions
