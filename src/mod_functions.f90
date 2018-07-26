@@ -299,8 +299,8 @@ contains
   end subroutine upgrade
 
 
-  subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, lambda_var_sig, maxiter, &
-       m, kernel, iprint, std_map)
+  subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, &
+       lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
@@ -317,6 +317,8 @@ contains
     real(xp), intent(in) :: lambda_amp !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_mu !! lambda for mean position parameter
     real(xp), intent(in) :: lambda_sig !! lambda for dispersion parameter
+    real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
+    real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
 
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
@@ -326,9 +328,9 @@ contains
     real(xp), dimension(:,:,:), allocatable :: lb_3D, ub_3D
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(:), allocatable :: beta
-    real(xp), dimension(:), allocatable :: ravel_sig
-    real(xp), dimension(:), allocatable :: mean_sig    
-    real(xp), dimension(:,:), allocatable :: image_sig
+    real(xp), dimension(:), allocatable :: ravel_amp, ravel_mu, ravel_sig
+    real(xp), dimension(:), allocatable :: mean_amp, mean_mu, mean_sig    
+    real(xp), dimension(:,:), allocatable :: image_amp, image_mu, image_sig
 
 
     n_beta = 3*n_gauss * dim_y * dim_x
@@ -336,8 +338,8 @@ contains
     allocate(lb(n_beta), ub(n_beta), beta(n_beta))
     allocate(lb_3D(3*n_gauss,dim_y,dim_x), ub_3D(3*n_gauss,dim_y,dim_x))
     allocate(mean_sig(n_gauss))
-    allocate(image_sig(dim_y, dim_x))
-    allocate(ravel_sig(dim_y*dim_x))
+    allocate(image_amp(dim_y, dim_x), image_mu(dim_y, dim_x), image_sig(dim_y, dim_x))
+    allocate(ravel_amp(dim_y*dim_x), ravel_mu(dim_y*dim_x), ravel_sig(dim_y*dim_x))
 
     do j=1, dim_x
        do i=1, dim_y
@@ -351,13 +353,21 @@ contains
 
     !Compute mean sig vector    
     do i=1,n_gauss
+       image_amp = params(1+(3*(i-1)),:,:)
+       image_mu = params(2+(3*(i-1)),:,:)
        image_sig = params(3+(3*(i-1)),:,:)
+
+       call ravel_2D(image_amp, ravel_amp, dim_y, dim_x)
+       call ravel_2D(image_mu, ravel_mu, dim_y, dim_x)
        call ravel_2D(image_sig, ravel_sig, dim_y, dim_x)
+
+       mean_amp(i) = mean(ravel_amp)
+       mean_mu(i) = mean(ravel_mu)
        mean_sig(i) = mean(ravel_sig)
     end do
 
     call minimize(n_beta, m, beta, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-         lambda_var_sig, maxiter, kernel, iprint, std_map, mean_sig)
+         lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map, mean_amp, mean_mu, mean_sig)
 
     call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)
         

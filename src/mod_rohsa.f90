@@ -16,29 +16,31 @@ module mod_rohsa
 contains
 
   subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, &
-       init_option, iprint, iprint_init)
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, &
+       noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init)
     
     implicit none
     
-    logical, intent(in) :: noise        !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
-    logical, intent(in) :: regul        !! if true --> activate regulation
-    logical, intent(in) :: descent      !! if true --> activate hierarchical descent to initiate the optimization
-    integer, intent(in) :: n_gauss      !! number of gaussian to fit
-    integer, intent(in) :: n_gauss_add  !! number of gaussian to add at each step
-    integer, intent(in) :: m            !! number of corrections used in the limited memory matrix by LBFGS-B
-    integer, intent(in) :: lstd         !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
-    integer, intent(in) :: ustd         !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
-    integer, intent(in) :: iprint       !! print option 
-    integer, intent(in) :: iprint_init  !! print option init
-    integer, intent(in) :: maxiter      !! max iteration for L-BFGS-B alogorithm
-    integer, intent(in) :: maxiter_init !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
-    real(xp), intent(in) :: lambda_amp  !! lambda for amplitude parameter
-    real(xp), intent(in) :: lambda_mu   !! lamnda for mean position parameter
-    real(xp), intent(in) :: lambda_sig  !! lambda for dispersion parameter
-    real(xp), intent(in) :: lambda_var_sig  !! lambda for variance dispersion parameter
-    real(xp), intent(in) :: amp_fact_init   !! times max amplitude of additional Gaussian
-    real(xp), intent(in) :: sig_init        !! dispersion of additional Gaussian
+    logical, intent(in) :: noise           !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
+    logical, intent(in) :: regul           !! if true --> activate regulation
+    logical, intent(in) :: descent         !! if true --> activate hierarchical descent to initiate the optimization
+    integer, intent(in) :: n_gauss         !! number of gaussian to fit
+    integer, intent(in) :: n_gauss_add     !! number of gaussian to add at each step
+    integer, intent(in) :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
+    integer, intent(in) :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
+    integer, intent(in) :: ustd            !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
+    integer, intent(in) :: iprint          !! print option 
+    integer, intent(in) :: iprint_init     !! print option init
+    integer, intent(in) :: maxiter         !! max iteration for L-BFGS-B alogorithm
+    integer, intent(in) :: maxiter_init    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
+    real(xp), intent(in) :: lambda_amp     !! lambda for amplitude parameter
+    real(xp), intent(in) :: lambda_mu      !! lamnda for mean position parameter
+    real(xp), intent(in) :: lambda_sig     !! lambda for dispersion parameter
+    real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
+    real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
+    real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
+    real(xp), intent(in) :: amp_fact_init  !! times max amplitude of additional Gaussian
+    real(xp), intent(in) :: sig_init       !! dispersion of additional Gaussian
 
     character(len=8), intent(in) :: init_option !!Init ROHSA with the mean or the std spectrum    
     character(len=512), intent(in) :: fileout   !! name of the output result
@@ -188,8 +190,8 @@ contains
                    call set_stdmap(std_map, cube_mean, lstd, ustd)
                 end if
                 
-                call update(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, lambda_sig, &
-                     lambda_var_sig, maxiter, m, kernel, iprint, std_map)        
+                call update(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
+                     lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)        
                 deallocate(std_map)
              end if
           end if
@@ -236,8 +238,8 @@ contains
     end if
     
     if (regul .eqv. .true.) then
-       call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, lambda_sig, &
-            lambda_var_sig, maxiter, m, kernel, iprint, std_map)
+       call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
+            lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
     end if
     
     print*,
@@ -257,6 +259,8 @@ contains
     write(12,fmt=*) "# lambda_amp = ", lambda_amp
     write(12,fmt=*) "# lambda_mu = ", lambda_mu
     write(12,fmt=*) "# lambda_sig = ", lambda_sig
+    write(12,fmt=*) "# lambda_var_amp = ", lambda_var_amp
+    write(12,fmt=*) "# lambda_var_mu = ", lambda_var_mu
     write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
     write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
     write(12,fmt=*) "# sig_init = ", sig_init
