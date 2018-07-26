@@ -6,6 +6,8 @@
    ,lambda_amp = 1.d0	   !! lambda for amplitude parameter
    ,lambda_mu = 1.d0	   !! lamnda for mean position parameter
    ,lambda_sig = 1.d0      !! lambda for dispersion parameter
+   ,lambda_var_amp = 0.d0  !! lambda for dispersion amplitude parameter
+   ,lambda_var_mu = 0.d0   !! lambda for dispersion mean position parameter   
    ,lambda_var_sig = 1.d0  !! lambda for dispersion variance parameter
    ,amp_fact_init = 0.66d0 !! times max amplitude of additional Gaussian
    ,sig_init = 5.d0        !! dispersion of additional Gaussian
@@ -15,7 +17,7 @@
    ,m = 10                 !! number of corrections used in the limited memory matrix by LBFGS-B
    ,noise = .false.        !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
    ,regul = .true.         !! if true --> activate regulation
-   ,descent = .false.      !! if true --> activate hierarchical descent to initiate the optimization
+   ,descent = .true.      !! if true --> activate hierarchical descent to initiate the optimization
    ,lstd = 1               !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
    ,ustd = 20              !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
    ,iprint = -1             !! print option 
