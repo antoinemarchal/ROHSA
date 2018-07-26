@@ -47,6 +47,8 @@ program ROHSA
   lambda_amp = 1._xp
   lambda_mu = 1._xp
   lambda_sig = 1._xp
+  lambda_var_amp = 1._xp
+  lambda_var_mu = 1._xp
   lambda_var_sig = 1._xp
   amp_fact_init = 2._xp/3._xp
   sig_init = 5._xp

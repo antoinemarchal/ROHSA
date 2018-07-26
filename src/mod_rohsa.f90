@@ -83,6 +83,8 @@ contains
     print*, "lambda_amp = ", lambda_amp
     print*, "lambda_mu = ", lambda_mu
     print*, "lambda_sig = ", lambda_sig
+    print*, "lambda_var_amp = ", lambda_var_amp
+    print*, "lambda_var_mu = ", lambda_var_mu
     print*, "lambda_var_sig = ", lambda_var_sig
     print*, "amp_fact_init = ", amp_fact_init
     print*, "sig_init = ", sig_init

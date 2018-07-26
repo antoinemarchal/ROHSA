@@ -337,7 +337,7 @@ contains
 
     allocate(lb(n_beta), ub(n_beta), beta(n_beta))
     allocate(lb_3D(3*n_gauss,dim_y,dim_x), ub_3D(3*n_gauss,dim_y,dim_x))
-    allocate(mean_sig(n_gauss))
+    allocate(mean_amp(n_gauss), mean_mu(n_gauss), mean_sig(n_gauss))
     allocate(image_amp(dim_y, dim_x), image_mu(dim_y, dim_x), image_sig(dim_y, dim_x))
     allocate(ravel_amp(dim_y*dim_x), ravel_mu(dim_y*dim_x), ravel_sig(dim_y*dim_x))
 
