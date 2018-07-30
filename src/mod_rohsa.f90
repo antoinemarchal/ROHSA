@@ -197,10 +197,10 @@ contains
                 call update(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
                      lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)        
 
-                if (n_gauss_add .eq. 1) then !FIXME
-                   ! Add new Gaussian --> here of before go_up_level 
-                   n_gauss = n_gauss + 1
-                   call init_new_gauss(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, amp_fact_init, sig_init)
+                if (n_gauss_add .ne. 0) then !FIXME
+                   ! Add new Gaussian if one reduced chi square > 1 
+                   call init_new_gauss(cube_mean, fit_params, std_map, n_gauss, dim_cube(1), power, power, amp_fact_init, &
+                        sig_init)
                 end if
 
                 deallocate(std_map)

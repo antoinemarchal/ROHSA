@@ -469,41 +469,64 @@ contains
   end subroutine init_grid_params
 
 
-  subroutine init_new_gauss(cube, params, n_gauss, dim_v, dim_y, dim_x, amp_fact_init, sig_init)
+  subroutine init_new_gauss(cube, params, std_map, n_gauss, dim_v, dim_y, dim_x, amp_fact_init, sig_init)
     implicit none
     
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube   !! mean cube over spatial axis
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters to optimize with cube mean at each iteration
+    real(xp), intent(in), dimension(:,:), allocatable :: std_map !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), intent(in) :: amp_fact_init !! times max amplitude of additional Gaussian
     real(xp), intent(in) :: sig_init !! dispersion of additional Gaussian
 
-    integer, intent(in) :: n_gauss
+    integer, intent(inout) :: n_gauss
     integer, intent(in) :: dim_v, dim_y, dim_x
 
+    real(xp), dimension(:,:), allocatable :: redchi2
     real(xp), dimension(:,:,:), allocatable :: residual
     real(xp), dimension(:), allocatable :: residual_1D
+    logical :: new_gauss
 
     integer :: i, j
 
-    !Compute the residual function
     allocate(residual(dim_v, dim_y, dim_x))
     residual = 0._xp    
+
+    new_gauss = .false.
+
+    !Compute the residual function
+    allocate(redchi2(dim_y, dim_x))
+    redchi2 = 0._xp    
     do j=1, dim_x
        do i=1, dim_y
           allocate(residual_1D(dim_v))
           residual_1D = 0._xp
+
           call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v)
           residual(:,i,j) = residual_1D
 
-          ! Set new values
-          params(2+(3*(n_gauss-1)),i,j) = minloc(residual_1D, dim_v)
-          params(1+(3*(n_gauss-1)),i,j) = cube(int(params(2+(3*(n_gauss-1)),i,j)),i,j) * amp_fact_init
-          params(3+(3*(n_gauss-1)),i,j) = sig_init;
+          redchi2(i,j) = sum((residual_1D / std_map(i,j))**2._xp) / (dim_v - (3*n_gauss))                    
 
+          if (redchi2(i,j) .gt. 1._xp) then
+             new_gauss = .true.
+          end if
           deallocate(residual_1D)
        end do
     end do
-    deallocate(residual)    
+    deallocate(redchi2)    
+
+    if (new_gauss .eqv. .true.) then
+       ! Add new Gaussian
+       n_gauss = n_gauss + 1
+
+       do j=1, dim_x
+          do i=1, dim_y
+             ! Set new values
+             params(2+(3*(n_gauss-1)),i,j) = minloc(residual(:,i,j), dim_v)
+             params(1+(3*(n_gauss-1)),i,j) = cube(int(params(2+(3*(n_gauss-1)),i,j)),i,j) * amp_fact_init
+             params(3+(3*(n_gauss-1)),i,j) = sig_init;
+          end do
+       end do
+    end if
 
   end subroutine init_new_gauss
 
