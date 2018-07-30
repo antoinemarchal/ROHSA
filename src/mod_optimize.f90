@@ -8,7 +8,7 @@ module mod_optimize
   
   private
 
-  public :: gaussian, minimize_spec, minimize
+  public :: gaussian, minimize_spec, minimize, myfunc_spec, myresidual
   
 contains
   

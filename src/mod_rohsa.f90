@@ -24,7 +24,6 @@ contains
     logical, intent(in) :: noise           !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
     logical, intent(in) :: regul           !! if true --> activate regulation
     logical, intent(in) :: descent         !! if true --> activate hierarchical descent to initiate the optimization
-    integer, intent(in) :: n_gauss         !! number of gaussian to fit
     integer, intent(in) :: n_gauss_add     !! number of gaussian to add at each step
     integer, intent(in) :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
@@ -45,6 +44,7 @@ contains
     character(len=8), intent(in) :: init_option !!Init ROHSA with the mean or the std spectrum    
     character(len=512), intent(in) :: fileout   !! name of the output result
 
+    integer :: n_gauss         !! number of gaussian to fit
     integer :: nside        !! size of the reshaped data \(2^{nside}\)
     integer :: n            !! loop index
     integer :: power        !! loop index
@@ -140,7 +140,7 @@ contains
     call reshape_up(data, cube, dim_data, dim_cube)
     
     !Allocate memory for parameters grids
-    allocate(grid_params(3*n_gauss, dim_data(2), dim_data(3)))
+    allocate(grid_params(3*(n_gauss+(nside*n_gauss_add)), dim_data(2), dim_data(3)))
     allocate(fit_params(3*(n_gauss+(nside*n_gauss_add)), 1, 1))
     
     print*, "                    Start iteration"
@@ -170,6 +170,7 @@ contains
              end if
           end if
           
+          ! Propagate solution on new grid (higher resolution)
           call go_up_level(fit_params)
           write(*,*) ""
           write(*,*) "Update parameters level ", n, ">", power
@@ -191,9 +192,17 @@ contains
                 else
                    call set_stdmap(std_map, cube_mean, lstd, ustd)
                 end if
-                
+
+                ! Update parameters 
                 call update(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
                      lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)        
+
+                if (n_gauss_add .eq. 1) then !FIXME
+                   ! Add new Gaussian --> here of before go_up_level 
+                   n_gauss = n_gauss + 1
+                   call init_new_gauss(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, amp_fact_init, sig_init)
+                end if
+
                 deallocate(std_map)
              end if
           end if
@@ -240,6 +249,8 @@ contains
     end if
     
     if (regul .eqv. .true.) then
+       ! Add new Gaussian 
+       
        call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
             lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
     end if
