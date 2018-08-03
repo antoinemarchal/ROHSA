@@ -424,11 +424,12 @@ contains
   end subroutine std_spectrum  
 
 
-  subroutine max_spectrum(data, spectrum, dim_v, dim_y, dim_x)
+  subroutine max_spectrum(data, spectrum, dim_v, dim_y, dim_x, norm_value)
     !! Compute the MAX spectrum of a cube along the spatial axis
     implicit none
-    
+
     real(xp), intent(in), dimension(:,:,:), allocatable :: data !! initial fits data
+    real(xp), intent(in), optional :: norm_value !! max value of the mean spectrum to normalze the max spectrum if present
     integer, intent(in) :: dim_v !! dimension along v axis
     integer, intent(in) :: dim_y !! dimension along spatial axis y 
     integer, intent(in) :: dim_x !! dimension along spatial axis x
@@ -441,9 +442,15 @@ contains
     do i=1,dim_v
        allocate(map(dim_y,dim_x))
        map = data(i,:,:)
-       spectrum(i) = max_2D(map, dim_y, dim_x)
+       spectrum(i) = max_2D(map, dim_y, dim_x) 
        deallocate(map)
     end do
+
+    if (present(norm_value)) then
+       spectrum = spectrum / (maxval(spectrum) / norm_value)
+    end if
+
+    
     
   end subroutine max_spectrum  
 

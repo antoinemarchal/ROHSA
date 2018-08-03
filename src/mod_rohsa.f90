@@ -59,6 +59,7 @@ contains
     real(xp), dimension(:,:), allocatable :: std_map       !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: std_spect       !! std spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect       !! max spectrum of the observation
+    real(xp), dimension(:), allocatable :: max_spect_norm  !! max spectrum of the observation normalized by the max of the mean spectrum
     real(xp), dimension(:), allocatable :: mean_spect      !! mean spectrum of the observation
     real(xp), dimension(:), allocatable :: guess_spect !! params obtain fi the optimization of the std spectrum of the observation
     
@@ -89,6 +90,7 @@ contains
     print*, "lambda_var_sig = ", lambda_var_sig
     print*, "amp_fact_init = ", amp_fact_init
     print*, "sig_init = ", sig_init
+    print*, "init_option = ", init_option
     print*, "maxiter_itit = ", maxiter_init
     print*, "init_option = ", init_option
     print*, "maxiter = ", maxiter
@@ -134,12 +136,13 @@ contains
     
     print*, "Compute mean and std spectrum"
     allocate(std_spect(dim_data(1)))
-    allocate(max_spect(dim_data(1)))
+    allocate(max_spect(dim_data(1)), max_spect_norm(dim_data(1)))
     allocate(mean_spect(dim_data(1)))
 
     call std_spectrum(data, std_spect, dim_data(1), dim_data(2), dim_data(3))
     call mean_spectrum(data, mean_spect, dim_data(1), dim_data(2), dim_data(3))
     call max_spectrum(data, max_spect, dim_data(1), dim_data(2), dim_data(3))
+    call max_spectrum(data, max_spect_norm, dim_data(1), dim_data(2), dim_data(3), maxval(mean_spect))
     
     call reshape_up(data, cube, dim_data, dim_cube)
     
@@ -171,8 +174,11 @@ contains
              elseif (init_option .eq. "max") then
                 call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), max_spect, amp_fact_init, sig_init, &
                      maxiter_init, m, iprint_init)
+             elseif (init_option .eq. "maxnorm") then
+                call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
+                     maxiter_init, m, iprint_init)
              else 
-                print*, "init_option keyword should be 'mean' or 'std' or 'max'"
+                print*, "init_option keyword should be 'mean' or 'std' or 'max' or 'maxnorm'"
                 stop
              end if
           end if
@@ -230,13 +236,17 @@ contains
              print*, "Use of the mean spectrum to initialize each los"
              call init_spectrum(n_gauss, guess_spect, dim_cube(1), mean_spect, amp_fact_init, sig_init, &
                   maxiter_init, m, iprint_init)
+          else if (init_option .eq. "std") then
+             print*, "Use of the std spectrum to initialize each los"
+             call init_spectrum(n_gauss, guess_spect, dim_cube(1), std_spect, amp_fact_init, sig_init, &
+                  maxiter_init, m, iprint_init)
           else if (init_option .eq. "max") then
              print*, "Use of the max spectrum to initialize each los"
              call init_spectrum(n_gauss, guess_spect, dim_cube(1), max_spect, amp_fact_init, sig_init, &
                   maxiter_init, m, iprint_init)
-          else if (init_option .eq. "std") then
+          else if (init_option .eq. "maxnorm") then
              print*, "Use of the std spectrum to initialize each los"
-             call init_spectrum(n_gauss, guess_spect, dim_cube(1), std_spect, amp_fact_init, sig_init, &
+             call init_spectrum(n_gauss, guess_spect, dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
                   maxiter_init, m, iprint_init)
           else
              print*, "init_option keyword should be 'mean' or 'std' or 'max'"
@@ -288,6 +298,7 @@ contains
     write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
     write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
     write(12,fmt=*) "# sig_init = ", sig_init
+    write(12,fmt=*) "# init_option = ", init_option
     write(12,fmt=*) "# maxiter_itit = ", maxiter_init
     write(12,fmt=*) "# maxiter = ", maxiter
     write(12,fmt=*) "# lstd = ", lstd
