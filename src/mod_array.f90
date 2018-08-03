@@ -6,7 +6,7 @@ module mod_array
 
   private
 
-  public :: convolution_2D_mirror, ravel_2D, ravel_3D, unravel_3D, mean, std, std_2D, mean_2D
+  public :: convolution_2D_mirror, ravel_2D, ravel_3D, unravel_3D, mean, std, std_2D, mean_2D, max_2D
   
 contains
 
@@ -217,6 +217,26 @@ contains
     deallocate(vector)
 
   end function std_2D
+
+
+  function max_2D(map, dim_y, dim_x)
+    !! Compute the MAX of a 2D map
+    implicit none
+
+    integer, intent(in) :: dim_y !! dimension along spatial axis y
+    integer, intent(in) :: dim_x !! dimension along spatial axis x
+    real(xp), intent(in), dimension(:,:), allocatable :: map !! 2D array
+    real(xp), dimension(:), allocatable :: vector !! 1D array 
+    real(xp) :: max_2D
+
+    allocate(vector(dim_y*dim_x))
+
+    call ravel_2D(map, vector, dim_y, dim_x)
+    max_2D = maxval(vector)
+
+    deallocate(vector)
+
+  end function max_2D
 
 
   function mean_2D(map, dim_y, dim_x)

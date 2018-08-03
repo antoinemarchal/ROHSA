@@ -58,6 +58,7 @@ contains
     real(xp), dimension(:,:,:), allocatable :: grid_params !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:), allocatable :: std_map       !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: std_spect       !! std spectrum of the observation
+    real(xp), dimension(:), allocatable :: max_spect       !! max spectrum of the observation
     real(xp), dimension(:), allocatable :: mean_spect      !! mean spectrum of the observation
     real(xp), dimension(:), allocatable :: guess_spect !! params obtain fi the optimization of the std spectrum of the observation
     
@@ -95,6 +96,7 @@ contains
     print*, "ustd = ", ustd
     print*, "noise = ", noise
     print*, "regul = ", regul
+    print*, "descent = ", descent
     print*,
     
     allocate(kernel(3, 3))
@@ -132,10 +134,12 @@ contains
     
     print*, "Compute mean and std spectrum"
     allocate(std_spect(dim_data(1)))
+    allocate(max_spect(dim_data(1)))
     allocate(mean_spect(dim_data(1)))
 
     call std_spectrum(data, std_spect, dim_data(1), dim_data(2), dim_data(3))
     call mean_spectrum(data, mean_spect, dim_data(1), dim_data(2), dim_data(3))
+    call max_spectrum(data, max_spect, dim_data(1), dim_data(2), dim_data(3))
     
     call reshape_up(data, cube, dim_data, dim_cube)
     
@@ -164,8 +168,11 @@ contains
              elseif (init_option .eq. "std") then
                 call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, sig_init, &
                      maxiter_init, m, iprint_init)
+             elseif (init_option .eq. "max") then
+                call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), max_spect, amp_fact_init, sig_init, &
+                     maxiter_init, m, iprint_init)
              else 
-                print*, "init_option keyword should be 'mean' of 'std'"
+                print*, "init_option keyword should be 'mean' or 'std' or 'max'"
                 stop
              end if
           end if
@@ -223,12 +230,16 @@ contains
              print*, "Use of the mean spectrum to initialize each los"
              call init_spectrum(n_gauss, guess_spect, dim_cube(1), mean_spect, amp_fact_init, sig_init, &
                   maxiter_init, m, iprint_init)
+          else if (init_option .eq. "max") then
+             print*, "Use of the max spectrum to initialize each los"
+             call init_spectrum(n_gauss, guess_spect, dim_cube(1), max_spect, amp_fact_init, sig_init, &
+                  maxiter_init, m, iprint_init)
           else if (init_option .eq. "std") then
              print*, "Use of the std spectrum to initialize each los"
              call init_spectrum(n_gauss, guess_spect, dim_cube(1), std_spect, amp_fact_init, sig_init, &
                   maxiter_init, m, iprint_init)
           else
-             print*, "init_option keyword should be 'mean' of 'std'"
+             print*, "init_option keyword should be 'mean' or 'std' or 'max'"
              stop
           end if
           call init_grid_params(grid_params, guess_spect, dim_data(2), dim_data(3))
@@ -283,6 +294,7 @@ contains
     write(12,fmt=*) "# ustd = ", ustd
     write(12,fmt=*) "# noise = ", noise
     write(12,fmt=*) "# regul = ", regul
+    write(12,fmt=*) "# descent = ", descent
     write(12,fmt=*) "# "
     
     write(12,fmt=*) "# i, j, A, mean, sigma"

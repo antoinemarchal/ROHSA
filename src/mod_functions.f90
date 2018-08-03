@@ -10,7 +10,7 @@ module mod_functions
   private
   
   public :: mean_array, mean_map, dim2nside, dim_data2dim_cube, reshape_up, reshape_down, go_up_level, init_spectrum, &
-       upgrade, update, set_stdmap, std_spectrum, mean_spectrum, init_grid_params, init_new_gauss
+       upgrade, update, set_stdmap, std_spectrum, mean_spectrum, max_spectrum, init_grid_params, init_new_gauss
 
 contains
     
@@ -422,6 +422,30 @@ contains
     end do
     
   end subroutine std_spectrum  
+
+
+  subroutine max_spectrum(data, spectrum, dim_v, dim_y, dim_x)
+    !! Compute the MAX spectrum of a cube along the spatial axis
+    implicit none
+    
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data !! initial fits data
+    integer, intent(in) :: dim_v !! dimension along v axis
+    integer, intent(in) :: dim_y !! dimension along spatial axis y 
+    integer, intent(in) :: dim_x !! dimension along spatial axis x
+
+    real(xp), intent(inout), dimension(:), allocatable :: spectrum !! max_spectrum of the observation
+    real(xp), dimension(:,:), allocatable :: map !! 2D array
+
+    integer :: i !! loop index
+
+    do i=1,dim_v
+       allocate(map(dim_y,dim_x))
+       map = data(i,:,:)
+       spectrum(i) = max_2D(map, dim_y, dim_x)
+       deallocate(map)
+    end do
+    
+  end subroutine max_spectrum  
 
 
   subroutine mean_spectrum(data, spectrum, dim_v, dim_y, dim_x)
