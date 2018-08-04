@@ -281,7 +281,7 @@ contains
        
        if (n_gauss_add .ne. 0) then !FIXME KEYWORD
           do l=1,n_gauss_add
-             ! Add new Gaussian if one reduced chi square > 1 
+             ! Add new Gaussian if at least one reduced chi square of the field is > 1 
              call init_new_gauss(data, grid_params, std_map, n_gauss, dim_data(1), dim_data(2), dim_data(3), amp_fact_init, &
                   sig_init)
              call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
