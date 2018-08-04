@@ -276,12 +276,10 @@ contains
     end if
     
     if (regul .eqv. .true.) then
-       ! Add new Gaussian 
-       
        call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
             lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
        
-       if (n_gauss_add .ne. 0) then !FIXME KEYWORD + BUGG
+       if (n_gauss_add .ne. 0) then !FIXME KEYWORD
           do l=1,n_gauss_add
              ! Add new Gaussian if one reduced chi square > 1 
              call init_new_gauss(data, grid_params, std_map, n_gauss, dim_cube(1), dim_cube(2), dim_cube(3), amp_fact_init, &
