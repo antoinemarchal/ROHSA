@@ -543,7 +543,6 @@ contains
           deallocate(residual_1D)
        end do
     end do
-    deallocate(redchi2)    
 
     if (new_gauss .eqv. .true.) then
        ! Add new Gaussian
@@ -551,13 +550,17 @@ contains
 
        do j=1, dim_x
           do i=1, dim_y
-             ! Set new values
-             params(2+(3*(n_gauss-1)),i,j) = minloc(residual(:,i,j), dim_v)
-             params(1+(3*(n_gauss-1)),i,j) = cube(int(params(2+(3*(n_gauss-1)),i,j)),i,j) * amp_fact_init
-             params(3+(3*(n_gauss-1)),i,j) = sig_init;
+             ! Set new values if redchi2 > 1
+             if (redchi2(i,j) .gt. 1._xp) then
+                params(2+(3*(n_gauss-1)),i,j) = minloc(residual(:,i,j), dim_v)
+                params(1+(3*(n_gauss-1)),i,j) = cube(int(params(2+(3*(n_gauss-1)),i,j)),i,j) * amp_fact_init
+                params(3+(3*(n_gauss-1)),i,j) = sig_init;
+             end if
           end do
        end do
     end if
+
+    deallocate(redchi2)    
 
   end subroutine init_new_gauss
 

@@ -148,8 +148,12 @@ contains
     call reshape_up(data, cube, dim_data, dim_cube)
     
     !Allocate memory for parameters grids
-    allocate(grid_params(3*(n_gauss+(nside*n_gauss_add)), dim_data(2), dim_data(3)))
-    allocate(fit_params(3*(n_gauss+(nside*n_gauss_add)), 1, 1))
+    if (descent .eqv. .true.) then
+       allocate(grid_params(3*(n_gauss+(nside*n_gauss_add)), dim_data(2), dim_data(3)))
+       allocate(fit_params(3*(n_gauss+(nside*n_gauss_add)), 1, 1))
+    else 
+       allocate(grid_params(3*(n_gauss+n_gauss_add), dim_data(2), dim_data(3)))
+    end if
     
     print*, "                    Start iteration"
     print*,
@@ -232,7 +236,7 @@ contains
             (/ 3*n_gauss, dim_data(2), dim_data(3)/))       
 
        else
-          allocate(guess_spect(3*n_gauss))
+          allocate(guess_spect(3*(n_gauss+n_gauss_add)))
           if (init_option .eq. "mean") then
              print*, "Use of the mean spectrum to initialize each los"
              call init_spectrum(n_gauss, guess_spect, dim_cube(1), mean_spect, amp_fact_init, sig_init, &
@@ -254,6 +258,7 @@ contains
              stop
           end if
           call init_grid_params(grid_params, guess_spect, dim_data(2), dim_data(3))
+
           deallocate(guess_spect)      
     end if
     
@@ -276,7 +281,7 @@ contains
        call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
             lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
        
-       if (n_gauss_add .ne. 0) then !FIXME KEYWORD
+       if (n_gauss_add .ne. 0) then !FIXME KEYWORD + BUGG
           do l=1,n_gauss_add
              ! Add new Gaussian if one reduced chi square > 1 
              call init_new_gauss(data, grid_params, std_map, n_gauss, dim_cube(1), dim_cube(2), dim_cube(3), amp_fact_init, &
@@ -290,7 +295,7 @@ contains
     
     print*,
     print*, "_____ Write output file _____"
-    print*, 
+    print*,
     
     ! Open file
     open(unit=12, file=fileout, action="write", iostat=ios)
@@ -321,7 +326,7 @@ contains
     write(12,fmt=*) "# "
     
     write(12,fmt=*) "# i, j, A, mean, sigma"
-    
+
     do i=1, dim_data(2)
        do j=1, dim_data(3)
           do k=1, n_gauss
