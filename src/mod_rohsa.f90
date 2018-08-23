@@ -15,9 +15,9 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, &
-       noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init)
+  subroutine main_rohsa(data, std_cube, filename_parameters, fileout, n_gauss, n_gauss_add, lambda_amp, &
+       lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, &
+       maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init)
     
     implicit none
     
@@ -41,7 +41,8 @@ contains
     real(xp), intent(in) :: amp_fact_init  !! times max amplitude of additional Gaussian
     real(xp), intent(in) :: sig_init       !! dispersion of additional Gaussian
 
-    character(len=8), intent(in) :: init_option !!Init ROHSA with the mean or the std spectrum    
+    character(len=8), intent(in)   :: init_option !!Init ROHSA with the mean or the std spectrum    
+    character(len=512), intent(in) :: filename_parameters !! name of the parameters file (default parameters.txt)
     character(len=512), intent(in) :: fileout   !! name of the output result
 
     integer :: n_gauss         !! number of gaussian to fit
@@ -81,6 +82,7 @@ contains
     print*,
     print*, "______Parameters_____"
     print*,
+    print*, "filename_parameters = ", filename_parameters
     print*, "n_gauss = ", n_gauss
     print*, "n_gauss_add = ", n_gauss_add
     print*, "lambda_amp = ", lambda_amp
@@ -92,8 +94,7 @@ contains
     print*, "amp_fact_init = ", amp_fact_init
     print*, "sig_init = ", sig_init
     print*, "init_option = ", init_option
-    print*, "maxiter_itit = ", maxiter_init
-    print*, "init_option = ", init_option
+    print*, "maxiter_init = ", maxiter_init
     print*, "maxiter = ", maxiter
     print*, "lstd = ", lstd
     print*, "ustd = ", ustd
@@ -299,10 +300,10 @@ contains
     open(unit=12, file=fileout, action="write", iostat=ios)
     if (ios /= 0) stop "opening file error"
     
-    ! Read cube dimension and compute the number of line
     write(12,fmt=*) "# "
     write(12,fmt=*) "# ______Parameters_____"
     write(12,fmt=*) "# "
+    write(12,fmt=*) "# filename_parameters = ", filename_parameters
     write(12,fmt=*) "# n_gauss = ", n_gauss
     write(12,fmt=*) "# n_gauss_add = ", n_gauss_add
     write(12,fmt=*) "# lambda_amp = ", lambda_amp
