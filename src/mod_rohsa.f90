@@ -15,7 +15,7 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, std_cube, filename_parameters, fileout, n_gauss, n_gauss_add, lambda_amp, &
+  subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, &
        lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, &
        maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init)
     
@@ -82,7 +82,6 @@ contains
     print*,
     print*, "______Parameters_____"
     print*,
-    print*, "filename_parameters = ", filename_parameters
     print*, "n_gauss = ", n_gauss
     print*, "n_gauss_add = ", n_gauss_add
     print*, "lambda_amp = ", lambda_amp
@@ -303,7 +302,6 @@ contains
     write(12,fmt=*) "# "
     write(12,fmt=*) "# ______Parameters_____"
     write(12,fmt=*) "# "
-    write(12,fmt=*) "# filename_parameters = ", filename_parameters
     write(12,fmt=*) "# n_gauss = ", n_gauss
     write(12,fmt=*) "# n_gauss_add = ", n_gauss_add
     write(12,fmt=*) "# lambda_amp = ", lambda_amp

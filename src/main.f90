@@ -83,7 +83,7 @@ program ROHSA
   write(*,*) "opening file and reading data"
   
   !Call ROHSA subroutine
-  call main_rohsa(data, std_cube, filename_parameters, fileout, n_gauss, n_gauss_add, lambda_amp, &
+  call main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, &
        lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, &
        maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init)  
    
