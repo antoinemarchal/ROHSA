@@ -42,7 +42,6 @@ contains
     real(xp), intent(in) :: sig_init       !! dispersion of additional Gaussian
 
     character(len=8), intent(in)   :: init_option !!Init ROHSA with the mean or the std spectrum    
-    character(len=512), intent(in) :: filename_parameters !! name of the parameters file (default parameters.txt)
     character(len=512), intent(in) :: fileout   !! name of the output result
 
     integer :: n_gauss         !! number of gaussian to fit
