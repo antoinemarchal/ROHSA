@@ -1,8 +1,14 @@
 import os
 import numpy as np
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-r", "--run", help="run filename list with ROHSA using nohup",
+                    action="store_true")
+args = parser.parse_args()
 
 filename = ''
-fileout = ''
+fileout = '_{}.dat'
 filename_noise = ''
 n_gauss = 6            # number of gaussian to fit
 lambda_amp = 1.      # lambda for amplitude parameter
@@ -29,33 +35,43 @@ path = "./INPUT/"
 if not os.path.exists(path):
     os.makedirs(path)
 
+#Loop over hyper-parameters
+lambdas = [1., 10., 100., 1000, 10000]
+lambda_vars = [1., 10., 100., 1000, 10000]
+lambdas = [1., 10.]
+lambda_vars = [1., 10.]
+
 k = 0
 
-input_file = open(path + "input_parameters_run_{}".format(k), 'w')
-input_file.write("&user_parameters"+'\n')
-input_file.write("    filename =  "+repr(filename)+'\n')
-input_file.write("    ,fileout =  "+repr(fileout)+'\n')
-input_file.write("    ,filename_noise =  "+repr(filename)+'\n')
-input_file.write("    ,n_gauss =  "+repr(n_gauss)+'\n')
-input_file.write("    ,lambda_amp =  "+repr(lambda_amp)+'d0'+'\n')
-input_file.write("    ,lambda_mu =  "+repr(lambda_mu)+'d0'+'\n')
-input_file.write("    ,lambda_sig =  "+repr(lambda_sig)+'d0'+'\n')
-input_file.write("    ,lambda_var_amp =  "+repr(lambda_var_amp)+'d0'+'\n')
-input_file.write("    ,lambda_var_mu =  "+repr(lambda_var_mu)+'d0'+'\n')
-input_file.write("    ,lambda_var_sig =  "+repr(lambda_var_sig)+'d0'+'\n')
-input_file.write("    ,amp_fact_init =  "+repr(amp_fact_init)+'d0'+'\n')
-input_file.write("    ,sig_init =  "+repr(sig_init)+'d0'+'\n')
-input_file.write("    ,init_option =  "+repr(init_option)+'\n')
-input_file.write("    ,maxiter_init =  "+repr(maxiter_init)+'\n')
-input_file.write("    ,maxiter =  "+repr(maxiter)+'\n')
-input_file.write("    ,m =  "+repr(m)+'\n')
-input_file.write("    ,noise =  "+noise+'\n')
-input_file.write("    ,regul =  "+regul+'\n')
-input_file.write("    ,descent =  "+descent+'\n')
-input_file.write("    ,lstd =  "+repr(lstd)+'\n')
-input_file.write("    ,ustd =  "+repr(ustd)+'\n')
-input_file.write("    ,iprint =  "+repr(iprint)+'\n')
-input_file.write("    ,iprint_init =  "+repr(iprint_init)+'\n')
-input_file.write("    /"+'\n')
-input_file.close()
-# os.system("make run")
+for lambda_g in lambdas:
+    for lambda_var in lambda_vars:
+        input_file = open(path + "input_parameters_run_{}".format(k), 'w')
+        input_file.write("&user_parameters"+'\n')
+        input_file.write("    filename =  "+repr(filename)+'\n')
+        input_file.write("    ,fileout =  "+repr(fileout.format(k))+'\n')
+        input_file.write("    ,filename_noise =  "+repr(filename)+'\n')
+        input_file.write("    ,n_gauss =  "+repr(n_gauss)+'\n')
+        input_file.write("    ,lambda_amp =  "+repr(lambda_g)+'d0'+'\n')
+        input_file.write("    ,lambda_mu =  "+repr(lambda_g)+'d0'+'\n')
+        input_file.write("    ,lambda_sig =  "+repr(lambda_g)+'d0'+'\n')
+        input_file.write("    ,lambda_var_amp =  "+repr(lambda_var_amp)+'d0'+'\n')
+        input_file.write("    ,lambda_var_mu =  "+repr(lambda_var)+'d0'+'\n')
+        input_file.write("    ,lambda_var_sig =  "+repr(lambda_var)+'d0'+'\n')
+        input_file.write("    ,amp_fact_init =  "+repr(amp_fact_init)+'d0'+'\n')
+        input_file.write("    ,sig_init =  "+repr(sig_init)+'d0'+'\n')
+        input_file.write("    ,init_option =  "+repr(init_option)+'\n')
+        input_file.write("    ,maxiter_init =  "+repr(maxiter_init)+'\n')
+        input_file.write("    ,maxiter =  "+repr(maxiter)+'\n')
+        input_file.write("    ,m =  "+repr(m)+'\n')
+        input_file.write("    ,noise =  "+noise+'\n')
+        input_file.write("    ,regul =  "+regul+'\n')
+        input_file.write("    ,descent =  "+descent+'\n')
+        input_file.write("    ,lstd =  "+repr(lstd)+'\n')
+        input_file.write("    ,ustd =  "+repr(ustd)+'\n')
+        input_file.write("    ,iprint =  "+repr(iprint)+'\n')
+        input_file.write("    ,iprint_init =  "+repr(iprint_init)+'\n')
+        input_file.write("    /"+'\n')
+        input_file.close()
+        if args.run : os.system("nohup ROHSA "+ path + "input_parameters_run_{}".format(k) + "&")
+        k += 1
+        
