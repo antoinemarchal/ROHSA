@@ -1,0 +1,25 @@
+&user_parameters
+    filename =  ''
+    ,fileout =  ''
+    ,filename_noise =  ''
+    ,n_gauss =  6
+    ,lambda_amp =  1.0d0
+    ,lambda_mu =  1.0d0
+    ,lambda_sig =  1.0d0
+    ,lambda_var_amp =  0.0d0
+    ,lambda_var_mu =  0.0d0
+    ,lambda_var_sig =  1.0d0
+    ,amp_fact_init =  0.66d0
+    ,sig_init =  5.0d0
+    ,init_option =  'mean'
+    ,maxiter_init =  15000
+    ,maxiter =  800
+    ,m =  10
+    ,noise =  .false.
+    ,regul =  .true.
+    ,descent =  .true.
+    ,lstd =  1
+    ,ustd =  20
+    ,iprint =  -1
+    ,iprint_init =  -1
+    /
