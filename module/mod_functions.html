@@ -44,7 +44,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../index.html">ROHSA <small>1.1.0</small></a>
+          <a class="navbar-brand" href="../index.html">ROHSA <small>1.2.0</small></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -124,7 +124,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title="28.7% of total for modules and submodules.">325 statements</a>
+	  title="31.5% of total for modules and submodules.">391 statements</a>
      </li> 
      
      
@@ -210,9 +210,13 @@
       
       <a class="list-group-item" href="../module/mod_functions.html#proc-std_spectrum">std_spectrum</a>
       
+      <a class="list-group-item" href="../module/mod_functions.html#proc-max_spectrum">max_spectrum</a>
+      
       <a class="list-group-item" href="../module/mod_functions.html#proc-mean_spectrum">mean_spectrum</a>
       
       <a class="list-group-item" href="../module/mod_functions.html#proc-init_grid_params">init_grid_params</a>
+      
+      <a class="list-group-item" href="../module/mod_functions.html#proc-init_new_gauss">init_new_gauss</a>
       
     </div>
   </div>
@@ -603,9 +607,13 @@
       
       <a class="list-group-item" href="../module/mod_functions.html#proc-std_spectrum">std_spectrum</a>
       
+      <a class="list-group-item" href="../module/mod_functions.html#proc-max_spectrum">max_spectrum</a>
+      
       <a class="list-group-item" href="../module/mod_functions.html#proc-mean_spectrum">mean_spectrum</a>
       
       <a class="list-group-item" href="../module/mod_functions.html#proc-init_grid_params">init_grid_params</a>
+      
+      <a class="list-group-item" href="../module/mod_functions.html#proc-init_new_gauss">init_new_gauss</a>
       
     </div>
   </div>
@@ -2229,6 +2237,140 @@ public subroutine <a href='../proc/std_spectrum.html'>std_spectrum</a>(data, spe
     
     
   <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-max_spectrum"></span><h3>
+public subroutine <a href='../proc/max_spectrum.html'>max_spectrum</a>(data, spectrum, dim_v, dim_y, dim_x, norm_value)
+    
+    
+	 
+</h3></div>
+  <div class="panel-body">
+       
+    
+
+
+
+
+
+
+
+<p>Compute the MAX spectrum of a cube along the spatial axis</p>
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>dimension(:,:,:), allocatable</td><td>::</td>
+  <td><strong>data</strong></td><td><p>initial fits data</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=xp),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>spectrum</strong></td><td><p>max_spectrum of the observation</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dim_v</strong></td><td><p>dimension along v axis</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dim_y</strong></td><td><p>dimension along spatial axis y </p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dim_x</strong></td><td><p>dimension along spatial axis x</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
+  
+  <td></td><td>::</td>
+  <td><strong>norm_value</strong></td><td><p>max value of the mean spectrum to normalze the max spectrum if present</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
   <div class="panel-heading codesum"><span class="anchor" id="proc-mean_spectrum"></span><h3>
 public subroutine <a href='../proc/mean_spectrum.html'>mean_spectrum</a>(data, spectrum, dim_v, dim_y, dim_x)
     
@@ -2436,6 +2578,177 @@ public subroutine <a href='../proc/init_grid_params.html'>init_grid_params</a>(p
   
   <td></td><td>::</td>
   <td><strong>dim_x</strong></td><td><p>dimension along spatial axis x</p></td>
+  
+</tr>
+
+</tbody>
+</table>
+
+      
+    
+    
+
+  </div>
+  </div>
+
+    
+    
+  <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-init_new_gauss"></span><h3>
+public subroutine <a href='../proc/init_new_gauss.html'>init_new_gauss</a>(cube, params, std_map, n_gauss, dim_v, dim_y, dim_x, amp_fact_init, sig_init)
+    
+    
+	 
+</h3></div>
+  <div class="panel-body">
+       
+    
+    
+    <h4>Arguments</h4>
+    
+      
+      
+<table class="table table-striped varlist">
+<thead><tr><th>Type</th>
+<th>Intent</th><th>Optional</th>
+<th>Attributes</th><th></th><th>Name</th><th></th></thead>
+
+
+
+<tbody>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>dimension(:,:,:), allocatable</td><td>::</td>
+  <td><strong>cube</strong></td><td><p>mean cube over spatial axis</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=xp),</td>
+  <td>intent(inout),</td>
+  <td></td>
+  
+  <td>dimension(:,:,:), allocatable</td><td>::</td>
+  <td><strong>params</strong></td><td><p>parameters to optimize with cube mean at each iteration</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td></td>
+  
+  <td>dimension(:,:), allocatable</td><td>::</td>
+  <td><strong>std_map</strong></td><td><p>standard deviation map fo the cube computed by ROHSA with lb and ub</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer,</td>
+  <td>intent(inout)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>n_gauss</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dim_v</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dim_y</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>integer,</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>dim_x</strong></td><td></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>amp_fact_init</strong></td><td><p>times max amplitude of additional Gaussian</p></td>
+  
+</tr>
+
+  
+  
+  
+  
+<tr>
+  
+  <td><span class="anchor" ></span>real(kind=xp),</td>
+  <td>intent(in)</td>
+  <td></td>
+  
+  <td></td><td>::</td>
+  <td><strong>sig_init</strong></td><td><p>dispersion of additional Gaussian</p></td>
   
 </tr>
 

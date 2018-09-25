@@ -42,13 +42,13 @@ program ROHSA
   call get_command_argument(1, filename_parameters)
     
   !Default user parameters
-  n_gauss = 1
+  n_gauss = 6
   n_gauss_add = 0
   lambda_amp = 1._xp
   lambda_mu = 1._xp
   lambda_sig = 1._xp
-  lambda_var_amp = 1._xp
-  lambda_var_mu = 1._xp
+  lambda_var_amp = 0._xp
+  lambda_var_mu = 0._xp
   lambda_var_sig = 1._xp
   amp_fact_init = 2._xp/3._xp
   sig_init = 5._xp
@@ -58,7 +58,7 @@ program ROHSA
   noise = .false.
   regul = .true.
   descent = .false.
-  lstd = 0; ustd = 20
+  lstd = 1; ustd = 20
   init_option = "mean"
   iprint = -1
   iprint_init = -1
@@ -83,8 +83,8 @@ program ROHSA
   write(*,*) "opening file and reading data"
   
   !Call ROHSA subroutine
-  call main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, &
-       m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init)  
+  call main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, &
+       lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, &
+       maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init)  
    
 end program ROHSA

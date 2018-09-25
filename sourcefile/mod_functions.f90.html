@@ -44,7 +44,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../index.html">ROHSA <small>1.1.0</small></a>
+          <a class="navbar-brand" href="../index.html">ROHSA <small>1.2.0</small></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -124,7 +124,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title="10.8% of total for source files.">325 statements</a>
+	  title="12.5% of total for source files.">391 statements</a>
      </li> 
      
      
@@ -483,7 +483,7 @@
 <a name="ln-10"></a><span class="k">  private</span>
 <a name="ln-11"></a><span class="k">  </span>
 <a name="ln-12"></a><span class="k">  public</span> <span class="kd">::</span> <span class="n">mean_array</span><span class="p">,</span> <span class="n">mean_map</span><span class="p">,</span> <span class="n">dim2nside</span><span class="p">,</span> <span class="n">dim_data2dim_cube</span><span class="p">,</span> <span class="n">reshape_up</span><span class="p">,</span> <span class="n">reshape_down</span><span class="p">,</span> <span class="n">go_up_level</span><span class="p">,</span> <span class="n">init_spectrum</span><span class="p">,</span> <span class="p">&amp;</span>
-<a name="ln-13"></a>       <span class="n">upgrade</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="n">set_stdmap</span><span class="p">,</span> <span class="n">std_spectrum</span><span class="p">,</span> <span class="n">mean_spectrum</span><span class="p">,</span> <span class="n">init_grid_params</span>
+<a name="ln-13"></a>       <span class="n">upgrade</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="n">set_stdmap</span><span class="p">,</span> <span class="n">std_spectrum</span><span class="p">,</span> <span class="n">mean_spectrum</span><span class="p">,</span> <span class="n">max_spectrum</span><span class="p">,</span> <span class="n">init_grid_params</span><span class="p">,</span> <span class="n">init_new_gauss</span>
 <a name="ln-14"></a>
 <a name="ln-15"></a><span class="k">contains</span>
 <a name="ln-16"></a><span class="k">    </span>
@@ -897,52 +897,148 @@
 <a name="ln-424"></a><span class="k">  end subroutine </span><span class="n">std_spectrum</span>  
 <a name="ln-425"></a>
 <a name="ln-426"></a>
-<a name="ln-427"></a>  <span class="k">subroutine </span><span class="n">mean_spectrum</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
-<a name="ln-428"></a>    <span class="c">!! Compute the MEAN spectrum of a cube along the spatial axis</span>
+<a name="ln-427"></a>  <span class="k">subroutine </span><span class="n">max_spectrum</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">norm_value</span><span class="p">)</span>
+<a name="ln-428"></a>    <span class="c">!! Compute the MAX spectrum of a cube along the spatial axis</span>
 <a name="ln-429"></a>    <span class="k">implicit none</span>
-<a name="ln-430"></a><span class="k">    </span>
+<a name="ln-430"></a>
 <a name="ln-431"></a><span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="k">data</span> <span class="c">!! initial fits data</span>
-<a name="ln-432"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span> <span class="c">!! dimension along v axis</span>
-<a name="ln-433"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span> <span class="c">!! dimension along spatial axis y </span>
-<a name="ln-434"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_x</span> <span class="c">!! dimension along spatial axis x</span>
-<a name="ln-435"></a>
-<a name="ln-436"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">spectrum</span> <span class="c">!! std_spectrum of the observation</span>
-<a name="ln-437"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">map</span> <span class="c">!! 2D array</span>
-<a name="ln-438"></a>
-<a name="ln-439"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span> <span class="c">!! loop index</span>
-<a name="ln-440"></a>
-<a name="ln-441"></a>    <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">dim_v</span>
-<a name="ln-442"></a>       <span class="k">allocate</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span><span class="n">dim_x</span><span class="p">))</span>
-<a name="ln-443"></a>       <span class="n">map</span> <span class="o">=</span> <span class="k">data</span><span class="p">(</span><span class="n">i</span><span class="p">,:,:)</span>
-<a name="ln-444"></a>       <span class="n">spectrum</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">mean_2D</span><span class="p">(</span><span class="n">map</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
-<a name="ln-445"></a>       <span class="k">deallocate</span><span class="p">(</span><span class="n">map</span><span class="p">)</span>
-<a name="ln-446"></a>    <span class="k">end do</span>
-<a name="ln-447"></a><span class="k">    </span>
-<a name="ln-448"></a><span class="k">  end subroutine </span><span class="n">mean_spectrum</span>  
-<a name="ln-449"></a>
-<a name="ln-450"></a>
-<a name="ln-451"></a>  <span class="k">subroutine </span><span class="n">init_grid_params</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">guess_spectrum</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
-<a name="ln-452"></a>    <span class="c">!! Set up a grid params array with std spectrum at each spatial position</span>
-<a name="ln-453"></a>    <span class="k">implicit none</span>
-<a name="ln-454"></a><span class="k"> </span>
-<a name="ln-455"></a><span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">params</span> <span class="c">!! grid of paramters</span>
-<a name="ln-456"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">guess_spectrum</span> <span class="c">!! std spectrum of the observation</span>
-<a name="ln-457"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span> <span class="c">!! dimension along spatial axis y </span>
-<a name="ln-458"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_x</span> <span class="c">!! dimension along spatial axis x</span>
-<a name="ln-459"></a>
-<a name="ln-460"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span> <span class="c">!! index loop</span>
-<a name="ln-461"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">j</span> <span class="c">!! index loop</span>
-<a name="ln-462"></a>
-<a name="ln-463"></a>    <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
-<a name="ln-464"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
-<a name="ln-465"></a>          <span class="n">params</span><span class="p">(:,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">guess_spectrum</span>
-<a name="ln-466"></a>       <span class="k">end do</span>
-<a name="ln-467"></a><span class="k">    end do</span>
-<a name="ln-468"></a>
-<a name="ln-469"></a><span class="k">  end subroutine </span><span class="n">init_grid_params</span>
-<a name="ln-470"></a>
+<a name="ln-432"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">optional</span> <span class="kd">::</span> <span class="n">norm_value</span> <span class="c">!! max value of the mean spectrum to normalze the max spectrum if present</span>
+<a name="ln-433"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span> <span class="c">!! dimension along v axis</span>
+<a name="ln-434"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span> <span class="c">!! dimension along spatial axis y </span>
+<a name="ln-435"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_x</span> <span class="c">!! dimension along spatial axis x</span>
+<a name="ln-436"></a>
+<a name="ln-437"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">spectrum</span> <span class="c">!! max_spectrum of the observation</span>
+<a name="ln-438"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">map</span> <span class="c">!! 2D array</span>
+<a name="ln-439"></a>
+<a name="ln-440"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span> <span class="c">!! loop index</span>
+<a name="ln-441"></a>
+<a name="ln-442"></a>    <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">dim_v</span>
+<a name="ln-443"></a>       <span class="k">allocate</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span><span class="n">dim_x</span><span class="p">))</span>
+<a name="ln-444"></a>       <span class="n">map</span> <span class="o">=</span> <span class="k">data</span><span class="p">(</span><span class="n">i</span><span class="p">,:,:)</span>
+<a name="ln-445"></a>       <span class="n">spectrum</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">max_2D</span><span class="p">(</span><span class="n">map</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span> 
+<a name="ln-446"></a>       <span class="k">deallocate</span><span class="p">(</span><span class="n">map</span><span class="p">)</span>
+<a name="ln-447"></a>    <span class="k">end do</span>
+<a name="ln-448"></a>
+<a name="ln-449"></a><span class="k">    if</span> <span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">norm_value</span><span class="p">))</span> <span class="k">then</span>
+<a name="ln-450"></a><span class="k">       </span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">spectrum</span> <span class="o">/</span> <span class="p">(</span><span class="nb">maxval</span><span class="p">(</span><span class="n">spectrum</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm_value</span><span class="p">)</span>
+<a name="ln-451"></a>    <span class="k">end if</span>
+<a name="ln-452"></a>
+<a name="ln-453"></a><span class="k">    </span>
+<a name="ln-454"></a><span class="k">    </span>
+<a name="ln-455"></a><span class="k">  end subroutine </span><span class="n">max_spectrum</span>  
+<a name="ln-456"></a>
+<a name="ln-457"></a>
+<a name="ln-458"></a>  <span class="k">subroutine </span><span class="n">mean_spectrum</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
+<a name="ln-459"></a>    <span class="c">!! Compute the MEAN spectrum of a cube along the spatial axis</span>
+<a name="ln-460"></a>    <span class="k">implicit none</span>
+<a name="ln-461"></a><span class="k">    </span>
+<a name="ln-462"></a><span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="k">data</span> <span class="c">!! initial fits data</span>
+<a name="ln-463"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span> <span class="c">!! dimension along v axis</span>
+<a name="ln-464"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span> <span class="c">!! dimension along spatial axis y </span>
+<a name="ln-465"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_x</span> <span class="c">!! dimension along spatial axis x</span>
+<a name="ln-466"></a>
+<a name="ln-467"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">spectrum</span> <span class="c">!! std_spectrum of the observation</span>
+<a name="ln-468"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">map</span> <span class="c">!! 2D array</span>
+<a name="ln-469"></a>
+<a name="ln-470"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span> <span class="c">!! loop index</span>
 <a name="ln-471"></a>
-<a name="ln-472"></a><span class="k">end module </span><span class="n">mod_functions</span>
+<a name="ln-472"></a>    <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">dim_v</span>
+<a name="ln-473"></a>       <span class="k">allocate</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span><span class="n">dim_x</span><span class="p">))</span>
+<a name="ln-474"></a>       <span class="n">map</span> <span class="o">=</span> <span class="k">data</span><span class="p">(</span><span class="n">i</span><span class="p">,:,:)</span>
+<a name="ln-475"></a>       <span class="n">spectrum</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">mean_2D</span><span class="p">(</span><span class="n">map</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
+<a name="ln-476"></a>       <span class="k">deallocate</span><span class="p">(</span><span class="n">map</span><span class="p">)</span>
+<a name="ln-477"></a>    <span class="k">end do</span>
+<a name="ln-478"></a><span class="k">    </span>
+<a name="ln-479"></a><span class="k">  end subroutine </span><span class="n">mean_spectrum</span>  
+<a name="ln-480"></a>
+<a name="ln-481"></a>
+<a name="ln-482"></a>  <span class="k">subroutine </span><span class="n">init_grid_params</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">guess_spectrum</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
+<a name="ln-483"></a>    <span class="c">!! Set up a grid params array with std spectrum at each spatial position</span>
+<a name="ln-484"></a>    <span class="k">implicit none</span>
+<a name="ln-485"></a><span class="k"> </span>
+<a name="ln-486"></a><span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">params</span> <span class="c">!! grid of paramters</span>
+<a name="ln-487"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">guess_spectrum</span> <span class="c">!! std spectrum of the observation</span>
+<a name="ln-488"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span> <span class="c">!! dimension along spatial axis y </span>
+<a name="ln-489"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_x</span> <span class="c">!! dimension along spatial axis x</span>
+<a name="ln-490"></a>
+<a name="ln-491"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span> <span class="c">!! index loop</span>
+<a name="ln-492"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">j</span> <span class="c">!! index loop</span>
+<a name="ln-493"></a>
+<a name="ln-494"></a>    <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-495"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-496"></a>          <span class="n">params</span><span class="p">(:,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">guess_spectrum</span>
+<a name="ln-497"></a>       <span class="k">end do</span>
+<a name="ln-498"></a><span class="k">    end do</span>
+<a name="ln-499"></a>
+<a name="ln-500"></a><span class="k">  end subroutine </span><span class="n">init_grid_params</span>
+<a name="ln-501"></a>
+<a name="ln-502"></a>
+<a name="ln-503"></a>  <span class="k">subroutine </span><span class="n">init_new_gauss</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">std_map</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">)</span>
+<a name="ln-504"></a>    <span class="k">implicit none</span>
+<a name="ln-505"></a><span class="k">    </span>
+<a name="ln-506"></a><span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">cube</span>   <span class="c">!! mean cube over spatial axis</span>
+<a name="ln-507"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">params</span> <span class="c">!! parameters to optimize with cube mean at each iteration</span>
+<a name="ln-508"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">std_map</span> <span class="c">!! standard deviation map fo the cube computed by ROHSA with lb and ub</span>
+<a name="ln-509"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">amp_fact_init</span> <span class="c">!! times max amplitude of additional Gaussian</span>
+<a name="ln-510"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">sig_init</span> <span class="c">!! dispersion of additional Gaussian</span>
+<a name="ln-511"></a>
+<a name="ln-512"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n_gauss</span>
+<a name="ln-513"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-514"></a>
+<a name="ln-515"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">redchi2</span>
+<a name="ln-516"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">residual</span>
+<a name="ln-517"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">residual_1D</span>
+<a name="ln-518"></a>    <span class="kt">logical</span> <span class="kd">::</span> <span class="n">new_gauss</span>
+<a name="ln-519"></a>
+<a name="ln-520"></a>    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span>
+<a name="ln-521"></a>
+<a name="ln-522"></a>    <span class="k">allocate</span><span class="p">(</span><span class="n">residual</span><span class="p">(</span><span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
+<a name="ln-523"></a>    <span class="n">residual</span> <span class="o">=</span> <span class="mf">0._xp</span>    
+<a name="ln-524"></a>
+<a name="ln-525"></a>    <span class="n">new_gauss</span> <span class="o">=</span> <span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<a name="ln-526"></a>
+<a name="ln-527"></a>    <span class="c">!Compute the residual function</span>
+<a name="ln-528"></a>    <span class="k">allocate</span><span class="p">(</span><span class="n">redchi2</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">))</span>
+<a name="ln-529"></a>    <span class="n">redchi2</span> <span class="o">=</span> <span class="mf">0._xp</span>    
+<a name="ln-530"></a>    <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-531"></a>       <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-532"></a>          <span class="k">allocate</span><span class="p">(</span><span class="n">residual_1D</span><span class="p">(</span><span class="n">dim_v</span><span class="p">))</span>
+<a name="ln-533"></a>          <span class="n">residual_1D</span> <span class="o">=</span> <span class="mf">0._xp</span>
+<a name="ln-534"></a>
+<a name="ln-535"></a>          <span class="k">call </span><span class="n">myresidual</span><span class="p">(</span><span class="n">params</span><span class="p">(:,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">),</span> <span class="n">cube</span><span class="p">(:,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">),</span> <span class="n">residual_1D</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">)</span>
+<a name="ln-536"></a>          <span class="n">residual</span><span class="p">(:,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">residual_1D</span>
+<a name="ln-537"></a>
+<a name="ln-538"></a>          <span class="n">redchi2</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">residual_1D</span> <span class="o">/</span> <span class="n">std_map</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">))</span><span class="o">**</span><span class="mf">2._xp</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">dim_v</span> <span class="o">-</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">))</span>                    
+<a name="ln-539"></a>
+<a name="ln-540"></a>          <span class="k">if</span> <span class="p">(</span><span class="n">redchi2</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="p">.</span><span class="n">gt</span><span class="p">.</span> <span class="mf">1._xp</span><span class="p">)</span> <span class="k">then</span>
+<a name="ln-541"></a><span class="k">             </span><span class="n">new_gauss</span> <span class="o">=</span> <span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<a name="ln-542"></a>          <span class="k">end if</span>
+<a name="ln-543"></a><span class="k">          deallocate</span><span class="p">(</span><span class="n">residual_1D</span><span class="p">)</span>
+<a name="ln-544"></a>       <span class="k">end do</span>
+<a name="ln-545"></a><span class="k">    end do</span>
+<a name="ln-546"></a>
+<a name="ln-547"></a><span class="k">    if</span> <span class="p">(</span><span class="n">new_gauss</span> <span class="p">.</span><span class="n">eqv</span><span class="p">.</span> <span class="p">.</span><span class="n">true</span><span class="p">.)</span> <span class="k">then</span>
+<a name="ln-548"></a>       <span class="c">! Add new Gaussian</span>
+<a name="ln-549"></a>       <span class="n">n_gauss</span> <span class="o">=</span> <span class="n">n_gauss</span> <span class="o">+</span> <span class="mi">1</span>
+<a name="ln-550"></a>
+<a name="ln-551"></a>       <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_x</span>
+<a name="ln-552"></a>          <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_y</span>
+<a name="ln-553"></a>             <span class="c">! Set new values if redchi2 &gt; 1</span>
+<a name="ln-554"></a>             <span class="k">if</span> <span class="p">(</span><span class="n">redchi2</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="p">.</span><span class="n">gt</span><span class="p">.</span> <span class="mf">1._xp</span><span class="p">)</span> <span class="k">then</span>
+<a name="ln-555"></a><span class="k">                </span><span class="n">params</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">n_gauss</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="nb">minloc</span><span class="p">(</span><span class="n">residual</span><span class="p">(:,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">),</span> <span class="n">dim_v</span><span class="p">)</span>
+<a name="ln-556"></a>                <span class="n">params</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">n_gauss</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">cube</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">n_gauss</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">*</span> <span class="n">amp_fact_init</span>
+<a name="ln-557"></a>                <span class="n">params</span><span class="p">(</span><span class="mi">3</span><span class="o">+</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">n_gauss</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">sig_init</span><span class="p">;</span>
+<a name="ln-558"></a>             <span class="k">end if</span>
+<a name="ln-559"></a><span class="k">          end do</span>
+<a name="ln-560"></a><span class="k">       end do</span>
+<a name="ln-561"></a><span class="k">    end if</span>
+<a name="ln-562"></a>
+<a name="ln-563"></a><span class="k">    deallocate</span><span class="p">(</span><span class="n">redchi2</span><span class="p">)</span>    
+<a name="ln-564"></a>
+<a name="ln-565"></a>  <span class="k">end subroutine </span><span class="n">init_new_gauss</span>
+<a name="ln-566"></a>
+<a name="ln-567"></a>
+<a name="ln-568"></a><span class="k">end module </span><span class="n">mod_functions</span>
 </pre></div>
 
     </section>

@@ -44,7 +44,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../../index.html">ROHSA <small>1.1.0</small></a>
+          <a class="navbar-brand" href="../../index.html">ROHSA <small>1.2.0</small></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -181,7 +181,7 @@ When iprint &gt; <span class="m">0</span>, the file iterate.dat will be created 
 
 <p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p>For any question about the parameters, please contact us at the following address : antoine.marchal@ias.u-psud.fr</p></div>
 <h3>Data format</h3>
-<p>ROHSA does not support FITS file in version 1.1.0. It wiil be added in a next release. 
+<p>ROHSA does not support FITS file in version 1.2.0. It wiil be added in a next release. 
 You can find a python code : <code>fits2dat.py</code> in <code>src/</code> directory to convert your <code>.fits</code> file into a <code>.dat</code> file. </p>
 <h2>Running ROHSA</h2>
 <p>You can now run your Gaussian decomposition with ROHSA. Enjoy !</p>
@@ -189,9 +189,11 @@ You can find a python code : <code>fits2dat.py</code> in <code>src/</code> direc
 </pre></div>
 
 
-<div class="codehilite"><pre><span></span><span class="o">(</span>Clumpix<span class="o">)</span> amarchal@glx-calcul3:~/ROHSA/src$ ./ROHSA parameters.txt 
+<div class="codehilite"><pre><span></span><span class="o">(</span>marchalenv<span class="o">)</span> dapmcw133:src antoinemarchal$ ./ROHSA parameters.txt 
+
+ opening file and reading data
  -------------------------------------------------------------------------
-<span class="m">17</span> April <span class="m">2018</span>   <span class="m">9</span>:45:45.824 AM
+<span class="m">25</span> September <span class="m">2018</span>   <span class="m">5</span>:09:11.592 PM
 
    ____     ___    _   _   ____       _    
   <span class="p">|</span>  _ <span class="se">\ </span>  / _ <span class="se">\ </span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> / ___<span class="p">|</span>     / <span class="se">\ </span>  
@@ -199,58 +201,72 @@ You can find a python code : <code>fits2dat.py</code> in <code>src/</code> direc
   <span class="p">|</span>  _ &lt;  <span class="p">|</span> <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>  _  <span class="p">|</span>  ___<span class="o">)</span> <span class="p">|</span>  / ___ <span class="se">\ </span>
   <span class="p">|</span>_<span class="p">|</span> <span class="se">\_\ </span> <span class="se">\_</span>__/  <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span>____/  /_/   <span class="se">\_\ </span>
 
-  Version <span class="m">1</span>.1.0
+  Version <span class="m">1</span>.0.0
   ROHSA is released as open <span class="nb">source</span> code
   Check out the documentation: https://antoinemarchal.github.io/ROHSA/
 
  run: ./ROHSA parameters.txt
  -------------------------------------------------------------------------
-
- <span class="nv">filename</span> <span class="o">=</span> <span class="s1">&#39;./data.dat&#39;</span>
- <span class="nv">fileout</span> <span class="o">=</span> <span class="s1">&#39;./result.dat&#39;</span>
+ <span class="nv">fileout</span> <span class="o">=</span> <span class="s1">&#39;result.dat&#39;</span>
 
  ______Parameters_____
 
- <span class="nv">n_gauss</span> <span class="o">=</span>            <span class="m">8</span>
+ <span class="nv">n_gauss</span> <span class="o">=</span>            <span class="m">6</span>
  <span class="nv">lambda_amp</span> <span class="o">=</span>    <span class="m">1</span>.0000000000000000     
  <span class="nv">lambda_mu</span> <span class="o">=</span>    <span class="m">1</span>.0000000000000000     
  <span class="nv">lambda_sig</span> <span class="o">=</span>    <span class="m">1</span>.0000000000000000     
- <span class="nv">maxiter_itit</span> <span class="o">=</span>        <span class="m">15000</span>
- <span class="nv">maxiter</span> <span class="o">=</span>          <span class="m">800</span>
- <span class="nv">lstd</span> <span class="o">=</span>          <span class="m">160</span>
- <span class="nv">ustd</span> <span class="o">=</span>          <span class="m">198</span>
+ <span class="nv">lambda_var_amp</span> <span class="o">=</span>    <span class="m">0</span>.0000000000000000     
+ <span class="nv">lambda_var_mu</span> <span class="o">=</span>    <span class="m">0</span>.0000000000000000     
+ <span class="nv">lambda_var_sig</span> <span class="o">=</span>    <span class="m">1</span>.0000000000000000     
+ <span class="nv">amp_fact_init</span> <span class="o">=</span>   <span class="m">0</span>.66000000000000003     
+ <span class="nv">sig_init</span> <span class="o">=</span>    <span class="m">5</span>.0000000000000000     
+ <span class="nv">init_option</span> <span class="o">=</span> mean    
+ <span class="nv">maxiter_init</span> <span class="o">=</span>        <span class="m">15000</span>
+ <span class="nv">maxiter</span> <span class="o">=</span>           <span class="m">20</span>
+ <span class="nv">lstd</span> <span class="o">=</span>            <span class="m">1</span>
+ <span class="nv">ustd</span> <span class="o">=</span>           <span class="m">20</span>
  <span class="nv">noise</span> <span class="o">=</span>  F
  <span class="nv">regul</span> <span class="o">=</span>  T
+ <span class="nv">descent</span> <span class="o">=</span>  T
 
+ dim_v, dim_y, <span class="nv">dim_x</span> <span class="o">=</span>          <span class="m">101</span>          <span class="m">16</span>          <span class="m">16</span>
 
- opening file and reading data
- dim_v, dim_y, <span class="nv">dim_x</span> <span class="o">=</span>          <span class="m">395</span>          <span class="m">94</span>          <span class="m">67</span>
-
- number of <span class="nv">los</span> <span class="o">=</span>         <span class="m">6298</span>
- <span class="nv">nside</span> <span class="o">=</span>            <span class="m">7</span>
+ number of <span class="nv">los</span> <span class="o">=</span>          <span class="m">256</span>
+ <span class="nv">nside</span> <span class="o">=</span>            <span class="m">4</span>
 
  Reshape cube, new dimensions :
- dim_v, dim_y, <span class="nv">dim_x</span> <span class="o">=</span>          <span class="m">395</span>         <span class="m">128</span>         <span class="m">128</span>
+ dim_v, dim_y, <span class="nv">dim_x</span> <span class="o">=</span>          <span class="m">101</span>          <span class="m">16</span>          <span class="m">16</span>
 
+ Compute mean and std spectrum
                      Start iteration
 
+ Start hierarchical descent
  Init mean spectrum
 
  Update parameters level            <span class="m">0</span> &gt;           <span class="m">1</span>
-RUNNING THE L-BFGS-B CODE
 
-           * * *
+ Update parameters level            <span class="m">1</span> &gt;           <span class="m">2</span>
 
-Machine <span class="nv">precision</span> <span class="o">=</span> <span class="m">2</span>.220D-16
- <span class="nv">N</span> <span class="o">=</span>           <span class="m">24</span>     <span class="nv">M</span> <span class="o">=</span>           <span class="m">10</span>
+ Update parameters level            <span class="m">2</span> &gt;           <span class="m">4</span>
 
-At X0         <span class="m">3</span> variables are exactly at the bounds
+ Update parameters level            <span class="m">3</span> &gt;           <span class="m">8</span>
 
-At iterate    <span class="m">0</span>    <span class="nv">f</span><span class="o">=</span>  <span class="m">1</span>.29989D-02    <span class="p">|</span>proj g<span class="p">|</span><span class="o">=</span>  <span class="m">4</span>.42658D-05
+ Update parameters level            <span class="m">4</span> &gt;          <span class="m">16</span>
 
-At iterate    <span class="m">1</span>    <span class="nv">f</span><span class="o">=</span>  <span class="m">1</span>.29989D-02    <span class="p">|</span>proj g<span class="p">|</span><span class="o">=</span>  <span class="m">6</span>.62203D-05
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, <span class="nv">dim_x</span> <span class="o">=</span>          <span class="m">101</span>          <span class="m">16</span>          <span class="m">16</span>
 
-...
+ Update last level ...
+
+
+ _____ Write output file _____
+
+ <span class="c1">##################################################################</span>
+<span class="m">25</span> September <span class="m">2018</span>   <span class="m">5</span>:09:11.654 PM
+  Terminate
+                         ROHSA ALGORITHM
+
+ <span class="c1">##################################################################</span>
 </pre></div>
     </div>
     

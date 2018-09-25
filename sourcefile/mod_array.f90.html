@@ -44,7 +44,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../index.html">ROHSA <small>1.1.0</small></a>
+          <a class="navbar-brand" href="../index.html">ROHSA <small>1.2.0</small></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -124,7 +124,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title=" 5.7% of total for source files.">171 statements</a>
+	  title=" 5.8% of total for source files.">183 statements</a>
      </li> 
      
      
@@ -478,7 +478,7 @@
 <a name="ln-6"></a>
 <a name="ln-7"></a><span class="k">  private</span>
 <a name="ln-8"></a>
-<a name="ln-9"></a><span class="k">  public</span> <span class="kd">::</span> <span class="n">convolution_2D_mirror</span><span class="p">,</span> <span class="n">ravel_2D</span><span class="p">,</span> <span class="n">ravel_3D</span><span class="p">,</span> <span class="n">unravel_3D</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">std_2D</span><span class="p">,</span> <span class="n">mean_2D</span>
+<a name="ln-9"></a><span class="k">  public</span> <span class="kd">::</span> <span class="n">convolution_2D_mirror</span><span class="p">,</span> <span class="n">ravel_2D</span><span class="p">,</span> <span class="n">ravel_3D</span><span class="p">,</span> <span class="n">unravel_3D</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">std_2D</span><span class="p">,</span> <span class="n">mean_2D</span><span class="p">,</span> <span class="n">max_2D</span>
 <a name="ln-10"></a>  
 <a name="ln-11"></a><span class="k">contains</span>
 <a name="ln-12"></a>
@@ -691,27 +691,47 @@
 <a name="ln-219"></a>  <span class="k">end function </span><span class="n">std_2D</span>
 <a name="ln-220"></a>
 <a name="ln-221"></a>
-<a name="ln-222"></a>  <span class="k">function </span><span class="n">mean_2D</span><span class="p">(</span><span class="n">map</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
-<a name="ln-223"></a>    <span class="c">!! Compute the MEAN of a 2D map</span>
+<a name="ln-222"></a>  <span class="k">function </span><span class="n">max_2D</span><span class="p">(</span><span class="n">map</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
+<a name="ln-223"></a>    <span class="c">!! Compute the MAX of a 2D map</span>
 <a name="ln-224"></a>    <span class="k">implicit none</span>
 <a name="ln-225"></a>
 <a name="ln-226"></a><span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span> <span class="c">!! dimension along spatial axis y</span>
 <a name="ln-227"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_x</span> <span class="c">!! dimension along spatial axis x</span>
 <a name="ln-228"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">map</span> <span class="c">!! 2D array</span>
 <a name="ln-229"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">vector</span> <span class="c">!! 1D array </span>
-<a name="ln-230"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span> <span class="kd">::</span> <span class="n">mean_2D</span>
+<a name="ln-230"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span> <span class="kd">::</span> <span class="n">max_2D</span>
 <a name="ln-231"></a>
 <a name="ln-232"></a>    <span class="k">allocate</span><span class="p">(</span><span class="n">vector</span><span class="p">(</span><span class="n">dim_y</span><span class="o">*</span><span class="n">dim_x</span><span class="p">))</span>
 <a name="ln-233"></a>
 <a name="ln-234"></a>    <span class="k">call </span><span class="n">ravel_2D</span><span class="p">(</span><span class="n">map</span><span class="p">,</span> <span class="n">vector</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
-<a name="ln-235"></a>    <span class="n">mean_2D</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
+<a name="ln-235"></a>    <span class="n">max_2D</span> <span class="o">=</span> <span class="nb">maxval</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
 <a name="ln-236"></a>
 <a name="ln-237"></a>    <span class="k">deallocate</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
 <a name="ln-238"></a>
-<a name="ln-239"></a>  <span class="k">end function </span><span class="n">mean_2D</span>
+<a name="ln-239"></a>  <span class="k">end function </span><span class="n">max_2D</span>
 <a name="ln-240"></a>
 <a name="ln-241"></a>
-<a name="ln-242"></a><span class="k">end module </span><span class="n">mod_array</span>
+<a name="ln-242"></a>  <span class="k">function </span><span class="n">mean_2D</span><span class="p">(</span><span class="n">map</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
+<a name="ln-243"></a>    <span class="c">!! Compute the MEAN of a 2D map</span>
+<a name="ln-244"></a>    <span class="k">implicit none</span>
+<a name="ln-245"></a>
+<a name="ln-246"></a><span class="k">    </span><span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span> <span class="c">!! dimension along spatial axis y</span>
+<a name="ln-247"></a>    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_x</span> <span class="c">!! dimension along spatial axis x</span>
+<a name="ln-248"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">map</span> <span class="c">!! 2D array</span>
+<a name="ln-249"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">vector</span> <span class="c">!! 1D array </span>
+<a name="ln-250"></a>    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span> <span class="kd">::</span> <span class="n">mean_2D</span>
+<a name="ln-251"></a>
+<a name="ln-252"></a>    <span class="k">allocate</span><span class="p">(</span><span class="n">vector</span><span class="p">(</span><span class="n">dim_y</span><span class="o">*</span><span class="n">dim_x</span><span class="p">))</span>
+<a name="ln-253"></a>
+<a name="ln-254"></a>    <span class="k">call </span><span class="n">ravel_2D</span><span class="p">(</span><span class="n">map</span><span class="p">,</span> <span class="n">vector</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span>
+<a name="ln-255"></a>    <span class="n">mean_2D</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
+<a name="ln-256"></a>
+<a name="ln-257"></a>    <span class="k">deallocate</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
+<a name="ln-258"></a>
+<a name="ln-259"></a>  <span class="k">end function </span><span class="n">mean_2D</span>
+<a name="ln-260"></a>
+<a name="ln-261"></a>
+<a name="ln-262"></a><span class="k">end module </span><span class="n">mod_array</span>
 </pre></div>
 
     </section>

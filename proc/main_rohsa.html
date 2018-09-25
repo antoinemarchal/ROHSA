@@ -44,7 +44,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../index.html">ROHSA <small>1.1.0</small></a>
+          <a class="navbar-brand" href="../index.html">ROHSA <small>1.2.0</small></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -124,7 +124,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title=" 7.1% of total for procedures.">206 statements</a>
+	  title=" 7.9% of total for procedures.">238 statements</a>
      </li> 
      
      
@@ -267,8 +267,8 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
   
 <tr>
   
-  <td><span class="anchor" id="variable-n_gauss%7E6"></span>integer,</td>
-  <td>intent(in)</td>
+  <td><span class="anchor" id="variable-n_gauss%7E6"></span>integer</td>
+  <td></td>
   <td></td>
   
   <td></td><td>::</td>
@@ -1003,16 +1003,15 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">main_rohsa</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">std_cube</span><span class="p">,</span> <span class="n">fileout</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">n_gauss_add</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span><span class="p">,</span> <span class="p">&amp;</span>
-       <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="p">&amp;</span>
-       <span class="n">noise</span><span class="p">,</span> <span class="n">regul</span><span class="p">,</span> <span class="n">descent</span><span class="p">,</span> <span class="n">lstd</span><span class="p">,</span> <span class="n">ustd</span><span class="p">,</span> <span class="n">init_option</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">main_rohsa</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">std_cube</span><span class="p">,</span> <span class="n">fileout</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">n_gauss_add</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="p">&amp;</span>
+       <span class="n">lambda_mu</span><span class="p">,</span> <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="p">&amp;</span>
+       <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">noise</span><span class="p">,</span> <span class="n">regul</span><span class="p">,</span> <span class="n">descent</span><span class="p">,</span> <span class="n">lstd</span><span class="p">,</span> <span class="n">ustd</span><span class="p">,</span> <span class="n">init_option</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
     
     <span class="k">implicit none</span>
 <span class="k">    </span>
 <span class="k">    </span><span class="kt">logical</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">noise</span>           <span class="c">!! if false --&gt; STD map computed by ROHSA with lstd and ustd (if true given by the user)</span>
     <span class="kt">logical</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">regul</span>           <span class="c">!! if true --&gt; activate regulation</span>
     <span class="kt">logical</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">descent</span>         <span class="c">!! if true --&gt; activate hierarchical descent to initiate the optimization</span>
-    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n_gauss</span>         <span class="c">!! number of gaussian to fit</span>
     <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">n_gauss_add</span>     <span class="c">!! number of gaussian to add at each step</span>
     <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">m</span>               <span class="c">!! number of corrections used in the limited memory matrix by LBFGS-B</span>
     <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">lstd</span>            <span class="c">!! lower bound to compute the standard deviation map of the cube (if noise .eq. false)</span>
@@ -1030,9 +1029,10 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">amp_fact_init</span>  <span class="c">!! times max amplitude of additional Gaussian</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">sig_init</span>       <span class="c">!! dispersion of additional Gaussian</span>
 
-    <span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">init_option</span> <span class="c">!!Init ROHSA with the mean or the std spectrum    </span>
+    <span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span>   <span class="kd">::</span> <span class="n">init_option</span> <span class="c">!!Init ROHSA with the mean or the std spectrum    </span>
     <span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">512</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">fileout</span>   <span class="c">!! name of the output result</span>
 
+    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">n_gauss</span>         <span class="c">!! number of gaussian to fit</span>
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">nside</span>        <span class="c">!! size of the reshaped data \(2^{nside}\)</span>
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">n</span>            <span class="c">!! loop index</span>
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">power</span>        <span class="c">!! loop index</span>
@@ -1046,6 +1046,8 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">grid_params</span> <span class="c">!! parameters to optimize at final step (dim of initial cube)</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">std_map</span>       <span class="c">!! standard deviation map fo the cube computed by ROHSA with lb and ub</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">std_spect</span>       <span class="c">!! std spectrum of the observation</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">max_spect</span>       <span class="c">!! max spectrum of the observation</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">max_spect_norm</span>  <span class="c">!! max spectrum of the observation normalized by the max of the mean spectrum</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">mean_spect</span>      <span class="c">!! mean spectrum of the observation</span>
     <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">guess_spect</span> <span class="c">!! params obtain fi the optimization of the std spectrum of the observation</span>
     
@@ -1058,6 +1060,7 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span>     <span class="c">!! loop index</span>
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">j</span>     <span class="c">!! loop index</span>
     <span class="kt">integer</span> <span class="kd">::</span> <span class="n">k</span>     <span class="c">!! loop index</span>
+    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">l</span>     <span class="c">!! loop index</span>
 
     <span class="k">call </span><span class="n">header</span><span class="p">()</span>
     
@@ -1076,13 +1079,14 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
     <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;lambda_var_sig = &quot;</span><span class="p">,</span> <span class="n">lambda_var_sig</span>
     <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;amp_fact_init = &quot;</span><span class="p">,</span> <span class="n">amp_fact_init</span>
     <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;sig_init = &quot;</span><span class="p">,</span> <span class="n">sig_init</span>
-    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;maxiter_itit = &quot;</span><span class="p">,</span> <span class="n">maxiter_init</span>
     <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;init_option = &quot;</span><span class="p">,</span> <span class="n">init_option</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;maxiter_init = &quot;</span><span class="p">,</span> <span class="n">maxiter_init</span>
     <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;maxiter = &quot;</span><span class="p">,</span> <span class="n">maxiter</span>
     <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;lstd = &quot;</span><span class="p">,</span> <span class="n">lstd</span>
     <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;ustd = &quot;</span><span class="p">,</span> <span class="n">ustd</span>
     <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;noise = &quot;</span><span class="p">,</span> <span class="n">noise</span>
     <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;regul = &quot;</span><span class="p">,</span> <span class="n">regul</span>
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;descent = &quot;</span><span class="p">,</span> <span class="n">descent</span>
     <span class="k">print</span><span class="o">*</span><span class="p">,</span>
     
     <span class="k">allocate</span><span class="p">(</span><span class="n">kernel</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
@@ -1120,18 +1124,25 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
     
     <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;Compute mean and std spectrum&quot;</span>
     <span class="k">allocate</span><span class="p">(</span><span class="n">std_spect</span><span class="p">(</span><span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+    <span class="k">allocate</span><span class="p">(</span><span class="n">max_spect</span><span class="p">(</span><span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="n">max_spect_norm</span><span class="p">(</span><span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
     <span class="k">allocate</span><span class="p">(</span><span class="n">mean_spect</span><span class="p">(</span><span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
 
     <span class="k">call </span><span class="n">std_spectrum</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">std_spect</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
     <span class="k">call </span><span class="n">mean_spectrum</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">mean_spect</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="k">call </span><span class="n">max_spectrum</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">max_spect</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="k">call </span><span class="n">max_spectrum</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">max_spect_norm</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="nb">maxval</span><span class="p">(</span><span class="n">mean_spect</span><span class="p">))</span>
     
     <span class="k">call </span><span class="n">reshape_up</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">)</span>
     
     <span class="c">!Allocate memory for parameters grids</span>
-    <span class="k">allocate</span><span class="p">(</span><span class="n">grid_params</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
-    <span class="k">allocate</span><span class="p">(</span><span class="n">fit_params</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">n_gauss</span><span class="o">+</span><span class="p">(</span><span class="n">nside</span><span class="o">*</span><span class="n">n_gauss_add</span><span class="p">)),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-    
-    <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;                    Start iteration&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">descent</span> <span class="p">.</span><span class="n">eqv</span><span class="p">.</span> <span class="p">.</span><span class="n">true</span><span class="p">.)</span> <span class="k">then</span>
+<span class="k">       allocate</span><span class="p">(</span><span class="n">grid_params</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">n_gauss</span><span class="o">+</span><span class="p">(</span><span class="n">nside</span><span class="o">*</span><span class="n">n_gauss_add</span><span class="p">)),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+       <span class="k">allocate</span><span class="p">(</span><span class="n">fit_params</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">n_gauss</span><span class="o">+</span><span class="p">(</span><span class="n">nside</span><span class="o">*</span><span class="n">n_gauss_add</span><span class="p">)),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">else </span>
+<span class="k">       allocate</span><span class="p">(</span><span class="n">grid_params</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">n_gauss</span><span class="o">+</span><span class="n">n_gauss_add</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+    <span class="k">end if</span>
+<span class="k">    </span>
+<span class="k">    print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;                    Start iteration&quot;</span>
     <span class="k">print</span><span class="o">*</span><span class="p">,</span>
     
     <span class="k">if</span> <span class="p">(</span><span class="n">descent</span> <span class="p">.</span><span class="n">eqv</span><span class="p">.</span> <span class="p">.</span><span class="n">true</span><span class="p">.)</span> <span class="k">then</span>
@@ -1152,13 +1163,20 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
              <span class="n">elseif</span> <span class="p">(</span><span class="n">init_option</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s2">&quot;std&quot;</span><span class="p">)</span> <span class="k">then</span>
 <span class="k">                call </span><span class="n">init_spectrum</span><span class="p">(</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">(:,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">std_spect</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="p">&amp;</span>
                      <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
+             <span class="n">elseif</span> <span class="p">(</span><span class="n">init_option</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s2">&quot;max&quot;</span><span class="p">)</span> <span class="k">then</span>
+<span class="k">                call </span><span class="n">init_spectrum</span><span class="p">(</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">(:,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">max_spect</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="p">&amp;</span>
+                     <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
+             <span class="n">elseif</span> <span class="p">(</span><span class="n">init_option</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s2">&quot;maxnorm&quot;</span><span class="p">)</span> <span class="k">then</span>
+<span class="k">                call </span><span class="n">init_spectrum</span><span class="p">(</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">(:,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">max_spect_norm</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="p">&amp;</span>
+                     <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
              <span class="k">else </span>
-<span class="k">                print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;init_option keyword should be &#39;mean&#39; of &#39;std&#39;&quot;</span>
+<span class="k">                print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;init_option keyword should be &#39;mean&#39; or &#39;std&#39; or &#39;max&#39; or &#39;maxnorm&#39;&quot;</span>
                 <span class="k">stop</span>
 <span class="k">             end if</span>
 <span class="k">          end if</span>
-<span class="k">          </span>
-<span class="k">          call </span><span class="n">go_up_level</span><span class="p">(</span><span class="n">fit_params</span><span class="p">)</span>
+          
+          <span class="c">! Propagate solution on new grid (higher resolution)</span>
+          <span class="k">call </span><span class="n">go_up_level</span><span class="p">(</span><span class="n">fit_params</span><span class="p">)</span>
           <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s2">&quot;&quot;</span>
           <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s2">&quot;Update parameters level &quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="n">power</span>
           
@@ -1179,10 +1197,18 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
                 <span class="k">else</span>
 <span class="k">                   call </span><span class="n">set_stdmap</span><span class="p">(</span><span class="n">std_map</span><span class="p">,</span> <span class="n">cube_mean</span><span class="p">,</span> <span class="n">lstd</span><span class="p">,</span> <span class="n">ustd</span><span class="p">)</span>
                 <span class="k">end if</span>
-<span class="k">                </span>
-<span class="k">                call </span><span class="n">update</span><span class="p">(</span><span class="n">cube_mean</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">power</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="p">&amp;</span>
+
+                <span class="c">! Update parameters </span>
+                <span class="k">call </span><span class="n">update</span><span class="p">(</span><span class="n">cube_mean</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">power</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="p">&amp;</span>
                      <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">std_map</span><span class="p">)</span>        
-                <span class="k">deallocate</span><span class="p">(</span><span class="n">std_map</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">n_gauss_add</span> <span class="p">.</span><span class="n">ne</span><span class="p">.</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span> <span class="c">!FIXME</span>
+                   <span class="c">! Add new Gaussian if one reduced chi square &gt; 1 </span>
+                   <span class="k">call </span><span class="n">init_new_gauss</span><span class="p">(</span><span class="n">cube_mean</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">,</span> <span class="n">std_map</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">power</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="p">&amp;</span>
+                        <span class="n">sig_init</span><span class="p">)</span>
+                <span class="k">end if</span>
+
+<span class="k">                deallocate</span><span class="p">(</span><span class="n">std_map</span><span class="p">)</span>
              <span class="k">end if</span>
 <span class="k">          end if</span>
 <span class="k">          </span>
@@ -1197,7 +1223,7 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
             <span class="p">(</span><span class="o">/</span> <span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">))</span>       
 
        <span class="k">else</span>
-<span class="k">          allocate</span><span class="p">(</span><span class="n">guess_spect</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n_gauss</span><span class="p">))</span>
+<span class="k">          allocate</span><span class="p">(</span><span class="n">guess_spect</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">n_gauss</span><span class="o">+</span><span class="n">n_gauss_add</span><span class="p">)))</span>
           <span class="k">if</span> <span class="p">(</span><span class="n">init_option</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s2">&quot;mean&quot;</span><span class="p">)</span> <span class="k">then</span>
 <span class="k">             print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;Use of the mean spectrum to initialize each los&quot;</span>
              <span class="k">call </span><span class="n">init_spectrum</span><span class="p">(</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">guess_spect</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">mean_spect</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="p">&amp;</span>
@@ -1206,11 +1232,20 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
 <span class="k">             print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;Use of the std spectrum to initialize each los&quot;</span>
              <span class="k">call </span><span class="n">init_spectrum</span><span class="p">(</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">guess_spect</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">std_spect</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="p">&amp;</span>
                   <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
+          <span class="k">else if</span> <span class="p">(</span><span class="n">init_option</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s2">&quot;max&quot;</span><span class="p">)</span> <span class="k">then</span>
+<span class="k">             print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;Use of the max spectrum to initialize each los&quot;</span>
+             <span class="k">call </span><span class="n">init_spectrum</span><span class="p">(</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">guess_spect</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">max_spect</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="p">&amp;</span>
+                  <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
+          <span class="k">else if</span> <span class="p">(</span><span class="n">init_option</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s2">&quot;maxnorm&quot;</span><span class="p">)</span> <span class="k">then</span>
+<span class="k">             print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;Use of the std spectrum to initialize each los&quot;</span>
+             <span class="k">call </span><span class="n">init_spectrum</span><span class="p">(</span><span class="n">n_gauss</span><span class="p">,</span> <span class="n">guess_spect</span><span class="p">,</span> <span class="n">dim_cube</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">max_spect_norm</span><span class="p">,</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="n">sig_init</span><span class="p">,</span> <span class="p">&amp;</span>
+                  <span class="n">maxiter_init</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">iprint_init</span><span class="p">)</span>
           <span class="k">else</span>
-<span class="k">             print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;init_option keyword should be &#39;mean&#39; of &#39;std&#39;&quot;</span>
+<span class="k">             print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;init_option keyword should be &#39;mean&#39; or &#39;std&#39; or &#39;max&#39;&quot;</span>
              <span class="k">stop</span>
 <span class="k">          end if</span>
 <span class="k">          call </span><span class="n">init_grid_params</span><span class="p">(</span><span class="n">grid_params</span><span class="p">,</span> <span class="n">guess_spect</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+
           <span class="k">deallocate</span><span class="p">(</span><span class="n">guess_spect</span><span class="p">)</span>      
     <span class="k">end if</span>
     
@@ -1230,17 +1265,27 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
 <span class="k">    if</span> <span class="p">(</span><span class="n">regul</span> <span class="p">.</span><span class="n">eqv</span><span class="p">.</span> <span class="p">.</span><span class="n">true</span><span class="p">.)</span> <span class="k">then</span>
 <span class="k">       call </span><span class="n">update</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">grid_params</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="p">&amp;</span>
             <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">std_map</span><span class="p">)</span>
-    <span class="k">end if</span>
+       
+       <span class="k">if</span> <span class="p">(</span><span class="n">n_gauss_add</span> <span class="p">.</span><span class="n">ne</span><span class="p">.</span> <span class="mi">0</span><span class="p">)</span> <span class="k">then</span> <span class="c">!FIXME KEYWORD</span>
+          <span class="k">do </span><span class="n">l</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n_gauss_add</span>
+             <span class="c">! Add new Gaussian if at least one reduced chi square of the field is &gt; 1 </span>
+             <span class="k">call </span><span class="n">init_new_gauss</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">grid_params</span><span class="p">,</span> <span class="n">std_map</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">amp_fact_init</span><span class="p">,</span> <span class="p">&amp;</span>
+                  <span class="n">sig_init</span><span class="p">)</span>
+             <span class="k">call </span><span class="n">update</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">grid_params</span><span class="p">,</span> <span class="n">n_gauss</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">lambda_amp</span><span class="p">,</span> <span class="n">lambda_mu</span><span class="p">,</span> <span class="p">&amp;</span>
+                  <span class="n">lambda_sig</span><span class="p">,</span> <span class="n">lambda_var_amp</span><span class="p">,</span> <span class="n">lambda_var_mu</span><span class="p">,</span> <span class="n">lambda_var_sig</span><span class="p">,</span> <span class="n">maxiter</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">std_map</span><span class="p">)</span>
+          <span class="k">end do</span>
+<span class="k">       end if</span>
+
+<span class="k">    end if</span>
 <span class="k">    </span>
 <span class="k">    print</span><span class="o">*</span><span class="p">,</span>
     <span class="k">print</span><span class="o">*</span><span class="p">,</span> <span class="s2">&quot;_____ Write output file _____&quot;</span>
-    <span class="k">print</span><span class="o">*</span><span class="p">,</span> 
+    <span class="k">print</span><span class="o">*</span><span class="p">,</span>
     
     <span class="c">! Open file</span>
     <span class="k">open</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="k">file</span><span class="o">=</span><span class="n">fileout</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;write&quot;</span><span class="p">,</span> <span class="n">iostat</span><span class="o">=</span><span class="n">ios</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">ios</span> <span class="o">/=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">stop</span> <span class="s2">&quot;opening file error&quot;</span>
     
-    <span class="c">! Read cube dimension and compute the number of line</span>
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# &quot;</span>
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# ______Parameters_____&quot;</span>
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# &quot;</span>
@@ -1254,16 +1299,18 @@ public subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lamb
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# lambda_var_sig = &quot;</span><span class="p">,</span> <span class="n">lambda_var_sig</span>
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# amp_fact_init = &quot;</span><span class="p">,</span> <span class="n">amp_fact_init</span>
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# sig_init = &quot;</span><span class="p">,</span> <span class="n">sig_init</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# init_option = &quot;</span><span class="p">,</span> <span class="n">init_option</span>
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# maxiter_itit = &quot;</span><span class="p">,</span> <span class="n">maxiter_init</span>
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# maxiter = &quot;</span><span class="p">,</span> <span class="n">maxiter</span>
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# lstd = &quot;</span><span class="p">,</span> <span class="n">lstd</span>
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# ustd = &quot;</span><span class="p">,</span> <span class="n">ustd</span>
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# noise = &quot;</span><span class="p">,</span> <span class="n">noise</span>
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# regul = &quot;</span><span class="p">,</span> <span class="n">regul</span>
+    <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# descent = &quot;</span><span class="p">,</span> <span class="n">descent</span>
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# &quot;</span>
     
     <span class="k">write</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">fmt</span><span class="o">=*</span><span class="p">)</span> <span class="s2">&quot;# i, j, A, mean, sigma&quot;</span>
-    
+
     <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
        <span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim_data</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
           <span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_gauss</span>

@@ -10,7 +10,7 @@ module mod_functions
   private
   
   public :: mean_array, mean_map, dim2nside, dim_data2dim_cube, reshape_up, reshape_down, go_up_level, init_spectrum, &
-       upgrade, update, set_stdmap, std_spectrum, mean_spectrum, init_grid_params
+       upgrade, update, set_stdmap, std_spectrum, mean_spectrum, max_spectrum, init_grid_params, init_new_gauss
 
 contains
     
@@ -424,6 +424,37 @@ contains
   end subroutine std_spectrum  
 
 
+  subroutine max_spectrum(data, spectrum, dim_v, dim_y, dim_x, norm_value)
+    !! Compute the MAX spectrum of a cube along the spatial axis
+    implicit none
+
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data !! initial fits data
+    real(xp), intent(in), optional :: norm_value !! max value of the mean spectrum to normalze the max spectrum if present
+    integer, intent(in) :: dim_v !! dimension along v axis
+    integer, intent(in) :: dim_y !! dimension along spatial axis y 
+    integer, intent(in) :: dim_x !! dimension along spatial axis x
+
+    real(xp), intent(inout), dimension(:), allocatable :: spectrum !! max_spectrum of the observation
+    real(xp), dimension(:,:), allocatable :: map !! 2D array
+
+    integer :: i !! loop index
+
+    do i=1,dim_v
+       allocate(map(dim_y,dim_x))
+       map = data(i,:,:)
+       spectrum(i) = max_2D(map, dim_y, dim_x) 
+       deallocate(map)
+    end do
+
+    if (present(norm_value)) then
+       spectrum = spectrum / (maxval(spectrum) / norm_value)
+    end if
+
+    
+    
+  end subroutine max_spectrum  
+
+
   subroutine mean_spectrum(data, spectrum, dim_v, dim_y, dim_x)
     !! Compute the MEAN spectrum of a cube along the spatial axis
     implicit none
@@ -467,6 +498,71 @@ contains
     end do
 
   end subroutine init_grid_params
+
+
+  subroutine init_new_gauss(cube, params, std_map, n_gauss, dim_v, dim_y, dim_x, amp_fact_init, sig_init)
+    implicit none
+    
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube   !! mean cube over spatial axis
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters to optimize with cube mean at each iteration
+    real(xp), intent(in), dimension(:,:), allocatable :: std_map !! standard deviation map fo the cube computed by ROHSA with lb and ub
+    real(xp), intent(in) :: amp_fact_init !! times max amplitude of additional Gaussian
+    real(xp), intent(in) :: sig_init !! dispersion of additional Gaussian
+
+    integer, intent(inout) :: n_gauss
+    integer, intent(in) :: dim_v, dim_y, dim_x
+
+    real(xp), dimension(:,:), allocatable :: redchi2
+    real(xp), dimension(:,:,:), allocatable :: residual
+    real(xp), dimension(:), allocatable :: residual_1D
+    logical :: new_gauss
+
+    integer :: i, j
+
+    allocate(residual(dim_v, dim_y, dim_x))
+    residual = 0._xp    
+
+    new_gauss = .false.
+
+    !Compute the residual function
+    allocate(redchi2(dim_y, dim_x))
+    redchi2 = 0._xp    
+    do j=1, dim_x
+       do i=1, dim_y
+          allocate(residual_1D(dim_v))
+          residual_1D = 0._xp
+
+          call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v)
+          residual(:,i,j) = residual_1D
+
+          redchi2(i,j) = sum((residual_1D / std_map(i,j))**2._xp) / (dim_v - (3*n_gauss))                    
+
+          if (redchi2(i,j) .gt. 1._xp) then
+             new_gauss = .true.
+          end if
+          deallocate(residual_1D)
+       end do
+    end do
+
+    if (new_gauss .eqv. .true.) then
+       ! Add new Gaussian
+       n_gauss = n_gauss + 1
+
+       do j=1, dim_x
+          do i=1, dim_y
+             ! Set new values if redchi2 > 1
+             if (redchi2(i,j) .gt. 1._xp) then
+                params(2+(3*(n_gauss-1)),i,j) = minloc(residual(:,i,j), dim_v)
+                params(1+(3*(n_gauss-1)),i,j) = cube(int(params(2+(3*(n_gauss-1)),i,j)),i,j) * amp_fact_init
+                params(3+(3*(n_gauss-1)),i,j) = sig_init;
+             end if
+          end do
+       end do
+    end if
+
+    deallocate(redchi2)    
+
+  end subroutine init_new_gauss
 
 
 end module mod_functions

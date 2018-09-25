@@ -10,7 +10,7 @@
     <meta name="author" content="Antoine Marchal" >
     <link rel="icon" href="../favicon.png">
 
-    <title>prn2lb &ndash; ROHSA</title>
+    <title>max_spectrum &ndash; ROHSA</title>
 
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/pygments.css" rel="stylesheet">
@@ -106,7 +106,7 @@
     
   
   <div class="row">
-    <h1>prn2lb
+    <h1>max_spectrum
       <small>Subroutine</small>
     
     </h1>
@@ -124,18 +124,20 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
 	  data-placement="bottom" data-html="true"
-	  title=" 1.0% of total for procedures.">31 statements</a>
+	  title=" 0.7% of total for procedures.">20 statements</a>
      </li> 
      
      
-    <li><i class="fa fa-code"></i><a href="../src/lbfgsb.f"> Source File</a></li>
+    <li><i class="fa fa-code"></i><a href="../src/mod_functions.f90"> Source File</a></li>
      
   </ul>
   <ol class="breadcrumb in-well text-right">
   
-     <li><a href='../sourcefile/lbfgsb.f.html'>lbfgsb.f</a></li>
+     <li><a href='../sourcefile/mod_functions.f90.html'>mod_functions.f90</a></li>
   
-     <li class="active">prn2lb</li>
+     <li><a href='../module/mod_functions.html'>mod_functions</a></li>
+  
+     <li class="active">max_spectrum</li>
   </ol>
 </div>
 </div>
@@ -176,7 +178,13 @@
 
 
 
-<em>None</em>
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  <div class="list-group">
+    <a class="list-group-item" href="../proc/max_spectrum.html#src">max_spectrum</a>
+  </div>
+</div>
+
 
 
 </div>
@@ -185,7 +193,7 @@
     
     <div class="col-md-9" id='text'>
     <h2>
-subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, word, iword, iback, stp, xstep)
+public subroutine max_spectrum(data, spectrum, dim_v, dim_y, dim_x, norm_value)
     
     
 	 
@@ -194,6 +202,8 @@ subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, wo
   
 
 
+    
+    <p>Compute the MAX spectrum of a cube along the spatial axis</p>
     
 
     <h3>Arguments</h3>
@@ -214,12 +224,12 @@ subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, wo
   
 <tr>
   
-  <td><span class="anchor" id="variable-n%7E20"></span>integer</td>
-  <td></td>
+  <td><span class="anchor" id="variable-data%7E5"></span>real(kind=xp),</td>
+  <td>intent(in),</td>
   <td></td>
   
-  <td></td><td>::</td>
-  <td><strong>n</strong></td><td></td>
+  <td>dimension(:,:,:), allocatable</td><td>::</td>
+  <td><strong>data</strong></td><td><p>initial fits data</p></td>
   
 </tr>
 
@@ -229,12 +239,12 @@ subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, wo
   
 <tr>
   
-  <td><span class="anchor" id="variable-x%7E9"></span>double precision</td>
-  <td></td>
+  <td><span class="anchor" id="variable-spectrum%7E2"></span>real(kind=xp),</td>
+  <td>intent(inout),</td>
   <td></td>
   
-  <td></td><td>::</td>
-  <td><strong>x</strong>(n)</td><td></td>
+  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>spectrum</strong></td><td><p>max_spectrum of the observation</p></td>
   
 </tr>
 
@@ -244,12 +254,12 @@ subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, wo
   
 <tr>
   
-  <td><span class="anchor" id="variable-f%7E4"></span>double precision</td>
-  <td></td>
+  <td><span class="anchor" id="variable-dim_v%7E11"></span>integer,</td>
+  <td>intent(in)</td>
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>f</strong></td><td></td>
+  <td><strong>dim_v</strong></td><td><p>dimension along v axis</p></td>
   
 </tr>
 
@@ -259,12 +269,12 @@ subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, wo
   
 <tr>
   
-  <td><span class="anchor" id="variable-g%7E6"></span>double precision</td>
-  <td></td>
+  <td><span class="anchor" id="variable-dim_y%7E5"></span>integer,</td>
+  <td>intent(in)</td>
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>g</strong>(n)</td><td></td>
+  <td><strong>dim_y</strong></td><td><p>dimension along spatial axis y </p></td>
   
 </tr>
 
@@ -274,12 +284,12 @@ subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, wo
   
 <tr>
   
-  <td><span class="anchor" id="variable-iprint%7E7"></span>integer</td>
-  <td></td>
+  <td><span class="anchor" id="variable-dim_x%7E5"></span>integer,</td>
+  <td>intent(in)</td>
   <td></td>
   
   <td></td><td>::</td>
-  <td><strong>iprint</strong></td><td></td>
+  <td><strong>dim_x</strong></td><td><p>dimension along spatial axis x</p></td>
   
 </tr>
 
@@ -289,162 +299,12 @@ subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, wo
   
 <tr>
   
-  <td><span class="anchor" id="variable-itfile%7E2"></span>integer</td>
-  <td></td>
-  <td></td>
+  <td><span class="anchor" id="variable-norm_value"></span>real(kind=xp),</td>
+  <td>intent(in),</td>
+  <td>optional</td>
   
   <td></td><td>::</td>
-  <td><strong>itfile</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-iter%7E3"></span>integer</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>iter</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-nfgv%7E2"></span>integer</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>nfgv</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-nact"></span>integer</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>nact</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-sbgnrm%7E2"></span>double precision</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>sbgnrm</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-nseg%7E2"></span>integer</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>nseg</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-word"></span>character(len=3)</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>word</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-iword"></span>integer</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>iword</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-iback%7E2"></span>integer</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>iback</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-stp%7E3"></span>double precision</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>stp</strong></td><td></td>
-  
-</tr>
-
-  
-  
-  
-  
-<tr>
-  
-  <td><span class="anchor" id="variable-xstep%7E2"></span>double precision</td>
-  <td></td>
-  <td></td>
-  
-  <td></td><td>::</td>
-  <td><strong>xstep</strong></td><td></td>
+  <td><strong>norm_value</strong></td><td><p>max value of the mean spectrum to normalze the max spectrum if present</p></td>
   
 </tr>
 
@@ -467,143 +327,47 @@ subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, wo
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.40.1 (20161225.0304)
  -->
-<!-- Title: proc~~prn2lb~~CallsGraph Pages: 1 -->
-<svg id="procprn2lbCallsGraph" width="152pt" height="72pt"
- viewBox="0.00 0.00 152.00 71.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~prn2lb~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 67.5)">
-<title>proc~~prn2lb~~CallsGraph</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-67.5 148,-67.5 148,4 -4,4"/>
-<!-- proc~prn2lb -->
-<g id="proc~~prn2lb~~CallsGraph_node1" class="node">
-<title>proc~prn2lb</title>
-<polygon fill="none" stroke="#000000" points="54,-42.2554 0,-42.2554 0,-20.2446 54,-20.2446 54,-42.2554"/>
-<text text-anchor="middle" x="27" y="-28.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">prn2lb</text>
+<!-- Title: proc~~max_spectrum~~CallsGraph Pages: 1 -->
+<svg id="procmax_spectrumCallsGraph" width="269pt" height="31pt"
+ viewBox="0.00 0.00 268.88 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~max_spectrum~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
+<title>proc~~max_spectrum~~CallsGraph</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 264.8755,-26.5 264.8755,4 -4,4"/>
+<!-- proc~max_spectrum -->
+<g id="proc~~max_spectrum~~CallsGraph_node1" class="node">
+<title>proc~max_spectrum</title>
+<polygon fill="none" stroke="#000000" points="80.7826,-22.2554 .0724,-22.2554 .0724,-.2446 80.7826,-.2446 80.7826,-22.2554"/>
+<text text-anchor="middle" x="40.4275" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">max_spectrum</text>
 </g>
-<!-- 2 -->
-<g id="proc~~prn2lb~~CallsGraph_node2" class="node">
-<title>2</title>
-<polygon fill="#777777" stroke="#777777" points="144,-63.2554 90,-63.2554 90,-41.2446 144,-41.2446 144,-63.2554"/>
-<text text-anchor="middle" x="117" y="-49.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">2</text>
-</g>
-<!-- proc~prn2lb&#45;&gt;2 -->
-<g id="proc~~prn2lb~~CallsGraph_edge1" class="edge">
-<title>proc~prn2lb&#45;&gt;2</title>
-<path fill="none" stroke="#000000" d="M54.003,-37.5507C62.1158,-39.4437 71.1631,-41.5547 79.8131,-43.573"/>
-<polygon fill="#000000" stroke="#000000" points="79.1713,-47.0172 89.705,-45.8812 80.7619,-40.2004 79.1713,-47.0172"/>
-</g>
-<!-- 6 -->
-<g id="proc~~prn2lb~~CallsGraph_node3" class="node">
-<title>6</title>
-<polygon fill="#777777" stroke="#777777" points="144,-22.2554 90,-22.2554 90,-.2446 144,-.2446 144,-22.2554"/>
-<text text-anchor="middle" x="117" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">6</text>
-</g>
-<!-- proc~prn2lb&#45;&gt;6 -->
-<g id="proc~~prn2lb~~CallsGraph_edge2" class="edge">
-<title>proc~prn2lb&#45;&gt;6</title>
-<path fill="none" stroke="#000000" d="M54.003,-25.2493C62.1158,-23.4465 71.1631,-21.436 79.8131,-19.5138"/>
-<polygon fill="#000000" stroke="#000000" points="80.7024,-22.9016 89.705,-17.3155 79.1839,-16.0683 80.7024,-22.9016"/>
-</g>
-</g>
-</svg>
-</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
-    <p>Nodes of different colours represent the following: </p>
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
- "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Generated by graphviz version 2.40.1 (20161225.0304)
- -->
-<!-- Title: Graph Key Pages: 1 -->
-<svg width="550pt" height="31pt"
- viewBox="0.00 0.00 550.25 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
-<title>Graph Key</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 546.2477,-26.5 546.2477,4 -4,4"/>
-<!-- Subroutine -->
-<g id="node1" class="node">
-<title>Subroutine</title>
-<polygon fill="#d9534f" stroke="#d9534f" points="62.6818,-22.2554 .1058,-22.2554 .1058,-.2446 62.6818,-.2446 62.6818,-22.2554"/>
-<text text-anchor="middle" x="31.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Subroutine</text>
-</g>
-<!-- Function -->
-<g id="node2" class="node">
-<title>Function</title>
-<polygon fill="#d94e8f" stroke="#d94e8f" points="134.3938,-22.2554 80.3938,-22.2554 80.3938,-.2446 134.3938,-.2446 134.3938,-22.2554"/>
-<text text-anchor="middle" x="107.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Function</text>
-</g>
-<!-- Interface -->
-<g id="node3" class="node">
-<title>Interface</title>
-<polygon fill="#a7506f" stroke="#a7506f" points="206.3938,-22.2554 152.3938,-22.2554 152.3938,-.2446 206.3938,-.2446 206.3938,-22.2554"/>
-<text text-anchor="middle" x="179.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Interface</text>
-</g>
-<!-- Unknown Procedure Type -->
-<g id="node4" class="node">
-<title>Unknown Procedure Type</title>
-<polygon fill="#777777" stroke="#777777" points="356.5315,-22.2554 224.2561,-22.2554 224.2561,-.2446 356.5315,-.2446 356.5315,-22.2554"/>
-<text text-anchor="middle" x="290.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Unknown Procedure Type</text>
-</g>
-<!-- Program -->
-<g id="node5" class="node">
-<title>Program</title>
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="428.3938,-22.2554 374.3938,-22.2554 374.3938,-.2446 428.3938,-.2446 428.3938,-22.2554"/>
-<text text-anchor="middle" x="401.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">Program</text>
-</g>
-<!-- This Page&#39;s Entity -->
-<g id="node6" class="node">
-<title>This Page&#39;s Entity</title>
-<polygon fill="none" stroke="#000000" points="542.102,-22.2554 446.6856,-22.2554 446.6856,-.2446 542.102,-.2446 542.102,-22.2554"/>
-<text text-anchor="middle" x="494.3938" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">This Page&#39;s Entity</text>
-</g>
-</g>
-</svg>
-
-    
-    <p>Solid arrows point from a procedure to one which it calls. Dashed 
-    arrows point from an interface to procedures which implement that interface.
-    This could include the module procedures in a generic interface or the
-    implementation in a submodule of an interface in a parent module.
-    </p>
-    </div></div></div></div>
-      </div>
-    </div>
-     
-     
-    <div class="panel panel-default">
-      <div class="panel-heading">
-	<h3 class="panel-title">Called by</h3>
-      </div>
-      <div class="panel-body">
-	<div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
- "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Generated by graphviz version 2.40.1 (20161225.0304)
- -->
-<!-- Title: proc~~prn2lb~~CalledByGraph Pages: 1 -->
-<svg id="procprn2lbCalledByGraph" width="152pt" height="31pt"
- viewBox="0.00 0.00 152.00 30.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~prn2lb~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 26.5)">
-<title>proc~~prn2lb~~CalledByGraph</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-26.5 148,-26.5 148,4 -4,4"/>
-<!-- proc~prn2lb -->
-<g id="proc~~prn2lb~~CalledByGraph_node1" class="node">
-<title>proc~prn2lb</title>
-<polygon fill="none" stroke="#000000" points="144,-22.2554 90,-22.2554 90,-.2446 144,-.2446 144,-22.2554"/>
-<text text-anchor="middle" x="117" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#000000">prn2lb</text>
-</g>
-<!-- proc~mainlb -->
-<g id="proc~~prn2lb~~CalledByGraph_node2" class="node">
-<title>proc~mainlb</title>
-<g id="a_proc~~prn2lb~~CalledByGraph_node2"><a xlink:href=".././proc/mainlb.html" xlink:title="mainlb">
-<polygon fill="#d9534f" stroke="#d9534f" points="54,-22.2554 0,-22.2554 0,-.2446 54,-.2446 54,-22.2554"/>
-<text text-anchor="middle" x="27" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">mainlb</text>
+<!-- proc~max_2d -->
+<g id="proc~~max_spectrum~~CallsGraph_node2" class="node">
+<title>proc~max_2d</title>
+<g id="a_proc~~max_spectrum~~CallsGraph_node2"><a xlink:href=".././proc/max_2d.html" xlink:title="max_2D">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="170.855,-22.2554 116.855,-22.2554 116.855,-.2446 170.855,-.2446 170.855,-22.2554"/>
+<text text-anchor="middle" x="143.855" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">max_2D</text>
 </a>
 </g>
 </g>
-<!-- proc~mainlb&#45;&gt;proc~prn2lb -->
-<g id="proc~~prn2lb~~CalledByGraph_edge1" class="edge">
-<title>proc~mainlb&#45;&gt;proc~prn2lb</title>
-<path fill="none" stroke="#000000" d="M54.003,-11.25C62.0277,-11.25 70.9665,-11.25 79.5309,-11.25"/>
-<polygon fill="#000000" stroke="#000000" points="79.7051,-14.7501 89.705,-11.25 79.705,-7.7501 79.7051,-14.7501"/>
+<!-- proc~max_spectrum&#45;&gt;proc~max_2d -->
+<g id="proc~~max_spectrum~~CallsGraph_edge1" class="edge">
+<title>proc~max_spectrum&#45;&gt;proc~max_2d</title>
+<path fill="none" stroke="#000000" d="M81.0079,-11.25C89.4439,-11.25 98.2948,-11.25 106.6039,-11.25"/>
+<polygon fill="#000000" stroke="#000000" points="106.7672,-14.7501 116.7672,-11.25 106.7672,-7.7501 106.7672,-14.7501"/>
+</g>
+<!-- proc~ravel_2d -->
+<g id="proc~~max_spectrum~~CallsGraph_node3" class="node">
+<title>proc~ravel_2d</title>
+<g id="a_proc~~max_spectrum~~CallsGraph_node3"><a xlink:href=".././proc/ravel_2d.html" xlink:title="ravel_2D">
+<polygon fill="#d9534f" stroke="#d9534f" points="260.8857,-22.2554 206.8447,-22.2554 206.8447,-.2446 260.8857,-.2446 260.8857,-22.2554"/>
+<text text-anchor="middle" x="233.8652" y="-8.1" font-family="Helvetica,sans-Serif" font-size="10.50" fill="#ffffff">ravel_2D</text>
+</a>
+</g>
+</g>
+<!-- proc~max_2d&#45;&gt;proc~ravel_2d -->
+<g id="proc~~max_spectrum~~CallsGraph_edge2" class="edge">
+<title>proc~max_2d&#45;&gt;proc~ravel_2d</title>
+<path fill="none" stroke="#000000" d="M170.861,-11.25C178.8866,-11.25 187.8265,-11.25 196.3918,-11.25"/>
+<polygon fill="#000000" stroke="#000000" points="196.5672,-14.7501 206.5672,-11.25 196.5671,-7.7501 196.5672,-14.7501"/>
 </g>
 </g>
 </svg>
@@ -668,6 +432,7 @@ subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, wo
     </div></div></div></div>
       </div>
     </div>
+     
      
     <br>
 
@@ -696,7 +461,13 @@ subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, wo
 
 
 
-<em>None</em>
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+  <div class="list-group">
+    <a class="list-group-item" href="../proc/max_spectrum.html#src">max_spectrum</a>
+  </div>
+</div>
+
 
 
     </section>
@@ -719,6 +490,42 @@ subroutine prn2lb(n, x, f, g, iprint, itfile, iter, nfgv, nact, sbgnrm, nseg, wo
 
     
     
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="highlight"><pre><span></span>  <span class="k">subroutine </span><span class="n">max_spectrum</span><span class="p">(</span><span class="k">data</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">dim_v</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">,</span> <span class="n">norm_value</span><span class="p">)</span>
+    <span class="c">!! Compute the MAX spectrum of a cube along the spatial axis</span>
+    <span class="k">implicit none</span>
+
+<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="k">data</span> <span class="c">!! initial fits data</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="k">optional</span> <span class="kd">::</span> <span class="n">norm_value</span> <span class="c">!! max value of the mean spectrum to normalze the max spectrum if present</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_v</span> <span class="c">!! dimension along v axis</span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_y</span> <span class="c">!! dimension along spatial axis y </span>
+    <span class="kt">integer</span><span class="p">,</span> <span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span> <span class="kd">::</span> <span class="n">dim_x</span> <span class="c">!! dimension along spatial axis x</span>
+
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">spectrum</span> <span class="c">!! max_spectrum of the observation</span>
+    <span class="kt">real</span><span class="p">(</span><span class="n">xp</span><span class="p">),</span> <span class="k">dimension</span><span class="p">(:,:),</span> <span class="k">allocatable</span> <span class="kd">::</span> <span class="n">map</span> <span class="c">!! 2D array</span>
+
+    <span class="kt">integer</span> <span class="kd">::</span> <span class="n">i</span> <span class="c">!! loop index</span>
+
+    <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">dim_v</span>
+       <span class="k">allocate</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">dim_y</span><span class="p">,</span><span class="n">dim_x</span><span class="p">))</span>
+       <span class="n">map</span> <span class="o">=</span> <span class="k">data</span><span class="p">(</span><span class="n">i</span><span class="p">,:,:)</span>
+       <span class="n">spectrum</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">max_2D</span><span class="p">(</span><span class="n">map</span><span class="p">,</span> <span class="n">dim_y</span><span class="p">,</span> <span class="n">dim_x</span><span class="p">)</span> 
+       <span class="k">deallocate</span><span class="p">(</span><span class="n">map</span><span class="p">)</span>
+    <span class="k">end do</span>
+
+<span class="k">    if</span> <span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">norm_value</span><span class="p">))</span> <span class="k">then</span>
+<span class="k">       </span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">spectrum</span> <span class="o">/</span> <span class="p">(</span><span class="nb">maxval</span><span class="p">(</span><span class="n">spectrum</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm_value</span><span class="p">)</span>
+    <span class="k">end if</span>
+
+<span class="k">    </span>
+<span class="k">    </span>
+<span class="k">  end subroutine </span><span class="n">max_spectrum</span>  
+</pre></div>
+
+    </section>
+    <br>
     
     
     </div>
