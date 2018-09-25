@@ -71,9 +71,11 @@ You can now run your Gaussian decomposition with ROHSA. Enjoy !
 ```  
 
 ```bash
-(Clumpix) amarchal@glx-calcul3:~/ROHSA/src$ ./ROHSA parameters.txt 
+(marchalenv) dapmcw133:src antoinemarchal$ ./ROHSA parameters.txt 
+ 
+ opening file and reading data
  -------------------------------------------------------------------------
-17 April 2018   9:45:45.824 AM
+25 September 2018   5:09:11.592 PM
  
    ____     ___    _   _   ____       _    
   |  _ \   / _ \  | | | | / ___|     / \   
@@ -81,57 +83,70 @@ You can now run your Gaussian decomposition with ROHSA. Enjoy !
   |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
   |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
  
-  Version {!../version!}
+  Version 1.0.0
   ROHSA is released as open source code
   Check out the documentation: https://antoinemarchal.github.io/ROHSA/
  
  run: ./ROHSA parameters.txt
  -------------------------------------------------------------------------
- 
- filename = './data.dat'
- fileout = './result.dat'
+ fileout = 'result.dat'
 
  ______Parameters_____
 
- n_gauss =            8
+ n_gauss =            6
  lambda_amp =    1.0000000000000000     
  lambda_mu =    1.0000000000000000     
  lambda_sig =    1.0000000000000000     
- maxiter_itit =        15000
- maxiter =          800
- lstd =          160
- ustd =          198
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1.0000000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    5.0000000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =           20
+ lstd =            1
+ ustd =           20
  noise =  F
  regul =  T
+ descent =  T
 
+ dim_v, dim_y, dim_x =          101          16          16
  
- opening file and reading data
- dim_v, dim_y, dim_x =          395          94          67
- 
- number of los =         6298
- nside =            7
+ number of los =          256
+ nside =            4
 
  Reshape cube, new dimensions :
- dim_v, dim_y, dim_x =          395         128         128
+ dim_v, dim_y, dim_x =          101          16          16
 
+ Compute mean and std spectrum
                      Start iteration
 
+ Start hierarchical descent
  Init mean spectrum
  
  Update parameters level            0 >           1
-RUNNING THE L-BFGS-B CODE
+ 
+ Update parameters level            1 >           2
+ 
+ Update parameters level            2 >           4
+ 
+ Update parameters level            3 >           8
+ 
+ Update parameters level            4 >          16
 
-           * * *
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101          16          16
 
-Machine precision = 2.220D-16
- N =           24     M =           10
+ Update last level ...
 
-At X0         3 variables are exactly at the bounds
 
-At iterate    0    f=  1.29989D-02    |proj g|=  4.42658D-05
+ _____ Write output file _____
 
-At iterate    1    f=  1.29989D-02    |proj g|=  6.62203D-05
-
-...
-
+ ##################################################################
+25 September 2018   5:09:11.654 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
 ```

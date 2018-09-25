@@ -9,7 +9,7 @@ title: Installation
 ##Dependencies
 ROHSA has the following dependencies:
 
-* [Make](https://www.gnu.org/software/make/) for building FIDASIM. (Required)
+* [Make](https://www.gnu.org/software/make/) for building ROHSA. (Required)
 * [Fortran](https://gcc.gnu.org/) (Required)
 * [git](https://git-scm.com/) for version control (Optional)
 * [Ford](https://github.com/cmacmackin/ford) for creating HTML documentation (Optional)
