@@ -21,7 +21,7 @@ contains
     write(*,*) " |  _ <  | |_| | |  _  |  ___) |  / ___ \ "
     write(*,*) " |_| \_\  \___/  |_| |_| |____/  /_/   \_\ "
     write(*,*) ""
-    write(*,*) " Version 1.0.0"
+    write(*,*) " Version 1.2.1"
     write(*,*) " ROHSA is released as open source code"
     write(*,*) " Check out the documentation: https://antoinemarchal.github.io/ROHSA/"
     write(*,*) ""
