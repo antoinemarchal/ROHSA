@@ -6,6 +6,7 @@ module mod_rohsa
   use mod_functions
   use mod_start
   use mod_optimize
+  use mod_inout
 
   implicit none
 
@@ -44,7 +45,7 @@ contains
     character(len=8), intent(in)   :: init_option !!Init ROHSA with the mean or the std spectrum    
     character(len=512), intent(in) :: fileout   !! name of the output result
 
-    integer :: n_gauss         !! number of gaussian to fit
+    integer :: n_gauss      !! number of gaussian to fit
     integer :: nside        !! size of the reshaped data \(2^{nside}\)
     integer :: n            !! loop index
     integer :: power        !! loop index
@@ -186,6 +187,10 @@ contains
                 stop
              end if
           end if
+
+          ! Save grid in file
+          print*, "Save grid parameters"
+          call save_grid(n, n_gauss, fit_params, power, fileout)
           
           ! Propagate solution on new grid (higher resolution)
           call go_up_level(fit_params)

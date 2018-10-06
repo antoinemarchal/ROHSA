@@ -10,7 +10,7 @@ CFLAGS=-openmp -llapack -lcfitsio -lm -g -O2
 
 OUT=ROHSA
 
-all: blas.o lbfgsb.o linpack.o timer.o mod_constants.o mod_inout.o mod_array.o mod_optimize.o mod_functions.o mod_start.o mod_rohsa.o main.o
+all: blas.o lbfgsb.o linpack.o timer.o mod_constants.o mod_convert.o mod_inout.o mod_array.o mod_optimize.o mod_functions.o mod_start.o mod_rohsa.o main.o
 	$(FC) $^ $(CFLAGS) -o $(OUT)
 
 main.o: main.f90
@@ -28,6 +28,9 @@ timer.o: timer.f
 
 # My files
 mod_constants.o: mod_constants.f90
+	$(FC) $(GFLAGS) -c $^
+
+mod_convert.o: mod_convert.f90
 	$(FC) $(GFLAGS) -c $^
 
 mod_inout.o: mod_inout.f90
