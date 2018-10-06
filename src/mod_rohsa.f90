@@ -18,13 +18,14 @@ contains
 
   subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, &
        lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, &
-       maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init)
+       maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, save_grid)
     
     implicit none
     
     logical, intent(in) :: noise           !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
     logical, intent(in) :: regul           !! if true --> activate regulation
     logical, intent(in) :: descent         !! if true --> activate hierarchical descent to initiate the optimization
+    logical, intent(in) :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
     integer, intent(in) :: n_gauss_add     !! number of gaussian to add at each step
     integer, intent(in) :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
@@ -189,8 +190,10 @@ contains
           end if
 
           ! Save grid in file
-          print*, "Save grid parameters"
-          call save_grid(n, n_gauss, fit_params, power, fileout)
+          if (save_grid .eqv. .true.) then
+             print*, "Save grid parameters"
+             call save_process(n, n_gauss, fit_params, power, fileout)
+          end if
           
           ! Propagate solution on new grid (higher resolution)
           call go_up_level(fit_params)

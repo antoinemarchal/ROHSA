@@ -8,13 +8,13 @@ module mod_inout
   
   private
   
-  public :: read_cube, read_map, read_parameters, save_grid!, read_fits_real_3d
+  public :: read_cube, read_map, read_parameters, save_process!, read_fits_real_3d
 
 contains
   
   subroutine read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, n_gauss_add, &
        lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
-       sig_init, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init)
+       sig_init, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid)
     implicit none
 
     integer :: ios=0
@@ -29,7 +29,7 @@ contains
     real(xp), intent(inout) :: lambda_amp, lambda_mu, lambda_sig
     real(xp), intent(inout) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
     real(xp), intent(inout) :: amp_fact_init, sig_init
-    logical, intent(inout) :: noise, regul, descent
+    logical, intent(inout) :: noise, regul, descent, save_grid
 
     character(len=512), intent(inout) :: filename
     character(len=512), intent(inout) :: fileout
@@ -38,7 +38,7 @@ contains
 
     namelist /user_parameters/ filename, fileout, filename_noise, n_gauss, n_gauss_add, lambda_amp, lambda_mu, &
          & lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, init_option, &
-         maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init
+         maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
     if (ios /= 0) stop "opening file error"
@@ -103,7 +103,7 @@ contains
     close(11)
   end subroutine read_map
   
-  subroutine save_grid(nside, n_gauss, grid, power, fileout)
+  subroutine save_process(nside, n_gauss, grid, power, fileout)
     implicit none
 
     integer, intent(in) :: n_gauss    !! number of gaussian to fit
@@ -137,6 +137,6 @@ contains
     end do
 
     close(12)
-  end subroutine save_grid
+  end subroutine save_process
 
 end Module mod_inout
