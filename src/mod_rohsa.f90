@@ -231,7 +231,7 @@ contains
           ! Save grid in file
           if (save_grid .eqv. .true.) then
              print*, "Save grid parameters"
-             call save_process(n, n_gauss, fit_params, power, fileout)
+             call save_process(n, n_gauss, fit_params, power*2, fileout)
           end if
        enddo
        
