@@ -188,12 +188,6 @@ contains
                 stop
              end if
           end if
-
-          ! Save grid in file
-          if (save_grid .eqv. .true.) then
-             print*, "Save grid parameters"
-             call save_process(n, n_gauss, fit_params, power/2, fileout)
-          end if
           
           ! Propagate solution on new grid (higher resolution)
           call go_up_level(fit_params)
@@ -233,6 +227,12 @@ contains
           end if
           
           deallocate(cube_mean)
+
+          ! Save grid in file
+          if (save_grid .eqv. .true.) then
+             print*, "Save grid parameters"
+             call save_process(n, n_gauss, fit_params, power, fileout)
+          end if
        enddo
        
        print*,

@@ -124,7 +124,9 @@ contains
     ! Open file
     open(unit=12, file=fileout_nside, action="write", iostat=ios)
     if (ios /= 0) stop "opening file error"
-    
+
+    print*, dim_yx
+
     write(12,fmt=*) "# i, j, A, mean, sigma"
 
     do i=1, dim_yx
