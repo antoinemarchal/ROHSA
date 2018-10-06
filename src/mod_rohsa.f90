@@ -209,7 +209,7 @@ contains
                 end if
 
                 ! Update parameters 
-                print*,  "Update level", n
+                print*,  "Update level", n, ">", power
                 call update(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
                      lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)        
 
@@ -286,7 +286,6 @@ contains
     end if
     
     if (regul .eqv. .true.) then
-       print*, shape(data), shape(grid_params)
        call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
             lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
        
