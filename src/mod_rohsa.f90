@@ -162,7 +162,7 @@ contains
     if (descent .eqv. .true.) then
        print*, "Start hierarchical descent"
        !Start iteration
-       do n=0,nside
+       do n=0,nside-1
           power = 2**n
           
           allocate(cube_mean(dim_cube(1), power, power))
@@ -188,18 +188,14 @@ contains
                 stop
              end if
           end if
-          
-          ! Propagate solution on new grid (higher resolution)
-          call go_up_level(fit_params)
-          write(*,*) ""
-          write(*,*) "Update parameters level ", n, ">", power
-          
+                    
           if (regul .eqv. .false.) then
              call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), maxiter, m, iprint)
           end if
           
           if (regul .eqv. .true.) then
-             if (n == 0) then
+             if (n == 0) then                
+                print*,  "Update level", n
                 call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), maxiter, m, iprint)
              end if
              
@@ -213,6 +209,7 @@ contains
                 end if
 
                 ! Update parameters 
+                print*,  "Update level", n
                 call update(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
                      lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)        
 
@@ -233,6 +230,12 @@ contains
              print*, "Save grid parameters"
              call save_process(n, n_gauss, fit_params, power, fileout)
           end if
+
+          ! Propagate solution on new grid (higher resolution)
+          call go_up_level(fit_params)
+          write(*,*) ""
+          write(*,*) "Interpolate parameters level ", n!, ">", power
+
        enddo
        
        print*,
@@ -283,6 +286,7 @@ contains
     end if
     
     if (regul .eqv. .true.) then
+       print*, shape(data), shape(grid_params)
        call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
             lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
        
