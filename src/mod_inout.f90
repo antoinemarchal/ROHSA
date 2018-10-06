@@ -103,11 +103,11 @@ contains
     close(11)
   end subroutine read_map
   
-  subroutine save_process(nside, n_gauss, grid, power, fileout)
+  subroutine save_process(nside, n_gauss, grid, dim_yx, fileout)
     implicit none
 
     integer, intent(in) :: n_gauss    !! number of gaussian to fit
-    integer, intent(in) :: power      !! loop index
+    integer, intent(in) :: dim_yx     !! spatial dimension
     real(xp), intent(in), dimension(:,:,:), allocatable :: grid !! parameters to optimize with cube mean at each iteration
     character(len=512), intent(in) :: fileout   !! name of the output result
 
@@ -119,7 +119,6 @@ contains
     integer :: j     !! loop index
     integer :: k     !! loop index
 
-    print*, nside
     fileout_nside = trim(fileout(:len_trim(fileout)-4)) // "_nside_" // trim(str(nside)) // ".dat"
 
     ! Open file
@@ -128,8 +127,8 @@ contains
     
     write(12,fmt=*) "# i, j, A, mean, sigma"
 
-    do i=1, power
-       do j=1, power
+    do i=1, dim_yx
+       do j=1, dim_yx
           do k=1, n_gauss
              write(12,fmt=*) i-1, j-1, grid(1+((k-1)*3),i,j), grid(2+((k-1)*3),i,j), grid(3+((k-1)*3),i,j)
           enddo
