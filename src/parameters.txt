@@ -22,5 +22,6 @@
    ,ustd = 20              !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
    ,iprint = -1             !! print option 
    ,iprint_init = -1       !! print option init
+   ,save_grid = .false.    !! if true --> save fitted parameters at each iteration of the multiresolution process
    /
 
