@@ -7,10 +7,7 @@ from astropy.io import fits
 from astropy import units
 from astropy import constants as const
 from astropy import wcs
-
-# from mylibrary.CGD import mod_tools
-# from mylibrary.PROJ import mod_projection
-# from mylibrary.PLOT import mod_plot
+import argparse
 
 plt.ion()
 cm = plt.get_cmap('inferno')
@@ -22,8 +19,8 @@ m_h = 1.6737236e-27 #kg
 C = 1.83e18 #K-1cm-2 / (km.s-1)
 pc2cm = units.pc.to(units.m) * 1.e2
 
-path = '/data/glx-calcul3/data1/amarchal/IRAM/to_decompose/data/'
-filename_data = 'Draco9_CO10.fits'
+path = './content/'
+filename_data = 'GHIGLS_DFN_Tb.fits'
 
 hdu_list_data = fits.open(path + filename_data)
 hdu_data = hdu_list_data[0]
