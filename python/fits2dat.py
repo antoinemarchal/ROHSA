@@ -19,7 +19,7 @@ m_h = 1.6737236e-27 #kg
 C = 1.83e18 #K-1cm-2 / (km.s-1)
 pc2cm = units.pc.to(units.m) * 1.e2
 
-path = './content/'
+path = '.'
 filename_data = 'GHIGLS_DFN_Tb.fits'
 
 hdu_list_data = fits.open(path + filename_data)
