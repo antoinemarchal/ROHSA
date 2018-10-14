@@ -82,7 +82,35 @@ class ROHSA(object):
             os.system("ROHSA " + filename)
         else:
             os.system("nohup ROHSA " + filename + "&")
-            
+
+    def read_gaussian(self, filename=None):
+        if not filename: 
+            print("Need the ouput filename of ROHSA")
+            sys.exit()
+
+        data = np.genfromtxt(filename)
+        print("Opening data file")
+
+        amp = data[:, 2]
+        mean = data[:, 3] - 1
+        sigma = data[:, 4]
+        
+        dim_y = self.cube.shape[1]
+        dim_x = self.cube.shape[2]
+
+        n_gauss = int(len(amp) / (dim_y*dim_x))
+        params = np.zeros((3*n_gauss, dim_y, dim_x))
+        
+        i__ = 0
+        for i in range(dim_y):
+            for j in range(dim_x):
+                for k in range(n_gauss):
+                    params[0+(3*k),i,j] = amp[i__]
+                    params[1+(3*k),i,j] = mean[i__]
+                    params[2+(3*k),i,j] = sigma[i__]
+                    i__ += 1
+        
+        return params
         
 if __name__ == '__main__':    
     #Load data
@@ -93,7 +121,7 @@ if __name__ == '__main__':
     #Call ROHSApy
     core = ROHSA(cube)
     core.cube2dat()
-    core.gen_parameters(filename="mycube.dat")
-    core.run("parameters.txt", nohup=False)
-
+    core.gen_parameters(filename="mycube.dat", save_grid=".false.")
+    core.run("parameters.txt", nohup=False, fileout="result.dat")
+    gaussian = core.read_gaussian("result.dat")
     
