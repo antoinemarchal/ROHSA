@@ -89,7 +89,7 @@ if __name__ == '__main__':
     #Call ROHSApy
     core = ROHSA(cube)
     core.cube2dat()
-    core.gen_parameters(filename="mycube.dat", n_gauss = 3)
+    core.gen_parameters(filename="mycube.dat")
     core.run("parameters.txt", nohup=False)
 
     
