@@ -38,6 +38,7 @@ class ROHSA(object):
         if not filename : 
             print("Need an input filename")
             sys.exit()
+        else: print("Generate parameters file")
 
         filename_parameters = filename_parameters or "parameters.txt"
 
