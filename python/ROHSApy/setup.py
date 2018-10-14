@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 
-
 with open('Readme.md') as f:
         readme = f.read()
 
@@ -10,7 +9,7 @@ with open('LICENSE') as f:
     
 setup(
     name='ROHSApy',
-    version='0.1.1',
+    version='0.1.2',
     description='python interface package for ROHSA software',
     long_description=readme,
     classifiers=[
@@ -21,12 +20,15 @@ setup(
     ],
     author='Antoine Marchal and Joshua Peek',
     author_email='antoine.marchal@ias.u-psud.fr',
-    url='',
+    url='https://github.com/antoinemarchal/ROHSA',
     license=license,
     packages=find_packages(exclude=('tests', 'docs')),
     install_requires=[
+            'os',
+            'sys'
             'numpy',
-            'six'
+            'matplotlib',
+            'astropy'
     ],
     include_package_data=True
 )
