@@ -38,7 +38,6 @@ class ROHSA(object):
         if not filename : 
             print("Need an input filename")
             sys.exit()
-        else: print("Generate parameters file")
 
         if not filename_parameters :
             print("Generate parameters.dat file")
