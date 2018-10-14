@@ -23,11 +23,11 @@ class ROHSA(object):
         filename = filename or "mycube.dat"
         
         with open(filename,'w+') as f:
-            f.write('{:d}\t{:d}\t{:d}\n'.format(cube.shape[0], cube.shape[1], cube.shape[2]))
-            for i in range(cube.shape[1]):
-                for j in range(cube.shape[2]):
-                    for k in range(cube.shape[0]):
-                        line = '{:d}\t{:d}\t{:d}\t{:0.16f}\n'.format(k, i, j, cube[k,i,j])
+            f.write('{:d}\t{:d}\t{:d}\n'.format(self.cube.shape[0], self.cube.shape[1], self.cube.shape[2]))
+            for i in range(self.cube.shape[1]):
+                for j in range(self.cube.shape[2]):
+                    for k in range(self.cube.shape[0]):
+                        line = '{:d}\t{:d}\t{:d}\t{:0.16f}\n'.format(k, i, j, self.cube[k,i,j])
                         f.write(line)
         
     def gen_parameters(self, filename_parameters=None, filename=None, fileout="result.dat", filename_noise="", n_gauss=3, lambda_amp=1000, 
