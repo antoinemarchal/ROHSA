@@ -1,2 +1,4 @@
-numpy
-six
+os
+sysnumpy
+matplotlib
+astropy
