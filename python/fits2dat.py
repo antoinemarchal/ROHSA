@@ -29,11 +29,11 @@ if len(hdu_list_data[0].shape) == 4.:
         cube = hdu_data.data[0]
 elif len(hdu_list_data[0].shape) == 3 :
         cube = hdu_data.data
-# else: print 'Invalid dimension of input data'
+else: print('Invalid dimension of input data')
 
 cube[np.where(cube != cube)] = 0
 
-subcube = cube
+subcube = cube[:,:32,:32]
 
 nx = subcube.shape[2]
 ny = subcube.shape[1]
