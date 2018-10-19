@@ -3,7 +3,9 @@ FC=gfortran
 # FC=mpif90
 
 # GFLAGS=-Wall -Wextra -pedantic -std=f2008 -g -O2 -fno-second-underscore -Wno-compare-reals -fcheck=all -fimplicit-none -fbacktrace -gdwarf-2 -fall-intrinsics -Wno-unused-function -fcheck=bounds -I/usr/local/include
-GFLAGS= -O -Wall -fbounds-check -g -Wno-uninitialized -I/usr/local/include
+
+# GFLAGS= -O -Wall -fbounds-check -g -Wno-uninitialized -I/usr/local/include
+GFLAGS= -O2 -Wall -Wno-uninitialized -ffixed-line-length-none -I/usr/local/include
 
 CFLAGS= -llapack -lm -g -O2 #-lcfitsio -openmp 
 # -L/Users/antoinemarchal/mylib/cfitsio-master
