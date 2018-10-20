@@ -142,7 +142,7 @@ class ROHSA(object):
         plt.plot(x, self.cube[:,idy,idx])
         tot = np.zeros(self.cube.shape[0])
         for i in np.arange(gaussian.shape[0]/3):
-            spectrum = self.gauss(x, gaussian[0+(3*i),idy,idx], gaussian[1+(3*i),idy,idx], gaussian[2+(3*i),idy,idx])
+            spectrum = self.gauss(x, gaussian[int(0+(3*i)),idy,idx], gaussian[int(1+(3*i)),idy,idx], gaussian[int(2+(3*i)),idy,idx])
             tot += spectrum
             plt.plot(x, spectrum, color="k") 
         plt.plot(x, tot, color="r") 
