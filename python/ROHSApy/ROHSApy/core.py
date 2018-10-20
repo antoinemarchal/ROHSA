@@ -15,6 +15,7 @@ class ROHSA(object):
         super(ROHSA, self).__init__()
         self.cube = cube
 
+
     def cube2dat(self, filename=None):
         if not filename :
             print("Generate mycube.dat file")
@@ -29,6 +30,22 @@ class ROHSA(object):
                     for k in range(self.cube.shape[0]):
                         line = '{:d}\t{:d}\t{:d}\t{:0.16f}\n'.format(k, i, j, self.cube[k,i,j])
                         f.write(line)
+
+
+    def rms_map_const(self, filename=None, const=1.):
+        if not filename :
+            print("Generate rms_map.dat file")
+        else: print("Generate " + filename + " file")
+
+        filename = filename or "myrms_map.dat"
+        
+        with open(filename,'w+') as f:
+            f.write('{:d}\t{:d}\n'.format(self.cube.shape[1], self.cube.shape[2]))
+            for j in range(self.cube.shape[2]):
+                for k in range(self.cube.shape[1]):
+                    line = '{:d}\t{:d}\t{:0.16f}\n'.format(j, k, const)
+                    f.write(line)
+
         
     def gen_parameters(self, filename_parameters=None, filename=None, fileout="result.dat", filename_noise="", n_gauss=3, lambda_amp=1000, 
                        lambda_mu=1000, lambda_sig=1000, lambda_var_amp=0, lambda_var_mu=0, lambda_var_sig=1000, amp_fact_init=0.66, sig_init = 4., 
@@ -74,6 +91,7 @@ class ROHSA(object):
         input_file.write("    /"+'\n')
         input_file.close()
 
+
     def run(self, filename=None, nohup=False):
         if not filename: 
             print("Need the input filename parameters to run ROHSA")
@@ -82,6 +100,7 @@ class ROHSA(object):
             os.system("ROHSA " + filename)
         else:
             os.system("nohup ROHSA " + filename + "&")
+
 
     def read_gaussian(self, filename=None):
         if not filename: 
@@ -111,17 +130,37 @@ class ROHSA(object):
                     i__ += 1
         
         return params
+
+
+    def gauss(self, x, a, mu, sig):
+        return a * np.exp(-((x - mu)**2)/(2. * sig**2))
+
+
+    def plot_spect(self, gaussian, idy=0, idx=0):
+        plt.figure()
+        x = np.arange(self.cube.shape[0])
+        plt.plot(x, self.cube[:,idy,idx])
+        tot = np.zeros(self.cube.shape[0])
+        for i in np.arange(gaussian.shape[0]/3):
+            spectrum = self.gauss(x, gaussian[0+(3*i),idy,idx], gaussian[1+(3*i),idy,idx], gaussian[2+(3*i),idy,idx])
+            tot += spectrum
+            plt.plot(x, spectrum, color="k") 
+        plt.plot(x, tot, color="r") 
+             
+        return 0 
+                
         
 if __name__ == '__main__':    
     #Load data
     filename = "GHIGLS_DFN_Tb.fits"
     hdu = fits.open(filename)
-    cube = hdu[0].data[0][:,:32,:32]
+    cube = hdu[0].data[0][150:350,:32,:32]
 
     #Call ROHSApy
     core = ROHSA(cube)
     core.cube2dat()
+    core.rms_map_const()
     core.gen_parameters(filename="mycube.dat", save_grid=".false.")
-    core.run("parameters.txt", nohup=False, fileout="result.dat")
+    core.run("parameters.txt", nohup=False)
     gaussian = core.read_gaussian("result.dat")
-    
+    core.plot_spect(gaussian, 14, 14)
