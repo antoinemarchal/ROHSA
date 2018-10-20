@@ -4,10 +4,10 @@ FC=gfortran
 
 # GFLAGS=-Wall -Wextra -pedantic -std=f2008 -g -O2 -fno-second-underscore -Wno-compare-reals -fcheck=all -fimplicit-none -fbacktrace -gdwarf-2 -fall-intrinsics -Wno-unused-function -fcheck=bounds -I/usr/local/include
 
-# GFLAGS= -O -Wall -fbounds-check -g -Wno-uninitialized -I/usr/local/include
-GFLAGS= -O2 -Wall -Wno-uninitialized -ffixed-line-length-none -I/usr/local/include
+# GFLAGS= -O2 -I/usr/local/include -ffixed-line-length-none -Wno-uninitialized -Wall -fbounds-check
+GFLAGS= -O2 -I/usr/local/include -ffixed-line-length-none #-fbounds-check
 
-CFLAGS= -llapack -lm -g -O2 #-lcfitsio -openmp 
+CFLAGS= -lm -g -O2 #-lcfitsio -openmp -llapack
 # -L/Users/antoinemarchal/mylib/cfitsio-master
 
 OUT=ROHSA
