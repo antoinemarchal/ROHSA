@@ -152,7 +152,12 @@ contains
     if (descent .eqv. .true.) then
        allocate(grid_params(3*(n_gauss+(nside*n_gauss_add)), dim_data(2), dim_data(3)))
        allocate(fit_params(3*(n_gauss+(nside*n_gauss_add)), 1, 1))
+       !Init sigma = 1 to avoid Nan
+       do i=1,n_gauss
+          fit_params(3+(3*(i-1)),1,1) = 1._xp
+       end do
     else 
+       !Maybe fixme same sigma = 1
        allocate(grid_params(3*(n_gauss+n_gauss_add), dim_data(2), dim_data(3)))
     end if
     
