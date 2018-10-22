@@ -57,7 +57,7 @@ class ROHSA(object):
             sys.exit()
 
         if not filename_parameters :
-            print("Generate parameters.dat file")
+            print("Generate parameters.txt file")
         else: print("Generate " + filename_parameters + " file")
         
         filename_parameters = filename_parameters or "parameters.txt"

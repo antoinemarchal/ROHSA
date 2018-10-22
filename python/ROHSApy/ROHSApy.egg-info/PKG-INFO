@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: ROHSApy
-Version: 0.1.6
+Version: 0.1.7
 Summary: python interface package for ROHSA software
 Home-page: https://github.com/antoinemarchal/ROHSA
 Author: Antoine Marchal and Joshua Peek
