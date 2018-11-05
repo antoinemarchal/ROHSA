@@ -12,6 +12,7 @@ program ROHSA
   logical :: regul           !! if true --> activate regulation
   logical :: descent         !! if true --> activate hierarchical descent to initiate the optimization
   logical :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
+  logical :: absorption      !! if true --> fit emission and absoption lines jointly
   integer :: n_gauss         !! number of gaussian to fit
   integer :: n_gauss_add     !! number of gaussian to add at each step
   integer :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
@@ -32,6 +33,7 @@ program ROHSA
 
   character(len=512) :: filename_parameters !! name of the parameters file (default parameters.txt)
   character(len=512) :: filename            !! name of the data file
+  character(len=512) :: filename_abs        !! name of the absorption data file
   character(len=512) :: fileout             !! name of the output result
   character(len=512) :: filename_noise      !! name of the file with STD map (if noise .eq. true)
   character(len=8)   :: init_option !!Init ROHSA with the mean or the std spectrum    
@@ -64,14 +66,22 @@ program ROHSA
   iprint = -1
   iprint_init = -1
   save_grid = .true.
+  absorption = .false.
  
   !Read parameters
-  call read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, n_gauss_add, &
+  call read_parameters(filename_parameters, filename, filename_abs, fileout, filename_noise, n_gauss, n_gauss_add, &
        lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
-       sig_init, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid)
+       sig_init, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init, &
+       save_grid, absorption)
+
+  call header()  
+
+  print*, "filename = '",trim(filename),"'"
+  if (absorption .eqv. .true.) then
+     print*, "filename_abs = '",trim(filename_abs),"'"
+  end if
 
   !Load data
-!   print*, "filename = '",trim(filename),"'"
   call read_cube(filename, data)
   
   if (noise .eqv. .true.) then
@@ -80,13 +90,13 @@ program ROHSA
      end if
      call read_map(filename_noise, std_cube)
   end if
-  
-  write(*,*) ""
-  write(*,*) "opening file and reading data"
-  
+    
   !Call ROHSA subroutine
   call main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, &
        lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, &
-       maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, save_grid)  
+       maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
+       save_grid, absorption)  
+
+  call ender()
    
 end program ROHSA

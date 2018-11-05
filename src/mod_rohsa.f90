@@ -18,7 +18,8 @@ contains
 
   subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, &
        lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, &
-       maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, save_grid)
+       maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
+       save_grid, absorption)
     
     implicit none
     
@@ -26,6 +27,7 @@ contains
     logical, intent(in) :: regul           !! if true --> activate regulation
     logical, intent(in) :: descent         !! if true --> activate hierarchical descent to initiate the optimization
     logical, intent(in) :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
+    logical, intent(in) :: absorption      !! if true --> fit emission and absoption lines jointly
     integer, intent(in) :: n_gauss_add     !! number of gaussian to add at each step
     integer, intent(in) :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
@@ -75,14 +77,11 @@ contains
     integer :: j     !! loop index
     integer :: k     !! loop index
     integer :: l     !! loop index
-
-    call header()
     
     print*, "fileout = '",trim(fileout),"'"
     
     print*,
     print*, "______Parameters_____"
-    print*,
     print*, "n_gauss = ", n_gauss
     print*, "n_gauss_add = ", n_gauss_add
     print*, "lambda_amp = ", lambda_amp
@@ -101,6 +100,8 @@ contains
     print*, "noise = ", noise
     print*, "regul = ", regul
     print*, "descent = ", descent
+    print*, "save_grid = ", save_grid
+    print*, "absorption = ", absorption
     print*,
     
     allocate(kernel(3, 3))
@@ -347,9 +348,7 @@ contains
        enddo
     enddo
     close(12)
-    
-    call ender()
-    
+        
   end subroutine main_rohsa
   
 end module mod_rohsa

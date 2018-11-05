@@ -1,5 +1,6 @@
 &user_parameters
    filename = '/content/GHIGLS_DFN_Tb.dat'           !! name of the data file
+   ,filename_abs = ''           !! name of the absorption data file
    ,fileout = 'GHIGLS_DFN_Tb_gauss_run_0.dat'           !! name of the output result
    ,filename_noise = ''    !! name of the file with STD map (if noise .eq. true)
    ,n_gauss = 3   	   !! number of gaussian to fit
@@ -23,5 +24,6 @@
    ,iprint = -1             !! print option 
    ,iprint_init = -1       !! print option init
    ,save_grid = .false.    !! if true --> save fitted parameters at each iteration of the multiresolution process
+   ,absorption = .false.    !! if true --> fit emission and absoption lines jointly
    /
 
