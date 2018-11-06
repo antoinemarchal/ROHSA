@@ -155,6 +155,7 @@ contains
     !Allocate memory for parameters grids
     if (descent .eqv. .true.) then
        allocate(grid_params(3*(n_gauss+(nside*n_gauss_add)), dim_data(2), dim_data(3)))
+       allocate(grid_params_abs(3*(n_gauss+(nside*n_gauss_add)), dim_data(2), dim_data(3)))
        allocate(fit_params(3*(n_gauss+(nside*n_gauss_add)), 1, 1))
        !Init sigma = 1 to avoid Nan
        do i=1,n_gauss
@@ -307,7 +308,7 @@ contains
        else
           call update_abs(data, data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
                lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, &
-               iprint, std_map)
+               iprint, std_map, std_map_abs)
        end if
        
        if (n_gauss_add .ne. 0) then !FIXME KEYWORD

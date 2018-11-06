@@ -332,7 +332,6 @@ contains
     real(xp), dimension(:), allocatable :: mean_amp, mean_mu, mean_sig    
     real(xp), dimension(:,:), allocatable :: image_amp, image_mu, image_sig
 
-
     n_beta = 3*n_gauss * dim_y * dim_x
 
     allocate(lb(n_beta), ub(n_beta), beta(n_beta))
@@ -375,7 +374,7 @@ contains
 
 
   subroutine update_abs(cube, cube_abs, params, params_abs, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map, std_map_abs)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module) combining absorption line
     !! measurement. 
     implicit none
@@ -383,6 +382,7 @@ contains
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube 
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube_abs !! cube absorption
     real(xp), intent(in), dimension(:,:), allocatable :: std_map !! Standard deviation map 
+    real(xp), intent(in), dimension(:,:), allocatable :: std_map_abs !! Standard deviation map 
     real(xp), intent(in), dimension(:,:), allocatable :: kernel !! convolution kernel
     integer, intent(in) :: dim_v !! dimension along v axis
     integer, intent(in) :: dim_y !! dimension along spatial axis y 
@@ -426,12 +426,12 @@ contains
           call init_bounds(cube(:,i,j), n_gauss, dim_v, lb_3D(:,i,j), ub_3D(:,i,j))
           call init_bounds(cube_abs(:,i,j), n_gauss, dim_v, lb_3D_abs(:,i,j), ub_3D_abs(:,i,j))
        end do
-    end do
+    end do    
 
-    call ravel_3D(lb_3D, lb, 3*n_gauss, dim_y, dim_x)
-    call ravel_3D(ub_3D, ub, 3*n_gauss, dim_y, dim_x)
-    call ravel_3D(params, beta, 3*n_gauss, dim_y, dim_x)
-
+    call ravel_3D_abs(lb_3D, lb_3D_abs, lb, 3*n_gauss, dim_y, dim_x)
+    call ravel_3D_abs(ub_3D, ub_3D_abs, ub, 3*n_gauss, dim_y, dim_x)
+    call ravel_3D_abs(params, params_abs, beta, 3*n_gauss, dim_y, dim_x)
+    
     !Compute mean amp, mu and sig vector    
     do i=1,n_gauss
        image_amp = params(1+(3*(i-1)),:,:)
@@ -447,10 +447,10 @@ contains
        mean_sig(i) = mean(ravel_sig)
     end do
 
-    call minimize(n_beta, m, beta, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-         lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map, mean_amp, mean_mu, mean_sig)
+    call minimize_abs(n_beta, m, beta, lb, ub, cube, cube_abs, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
+         lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map, std_map_abs, mean_amp, mean_mu, mean_sig)
 
-    call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)
+    call unravel_3D_abs(beta, params, params_abs, 3*n_gauss, dim_y, dim_x)
         
   end subroutine update_abs
 

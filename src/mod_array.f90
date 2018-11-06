@@ -6,7 +6,8 @@ module mod_array
 
   private
 
-  public :: convolution_2D_mirror, ravel_2D, ravel_3D, unravel_3D, mean, std, std_2D, mean_2D, max_2D
+  public :: convolution_2D_mirror, ravel_2D, ravel_3D, unravel_3D, mean, std, std_2D, mean_2D, max_2D, ravel_3D_abs, unravel_3D_abs
+  
   
 contains
 
@@ -156,6 +157,72 @@ contains
        end do
     end do
   end subroutine unravel_3D
+
+
+  ! Return a contiguous flattened 1D array from a 3D array
+  subroutine ravel_3D_abs(cube, cube_abs, vector, dim_v, dim_y, dim_x)
+    implicit none
+
+    integer, intent(in) :: dim_v, dim_y, dim_x
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube, cube_abs
+    real(xp), intent(inout), dimension(:), allocatable :: vector
+
+    integer :: i, j, k, i__
+
+    i__ = 1
+    
+    do k=1, dim_x
+       do j=1, dim_y
+          do i=1, dim_v
+             vector(i__) = cube(i,j,k)
+             i__ = i__ + 1
+          end do
+       end do
+    end do
+
+    do k=1, dim_x
+       do j=1, dim_y
+          do i=1, dim_v
+             vector(i__) = cube_abs(i,j,k)
+             i__ = i__ + 1
+          end do
+       end do
+    end do
+
+  end subroutine ravel_3D_abs
+
+
+  ! Return a 3D array from a contiguous flattened 1D array 
+  subroutine unravel_3D_abs(vector, cube, cube_abs, dim_v, dim_y, dim_x)
+    implicit none
+
+    integer, intent(in) :: dim_v, dim_y, dim_x
+    real(xp), intent(in), dimension(:), allocatable :: vector
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: cube, cube_abs
+
+    integer :: i, j, k, i__
+
+    i__ = 1
+    
+    do k=1, dim_x
+       do j=1, dim_y
+          do i=1, dim_v
+             cube(i,j,k) = vector(i__)
+             i__ = i__ + 1
+          end do
+       end do
+    end do
+
+    do k=1, dim_x
+       do j=1, dim_y
+          do i=1, dim_v
+             cube_abs(i,j,k) = vector(i__)
+             i__ = i__ + 1
+          end do
+       end do
+    end do
+
+  end subroutine unravel_3D_abs
 
 
   pure function mean(array)
