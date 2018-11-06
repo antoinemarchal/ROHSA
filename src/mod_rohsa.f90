@@ -16,7 +16,7 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, &
+  subroutine main_rohsa(data, data_abs, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, &
        lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, &
        maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
        save_grid, absorption)
@@ -54,13 +54,16 @@ contains
     integer :: power        !! loop index
 
     real(xp), intent(in), dimension(:,:,:), allocatable :: data        !! initial fits data
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data_abs        !! initial fits data absorption
     real(xp), intent(in), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
 
     real(xp), dimension(:,:,:), allocatable :: cube        !! reshape data with nside --> cube
     real(xp), dimension(:,:,:), allocatable :: cube_mean   !! mean cube over spatial axis
     real(xp), dimension(:,:,:), allocatable :: fit_params  !! parameters to optimize with cube mean at each iteration
     real(xp), dimension(:,:,:), allocatable :: grid_params !! parameters to optimize at final step (dim of initial cube)
+    real(xp), dimension(:,:,:), allocatable :: grid_params_abs !! parameters to optimize at final step (dim of initial cube)for absorp
     real(xp), dimension(:,:), allocatable :: std_map       !! standard deviation map fo the cube computed by ROHSA with lb and ub
+    real(xp), dimension(:,:), allocatable :: std_map_abs   !! standard deviation map fo the absorp cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: std_spect       !! std spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect       !! max spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect_norm  !! max spectrum of the observation normalized by the max of the mean spectrum
@@ -160,6 +163,7 @@ contains
     else 
        !Maybe fixme same sigma = 1
        allocate(grid_params(3*(n_gauss+n_gauss_add), dim_data(2), dim_data(3)))
+       allocate(grid_params_abs(3*(n_gauss+n_gauss_add), dim_data(2), dim_data(3)))
     end if
     
     print*, "                    Start iteration"
@@ -284,16 +288,27 @@ contains
     print*,
     
     allocate(std_map(dim_data(2), dim_data(3)))
+    allocate(std_map_abs(dim_data(2), dim_data(3)))
     
     if (noise .eqv. .true.) then
        std_map = std_cube
     else   
-       call set_stdmap(std_map, data, lstd, ustd)
+       if (absorption .eqv. .false.) then
+          call set_stdmap(std_map, data, lstd, ustd)
+       else
+          call set_stdmap(std_map_abs, data_abs, lstd, ustd)
+       end if
     end if
     
     if (regul .eqv. .true.) then
-       call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-            lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
+       if (absorption .eqv. .false.) then 
+          call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
+               lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
+       else
+          call update_abs(data, data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
+               lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, &
+               iprint, std_map)
+       end if
        
        if (n_gauss_add .ne. 0) then !FIXME KEYWORD
           do l=1,n_gauss_add

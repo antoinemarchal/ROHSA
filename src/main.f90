@@ -39,6 +39,7 @@ program ROHSA
   character(len=8)   :: init_option !!Init ROHSA with the mean or the std spectrum    
 
   real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
+  real(xp), dimension(:,:,:), allocatable :: data_abs        !! initial fits data
   real(xp), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
 
   !Print header and get filename in argument
@@ -83,6 +84,9 @@ program ROHSA
 
   !Load data
   call read_cube(filename, data)
+  if (absorption .eqv. .true.) then
+     call read_cube(filename_abs, data_abs)
+  end if
   
   if (noise .eqv. .true.) then
      if (filename_noise == " ") then
@@ -90,9 +94,9 @@ program ROHSA
      end if
      call read_map(filename_noise, std_cube)
   end if
-    
+
   !Call ROHSA subroutine
-  call main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, &
+  call main_rohsa(data, data_abs, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, &
        lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, &
        maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
        save_grid, absorption)  
