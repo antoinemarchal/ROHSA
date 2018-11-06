@@ -404,17 +404,19 @@ contains
     integer :: i,j
     integer :: n_beta
     real(xp), dimension(:,:,:), allocatable :: lb_3D, ub_3D
+    real(xp), dimension(:,:,:), allocatable :: lb_3D_abs, ub_3D_abs
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(:), allocatable :: beta
     real(xp), dimension(:), allocatable :: ravel_amp, ravel_mu, ravel_sig
     real(xp), dimension(:), allocatable :: mean_amp, mean_mu, mean_sig    
     real(xp), dimension(:,:), allocatable :: image_amp, image_mu, image_sig
 
-
-    n_beta = 3*n_gauss * dim_y * dim_x
+    ! Add absorption cube
+    n_beta = 2 * 3*n_gauss * dim_y * dim_x 
 
     allocate(lb(n_beta), ub(n_beta), beta(n_beta))
     allocate(lb_3D(3*n_gauss,dim_y,dim_x), ub_3D(3*n_gauss,dim_y,dim_x))
+    allocate(lb_3D_abs(3*n_gauss,dim_y,dim_x), ub_3D_abs(3*n_gauss,dim_y,dim_x))
     allocate(mean_amp(n_gauss), mean_mu(n_gauss), mean_sig(n_gauss))
     allocate(image_amp(dim_y, dim_x), image_mu(dim_y, dim_x), image_sig(dim_y, dim_x))
     allocate(ravel_amp(dim_y*dim_x), ravel_mu(dim_y*dim_x), ravel_sig(dim_y*dim_x))
@@ -422,6 +424,7 @@ contains
     do j=1, dim_x
        do i=1, dim_y
           call init_bounds(cube(:,i,j), n_gauss, dim_v, lb_3D(:,i,j), ub_3D(:,i,j))
+          call init_bounds(cube_abs(:,i,j), n_gauss, dim_v, lb_3D_abs(:,i,j), ub_3D_abs(:,i,j))
        end do
     end do
 
@@ -429,7 +432,7 @@ contains
     call ravel_3D(ub_3D, ub, 3*n_gauss, dim_y, dim_x)
     call ravel_3D(params, beta, 3*n_gauss, dim_y, dim_x)
 
-    !Compute mean sig vector    
+    !Compute mean amp, mu and sig vector    
     do i=1,n_gauss
        image_amp = params(1+(3*(i-1)),:,:)
        image_mu = params(2+(3*(i-1)),:,:)
