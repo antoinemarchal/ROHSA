@@ -502,9 +502,9 @@ contains
              dR_over_dB(2+(3*(k-1)),i,j) = dR_over_dB(2+(3*(k-1)),i,j) + (lambda_mu_abs * (image_mu(i,j) - image_mu_abs(i,j)))
              dR_over_dB(3+(3*(k-1)),i,j) = dR_over_dB(3+(3*(k-1)),i,j) + (lambda_sig_abs * (image_sig(i,j) - image_sig_abs(i,j)))
 
-             dR_over_dB_abs(1+(3*(k-1)),i,j) = lambda_amp_abs * (image_amp(i,j) - image_amp_abs(i,j))
-             dR_over_dB_abs(2+(3*(k-1)),i,j) = lambda_mu_abs * (image_mu(i,j) - image_mu_abs(i,j))
-             dR_over_dB_abs(3+(3*(k-1)),i,j) = lambda_sig_abs * (image_sig(i,j) - image_sig_abs(i,j))
+             dR_over_dB_abs(1+(3*(k-1)),i,j) = - lambda_amp_abs * (image_amp(i,j) - image_amp_abs(i,j))
+             dR_over_dB_abs(2+(3*(k-1)),i,j) = - lambda_mu_abs * (image_mu(i,j) - image_mu_abs(i,j))
+             dR_over_dB_abs(3+(3*(k-1)),i,j) = - lambda_sig_abs * (image_sig(i,j) - image_sig_abs(i,j))
           end do
        end do       
     end do
