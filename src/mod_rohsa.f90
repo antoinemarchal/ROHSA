@@ -375,7 +375,7 @@ contains
        print*,
        
        ! Open file
-       open(unit=12, file=trim(fileout(:len_trim(fileout)-4)) // "_absoprtion" // ".dat", action="write", iostat=ios)
+       open(unit=12, file=trim(fileout(:len_trim(fileout)-4)) // "_absorption" // ".dat", action="write", iostat=ios)
        if (ios /= 0) stop "opening file error"
        
        write(12,fmt=*) "# "
