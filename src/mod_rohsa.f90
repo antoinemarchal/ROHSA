@@ -16,9 +16,9 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, data_abs, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, &
-       lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, &
-       maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
+  subroutine main_rohsa(data, data_abs, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
+       lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
+       sig_init, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
        save_grid, absorption)
     
     implicit none
@@ -39,6 +39,9 @@ contains
     real(xp), intent(in) :: lambda_amp     !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_mu      !! lamnda for mean position parameter
     real(xp), intent(in) :: lambda_sig     !! lambda for dispersion parameter
+    real(xp), intent(in) :: lambda_amp_abs     !! lambda for amplitude parameter
+    real(xp), intent(in) :: lambda_mu_abs      !! lamnda for mean position parameter
+    real(xp), intent(in) :: lambda_sig_abs     !! lambda for dispersion parameter
     real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
     real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
@@ -294,9 +297,8 @@ contains
     if (noise .eqv. .true.) then
        std_map = std_cube
     else   
-       if (absorption .eqv. .false.) then
-          call set_stdmap(std_map, data, lstd, ustd)
-       else
+       call set_stdmap(std_map, data, lstd, ustd)
+       if (absorption .eqv. .true.) then
           call set_stdmap(std_map_abs, data_abs, lstd, ustd)
        end if
     end if
@@ -306,9 +308,11 @@ contains
           call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
                lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
        else
+          call init_params_abs(data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
+               amp_fact_init)
           call update_abs(data, data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
-               lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, &
-               iprint, std_map, std_map_abs)
+               lambda_amp, lambda_mu, lambda_sig, lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, &
+               lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map, std_map_abs)
        end if
        
        if (n_gauss_add .ne. 0) then !FIXME KEYWORD
@@ -364,7 +368,52 @@ contains
        enddo
     enddo
     close(12)
-        
+
+    if (absorption .eqv. .true.) then
+       print*,
+       print*, "_____ Write output file absorption _____"
+       print*,
+       
+       ! Open file
+       open(unit=12, file=trim(fileout(:len_trim(fileout)-4)) // "_absoprtion" // ".dat", action="write", iostat=ios)
+       if (ios /= 0) stop "opening file error"
+       
+       write(12,fmt=*) "# "
+       write(12,fmt=*) "# ______Parameters_____"
+       write(12,fmt=*) "# "
+       write(12,fmt=*) "# n_gauss = ", n_gauss
+       write(12,fmt=*) "# n_gauss_add = ", n_gauss_add
+       write(12,fmt=*) "# lambda_amp = ", lambda_amp
+       write(12,fmt=*) "# lambda_mu = ", lambda_mu
+       write(12,fmt=*) "# lambda_sig = ", lambda_sig
+       write(12,fmt=*) "# lambda_var_amp = ", lambda_var_amp
+       write(12,fmt=*) "# lambda_var_mu = ", lambda_var_mu
+       write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
+       write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
+       write(12,fmt=*) "# sig_init = ", sig_init
+       write(12,fmt=*) "# init_option = ", init_option
+       write(12,fmt=*) "# maxiter_itit = ", maxiter_init
+       write(12,fmt=*) "# maxiter = ", maxiter
+       write(12,fmt=*) "# lstd = ", lstd
+       write(12,fmt=*) "# ustd = ", ustd
+       write(12,fmt=*) "# noise = ", noise
+       write(12,fmt=*) "# regul = ", regul
+       write(12,fmt=*) "# descent = ", descent
+       write(12,fmt=*) "# "
+       
+       write(12,fmt=*) "# i, j, A, mean, sigma"
+       
+       do i=1, dim_data(2)
+          do j=1, dim_data(3)
+             do k=1, n_gauss
+                write(12,fmt=*) i-1, j-1, grid_params_abs(1+((k-1)*3),i,j), grid_params_abs(2+((k-1)*3),i,j), &
+                     grid_params_abs(3+((k-1)*3),i,j)
+             enddo
+          enddo
+       enddo
+       close(12)
+    end if
+    
   end subroutine main_rohsa
   
 end module mod_rohsa

@@ -255,7 +255,8 @@ contains
 
   ! Minimize algorithn for a cube with regularization
   subroutine minimize_abs(n, m, x, lb, ub, cube, cube_abs, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map, std_map_abs, mean_amp, mean_mu, mean_sig)
+       lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, &
+       std_map, std_map_abs, mean_amp, mean_mu, mean_sig)
     implicit none      
 
     integer, intent(in) :: n
@@ -265,6 +266,7 @@ contains
     integer, intent(in) :: iprint
     
     real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
+    real(xp), intent(in) :: lambda_amp_abs, lambda_mu_abs, lambda_sig_abs
     real(xp), intent(in) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
     real(xp), intent(in), dimension(:), allocatable :: lb, ub
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube, cube_abs
@@ -312,8 +314,9 @@ contains
        
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
-          call f_g_cube(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
-               lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map, mean_amp, mean_mu, mean_sig)
+          call f_g_cube_abs(f, g, cube, cube_abs, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
+               lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map, &
+               std_map_abs, mean_amp, mean_mu, mean_sig)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations
@@ -328,6 +331,189 @@ contains
     !     end of loop do while       
     end do
   end subroutine minimize_abs
+
+  ! Compute the objective function for a cube and the gradient of the obkective function
+  subroutine f_g_cube_abs(f, g, cube, cube_abs, beta, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
+       lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map, std_map_abs, &
+       mean_amp, mean_mu, mean_sig)
+    implicit none
+
+    integer, intent(in) :: n_gauss
+    integer, intent(in) :: dim_v, dim_y, dim_x
+    real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
+    real(xp), intent(in) :: lambda_amp_abs, lambda_mu_abs, lambda_sig_abs
+    real(xp), intent(in) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
+    real(xp), intent(in), dimension(:), allocatable :: beta
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube, cube_abs
+    real(xp), intent(in), dimension(:,:), allocatable :: kernel
+    real(xp), intent(in), dimension(:,:), allocatable :: std_map, std_map_abs
+    real(xp), intent(in), dimension(:), allocatable :: mean_amp, mean_mu, mean_sig    
+    real(xp), intent(inout) :: f
+    real(xp), intent(inout), dimension(:), allocatable :: g
+
+    integer :: i, j, k, l
+    real(xp), dimension(:,:,:), allocatable :: residual, residual_abs
+    real(xp), dimension(:), allocatable :: residual_1D
+    real(xp), dimension(:,:,:), allocatable :: params, params_abs
+    real(xp), dimension(:,:), allocatable :: conv_amp, conv_mu, conv_sig
+    real(xp), dimension(:,:), allocatable :: conv_conv_amp, conv_conv_mu, conv_conv_sig
+    real(xp), dimension(:,:), allocatable :: image_amp, image_mu, image_sig
+    real(xp), dimension(:,:), allocatable :: image_amp_abs, image_mu_abs, image_sig_abs
+    real(xp), dimension(:,:,:), allocatable :: g_3D, g_3D_abs
+    real(xp), dimension(:,:,:,:), allocatable :: dF_over_dB, dF_over_dB_abs
+    real(xp), dimension(:,:,:), allocatable :: dR_over_dB, dR_over_dB_abs
+    real(xp), dimension(:,:,:), allocatable :: deriv, deriv_abs
+
+    allocate(dR_over_dB(3*n_gauss, dim_y, dim_x))
+    allocate(dF_over_dB(3*n_gauss, dim_v, dim_y, dim_x))
+    allocate(dR_over_dB_abs(3*n_gauss, dim_y, dim_x))
+    allocate(dF_over_dB_abs(3*n_gauss, dim_v, dim_y, dim_x))
+    allocate(deriv(3*n_gauss, dim_y, dim_x))
+    allocate(deriv_abs(3*n_gauss, dim_y, dim_x))
+    allocate(g_3D(3*n_gauss, dim_y, dim_x))
+    allocate(g_3D_abs(3*n_gauss, dim_y, dim_x))
+    allocate(residual(dim_v, dim_y, dim_x))
+    allocate(residual_abs(dim_v, dim_y, dim_x))
+    allocate(params(3*n_gauss, dim_y, dim_x))
+    allocate(params_abs(3*n_gauss, dim_y, dim_x))
+    allocate(conv_amp(dim_y, dim_x), conv_mu(dim_y, dim_x), conv_sig(dim_y, dim_x))
+    allocate(conv_conv_amp(dim_y, dim_x), conv_conv_mu(dim_y, dim_x), conv_conv_sig(dim_y, dim_x))
+    allocate(image_amp(dim_y, dim_x), image_mu(dim_y, dim_x), image_sig(dim_y, dim_x))
+    allocate(image_amp_abs(dim_y, dim_x), image_mu_abs(dim_y, dim_x), image_sig_abs(dim_y, dim_x))
+    
+    dR_over_dB = 0._xp; dR_over_dB_abs = 0._xp
+    dF_over_dB = 0._xp; dF_over_dB_abs = 0._xp
+    deriv = 0._xp; deriv_abs = 0._xp
+    f = 0._xp
+    g = 0._xp
+    g_3D = 0._xp; g_3D_abs = 0._xp
+    residual = 0._xp    
+    params = 0._xp
+    params_abs = 0._xp
+    
+    call unravel_3D_abs(beta, params, params_abs, 3*n_gauss, dim_y, dim_x)    
+
+    ! Compute the objective function and the gradient
+    do j=1, dim_x
+       do i=1, dim_y
+          allocate(residual_1D(dim_v))
+          residual_1D = 0._xp
+          call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v)
+          residual(:,i,j) = residual_1D
+          if (std_map(i,j) > 0._xp) then
+             f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2._xp)
+          end if
+          residual_1D = 0._xp          
+          call myresidual(params_abs(:,i,j), cube_abs(:,i,j), residual_1D, n_gauss, dim_v)
+          residual_abs(:,i,j) = residual_1D
+          if (std_map_abs(i,j) > 0._xp) then
+             f = f + (myfunc_spec(residual_1D)/std_map_abs(i,j)**2._xp)
+          end if          
+          deallocate(residual_1D)
+       end do
+    end do
+
+    do l=1, dim_x
+       do j=1, dim_y
+          do i=1, n_gauss
+             do k=1, dim_v          
+                dF_over_dB(1+(3*(i-1)),k,j,l) = dF_over_dB(1+(3*(i-1)),k,j,l) +&
+                     exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))
+                
+                dF_over_dB(2+(3*(i-1)),k,j,l) = dF_over_dB(2+(3*(i-1)),k,j,l) +&
+                     params(1+(3*(i-1)),j,l) * ( real(k,xp) - params(2+(3*(i-1)),j,l) ) / (params(3+(3*(i-1)),j,l)**2._xp) *&
+                     exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))
+                
+                dF_over_dB(3+(3*(i-1)),k,j,l) = dF_over_dB(3+(3*(i-1)),k,j,l) +&
+                     params(1+(3*(i-1)),j,l) * ( real(k,xp) - params(2+(3*(i-1)),j,l) )**2._xp / (params(3+(3*(i-1)),j,l)**3._xp) *&
+                     exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))
+
+                dF_over_dB_abs(1+(3*(i-1)),k,j,l) = dF_over_dB_abs(1+(3*(i-1)),k,j,l) +&
+                     exp( ( -(real(k,xp) - params_abs(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params_abs(3+(3*(i-1)),j,l)**2._xp))
+                
+                dF_over_dB_abs(2+(3*(i-1)),k,j,l) = dF_over_dB_abs(2+(3*(i-1)),k,j,l) +&
+                     params_abs(1+(3*(i-1)),j,l) * ( real(k,xp) - params_abs(2+(3*(i-1)),j,l) ) / &
+                     (params_abs(3+(3*(i-1)),j,l)**2._xp) * exp( ( -(real(k,xp) - params_abs(2+(3*(i-1)),j,l))**2._xp) &
+                     / (2._xp * params_abs(3+(3*(i-1)),j,l)**2._xp))
+                
+                dF_over_dB_abs(3+(3*(i-1)),k,j,l) = dF_over_dB_abs(3+(3*(i-1)),k,j,l) +&
+                     params_abs(1+(3*(i-1)),j,l) * ( real(k,xp) - params_abs(2+(3*(i-1)),j,l) )**2._xp &
+                     / (params_abs(3+(3*(i-1)),j,l)**3._xp) * exp( ( -(real(k,xp) - params_abs(2+(3*(i-1)),j,l))**2._xp) &
+                     / (2._xp * params_abs(3+(3*(i-1)),j,l)**2._xp))
+
+             enddo
+          enddo
+       end do
+    end do
+    
+    do k=1, dim_v
+       do j=1, dim_x
+          do i=1, dim_y
+             do l=1, 3*n_gauss
+                if (std_map(i,j) > 0._xp) then
+                   deriv(l,i,j) = deriv(l,i,j) + dF_over_dB(l,k,i,j) * (residual(k,i,j)/std_map(i,j)**2._xp)
+                end if
+                if (std_map_abs(i,j) > 0._xp) then
+                   deriv_abs(l,i,j) = deriv_abs(l,i,j) + dF_over_dB_abs(l,k,i,j) * (residual_abs(k,i,j)/std_map_abs(i,j)**2._xp)
+                end if
+             end do
+          end do
+       end do
+    end do
+    
+    do k=1, n_gauss
+       conv_amp = 0._xp; conv_mu = 0._xp; conv_sig = 0._xp
+       conv_conv_amp = 0._xp; conv_conv_mu = 0._xp; conv_conv_sig = 0._xp
+       image_amp = 0._xp; image_mu = 0._xp; image_sig = 0._xp
+       image_amp_abs = 0._xp; image_mu_abs = 0._xp; image_sig_abs = 0._xp
+
+       image_amp = params(1+(3*(k-1)),:,:)
+       image_mu = params(2+(3*(k-1)),:,:)
+       image_sig = params(3+(3*(k-1)),:,:)
+
+       image_amp_abs = params_abs(1+(3*(k-1)),:,:)
+       image_mu_abs = params_abs(2+(3*(k-1)),:,:)
+       image_sig_abs = params_abs(3+(3*(k-1)),:,:)
+       
+       call convolution_2D_mirror(image_amp, conv_amp, dim_y, dim_x, kernel, 3)
+       call convolution_2D_mirror(image_mu, conv_mu, dim_y, dim_x, kernel, 3)
+       call convolution_2D_mirror(image_sig, conv_sig, dim_y, dim_x, kernel, 3)
+
+       call convolution_2D_mirror(conv_amp, conv_conv_amp, dim_y, dim_x, kernel, 3)
+       call convolution_2D_mirror(conv_mu, conv_conv_mu, dim_y, dim_x, kernel, 3)
+       call convolution_2D_mirror(conv_sig, conv_conv_sig, dim_y, dim_x, kernel, 3)
+
+       !New term on sig
+       do j=1, dim_x
+          do i=1, dim_y
+             f = f + (0.5_xp * lambda_amp * conv_amp(i,j)**2) + (0.5_xp * lambda_var_amp * (image_amp(i,j) - mean_amp(k))**2._xp)
+             f = f + (0.5_xp * lambda_mu * conv_mu(i,j)**2) + (0.5_xp * lambda_var_mu * (image_mu(i,j) - mean_mu(k))**2._xp) 
+             f = f + (0.5_xp * lambda_sig * conv_sig(i,j)**2) + (0.5_xp * lambda_var_sig * (image_sig(i,j) - mean_sig(k))**2._xp)
+
+             f = f + (0.5_xp * lambda_amp_abs * (image_amp(i,j) - image_amp_abs(i,j))**2._xp)
+             f = f + (0.5_xp * lambda_mu_abs * (image_mu(i,j) - image_mu_abs(i,j))**2._xp)
+             f = f + (0.5_xp * lambda_sig_abs * (image_sig(i,j) - image_sig_abs(i,j))**2._xp)
+                          
+             dR_over_dB(1+(3*(k-1)),i,j) = lambda_amp * conv_conv_amp(i,j) + (lambda_var_amp * (image_amp(i,j) - mean_amp(k)))
+             dR_over_dB(2+(3*(k-1)),i,j) = lambda_mu * conv_conv_mu(i,j) + (lambda_var_mu * (image_mu(i,j) - mean_mu(k)))
+             dR_over_dB(3+(3*(k-1)),i,j) = lambda_sig * conv_conv_sig(i,j) + (lambda_var_sig * (image_sig(i,j) - mean_sig(k)))
+
+             dR_over_dB(1+(3*(k-1)),i,j) = dR_over_dB(1+(3*(k-1)),i,j) + (lambda_amp_abs * (image_amp(i,j) - image_amp_abs(i,j)))
+             dR_over_dB(2+(3*(k-1)),i,j) = dR_over_dB(2+(3*(k-1)),i,j) + (lambda_mu_abs * (image_mu(i,j) - image_mu_abs(i,j)))
+             dR_over_dB(3+(3*(k-1)),i,j) = dR_over_dB(3+(3*(k-1)),i,j) + (lambda_sig_abs * (image_sig(i,j) - image_sig_abs(i,j)))
+
+             dR_over_dB_abs(1+(3*(k-1)),i,j) = lambda_amp_abs * (image_amp(i,j) - image_amp_abs(i,j))
+             dR_over_dB_abs(2+(3*(k-1)),i,j) = lambda_mu_abs * (image_mu(i,j) - image_mu_abs(i,j))
+             dR_over_dB_abs(3+(3*(k-1)),i,j) = lambda_sig_abs * (image_sig(i,j) - image_sig_abs(i,j))
+          end do
+       end do       
+    end do
+    
+    g_3D = deriv + dR_over_dB
+    g_3D_abs = deriv_abs + dR_over_dB_abs
+
+    call ravel_3D_abs(g_3D, g_3D_abs, g, 3*n_gauss, dim_y, dim_x)
+  end subroutine f_g_cube_abs
 
   
   ! Compute the objective function for a cube and the gradient of the obkective function
