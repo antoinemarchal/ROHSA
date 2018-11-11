@@ -8,12 +8,12 @@ module mod_inout
   
   private
   
-  public :: read_cube, read_map, read_parameters, save_process!, read_fits_real_3d
+  public :: read_cube, read_map, read_parameters, save_process
 
 contains
   
   subroutine read_parameters(filename_parameters, filename, filename_abs, fileout, filename_noise, n_gauss, &
-       n_gauss_add, lambda_amp, lambda_mu, lambda_sig, lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, &
+       n_gauss_add, lambda_amp, lambda_mu, lambda_sig, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, &
        lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, init_option, maxiter_init, maxiter, m, noise, regul, &
        descent, lstd, ustd, iprint, iprint_init, save_grid, absorption)
     implicit none
@@ -28,7 +28,7 @@ contains
     integer, intent(inout) :: iprint, iprint_init
     integer, intent(inout) :: maxiter, maxiter_init
     real(xp), intent(inout) :: lambda_amp, lambda_mu, lambda_sig
-    real(xp), intent(inout) :: lambda_amp_abs, lambda_mu_abs, lambda_sig_abs
+    real(xp), intent(inout) :: lambda_abs_amp, lambda_abs_mu, lambda_abs_sig
     real(xp), intent(inout) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
     real(xp), intent(inout) :: amp_fact_init, sig_init
     logical, intent(inout) :: noise, regul, descent, save_grid, absorption
@@ -40,7 +40,7 @@ contains
     character(len=8), intent(inout) :: init_option
 
     namelist /user_parameters/ filename, filename_abs, fileout, filename_noise, n_gauss, n_gauss_add, lambda_amp, lambda_mu, &
-         & lambda_sig, lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
+         & lambda_sig, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
          amp_fact_init, sig_init, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, &
          iprint_init, save_grid, absorption
     
