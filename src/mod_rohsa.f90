@@ -17,7 +17,7 @@ module mod_rohsa
 contains
 
   subroutine main_rohsa(data, data_abs, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
+       lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
        sig_init, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
        save_grid, absorption)
     
@@ -39,9 +39,9 @@ contains
     real(xp), intent(in) :: lambda_amp     !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_mu      !! lamnda for mean position parameter
     real(xp), intent(in) :: lambda_sig     !! lambda for dispersion parameter
-    real(xp), intent(in) :: lambda_amp_abs     !! lambda for amplitude parameter
-    real(xp), intent(in) :: lambda_mu_abs      !! lamnda for mean position parameter
-    real(xp), intent(in) :: lambda_sig_abs     !! lambda for dispersion parameter
+    real(xp), intent(in) :: lambda_abs_amp     !! lambda for amplitude parameter
+    real(xp), intent(in) :: lambda_abs_mu      !! lamnda for mean position parameter
+    real(xp), intent(in) :: lambda_abs_sig     !! lambda for dispersion parameter
     real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
     real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
@@ -93,9 +93,9 @@ contains
     print*, "lambda_amp = ", lambda_amp
     print*, "lambda_mu = ", lambda_mu
     print*, "lambda_sig = ", lambda_sig
-    print*, "lambda_amp_abs = ", lambda_amp_abs
-    print*, "lambda_mu_abs = ", lambda_mu_abs
-    print*, "lambda_sig_abs = ", lambda_sig_abs
+    print*, "lambda_abs_amp = ", lambda_abs_amp
+    print*, "lambda_abs_mu = ", lambda_abs_mu
+    print*, "lambda_abs_sig = ", lambda_abs_sig
     print*, "lambda_var_amp = ", lambda_var_amp
     print*, "lambda_var_mu = ", lambda_var_mu
     print*, "lambda_var_sig = ", lambda_var_sig
@@ -314,7 +314,7 @@ contains
           call init_params_abs(data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
                amp_fact_init)
           call update_abs(data, data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
-               lambda_amp, lambda_mu, lambda_sig, lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, &
+               lambda_amp, lambda_mu, lambda_sig, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, &
                lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map, std_map_abs)
        end if
        
@@ -346,9 +346,9 @@ contains
     write(12,fmt=*) "# lambda_amp = ", lambda_amp
     write(12,fmt=*) "# lambda_mu = ", lambda_mu
     write(12,fmt=*) "# lambda_sig = ", lambda_sig
-    write(12,fmt=*) "# lambda_amp_abs = ", lambda_amp_abs
-    write(12,fmt=*) "# lambda_mu_abs = ", lambda_mu_abs
-    write(12,fmt=*) "# lambda_sig_abs = ", lambda_sig_abs
+    write(12,fmt=*) "# lambda_abs_amp = ", lambda_abs_amp
+    write(12,fmt=*) "# lambda_abs_mu = ", lambda_abs_mu
+    write(12,fmt=*) "# lambda_abs_sig = ", lambda_abs_sig
     write(12,fmt=*) "# lambda_var_amp = ", lambda_var_amp
     write(12,fmt=*) "# lambda_var_mu = ", lambda_var_mu
     write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
@@ -392,9 +392,9 @@ contains
        write(12,fmt=*) "# lambda_amp = ", lambda_amp
        write(12,fmt=*) "# lambda_mu = ", lambda_mu
        write(12,fmt=*) "# lambda_sig = ", lambda_sig
-       write(12,fmt=*) "# lambda_amp_abs = ", lambda_amp_abs
-       write(12,fmt=*) "# lambda_mu_abs = ", lambda_mu_abs
-       write(12,fmt=*) "# lambda_sig_abs = ", lambda_sig_abs
+       write(12,fmt=*) "# lambda_abs_amp = ", lambda_abs_amp
+       write(12,fmt=*) "# lambda_abs_mu = ", lambda_abs_mu
+       write(12,fmt=*) "# lambda_abs_sig = ", lambda_abs_sig
        write(12,fmt=*) "# lambda_var_amp = ", lambda_var_amp
        write(12,fmt=*) "# lambda_var_mu = ", lambda_var_mu
        write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig

@@ -25,9 +25,9 @@ program ROHSA
   real(xp) :: lambda_amp     !! lambda for amplitude parameter
   real(xp) :: lambda_mu      !! lamnda for mean position parameter
   real(xp) :: lambda_sig     !! lambda for dispersion parameter
-  real(xp) :: lambda_amp_abs     !! lambda for amplitude parameter
-  real(xp) :: lambda_mu_abs      !! lamnda for mean position parameter
-  real(xp) :: lambda_sig_abs     !! lambda for dispersion parameter
+  real(xp) :: lambda_abs_amp !! lambda for amplitude parameter
+  real(xp) :: lambda_abs_mu  !! lamnda for mean position parameter
+  real(xp) :: lambda_abs_sig !! lambda for dispersion parameter
   real(xp) :: lambda_var_amp !! lambda for variance amplitude parameter
   real(xp) :: lambda_var_mu  !! lambda for variance mean position parameter
   real(xp) :: lambda_var_sig !! lambda for variance dispersion parameter
@@ -54,9 +54,9 @@ program ROHSA
   lambda_amp = 1._xp
   lambda_mu = 1._xp
   lambda_sig = 1._xp
-  lambda_amp_abs = 0._xp
-  lambda_mu_abs = 1._xp
-  lambda_sig_abs = 0._xp
+  lambda_abs_amp = 0._xp
+  lambda_abs_mu = 1._xp
+  lambda_abs_sig = 0._xp
   lambda_var_amp = 0._xp
   lambda_var_mu = 0._xp
   lambda_var_sig = 1._xp
@@ -77,7 +77,7 @@ program ROHSA
  
   !Read parameters
   call read_parameters(filename_parameters, filename, filename_abs, fileout, filename_noise, n_gauss, n_gauss_add, &
-       lambda_amp, lambda_mu, lambda_sig, lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, &
+       lambda_amp, lambda_mu, lambda_sig, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, &
        lambda_var_sig, amp_fact_init, sig_init, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, &
        iprint, iprint_init, save_grid, absorption)
 
@@ -103,7 +103,7 @@ program ROHSA
 
   !Call ROHSA subroutine
   call main_rohsa(data, data_abs, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
+       lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
        sig_init, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
        save_grid, absorption)  
 

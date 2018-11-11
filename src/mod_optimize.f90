@@ -255,7 +255,7 @@ contains
 
   ! Minimize algorithn for a cube with regularization
   subroutine minimize_abs(n, m, x, lb, ub, cube, cube_abs, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, &
+       lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, &
        std_map, std_map_abs, mean_amp, mean_mu, mean_sig)
     implicit none      
 
@@ -266,7 +266,7 @@ contains
     integer, intent(in) :: iprint
     
     real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
-    real(xp), intent(in) :: lambda_amp_abs, lambda_mu_abs, lambda_sig_abs
+    real(xp), intent(in) :: lambda_abs_amp, lambda_abs_mu, lambda_abs_sig
     real(xp), intent(in) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
     real(xp), intent(in), dimension(:), allocatable :: lb, ub
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube, cube_abs
@@ -315,7 +315,7 @@ contains
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
           call f_g_cube_abs(f, g, cube, cube_abs, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
-               lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map, &
+               lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map, &
                std_map_abs, mean_amp, mean_mu, mean_sig)
           
        elseif (task(1:5) .eq. 'NEW_X') then
@@ -334,14 +334,14 @@ contains
 
   ! Compute the objective function for a cube and the gradient of the obkective function
   subroutine f_g_cube_abs(f, g, cube, cube_abs, beta, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map, std_map_abs, &
+       lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map, std_map_abs, &
        mean_amp, mean_mu, mean_sig)
     implicit none
 
     integer, intent(in) :: n_gauss
     integer, intent(in) :: dim_v, dim_y, dim_x
     real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
-    real(xp), intent(in) :: lambda_amp_abs, lambda_mu_abs, lambda_sig_abs
+    real(xp), intent(in) :: lambda_abs_amp, lambda_abs_mu, lambda_abs_sig
     real(xp), intent(in) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
     real(xp), intent(in), dimension(:), allocatable :: beta
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube, cube_abs
@@ -490,21 +490,21 @@ contains
              f = f + (0.5_xp * lambda_mu * conv_mu(i,j)**2) + (0.5_xp * lambda_var_mu * (image_mu(i,j) - mean_mu(k))**2._xp) 
              f = f + (0.5_xp * lambda_sig * conv_sig(i,j)**2) + (0.5_xp * lambda_var_sig * (image_sig(i,j) - mean_sig(k))**2._xp)
 
-             f = f + (0.5_xp * lambda_amp_abs * (image_amp(i,j) - image_amp_abs(i,j))**2._xp)
-             f = f + (0.5_xp * lambda_mu_abs * (image_mu(i,j) - image_mu_abs(i,j))**2._xp)
-             f = f + (0.5_xp * lambda_sig_abs * (image_sig(i,j) - image_sig_abs(i,j))**2._xp)
+             f = f + (0.5_xp * lambda_abs_amp * (image_amp(i,j) - image_amp_abs(i,j))**2._xp)
+             f = f + (0.5_xp * lambda_abs_mu * (image_mu(i,j) - image_mu_abs(i,j))**2._xp)
+             f = f + (0.5_xp * lambda_abs_sig * (image_sig(i,j) - image_sig_abs(i,j))**2._xp)
                           
              dR_over_dB(1+(3*(k-1)),i,j) = lambda_amp * conv_conv_amp(i,j) + (lambda_var_amp * (image_amp(i,j) - mean_amp(k)))
              dR_over_dB(2+(3*(k-1)),i,j) = lambda_mu * conv_conv_mu(i,j) + (lambda_var_mu * (image_mu(i,j) - mean_mu(k)))
              dR_over_dB(3+(3*(k-1)),i,j) = lambda_sig * conv_conv_sig(i,j) + (lambda_var_sig * (image_sig(i,j) - mean_sig(k)))
 
-             dR_over_dB(1+(3*(k-1)),i,j) = dR_over_dB(1+(3*(k-1)),i,j) + (lambda_amp_abs * (image_amp(i,j) - image_amp_abs(i,j)))
-             dR_over_dB(2+(3*(k-1)),i,j) = dR_over_dB(2+(3*(k-1)),i,j) + (lambda_mu_abs * (image_mu(i,j) - image_mu_abs(i,j)))
-             dR_over_dB(3+(3*(k-1)),i,j) = dR_over_dB(3+(3*(k-1)),i,j) + (lambda_sig_abs * (image_sig(i,j) - image_sig_abs(i,j)))
+             dR_over_dB(1+(3*(k-1)),i,j) = dR_over_dB(1+(3*(k-1)),i,j) + (lambda_abs_amp * (image_amp(i,j) - image_amp_abs(i,j)))
+             dR_over_dB(2+(3*(k-1)),i,j) = dR_over_dB(2+(3*(k-1)),i,j) + (lambda_abs_mu * (image_mu(i,j) - image_mu_abs(i,j)))
+             dR_over_dB(3+(3*(k-1)),i,j) = dR_over_dB(3+(3*(k-1)),i,j) + (lambda_abs_sig * (image_sig(i,j) - image_sig_abs(i,j)))
 
-             dR_over_dB_abs(1+(3*(k-1)),i,j) = - lambda_amp_abs * (image_amp(i,j) - image_amp_abs(i,j))
-             dR_over_dB_abs(2+(3*(k-1)),i,j) = - lambda_mu_abs * (image_mu(i,j) - image_mu_abs(i,j))
-             dR_over_dB_abs(3+(3*(k-1)),i,j) = - lambda_sig_abs * (image_sig(i,j) - image_sig_abs(i,j))
+             dR_over_dB_abs(1+(3*(k-1)),i,j) = - lambda_abs_amp * (image_amp(i,j) - image_amp_abs(i,j))
+             dR_over_dB_abs(2+(3*(k-1)),i,j) = - lambda_abs_mu * (image_mu(i,j) - image_mu_abs(i,j))
+             dR_over_dB_abs(3+(3*(k-1)),i,j) = - lambda_abs_sig * (image_sig(i,j) - image_sig_abs(i,j))
           end do
        end do       
     end do

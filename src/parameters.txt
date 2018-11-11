@@ -7,9 +7,9 @@
    ,lambda_amp = 100.d0	    !! lambda for amplitude parameter
    ,lambda_mu = 100.d0	    !! lamnda for mean position parameter
    ,lambda_sig = 100.d0     !! lambda for dispersion parameter absorption
-   ,lambda_amp_abs = 0.d0   !! lambda for amplitude parameter absorption
-   ,lambda_mu_abs = 100.d0  !! lamnda for mean position parameter absorption
-   ,lambda_sig_abs = 0.d0   !! lambda for dispersion parameter
+   ,lambda_abs_amp = 0.d0   !! lambda for amplitude parameter absorption
+   ,lambda_abs_mu = 100.d0  !! lamnda for mean position parameter absorption
+   ,lambda_abs_sig = 0.d0   !! lambda for dispersion parameter
    ,lambda_var_amp = 0.d0   !! lambda for dispersion amplitude parameter
    ,lambda_var_mu = 0.d0    !! lambda for dispersion mean position parameter   
    ,lambda_var_sig = 100.d0 !! lambda for dispersion variance parameter

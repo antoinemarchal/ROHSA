@@ -413,7 +413,7 @@ contains
 
 
   subroutine update_abs(cube, cube_abs, params, params_abs, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, &
+       lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, &
        iprint, std_map, std_map_abs)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module) combining absorption line
     !! measurement. 
@@ -434,9 +434,9 @@ contains
     real(xp), intent(in) :: lambda_amp !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_mu !! lambda for mean position parameter
     real(xp), intent(in) :: lambda_sig !! lambda for dispersion parameter
-    real(xp), intent(in) :: lambda_amp_abs !! lambda for amplitude parameter
-    real(xp), intent(in) :: lambda_mu_abs !! lambda for mean position parameter
-    real(xp), intent(in) :: lambda_sig_abs !! lambda for dispersion parameter
+    real(xp), intent(in) :: lambda_abs_amp !! lambda for amplitude parameter
+    real(xp), intent(in) :: lambda_abs_mu !! lambda for mean position parameter
+    real(xp), intent(in) :: lambda_abs_sig !! lambda for dispersion parameter
     real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
     real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
@@ -491,7 +491,7 @@ contains
     end do
 
     call minimize_abs(n_beta, m, beta, lb, ub, cube, cube_abs, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-         lambda_amp_abs, lambda_mu_abs, lambda_sig_abs, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, &
+         lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, &
          std_map, std_map_abs, mean_amp, mean_mu, mean_sig)
 
     call unravel_3D_abs(beta, params, params_abs, 3*n_gauss, dim_y, dim_x)
