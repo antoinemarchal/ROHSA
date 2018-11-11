@@ -48,7 +48,7 @@ class ROHSA(object):
 
         
     def gen_parameters(self, filename_parameters=None, filename=None, filename_abs="", fileout="result.dat", filename_noise="", n_gauss=3, lambda_amp=1000, 
-                       lambda_mu=1000, lambda_sig=1000, lambda_amp_abs=0, lambda_mu_abs=1000, lambda_sig_abs=0, lambda_var_amp=0, lambda_var_mu=0, lambda_var_sig=1000, 
+                       lambda_mu=1000, lambda_sig=1000, lambda_abs_amp=0, lambda_abs_mu=1000, lambda_abs_sig=0, lambda_var_amp=0, lambda_var_mu=0, lambda_var_sig=1000, 
                        amp_fact_init=0.66, sig_init = 4., init_option="mean", maxiter_init=15000, maxiter=800, m=10, noise=".false.", regul = ".true.", descent = ".true.",
                        lstd = 1, ustd = 20, iprint = -1, iprint_init = -1, save_grid=".true.", absorption=".false."):
 
@@ -72,9 +72,9 @@ class ROHSA(object):
         input_file.write("    ,lambda_amp =  "+repr(lambda_amp)+'d0'+'\n')
         input_file.write("    ,lambda_mu =  "+repr(lambda_mu)+'d0'+'\n')
         input_file.write("    ,lambda_sig =  "+repr(lambda_sig)+'d0'+'\n')
-        input_file.write("    ,lambda_amp_abs =  "+repr(lambda_amp_abs)+'d0'+'\n')
-        input_file.write("    ,lambda_mu_abs =  "+repr(lambda_mu_abs)+'d0'+'\n')
-        input_file.write("    ,lambda_sig_abs =  "+repr(lambda_sig_abs)+'d0'+'\n')
+        input_file.write("    ,lambda_abs_amp =  "+repr(lambda_abs_amp)+'d0'+'\n')
+        input_file.write("    ,lambda_abs_mu =  "+repr(lambda_abs_mu)+'d0'+'\n')
+        input_file.write("    ,lambda_abs_sig =  "+repr(lambda_abs_sig)+'d0'+'\n')
         input_file.write("    ,lambda_var_amp =  "+repr(lambda_var_amp)+'d0'+'\n')
         input_file.write("    ,lambda_var_mu =  "+repr(lambda_var_mu)+'d0'+'\n')
         input_file.write("    ,lambda_var_sig =  "+repr(lambda_var_sig)+'d0'+'\n')
