@@ -57,21 +57,21 @@ contains
     integer :: power        !! loop index
 
     real(xp), intent(in), dimension(:,:,:), allocatable :: data        !! initial fits data
-    real(xp), intent(in), dimension(:,:,:), allocatable :: data_abs        !! initial fits data absorption
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data_abs    !! initial fits data absorption
     real(xp), intent(in), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
 
-    real(xp), dimension(:,:,:), allocatable :: cube        !! reshape data with nside --> cube
-    real(xp), dimension(:,:,:), allocatable :: cube_mean   !! mean cube over spatial axis
-    real(xp), dimension(:,:,:), allocatable :: fit_params  !! parameters to optimize with cube mean at each iteration
-    real(xp), dimension(:,:,:), allocatable :: grid_params !! parameters to optimize at final step (dim of initial cube)
+    real(xp), dimension(:,:,:), allocatable :: cube            !! reshape data with nside --> cube
+    real(xp), dimension(:,:,:), allocatable :: cube_mean       !! mean cube over spatial axis
+    real(xp), dimension(:,:,:), allocatable :: fit_params      !! parameters to optimize with cube mean at each iteration
+    real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:,:), allocatable :: grid_params_abs !! parameters to optimize at final step (dim of initial cube)for absorp
-    real(xp), dimension(:,:), allocatable :: std_map       !! standard deviation map fo the cube computed by ROHSA with lb and ub
-    real(xp), dimension(:,:), allocatable :: std_map_abs   !! standard deviation map fo the absorp cube computed by ROHSA with lb and ub
-    real(xp), dimension(:), allocatable :: std_spect       !! std spectrum of the observation
-    real(xp), dimension(:), allocatable :: max_spect       !! max spectrum of the observation
-    real(xp), dimension(:), allocatable :: max_spect_norm  !! max spectrum of the observation normalized by the max of the mean spectrum
-    real(xp), dimension(:), allocatable :: mean_spect      !! mean spectrum of the observation
-    real(xp), dimension(:), allocatable :: guess_spect !! params obtain fi the optimization of the std spectrum of the observation
+    real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
+    real(xp), dimension(:,:), allocatable :: std_map_abs       !! standard deviation map fo the absorp cube computed by ROHSA with lb and ub
+    real(xp), dimension(:), allocatable :: std_spect           !! std spectrum of the observation
+    real(xp), dimension(:), allocatable :: max_spect           !! max spectrum of the observation
+    real(xp), dimension(:), allocatable :: max_spect_norm      !! max spectrum of the observation normalized by the max of the mean spectrum
+    real(xp), dimension(:), allocatable :: mean_spect          !! mean spectrum of the observation
+    real(xp), dimension(:), allocatable :: guess_spect         !! params obtain fi the optimization of the std spectrum of the observation
     
     integer, dimension(3) :: dim_data !! dimension of original data
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
@@ -93,6 +93,9 @@ contains
     print*, "lambda_amp = ", lambda_amp
     print*, "lambda_mu = ", lambda_mu
     print*, "lambda_sig = ", lambda_sig
+    print*, "lambda_amp_abs = ", lambda_amp_abs
+    print*, "lambda_mu_abs = ", lambda_mu_abs
+    print*, "lambda_sig_abs = ", lambda_sig_abs
     print*, "lambda_var_amp = ", lambda_var_amp
     print*, "lambda_var_mu = ", lambda_var_mu
     print*, "lambda_var_sig = ", lambda_var_sig
@@ -288,7 +291,7 @@ contains
     
     !Update last level
     print*,
-    print*, "Update last level ..."
+    print*, "Start updating last level."
     print*,
     
     allocate(std_map(dim_data(2), dim_data(3)))
@@ -343,6 +346,9 @@ contains
     write(12,fmt=*) "# lambda_amp = ", lambda_amp
     write(12,fmt=*) "# lambda_mu = ", lambda_mu
     write(12,fmt=*) "# lambda_sig = ", lambda_sig
+    write(12,fmt=*) "# lambda_amp_abs = ", lambda_amp_abs
+    write(12,fmt=*) "# lambda_mu_abs = ", lambda_mu_abs
+    write(12,fmt=*) "# lambda_sig_abs = ", lambda_sig_abs
     write(12,fmt=*) "# lambda_var_amp = ", lambda_var_amp
     write(12,fmt=*) "# lambda_var_mu = ", lambda_var_mu
     write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
@@ -386,6 +392,9 @@ contains
        write(12,fmt=*) "# lambda_amp = ", lambda_amp
        write(12,fmt=*) "# lambda_mu = ", lambda_mu
        write(12,fmt=*) "# lambda_sig = ", lambda_sig
+       write(12,fmt=*) "# lambda_amp_abs = ", lambda_amp_abs
+       write(12,fmt=*) "# lambda_mu_abs = ", lambda_mu_abs
+       write(12,fmt=*) "# lambda_sig_abs = ", lambda_sig_abs
        write(12,fmt=*) "# lambda_var_amp = ", lambda_var_amp
        write(12,fmt=*) "# lambda_var_mu = ", lambda_var_mu
        write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
