@@ -17,9 +17,9 @@ module mod_rohsa
 contains
 
   subroutine main_rohsa(data, data_abs, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
-       sig_init, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
-       save_grid, absorption)
+       lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
+       amp_fact_init, sig_init, amp_fact_init_abs, sig_init_abs, maxiter_init, maxiter, m, noise, regul, descent, &
+       lstd, ustd, init_option, iprint, iprint_init, save_grid, absorption)
     
     implicit none
     
@@ -39,6 +39,7 @@ contains
     real(xp), intent(in) :: lambda_amp     !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_mu      !! lamnda for mean position parameter
     real(xp), intent(in) :: lambda_sig     !! lambda for dispersion parameter
+    real(xp), intent(in) :: lambda_abs_tot     !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_abs_amp     !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_abs_mu      !! lamnda for mean position parameter
     real(xp), intent(in) :: lambda_abs_sig     !! lambda for dispersion parameter
@@ -46,7 +47,9 @@ contains
     real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
     real(xp), intent(in) :: amp_fact_init  !! times max amplitude of additional Gaussian
-    real(xp), intent(in) :: sig_init       !! dispersion of additional Gaussian
+    real(xp), intent(in) :: sig_init       !! 
+    real(xp), intent(in) :: amp_fact_init_abs  !! times max amplitude of additional Gaussian absoption
+    real(xp), intent(in) :: sig_init_abs       !! 
 
     character(len=8), intent(in)   :: init_option !!Init ROHSA with the mean or the std spectrum    
     character(len=512), intent(in) :: fileout   !! name of the output result
@@ -67,11 +70,15 @@ contains
     real(xp), dimension(:,:,:), allocatable :: grid_params_abs !! parameters to optimize at final step (dim of initial cube)for absorp
     real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:,:), allocatable :: std_map_abs       !! standard deviation map fo the absorp cube computed by ROHSA with lb and ub
+    real(xp) :: std_abs
     real(xp), dimension(:), allocatable :: std_spect           !! std spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect           !! max spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect_norm      !! max spectrum of the observation normalized by the max of the mean spectrum
     real(xp), dimension(:), allocatable :: mean_spect          !! mean spectrum of the observation
     real(xp), dimension(:), allocatable :: guess_spect         !! params obtain fi the optimization of the std spectrum of the observation
+    real(xp), dimension(:), allocatable :: spectrum_abs
+    real(xp), dimension(:), allocatable :: params_abs
+
     
     integer, dimension(3) :: dim_data !! dimension of original data
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
@@ -93,6 +100,7 @@ contains
     print*, "lambda_amp = ", lambda_amp
     print*, "lambda_mu = ", lambda_mu
     print*, "lambda_sig = ", lambda_sig
+    print*, "lambda_abs_tot = ", lambda_abs_tot
     print*, "lambda_abs_amp = ", lambda_abs_amp
     print*, "lambda_abs_mu = ", lambda_abs_mu
     print*, "lambda_abs_sig = ", lambda_abs_sig
@@ -101,6 +109,8 @@ contains
     print*, "lambda_var_sig = ", lambda_var_sig
     print*, "amp_fact_init = ", amp_fact_init
     print*, "sig_init = ", sig_init
+    print*, "amp_fact_init_abs = ", amp_fact_init_abs
+    print*, "sig_init_abs = ", sig_init_abs
     print*, "init_option = ", init_option
     print*, "maxiter_init = ", maxiter_init
     print*, "maxiter = ", maxiter
@@ -312,10 +322,16 @@ contains
                lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
        else
           call init_params_abs(data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
-               amp_fact_init)
-          call update_abs(data, data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
-               lambda_amp, lambda_mu, lambda_sig, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, &
-               lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map, std_map_abs)
+               amp_fact_init_abs, sig_init_abs)
+          allocate(spectrum_abs(dim_data(1)))
+          allocate(params_abs(3*n_gauss))
+          params_abs = grid_params_abs(:,dim_data(2)/2,dim_data(3)/2)
+          spectrum_abs = data_abs(:,dim_data(2)/2,dim_data(3)/2)
+          std_abs = std_map_abs(dim_data(2)/2,dim_data(3)/2)
+          call update_abs(data, spectrum_abs, grid_params, params_abs, n_gauss, dim_data(1), &
+               dim_data(2), dim_data(3), lambda_amp, lambda_mu, lambda_sig, lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, &
+               lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map, std_abs)
+          grid_params_abs(:,dim_data(2)/2,dim_data(3)/2) = params_abs
        end if
        
        if (n_gauss_add .ne. 0) then !FIXME KEYWORD

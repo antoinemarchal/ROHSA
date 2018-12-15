@@ -7,6 +7,7 @@
    ,lambda_amp = 100.d0	    !! lambda for amplitude parameter
    ,lambda_mu = 100.d0	    !! lamnda for mean position parameter
    ,lambda_sig = 100.d0     !! lambda for dispersion parameter absorption
+   ,lambda_abs_tot = 100.d0 !! lambda for residual absorption
    ,lambda_abs_amp = 0.d0   !! lambda for amplitude parameter absorption
    ,lambda_abs_mu = 100.d0  !! lamnda for mean position parameter absorption
    ,lambda_abs_sig = 0.d0   !! lambda for dispersion parameter

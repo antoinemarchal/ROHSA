@@ -8,31 +8,34 @@ program ROHSA
   
   implicit none
 
-  logical :: noise           !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
-  logical :: regul           !! if true --> activate regulation
-  logical :: descent         !! if true --> activate hierarchical descent to initiate the optimization
-  logical :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
-  logical :: absorption      !! if true --> fit emission and absoption lines jointly
-  integer :: n_gauss         !! number of gaussian to fit
-  integer :: n_gauss_add     !! number of gaussian to add at each step
-  integer :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
-  integer :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
-  integer :: ustd            !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
-  integer :: iprint          !! print option 
-  integer :: iprint_init     !! print option init
-  integer :: maxiter         !! max iteration for L-BFGS-B alogorithm
-  integer :: maxiter_init    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
-  real(xp) :: lambda_amp     !! lambda for amplitude parameter
-  real(xp) :: lambda_mu      !! lamnda for mean position parameter
-  real(xp) :: lambda_sig     !! lambda for dispersion parameter
-  real(xp) :: lambda_abs_amp !! lambda for amplitude parameter
-  real(xp) :: lambda_abs_mu  !! lamnda for mean position parameter
-  real(xp) :: lambda_abs_sig !! lambda for dispersion parameter
-  real(xp) :: lambda_var_amp !! lambda for variance amplitude parameter
-  real(xp) :: lambda_var_mu  !! lambda for variance mean position parameter
-  real(xp) :: lambda_var_sig !! lambda for variance dispersion parameter
-  real(xp) :: amp_fact_init  !! times max amplitude of additional Gaussian
-  real(xp) :: sig_init       !! dispersion of additional Gaussian
+  logical :: noise              !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
+  logical :: regul              !! if true --> activate regulation
+  logical :: descent            !! if true --> activate hierarchical descent to initiate the optimization
+  logical :: save_grid          !! save grid of fitted parameters at each step of the multiresolution process
+  logical :: absorption         !! if true --> fit emission and absoption lines jointly
+  integer :: n_gauss            !! number of gaussian to fit
+  integer :: n_gauss_add        !! number of gaussian to add at each step
+  integer :: m                  !! number of corrections used in the limited memory matrix by LBFGS-B
+  integer :: lstd               !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
+  integer :: ustd               !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
+  integer :: iprint             !! print option 
+  integer :: iprint_init        !! print option init
+  integer :: maxiter            !! max iteration for L-BFGS-B alogorithm
+  integer :: maxiter_init       !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
+  real(xp) :: lambda_amp        !! lambda for amplitude parameter
+  real(xp) :: lambda_mu         !! lamnda for mean position parameter
+  real(xp) :: lambda_sig        !! lambda for dispersion parameter
+  real(xp) :: lambda_abs_tot    !! lambda for amplitude parameter
+  real(xp) :: lambda_abs_amp    !! lambda for amplitude parameter
+  real(xp) :: lambda_abs_mu     !! lamnda for mean position parameter
+  real(xp) :: lambda_abs_sig    !! lambda for dispersion parameter
+  real(xp) :: lambda_var_amp    !! lambda for variance amplitude parameter
+  real(xp) :: lambda_var_mu     !! lambda for variance mean position parameter
+  real(xp) :: lambda_var_sig    !! lambda for variance dispersion parameter
+  real(xp) :: amp_fact_init     !! times max amplitude of additional Gaussian
+  real(xp) :: sig_init          !! dispersion of additional Gaussian
+  real(xp) :: amp_fact_init_abs !! times max amplitude of additional Gaussian absorption
+  real(xp) :: sig_init_abs      !! dispersion of additional Gaussian absorption
 
   character(len=512) :: filename_parameters !! name of the parameters file (default parameters.txt)
   character(len=512) :: filename            !! name of the data file
@@ -54,6 +57,7 @@ program ROHSA
   lambda_amp = 1._xp
   lambda_mu = 1._xp
   lambda_sig = 1._xp
+  lambda_abs_tot = 0._xp
   lambda_abs_amp = 0._xp
   lambda_abs_mu = 1._xp
   lambda_abs_sig = 0._xp
@@ -62,6 +66,8 @@ program ROHSA
   lambda_var_sig = 1._xp
   amp_fact_init = 2._xp/3._xp
   sig_init = 5._xp
+  amp_fact_init_abs = 2._xp/3._xp
+  sig_init_abs = 5._xp
   maxiter_init = 15000
   maxiter = 800
   m = 10
@@ -77,9 +83,9 @@ program ROHSA
  
   !Read parameters
   call read_parameters(filename_parameters, filename, filename_abs, fileout, filename_noise, n_gauss, n_gauss_add, &
-       lambda_amp, lambda_mu, lambda_sig, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, &
-       lambda_var_sig, amp_fact_init, sig_init, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, &
-       iprint, iprint_init, save_grid, absorption)
+       lambda_amp, lambda_mu, lambda_sig, lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, &
+       lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, amp_fact_init_abs, sig_init_abs, init_option, maxiter_init, &
+       maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid, absorption)
 
   call header()  
 
@@ -103,9 +109,9 @@ program ROHSA
 
   !Call ROHSA subroutine
   call main_rohsa(data, data_abs, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
-       sig_init, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
-       save_grid, absorption)  
+       lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
+       amp_fact_init, sig_init, amp_fact_init_abs, sig_init_abs, maxiter_init, maxiter, m, noise, regul, descent, &
+       lstd, ustd, init_option, iprint, iprint_init, save_grid, absorption)  
 
   call ender()
    
