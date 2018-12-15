@@ -12,10 +12,10 @@ module mod_inout
 
 contains
   
-  subroutine read_parameters(filename_parameters, filename, filename_abs, fileout, filename_noise, n_gauss, &
-       n_gauss_add, lambda_amp, lambda_mu, lambda_sig, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, &
-       lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, init_option, maxiter_init, maxiter, m, noise, regul, &
-       descent, lstd, ustd, iprint, iprint_init, save_grid, absorption)
+  subroutine read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, &
+       n_gauss_add, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
+       amp_fact_init, sig_init, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, &
+       iprint, iprint_init, save_grid)
     implicit none
 
     integer :: ios=0
@@ -28,21 +28,18 @@ contains
     integer, intent(inout) :: iprint, iprint_init
     integer, intent(inout) :: maxiter, maxiter_init
     real(xp), intent(inout) :: lambda_amp, lambda_mu, lambda_sig
-    real(xp), intent(inout) :: lambda_abs_amp, lambda_abs_mu, lambda_abs_sig
     real(xp), intent(inout) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
     real(xp), intent(inout) :: amp_fact_init, sig_init
-    logical, intent(inout) :: noise, regul, descent, save_grid, absorption
+    logical, intent(inout) :: noise, regul, descent, save_grid
 
     character(len=512), intent(inout) :: filename
-    character(len=512), intent(inout) :: filename_abs
     character(len=512), intent(inout) :: fileout
     character(len=512), intent(inout) :: filename_noise
     character(len=8), intent(inout) :: init_option
 
-    namelist /user_parameters/ filename, filename_abs, fileout, filename_noise, n_gauss, n_gauss_add, lambda_amp, lambda_mu, &
-         & lambda_sig, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
-         amp_fact_init, sig_init, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, &
-         iprint_init, save_grid, absorption
+    namelist /user_parameters/ filename, fileout, filename_noise, n_gauss, n_gauss_add, lambda_amp, lambda_mu, &
+         & lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, init_option, maxiter_init, &
+         maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
     if (ios /= 0) stop "opening file error"

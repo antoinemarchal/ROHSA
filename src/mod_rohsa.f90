@@ -16,10 +16,9 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, data_abs, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
-       sig_init, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
-       save_grid, absorption)
+  subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, maxiter_init, maxiter, m, noise, &
+       regul, descent, lstd, ustd, init_option, iprint, iprint_init, save_grid)
     
     implicit none
     
@@ -27,7 +26,6 @@ contains
     logical, intent(in) :: regul           !! if true --> activate regulation
     logical, intent(in) :: descent         !! if true --> activate hierarchical descent to initiate the optimization
     logical, intent(in) :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
-    logical, intent(in) :: absorption      !! if true --> fit emission and absoption lines jointly
     integer, intent(in) :: n_gauss_add     !! number of gaussian to add at each step
     integer, intent(in) :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
@@ -39,9 +37,6 @@ contains
     real(xp), intent(in) :: lambda_amp     !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_mu      !! lamnda for mean position parameter
     real(xp), intent(in) :: lambda_sig     !! lambda for dispersion parameter
-    real(xp), intent(in) :: lambda_abs_amp     !! lambda for amplitude parameter
-    real(xp), intent(in) :: lambda_abs_mu      !! lamnda for mean position parameter
-    real(xp), intent(in) :: lambda_abs_sig     !! lambda for dispersion parameter
     real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
     real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
@@ -57,14 +52,12 @@ contains
     integer :: power        !! loop index
 
     real(xp), intent(in), dimension(:,:,:), allocatable :: data        !! initial fits data
-    real(xp), intent(in), dimension(:,:,:), allocatable :: data_abs    !! initial fits data absorption
     real(xp), intent(in), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
 
     real(xp), dimension(:,:,:), allocatable :: cube            !! reshape data with nside --> cube
     real(xp), dimension(:,:,:), allocatable :: cube_mean       !! mean cube over spatial axis
     real(xp), dimension(:,:,:), allocatable :: fit_params      !! parameters to optimize with cube mean at each iteration
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
-    real(xp), dimension(:,:,:), allocatable :: grid_params_abs !! parameters to optimize at final step (dim of initial cube)for absorp
     real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:,:), allocatable :: std_map_abs       !! standard deviation map fo the absorp cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: std_spect           !! std spectrum of the observation
@@ -93,9 +86,6 @@ contains
     print*, "lambda_amp = ", lambda_amp
     print*, "lambda_mu = ", lambda_mu
     print*, "lambda_sig = ", lambda_sig
-    print*, "lambda_abs_amp = ", lambda_abs_amp
-    print*, "lambda_abs_mu = ", lambda_abs_mu
-    print*, "lambda_abs_sig = ", lambda_abs_sig
     print*, "lambda_var_amp = ", lambda_var_amp
     print*, "lambda_var_mu = ", lambda_var_mu
     print*, "lambda_var_sig = ", lambda_var_sig
@@ -110,7 +100,6 @@ contains
     print*, "regul = ", regul
     print*, "descent = ", descent
     print*, "save_grid = ", save_grid
-    print*, "absorption = ", absorption
     print*,
     
     allocate(kernel(3, 3))
@@ -161,7 +150,6 @@ contains
     !Allocate memory for parameters grids
     if (descent .eqv. .true.) then
        allocate(grid_params(3*(n_gauss+(nside*n_gauss_add)), dim_data(2), dim_data(3)))
-       allocate(grid_params_abs(3*(n_gauss+(nside*n_gauss_add)), dim_data(2), dim_data(3)))
        allocate(fit_params(3*(n_gauss+(nside*n_gauss_add)), 1, 1))
        !Init sigma = 1 to avoid Nan
        do i=1,n_gauss
@@ -170,7 +158,6 @@ contains
     else 
        !Maybe fixme same sigma = 1
        allocate(grid_params(3*(n_gauss+n_gauss_add), dim_data(2), dim_data(3)))
-       allocate(grid_params_abs(3*(n_gauss+n_gauss_add), dim_data(2), dim_data(3)))
     end if
     
     print*, "                    Start iteration"
@@ -301,22 +288,11 @@ contains
        std_map = std_cube
     else   
        call set_stdmap(std_map, data, lstd, ustd)
-       if (absorption .eqv. .true.) then
-          call set_stdmap(std_map_abs, data_abs, lstd, ustd)
-       end if
     end if
     
     if (regul .eqv. .true.) then
-       if (absorption .eqv. .false.) then 
-          call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-               lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
-       else
-          call init_params_abs(data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
-               amp_fact_init)
-          call update_abs(data, data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
-               lambda_amp, lambda_mu, lambda_sig, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, &
-               lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map, std_map_abs)
-       end if
+       call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
+            lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
        
        if (n_gauss_add .ne. 0) then !FIXME KEYWORD
           do l=1,n_gauss_add
@@ -346,9 +322,6 @@ contains
     write(12,fmt=*) "# lambda_amp = ", lambda_amp
     write(12,fmt=*) "# lambda_mu = ", lambda_mu
     write(12,fmt=*) "# lambda_sig = ", lambda_sig
-    write(12,fmt=*) "# lambda_abs_amp = ", lambda_abs_amp
-    write(12,fmt=*) "# lambda_abs_mu = ", lambda_abs_mu
-    write(12,fmt=*) "# lambda_abs_sig = ", lambda_abs_sig
     write(12,fmt=*) "# lambda_var_amp = ", lambda_var_amp
     write(12,fmt=*) "# lambda_var_mu = ", lambda_var_mu
     write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
@@ -374,54 +347,6 @@ contains
        enddo
     enddo
     close(12)
-
-    if (absorption .eqv. .true.) then
-       print*,
-       print*, "_____ Write output file absorption _____"
-       print*,
-       
-       ! Open file
-       open(unit=12, file=trim(fileout(:len_trim(fileout)-4)) // "_absorption" // ".dat", action="write", iostat=ios)
-       if (ios /= 0) stop "opening file error"
-       
-       write(12,fmt=*) "# "
-       write(12,fmt=*) "# ______Parameters_____"
-       write(12,fmt=*) "# "
-       write(12,fmt=*) "# n_gauss = ", n_gauss
-       write(12,fmt=*) "# n_gauss_add = ", n_gauss_add
-       write(12,fmt=*) "# lambda_amp = ", lambda_amp
-       write(12,fmt=*) "# lambda_mu = ", lambda_mu
-       write(12,fmt=*) "# lambda_sig = ", lambda_sig
-       write(12,fmt=*) "# lambda_abs_amp = ", lambda_abs_amp
-       write(12,fmt=*) "# lambda_abs_mu = ", lambda_abs_mu
-       write(12,fmt=*) "# lambda_abs_sig = ", lambda_abs_sig
-       write(12,fmt=*) "# lambda_var_amp = ", lambda_var_amp
-       write(12,fmt=*) "# lambda_var_mu = ", lambda_var_mu
-       write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
-       write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
-       write(12,fmt=*) "# sig_init = ", sig_init
-       write(12,fmt=*) "# init_option = ", init_option
-       write(12,fmt=*) "# maxiter_itit = ", maxiter_init
-       write(12,fmt=*) "# maxiter = ", maxiter
-       write(12,fmt=*) "# lstd = ", lstd
-       write(12,fmt=*) "# ustd = ", ustd
-       write(12,fmt=*) "# noise = ", noise
-       write(12,fmt=*) "# regul = ", regul
-       write(12,fmt=*) "# descent = ", descent
-       write(12,fmt=*) "# "
-       
-       write(12,fmt=*) "# i, j, A, mean, sigma"
-       
-       do i=1, dim_data(2)
-          do j=1, dim_data(3)
-             do k=1, n_gauss
-                write(12,fmt=*) i-1, j-1, grid_params_abs(1+((k-1)*3),i,j), grid_params_abs(2+((k-1)*3),i,j), &
-                     grid_params_abs(3+((k-1)*3),i,j)
-             enddo
-          enddo
-       enddo
-       close(12)
-    end if
     
   end subroutine main_rohsa
   
