@@ -11,19 +11,18 @@ cm.set_bad(color='black')
 imkw = dict(origin='lower', interpolation='none', cmap=cm)
 
 class ROHSA(object):
-    def __init__(self, cube, filename=None):
+    def __init__(self, cube, hdr=None, filename=None):
         super(ROHSA, self).__init__()
         self.cube = cube
+        self.hdr = hdr if hdr is not None else None
+        self.filename = filename if filename is not None else "cube.fits"
 
 
-    def cube2dat(self, filename=None):
-        if not filename :
-            print("Generate mycube.dat file")
-        else: print("Generate " + filename + " file")
-
-        filename = filename or "mycube.dat"
+    def cube2dat(self, fileout=None):
+        if not fileout : fileout = self.filename[:-5] + ".dat" if self.filename is not None else "cube.dat"
+        print("Generate .dat file readable by fortran")
         
-        with open(filename,'w+') as f:
+        with open(fileout,'w+') as f:
             f.write('{:d}\t{:d}\t{:d}\n'.format(self.cube.shape[0], self.cube.shape[1], self.cube.shape[2]))
             for i in range(self.cube.shape[1]):
                 for j in range(self.cube.shape[2]):
@@ -136,31 +135,60 @@ class ROHSA(object):
         return a * np.exp(-((x - mu)**2)/(2. * sig**2))
 
 
+    def gauss_2D(self, xs, a, mu, sig):
+        return [a * np.exp(-((x - mu)**2)/(2. * sig**2)) for x in xs]
+
+    
+    def mean2vel(self, CRVAL, CDELT, CRPIX, mean):
+        return [(CRVAL + CDELT * (mean[i] - CRPIX)) for i in range(len(mean))]
+
     def plot_spect(self, gaussian, idy=0, idx=0):
         plt.figure()
         x = np.arange(self.cube.shape[0])
+        v = self.mean2vel(hdr["CRVAL3"], hdr["CDELT3"], hdr["CRPIX3"], x)
         plt.plot(x, self.cube[:,idy,idx])
         tot = np.zeros(self.cube.shape[0])
-        for i in np.arange(gaussian.shape[0]/3):
+        n_gauss = gaussian.shape[0]/3
+        for i in np.arange(n_gauss):
             spectrum = self.gauss(x, gaussian[int(0+(3*i)),idy,idx], gaussian[int(1+(3*i)),idy,idx], gaussian[int(2+(3*i)),idy,idx])
             tot += spectrum
             plt.plot(x, spectrum, color="k") 
         plt.plot(x, tot, color="r") 
              
         return 0 
+
+    def return_result_cube(self, gaussian):
+        result = np.zeros(self.cube.shape)
+        n_gauss = gaussian.shape[0]/3
+        for i in np.arange(n_gauss) :
+            result += self.gauss_2D(np.arange(self.cube.shape[0]), gaussian[int(0+(3*i))], gaussian[int(1+(3*i))], gaussian[int(2+(3*i))])
+        return result
+
+    def write_fits(self, gaussian, fileout=None, hdr=False):
+        if not fileout : fileout = self.filename[:-5] + "_ROHSA.fits" if self.filename is not None else "cube_ROHSA.fits"
+
+        result = self.return_result_cube(gaussian)
+
+        hdu = fits.PrimaryHDU(result)
+        if self.hdr is not None : hdu.header = self.hdr
+        hdulist = fits.HDUList([hdu])
+        hdulist.writeto(fileout, overwrite=True)        
+        return 0
                 
         
 if __name__ == '__main__':    
     #Load data
     filename = "GHIGLS_DFN_Tb.fits"
     hdu = fits.open(filename)
+    hdr = hdu[0].header
     cube = hdu[0].data[0][150:350,:32,:32]
 
     #Call ROHSApy
-    core = ROHSA(cube)
+    core = ROHSA(cube, hdr=hdr, filename=filename)
     core.cube2dat()
     core.rms_map_const()
     core.gen_parameters(filename="mycube.dat", save_grid=".false.")
-    core.run("parameters.txt", nohup=False)
+    # core.run("parameters.txt", nohup=False)
     gaussian = core.read_gaussian("result.dat")
-    core.plot_spect(gaussian, 14, 14)
+    foo = core.write_fits(gaussian)
+    # core.plot_spect(gaussian, 14, 14)
