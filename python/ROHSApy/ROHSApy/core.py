@@ -18,11 +18,11 @@ class ROHSA(object):
         self.filename = filename if filename is not None else "cube.fits"
 
 
-    def cube2dat(self, fileout=None):
-        if not fileout : fileout = self.filename[:-5] + ".dat" if self.filename is not None else "cube.dat"
-        print("Generate .dat file readable by fortran")
+    def cube2dat(self, filename=None):
+        if not filename : filename = self.filename[:-5] + ".dat" if self.filename is not None else "cube.dat"
+        print("Generate " + filename + " file readable by fortran")
         
-        with open(fileout,'w+') as f:
+        with open(filename,'w+') as f:
             f.write('{:d}\t{:d}\t{:d}\n'.format(self.cube.shape[0], self.cube.shape[1], self.cube.shape[2]))
             for i in range(self.cube.shape[1]):
                 for j in range(self.cube.shape[2]):
@@ -31,7 +31,7 @@ class ROHSA(object):
                         f.write(line)
 
 
-    def rms_map_const(self, filename=None, const=1.):
+    def rms_map(self, rms_map, filename=None):
         if not filename :
             print("Generate rms_map.dat file")
         else: print("Generate " + filename + " file")
@@ -42,7 +42,7 @@ class ROHSA(object):
             f.write('{:d}\t{:d}\n'.format(self.cube.shape[1], self.cube.shape[2]))
             for j in range(self.cube.shape[2]):
                 for k in range(self.cube.shape[1]):
-                    line = '{:d}\t{:d}\t{:0.16f}\n'.format(j, k, const)
+                    line = '{:d}\t{:d}\t{:0.16f}\n'.format(k, j, rms_map[k,j])
                     f.write(line)
 
         
@@ -186,7 +186,7 @@ if __name__ == '__main__':
     #Call ROHSApy
     core = ROHSA(cube, hdr=hdr, filename=filename)
     core.cube2dat()
-    core.rms_map_const()
+    # core.rms_map_const()
     core.gen_parameters(filename="mycube.dat", save_grid=".false.")
     # core.run("parameters.txt", nohup=False)
     gaussian = core.read_gaussian("result.dat")
