@@ -144,18 +144,37 @@ class ROHSA(object):
     def mean2vel(self, CRVAL, CDELT, CRPIX, mean):
         return [(CRVAL + CDELT * (mean[i] - CRPIX)) for i in range(len(mean))]
 
+
     def plot_spect(self, gaussian, idy=0, idx=0):
-        plt.figure()
-        x = np.arange(self.cube.shape[0])
-        # v = self.mean2vel(hdr["CRVAL3"], hdr["CDELT3"], hdr["CRPIX3"], x)
-        plt.plot(x, self.cube[:,idy,idx])
-        tot = np.zeros(self.cube.shape[0])
         n_gauss = gaussian.shape[0]/3
-        for i in np.arange(n_gauss):
-            spectrum = self.gauss(x, gaussian[int(0+(3*i)),idy,idx], gaussian[int(1+(3*i)),idy,idx], gaussian[int(2+(3*i)),idy,idx])
-            tot += spectrum
-            plt.plot(x, spectrum, color="k") 
-        plt.plot(x, tot, color="r") 
+        x = np.arange(self.cube.shape[0])
+
+        fig = plt.figure(figsize=(8, 6))
+        ax = fig.add_subplot(111)
+
+        if self.hdr is not None :
+            if not self.hdr["CRVAL3"] : print "Missing CRVAL3 keyword"
+            v = self.mean2vel(self.hdr["CRVAL3"]*1.e-3, self.hdr["CDELT3"]*1.e-3, self.hdr["CRPIX3"], x)
+            if v[0] > v[1] : v = v[::-1]
+            ax.step(v, self.cube[:,idy,idx], color='cornflowerblue')
+            tot = np.zeros(self.cube.shape[0])
+            for i in np.arange(n_gauss):
+                spectrum = self.gauss(x, gaussian[int(0+(3*i)),idy,idx], gaussian[int(1+(3*i)),idy,idx], gaussian[int(2+(3*i)),idy,idx])
+                tot += spectrum
+                ax.plot(v, spectrum, color="k")
+            ax.plot(v, tot, color="r") 
+            ax.set_ylabel(r'T [k]')
+            ax.set_xlabel(r'v [km s$^{-1}$]')
+        else:
+            ax.step(x, self.cube[:,idy,idx], color='cornflowerblue')
+            tot = np.zeros(self.cube.shape[0])
+            for i in np.arange(n_gauss):
+                spectrum = self.gauss(x, gaussian[int(0+(3*i)),idy,idx], gaussian[int(1+(3*i)),idy,idx], gaussian[int(2+(3*i)),idy,idx])
+                tot += spectrum
+                ax.plot(x, spectrum, color="k")
+            ax.plot(x, tot, color="r") 
+            ax.set_ylabel(r'T [k]')
+            ax.set_xlabel(r'idx [pixel unit]')
              
         return 0 
 
@@ -193,4 +212,4 @@ if __name__ == '__main__':
     # core.run("parameters.txt", nohup=False)
     gaussian = core.read_gaussian("result.dat")
     foo = core.write_fits(gaussian)
-    # core.plot_spect(gaussian, 14, 14)
+    core.plot_spect(gaussian, 14, 14)
