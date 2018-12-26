@@ -145,7 +145,7 @@ class ROHSA(object):
     def plot_spect(self, gaussian, idy=0, idx=0):
         plt.figure()
         x = np.arange(self.cube.shape[0])
-        v = self.mean2vel(hdr["CRVAL3"], hdr["CDELT3"], hdr["CRPIX3"], x)
+        # v = self.mean2vel(hdr["CRVAL3"], hdr["CDELT3"], hdr["CRPIX3"], x)
         plt.plot(x, self.cube[:,idy,idx])
         tot = np.zeros(self.cube.shape[0])
         n_gauss = gaussian.shape[0]/3
