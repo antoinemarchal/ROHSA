@@ -374,7 +374,7 @@ contains
   end subroutine update
 
 
-  subroutine init_params_abs(cube_abs, params, params_abs, n_gauss, dim_v, dim_y, dim_x, amp_fact_init_abs, sig_init_abs)
+  subroutine init_params_abs(cube_abs, params, params_abs, n_gauss, dim_v, dim_y, dim_x, amp_fact_init)
     !! Init params for absorption cube
     implicit none
     
@@ -382,29 +382,32 @@ contains
     integer, intent(in) :: dim_v !! dimension along v axis
     integer, intent(in) :: dim_y !! dimension along spatial axis y 
     integer, intent(in) :: dim_x !! dimension along spatial axis x
-    real(xp), intent(in) :: amp_fact_init_abs !! times max amplitude of additional Gaussian
-    real(xp), intent(in) :: sig_init_abs !! dispersion of Gaussian absorption
+    real(xp), intent(in) :: amp_fact_init !! times max amplitude of additional Gaussian
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube_abs !! cube absorption
     real(xp), intent(in), dimension(:,:,:), allocatable :: params !! parameters cube to update
 
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params_abs !! parameters cube to update
 
-    integer :: k
+    integer :: i,j,k
     real(xp), dimension(:), allocatable :: line
     real(xp) :: max_line
 
     max_line = 0._xp
-
-    allocate(line(dim_v))
-    line = cube_abs(:,dim_y/2,dim_x/2)
-    max_line = maxval(line, dim_v)
-    do k=1, n_gauss
-       params_abs(1+(3*(k-1)),dim_y/2,dim_x/2) = amp_fact_init_abs * max_line
-       params_abs(2+(3*(k-1)),dim_y/2,dim_x/2) = params(2+(3*(k-1)),dim_y/2,dim_x/2)
-       params_abs(3+(3*(k-1)),dim_y/2,dim_x/2) = sig_init_abs
-    end do
-    deallocate(line)
     
+    !Init params_abs
+    do j=1, dim_x
+       do i=1, dim_y
+          allocate(line(dim_v))
+          line = cube_abs(:,i,j)
+          max_line = maxval(line, dim_v)
+          do k=1, n_gauss
+             params_abs(1+(3*(k-1)),i,j) = amp_fact_init * max_line
+             params_abs(2+(3*(k-1)),i,j) = params(2+(3*(k-1)),i,j)
+             params_abs(3+(3*(k-1)),i,j) = params(3+(3*(k-1)),i,j)
+          end do
+          deallocate(line)
+       end do
+    end do
   end subroutine init_params_abs
 
 
