@@ -16,10 +16,10 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, data_abs, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
-       amp_fact_init, sig_init, amp_fact_init_abs, sig_init_abs, maxiter_init, maxiter, m, noise, regul, descent, &
-       lstd, ustd, init_option, iprint, iprint_init, save_grid, absorption)
+  subroutine main_rohsa(data, data_abs, std_cube, std_cube_abs, fileout, n_gauss, lambda_amp, lambda_mu, &
+       lambda_sig, lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, &
+       lambda_var_sig, amp_fact_init, sig_init, amp_fact_init_abs, sig_init_abs, maxiter_init, maxiter, m, noise, &
+       regul, descent, lstd, ustd, init_option, iprint, iprint_init, save_grid, absorption)
     
     implicit none
     
@@ -28,7 +28,6 @@ contains
     logical, intent(in) :: descent         !! if true --> activate hierarchical descent to initiate the optimization
     logical, intent(in) :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
     logical, intent(in) :: absorption      !! if true --> fit emission and absoption lines jointly
-    integer, intent(in) :: n_gauss_add     !! number of gaussian to add at each step
     integer, intent(in) :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
     integer, intent(in) :: ustd            !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
@@ -59,9 +58,10 @@ contains
     integer :: n            !! loop index
     integer :: power        !! loop index
 
-    real(xp), intent(in), dimension(:,:,:), allocatable :: data        !! initial fits data
-    real(xp), intent(in), dimension(:,:,:), allocatable :: data_abs    !! initial fits data absorption
-    real(xp), intent(in), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data         !! initial fits data
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data_abs     !! initial fits data absorption
+    real(xp), intent(in), dimension(:,:), allocatable   :: std_cube     !! standard deviation map fo the cube is given by the user 
+    real(xp), intent(in), dimension(:,:), allocatable   :: std_cube_abs !! standard deviation map fo the absorption cube is given by the user 
 
     real(xp), dimension(:,:,:), allocatable :: cube            !! reshape data with nside --> cube
     real(xp), dimension(:,:,:), allocatable :: cube_mean       !! mean cube over spatial axis
@@ -70,14 +70,11 @@ contains
     real(xp), dimension(:,:,:), allocatable :: grid_params_abs !! parameters to optimize at final step (dim of initial cube)for absorp
     real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:,:), allocatable :: std_map_abs       !! standard deviation map fo the absorp cube computed by ROHSA with lb and ub
-    real(xp) :: std_abs
     real(xp), dimension(:), allocatable :: std_spect           !! std spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect           !! max spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect_norm      !! max spectrum of the observation normalized by the max of the mean spectrum
     real(xp), dimension(:), allocatable :: mean_spect          !! mean spectrum of the observation
-    real(xp), dimension(:), allocatable :: guess_spect         !! params obtain fi the optimization of the std spectrum of the observation
-    real(xp), dimension(:), allocatable :: spectrum_abs
-    real(xp), dimension(:), allocatable :: params_abs
+    real(xp), dimension(:), allocatable :: guess_spect         !! params obtain with the optimization of the std spectrum of the observation
 
     
     integer, dimension(3) :: dim_data !! dimension of original data
@@ -96,7 +93,6 @@ contains
     print*,
     print*, "______Parameters_____"
     print*, "n_gauss = ", n_gauss
-    print*, "n_gauss_add = ", n_gauss_add
     print*, "lambda_amp = ", lambda_amp
     print*, "lambda_mu = ", lambda_mu
     print*, "lambda_sig = ", lambda_sig
@@ -170,17 +166,17 @@ contains
     
     !Allocate memory for parameters grids
     if (descent .eqv. .true.) then
-       allocate(grid_params(3*(n_gauss+(nside*n_gauss_add)), dim_data(2), dim_data(3)))
-       allocate(grid_params_abs(3*(n_gauss+(nside*n_gauss_add)), dim_data(2), dim_data(3)))
-       allocate(fit_params(3*(n_gauss+(nside*n_gauss_add)), 1, 1))
+       allocate(grid_params(3*n_gauss, dim_data(2), dim_data(3)))
+       allocate(grid_params_abs(3*n_gauss, dim_data(2), dim_data(3)))
+       allocate(fit_params(3*n_gauss, 1, 1))
        !Init sigma = 1 to avoid Nan
        do i=1,n_gauss
           fit_params(3+(3*(i-1)),1,1) = 1._xp
        end do
     else 
        !Maybe fixme same sigma = 1
-       allocate(grid_params(3*(n_gauss+n_gauss_add), dim_data(2), dim_data(3)))
-       allocate(grid_params_abs(3*(n_gauss+n_gauss_add), dim_data(2), dim_data(3)))
+       allocate(grid_params(3*n_gauss, dim_data(2), dim_data(3)))
+       allocate(grid_params_abs(3*n_gauss, dim_data(2), dim_data(3)))
     end if
     
     print*, "                    Start iteration"
@@ -239,13 +235,6 @@ contains
                 print*,  "Update level", n, ">", power
                 call update(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
                      lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)        
-
-                if (n_gauss_add .ne. 0) then !FIXME
-                   ! Add new Gaussian if one reduced chi square > 1 
-                   call init_new_gauss(cube_mean, fit_params, std_map, n_gauss, dim_cube(1), power, power, amp_fact_init, &
-                        sig_init)
-                end if
-
                 deallocate(std_map)
              end if
           end if
@@ -273,7 +262,7 @@ contains
             (/ 3*n_gauss, dim_data(2), dim_data(3)/))       
 
        else
-          allocate(guess_spect(3*(n_gauss+n_gauss_add)))
+          allocate(guess_spect(3*n_gauss))
           if (init_option .eq. "mean") then
              print*, "Use of the mean spectrum to initialize each los"
              call init_spectrum(n_gauss, guess_spect, dim_cube(1), mean_spect, amp_fact_init, sig_init, &
@@ -309,10 +298,11 @@ contains
     
     if (noise .eqv. .true.) then
        std_map = std_cube
+       std_map_abs = std_cube_abs
     else   
        call set_stdmap(std_map, data, lstd, ustd)
        if (absorption .eqv. .true.) then
-          call set_stdmap(std_map_abs, data_abs, lstd, ustd)
+          call set_stdmap(std_map_abs, data_abs, lstd, ustd) ! fixme maybe later w/ lstd_abs and ustd_abs
        end if
     end if
     
@@ -323,27 +313,10 @@ contains
        else
           call init_params_abs(data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
                amp_fact_init_abs, sig_init_abs)
-          allocate(spectrum_abs(dim_data(1)))
-          allocate(params_abs(3*n_gauss))
-          params_abs = grid_params_abs(:,dim_data(2)/2,dim_data(3)/2)
-          spectrum_abs = data_abs(:,dim_data(2)/2,dim_data(3)/2)
-          std_abs = std_map_abs(dim_data(2)/2,dim_data(3)/2)
-          call update_abs(data, spectrum_abs, grid_params, params_abs, n_gauss, dim_data(1), &
-               dim_data(2), dim_data(3), lambda_amp, lambda_mu, lambda_sig, lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, &
-               lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map, std_abs)
-          grid_params_abs(:,dim_data(2)/2,dim_data(3)/2) = params_abs
+          call update_abs(data, data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
+               lambda_amp, lambda_mu, lambda_sig, lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, &
+               lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map, std_map_abs)
        end if
-       
-       if (n_gauss_add .ne. 0) then !FIXME KEYWORD
-          do l=1,n_gauss_add
-             ! Add new Gaussian if at least one reduced chi square of the field is > 1 
-             call init_new_gauss(data, grid_params, std_map, n_gauss, dim_data(1), dim_data(2), dim_data(3), amp_fact_init, &
-                  sig_init)
-             call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-                  lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
-          end do
-       end if
-
     end if
     
     print*,
@@ -358,7 +331,6 @@ contains
     write(12,fmt=*) "# ______Parameters_____"
     write(12,fmt=*) "# "
     write(12,fmt=*) "# n_gauss = ", n_gauss
-    write(12,fmt=*) "# n_gauss_add = ", n_gauss_add
     write(12,fmt=*) "# lambda_amp = ", lambda_amp
     write(12,fmt=*) "# lambda_mu = ", lambda_mu
     write(12,fmt=*) "# lambda_sig = ", lambda_sig
@@ -404,7 +376,6 @@ contains
        write(12,fmt=*) "# ______Parameters_____"
        write(12,fmt=*) "# "
        write(12,fmt=*) "# n_gauss = ", n_gauss
-       write(12,fmt=*) "# n_gauss_add = ", n_gauss_add
        write(12,fmt=*) "# lambda_amp = ", lambda_amp
        write(12,fmt=*) "# lambda_mu = ", lambda_mu
        write(12,fmt=*) "# lambda_sig = ", lambda_sig

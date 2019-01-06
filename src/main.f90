@@ -14,7 +14,6 @@ program ROHSA
   logical :: save_grid          !! save grid of fitted parameters at each step of the multiresolution process
   logical :: absorption         !! if true --> fit emission and absoption lines jointly
   integer :: n_gauss            !! number of gaussian to fit
-  integer :: n_gauss_add        !! number of gaussian to add at each step
   integer :: m                  !! number of corrections used in the limited memory matrix by LBFGS-B
   integer :: lstd               !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
   integer :: ustd               !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
@@ -42,18 +41,19 @@ program ROHSA
   character(len=512) :: filename_abs        !! name of the absorption data file
   character(len=512) :: fileout             !! name of the output result
   character(len=512) :: filename_noise      !! name of the file with STD map (if noise .eq. true)
+  character(len=512) :: filename_noise_abs  !! name of the file with STD map for absorption (if noise .eq. true)
   character(len=8)   :: init_option !!Init ROHSA with the mean or the std spectrum    
 
-  real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
-  real(xp), dimension(:,:,:), allocatable :: data_abs        !! initial fits data
-  real(xp), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
+  real(xp), dimension(:,:,:), allocatable :: data         !! initial fits data
+  real(xp), dimension(:,:,:), allocatable :: data_abs     !! initial fits data
+  real(xp), dimension(:,:), allocatable   :: std_cube     !! standard deviation map fo the cube is given by the user 
+  real(xp), dimension(:,:), allocatable   :: std_cube_abs !! standard deviation map fo the absorption cube is given by the user 
 
   !Print header and get filename in argument
   call get_command_argument(1, filename_parameters)
     
   !Default user parameters
   n_gauss = 6
-  n_gauss_add = 0
   lambda_amp = 1._xp
   lambda_mu = 1._xp
   lambda_sig = 1._xp
@@ -82,10 +82,10 @@ program ROHSA
   absorption = .false.
  
   !Read parameters
-  call read_parameters(filename_parameters, filename, filename_abs, fileout, filename_noise, n_gauss, n_gauss_add, &
+  call read_parameters(filename_parameters, filename, filename_abs, fileout, filename_noise, filename_noise_abs, n_gauss, &
        lambda_amp, lambda_mu, lambda_sig, lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, &
-       lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, amp_fact_init_abs, sig_init_abs, init_option, maxiter_init, &
-       maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid, absorption)
+       lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, amp_fact_init_abs, sig_init_abs, init_option, &
+       maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid, absorption)
 
   call header()  
 
@@ -105,13 +105,14 @@ program ROHSA
         print*, "--> noise = .true. (no input rms map)"
      end if
      call read_map(filename_noise, std_cube)
+     call read_map(filename_noise_abs, std_cube_abs)
   end if
 
   !Call ROHSA subroutine
-  call main_rohsa(data, data_abs, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
-       amp_fact_init, sig_init, amp_fact_init_abs, sig_init_abs, maxiter_init, maxiter, m, noise, regul, descent, &
-       lstd, ustd, init_option, iprint, iprint_init, save_grid, absorption)  
+  call main_rohsa(data, data_abs, std_cube, std_cube_abs, fileout, n_gauss, lambda_amp, lambda_mu, lambda_sig, &
+       lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, &
+       lambda_var_sig, amp_fact_init, sig_init, amp_fact_init_abs, sig_init_abs, maxiter_init, maxiter, m, noise, &
+       regul, descent, lstd, ustd, init_option, iprint, iprint_init, save_grid, absorption)  
 
   call ender()
    
