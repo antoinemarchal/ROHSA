@@ -404,7 +404,7 @@ contains
           do k=1, n_gauss
              params_abs(1+(3*(k-1)),i,j) = amp_fact_init * max_line
              params_abs(2+(3*(k-1)),i,j) = params(2+(3*(k-1)),i,j)
-             params_abs(3+(3*(k-1)),i,j) = sig_init_abs
+             params_abs(3+(3*(k-1)),i,j) = params(3+(3*(k-1)),i,j)
           end do
           deallocate(line)
        end do
