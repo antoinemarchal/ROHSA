@@ -306,12 +306,11 @@ contains
     end if
     
     if (regul .eqv. .true.) then
-       if (absorption .eqv. .false.) then 
           call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
                lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
-       else
+       if (absorption .eqv. .true.) then 
           call init_params_abs(data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
-               amp_fact_init_abs)
+               amp_fact_init_abs, sig_init_abs)
           call update_abs(data, data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
                lambda_amp, lambda_mu, lambda_sig, lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, &
                lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map, std_map_abs)

@@ -374,7 +374,7 @@ contains
   end subroutine update
 
 
-  subroutine init_params_abs(cube_abs, params, params_abs, n_gauss, dim_v, dim_y, dim_x, amp_fact_init)
+  subroutine init_params_abs(cube_abs, params, params_abs, n_gauss, dim_v, dim_y, dim_x, amp_fact_init, sig_init_abs)
     !! Init params for absorption cube
     implicit none
     
@@ -383,6 +383,7 @@ contains
     integer, intent(in) :: dim_y !! dimension along spatial axis y 
     integer, intent(in) :: dim_x !! dimension along spatial axis x
     real(xp), intent(in) :: amp_fact_init !! times max amplitude of additional Gaussian
+    real(xp), intent(in) :: sig_init_abs !! fixme
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube_abs !! cube absorption
     real(xp), intent(in), dimension(:,:,:), allocatable :: params !! parameters cube to update
 
@@ -403,7 +404,7 @@ contains
           do k=1, n_gauss
              params_abs(1+(3*(k-1)),i,j) = amp_fact_init * max_line
              params_abs(2+(3*(k-1)),i,j) = params(2+(3*(k-1)),i,j)
-             params_abs(3+(3*(k-1)),i,j) = params(3+(3*(k-1)),i,j)
+             params_abs(3+(3*(k-1)),i,j) = sig_init_abs
           end do
           deallocate(line)
        end do
