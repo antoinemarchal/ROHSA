@@ -17,9 +17,10 @@ module mod_rohsa
 contains
 
   subroutine main_rohsa(data, data_abs, std_cube, std_cube_abs, fileout, n_gauss, lambda_amp, lambda_mu, &
-       lambda_sig, lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_var_amp, lambda_var_mu, &
-       lambda_var_sig, amp_fact_init, sig_init, amp_fact_init_abs, sig_init_abs, maxiter_init, maxiter, m, noise, &
-       regul, descent, lstd, ustd, init_option, iprint, iprint_init, save_grid, absorption)
+       lambda_sig, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_abs_tot, lambda_abs_amp_joint, &
+       lambda_abs_mu_joint, lambda_abs_sig_joint, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
+       sig_init, amp_fact_init_abs, sig_init_abs, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, &
+       init_option, iprint, iprint_init, save_grid, absorption)
     
     implicit none
     
@@ -38,10 +39,13 @@ contains
     real(xp), intent(in) :: lambda_amp     !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_mu      !! lamnda for mean position parameter
     real(xp), intent(in) :: lambda_sig     !! lambda for dispersion parameter
+    real(xp), intent(in) :: lambda_abs_amp !! lambda for amplitude parameter
+    real(xp), intent(in) :: lambda_abs_mu !! lambda for mean position parameter
+    real(xp), intent(in) :: lambda_abs_sig !! lambda for dispersion parameter
     real(xp), intent(in) :: lambda_abs_tot     !! lambda for amplitude parameter
-    real(xp), intent(in) :: lambda_abs_amp     !! lambda for amplitude parameter
-    real(xp), intent(in) :: lambda_abs_mu      !! lamnda for mean position parameter
-    real(xp), intent(in) :: lambda_abs_sig     !! lambda for dispersion parameter
+    real(xp), intent(in) :: lambda_abs_amp_joint !! lambda for amplitude parameter
+    real(xp), intent(in) :: lambda_abs_mu_joint !! lambda for mean position parameter
+    real(xp), intent(in) :: lambda_abs_sig_joint !! lambda for dispersion parameter
     real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
     real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
@@ -95,10 +99,13 @@ contains
     print*, "lambda_amp = ", lambda_amp
     print*, "lambda_mu = ", lambda_mu
     print*, "lambda_sig = ", lambda_sig
-    print*, "lambda_abs_tot = ", lambda_abs_tot
     print*, "lambda_abs_amp = ", lambda_abs_amp
     print*, "lambda_abs_mu = ", lambda_abs_mu
     print*, "lambda_abs_sig = ", lambda_abs_sig
+    print*, "lambda_abs_tot = ", lambda_abs_tot
+    print*, "lambda_abs_amp_joint = ", lambda_abs_amp_joint
+    print*, "lambda_abs_mu_joint = ", lambda_abs_mu_joint
+    print*, "lambda_abs_sig_joint = ", lambda_abs_sig_joint
     print*, "lambda_var_amp = ", lambda_var_amp
     print*, "lambda_var_mu = ", lambda_var_mu
     print*, "lambda_var_sig = ", lambda_var_sig
@@ -311,9 +318,17 @@ contains
        if (absorption .eqv. .true.) then 
           call init_params_abs(data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
                amp_fact_init_abs, sig_init_abs)
-          call update_abs(data, data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
-               lambda_amp, lambda_mu, lambda_sig, lambda_abs_tot, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, &
-               lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map, std_map_abs)
+          ! call update_abs(data, data_abs, grid_params, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
+          !      lambda_amp, lambda_mu, lambda_sig, lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_abs_tot, &
+          !      lambda_abs_amp_joint, lambda_abs_mu_joint, lambda_abs_sig_joint, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
+          !      maxiter, m, kernel, iprint, std_map, std_map_abs)
+
+          ! call update(data_abs, grid_params_abs, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_abs_amp, lambda_abs_mu, &
+          !      lambda_abs_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, std_map)
+
+          call update_new_abs(data_abs, grid_params_abs, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), &
+               lambda_abs_amp, lambda_abs_mu, lambda_abs_sig, lambda_abs_mu_joint, lambda_var_amp, lambda_var_mu, &
+               lambda_var_sig, maxiter, m, kernel, iprint, std_map)
        end if
     end if
     
