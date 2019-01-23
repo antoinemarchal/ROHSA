@@ -29,7 +29,9 @@ program ROHSA
   real(xp) :: lambda_var_sig !! lambda for variance dispersion parameter
   real(xp) :: amp_fact_init  !! times max amplitude of additional Gaussian
   real(xp) :: sig_init       !! dispersion of additional Gaussian
+  real(xp) :: lb_sig_init    !! lower bound sigma init
   real(xp) :: ub_sig_init    !! upper bound sigma init
+  real(xp) :: lb_sig         !! lower bound sigma
   real(xp) :: ub_sig         !! upper bound sigma
 
   character(len=512) :: filename_parameters !! name of the parameters file (default parameters.txt)
@@ -55,7 +57,9 @@ program ROHSA
   lambda_var_sig = 1._xp
   amp_fact_init = 2._xp/3._xp
   sig_init = 5._xp
+  lb_sig_init = 1._xp
   ub_sig_init = 100._xp
+  lb_sig = 0.001_xp
   ub_sig = 100._xp
   maxiter_init = 15000
   maxiter = 800
@@ -72,8 +76,8 @@ program ROHSA
   !Read parameters
   call read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, n_gauss_add, &
        lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
-       sig_init, ub_sig_init, ub_sig, init_option, maxiter_init, maxiter, m, noise, regul, descent, &
-       lstd, ustd, iprint, iprint_init, save_grid)
+       sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, noise, &
+       regul, descent, lstd, ustd, iprint, iprint_init, save_grid)
 
   call header()  
 
@@ -91,9 +95,9 @@ program ROHSA
 
   !Call ROHSA subroutine
   call main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, ub_sig_init, ub_sig, &
-       maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
-       save_grid)  
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, lb_sig_init, ub_sig_init, &
+       lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, &
+       iprint_init, save_grid)  
 
   call ender()
    

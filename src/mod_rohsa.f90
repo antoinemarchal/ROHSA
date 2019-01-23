@@ -17,9 +17,9 @@ module mod_rohsa
 contains
 
   subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, ub_sig_init, ub_sig, &
-       maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, iprint_init, &
-       save_grid)
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, lb_sig_init, ub_sig_init, &
+       lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, &
+       iprint_init, save_grid)
     
     implicit none
     
@@ -44,6 +44,8 @@ contains
     real(xp), intent(in) :: amp_fact_init  !! times max amplitude of additional Gaussian
     real(xp), intent(in) :: sig_init       !! dispersion of additional Gaussian
     real(xp), intent(in) :: ub_sig_init    !! upper bound sigma init
+    real(xp), intent(in) :: lb_sig_init    !! lower bound sigma init
+    real(xp), intent(in) :: lb_sig         !! lower bound sigma
     real(xp), intent(in) :: ub_sig         !! upper bound sigma
 
     character(len=8), intent(in)   :: init_option !!Init ROHSA with the mean or the std spectrum    
@@ -94,7 +96,9 @@ contains
     print*, "lambda_var_sig = ", lambda_var_sig
     print*, "amp_fact_init = ", amp_fact_init
     print*, "sig_init = ", sig_init
+    print*, "lb_sig_init = ", lb_sig_init
     print*, "ub_sig_init = ", ub_sig_init
+    print*, "lb_sig = ", lb_sig
     print*, "ub_sig = ", ub_sig
     print*, "init_option = ", init_option
     print*, "maxiter_init = ", maxiter_init
@@ -182,16 +186,16 @@ contains
              if (init_option .eq. "mean") then
                 print*, "Init mean spectrum"        
                 call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, sig_init, &
-                     ub_sig_init, maxiter_init, m, iprint_init)
+                     lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
              elseif (init_option .eq. "std") then
                 call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, sig_init, &
-                     ub_sig_init, maxiter_init, m, iprint_init)
+                     lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
              elseif (init_option .eq. "max") then
                 call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), max_spect, amp_fact_init, sig_init, &
-                     ub_sig_init, maxiter_init, m, iprint_init)
+                     lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
              elseif (init_option .eq. "maxnorm") then
                 call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
-                     ub_sig_init, maxiter_init, m, iprint_init)
+                     lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
              else 
                 print*, "init_option keyword should be 'mean' or 'std' or 'max' or 'maxnorm'"
                 stop
@@ -199,13 +203,13 @@ contains
           end if
                     
           if (regul .eqv. .false.) then
-             call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), ub_sig, maxiter, m, iprint)
+             call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
           end if
           
           if (regul .eqv. .true.) then
              if (n == 0) then                
                 print*,  "Update level", n
-                call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), ub_sig, maxiter, m, iprint)
+                call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
              end if
              
              if (n > 0 .and. n < nside) then
@@ -220,7 +224,7 @@ contains
                 ! Update parameters 
                 print*,  "Update level", n, ">", power
                 call update(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
-                     lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, ub_sig, maxiter, m, kernel, &
+                     lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, kernel, &
                      iprint, std_map)        
 
                 if (n_gauss_add .ne. 0) then !FIXME
@@ -260,19 +264,19 @@ contains
           if (init_option .eq. "mean") then
              print*, "Use of the mean spectrum to initialize each los"
              call init_spectrum(n_gauss, guess_spect, dim_cube(1), mean_spect, amp_fact_init, sig_init, &
-                  ub_sig_init, maxiter_init, m, iprint_init)
+                  lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
           else if (init_option .eq. "std") then
              print*, "Use of the std spectrum to initialize each los"
              call init_spectrum(n_gauss, guess_spect, dim_cube(1), std_spect, amp_fact_init, sig_init, &
-                  ub_sig_init, maxiter_init, m, iprint_init)
+                  lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
           else if (init_option .eq. "max") then
              print*, "Use of the max spectrum to initialize each los"
              call init_spectrum(n_gauss, guess_spect, dim_cube(1), max_spect, amp_fact_init, sig_init, &
-                  ub_sig_init, maxiter_init, m, iprint_init)
+                  lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
           else if (init_option .eq. "maxnorm") then
              print*, "Use of the std spectrum to initialize each los"
              call init_spectrum(n_gauss, guess_spect, dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
-                  ub_sig_init, maxiter_init, m, iprint_init)
+                  lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
           else
              print*, "init_option keyword should be 'mean' or 'std' or 'max'"
              stop
@@ -298,7 +302,7 @@ contains
     
     if (regul .eqv. .true.) then
        call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-            lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, ub_sig, maxiter, m, kernel, &
+            lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, kernel, &
             iprint, std_map)
        
        if (n_gauss_add .ne. 0) then !FIXME KEYWORD
@@ -307,7 +311,7 @@ contains
              call init_new_gauss(data, grid_params, std_map, n_gauss, dim_data(1), dim_data(2), dim_data(3), amp_fact_init, &
                   sig_init)
              call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-                  lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, ub_sig, maxiter, m, kernel, &
+                  lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, kernel, &
                   iprint, std_map)
           end do
        end if
@@ -335,7 +339,9 @@ contains
     write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
     write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
     write(12,fmt=*) "# sig_init = ", sig_init
+    write(12,fmt=*) "# lb_sig_init = ", lb_sig_init
     write(12,fmt=*) "# ub_sig_init = ", ub_sig_init
+    write(12,fmt=*) "# lb_sig = ", lb_sig
     write(12,fmt=*) "# ub_sig = ", ub_sig
     write(12,fmt=*) "# init_option = ", init_option
     write(12,fmt=*) "# maxiter_itit = ", maxiter_init

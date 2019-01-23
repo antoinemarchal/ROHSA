@@ -167,7 +167,7 @@ contains
   end subroutine go_up_level
 
   
-  subroutine init_spectrum(n_gauss, params, dim_v, line, amp_fact_init, sig_init, ub_sig, maxiter, m, iprint)
+  subroutine init_spectrum(n_gauss, params, dim_v, line, amp_fact_init, sig_init, lb_sig, ub_sig, maxiter, m, iprint)
     !! Initialization of the mean sprectrum with N Gaussian
     implicit none
     
@@ -180,6 +180,7 @@ contains
     real(xp), intent(in), dimension(dim_v) :: line !! spectrum
     real(xp), intent(in) :: amp_fact_init !! times max amplitude of additional Gaussian
     real(xp), intent(in) :: sig_init !! dispersion of additional Gaussian
+    real(xp), intent(in) :: lb_sig !! lower bound sigma
     real(xp), intent(in) :: ub_sig !! upper bound sigma
 
     real(xp), intent(inout), dimension(3*n_gauss)  :: params !! params to optimize
@@ -195,7 +196,7 @@ contains
        residual = 0._xp
        lb = 0._xp; ub=0._xp
        
-       call init_bounds(line, i, dim_v, lb, ub, ub_sig)
+       call init_bounds(line, i, dim_v, lb, ub, lb_sig, ub_sig)
 
        do j=1, i
           do k=1, dim_v
@@ -228,12 +229,13 @@ contains
   end subroutine init_spectrum
   
 
-  subroutine init_bounds(line, n_gauss, dim_v, lb, ub, ub_sig)
+  subroutine init_bounds(line, n_gauss, dim_v, lb, ub, lb_sig, ub_sig)
     !! Initialize parameters bounds for optimization
     implicit none
     
     integer, intent(in) :: n_gauss !! number of Gaussian
     integer, intent(in) :: dim_v !! dimension along v axis
+    real(xp), intent(in) :: lb_sig !! lower bound sigma
     real(xp), intent(in) :: ub_sig !! upper bound sigma
     real(xp), intent(in), dimension(dim_v) :: line !! spectrum   
     real(xp), intent(inout), dimension(3*n_gauss) :: lb !! lower bounds
@@ -255,17 +257,18 @@ contains
        ub(2+(3*(i-1))) = dim_v;
        
        ! sigma bounds 
-       lb(3+(3*(i-1))) = 0.001_xp;
+       lb(3+(3*(i-1))) = lb_sig;
        ub(3+(3*(i-1))) = ub_sig;
     end do
   end subroutine init_bounds
 
 
-  subroutine upgrade(cube, params, power, n_gauss, dim_v, ub_sig, maxiter, m, iprint)
+  subroutine upgrade(cube, params, power, n_gauss, dim_v, lb_sig, ub_sig, maxiter, m, iprint)
     !! Upgrade parameters (spectra to spectra) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
 
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube
+    real(xp), intent(in) :: lb_sig !! lower bound sigma
     real(xp), intent(in) :: ub_sig !! upper bound sigma
     integer, intent(in) :: power !! nside of the cube
     integer, intent(in) :: n_gauss !! number of Gaussian
@@ -290,7 +293,7 @@ contains
           line = cube(:,i,j)
           x = params(:,i,j)
           
-          call init_bounds(line, n_gauss, dim_v, lb, ub, ub_sig)
+          call init_bounds(line, n_gauss, dim_v, lb, ub, lb_sig, ub_sig)
           call minimize_spec(3*n_gauss, m, x, lb, ub, line, dim_v, n_gauss, maxiter, iprint)
           
           params(:,i,j) = x
@@ -303,7 +306,7 @@ contains
 
 
   subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, &
-       lambda_var_mu, lambda_var_sig, ub_sig, maxiter, m, kernel, iprint, std_map)
+       lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, kernel, iprint, std_map)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
@@ -323,6 +326,7 @@ contains
     real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
     real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
+    real(xp), intent(in) :: lb_sig !! lower bound sigma
     real(xp), intent(in) :: ub_sig !! upper bound sigma
 
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
@@ -346,7 +350,7 @@ contains
 
     do j=1, dim_x
        do i=1, dim_y
-          call init_bounds(cube(:,i,j), n_gauss, dim_v, lb_3D(:,i,j), ub_3D(:,i,j), ub_sig)
+          call init_bounds(cube(:,i,j), n_gauss, dim_v, lb_3D(:,i,j), ub_3D(:,i,j), lb_sig, ub_sig)
        end do
     end do
 
