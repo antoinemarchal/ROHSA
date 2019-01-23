@@ -48,8 +48,9 @@ class ROHSA(object):
         
     def gen_parameters(self, filename_parameters=None, filename=None, fileout="result.dat", filename_noise="", n_gauss=3, lambda_amp=1000, 
                        lambda_mu=1000, lambda_sig=1000, lambda_var_amp=0, lambda_var_mu=0, lambda_var_sig=1000, amp_fact_init=0.66, sig_init = 4., 
-                       ub_sig_init=100., ub_sig=100., init_option="mean", maxiter_init=15000, maxiter=800, m=10, noise=".false.", regul = ".true.", 
-                       descent = ".true.", lstd = 1, ustd = 20, iprint = -1, iprint_init = -1, save_grid=".true.", absorption=".false."):
+                       lb_sig_init=1., ub_sig_init=100., lb_sig=0.001, ub_sig=100., init_option="mean", maxiter_init=15000, maxiter=800, m=10, 
+                       noise=".false.", regul = ".true.", descent = ".true.", lstd = 1, ustd = 20, iprint = -1, iprint_init = -1, 
+                       save_grid=".true.", absorption=".false."):
 
         if not filename : 
             print("Need an input filename")
@@ -75,7 +76,9 @@ class ROHSA(object):
         input_file.write("    ,lambda_var_sig =  "+repr(lambda_var_sig)+'d0'+'\n')
         input_file.write("    ,amp_fact_init =  "+repr(amp_fact_init)+'d0'+'\n')
         input_file.write("    ,sig_init =  "+repr(sig_init)+'d0'+'\n')
+        input_file.write("    ,lb_sig_init =  "+repr(lb_sig_init)+'d0'+'\n')
         input_file.write("    ,ub_sig_init =  "+repr(ub_sig_init)+'d0'+'\n')
+        input_file.write("    ,lb_sig =  "+repr(lb_sig)+'d0'+'\n')
         input_file.write("    ,ub_sig =  "+repr(ub_sig)+'d0'+'\n')
         input_file.write("    ,init_option =  "+repr(init_option)+'\n')
         input_file.write("    ,maxiter_init =  "+repr(maxiter_init)+'\n')
