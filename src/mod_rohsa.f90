@@ -65,6 +65,7 @@ contains
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:,:), allocatable :: std_map_abs       !! standard deviation map fo the absorp cube computed by ROHSA with lb and ub
+    real(xp), dimension(:), allocatable :: b_params            !! unknow average sigma
     real(xp), dimension(:), allocatable :: std_spect           !! std spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect           !! max spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect_norm      !! max spectrum of the observation normalized by the max of the mean spectrum
@@ -148,6 +149,7 @@ contains
     allocate(std_spect(dim_data(1)))
     allocate(max_spect(dim_data(1)), max_spect_norm(dim_data(1)))
     allocate(mean_spect(dim_data(1)))
+    allocate(b_params(n_gauss))
 
     call std_spectrum(data, std_spect, dim_data(1), dim_data(2), dim_data(3))
     call mean_spectrum(data, mean_spect, dim_data(1), dim_data(2), dim_data(3))
@@ -200,6 +202,10 @@ contains
                 print*, "init_option keyword should be 'mean' or 'std' or 'max' or 'maxnorm'"
                 stop
              end if
+             !Init b_params
+             do i=1, n_gauss       
+                b_params(i) = fit_params(3+(3*(i-1)),1,1)
+             end do
           end if
                     
           if (regul .eqv. .false.) then
@@ -223,7 +229,7 @@ contains
 
                 ! Update parameters 
                 print*,  "Update level", n, ">", power
-                call update(cube_mean, fit_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
+                call update(cube_mean, fit_params, b_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
                      lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, kernel, &
                      iprint, std_map)        
 
@@ -301,7 +307,7 @@ contains
     end if
     
     if (regul .eqv. .true.) then
-       call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
+       call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
             lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, kernel, &
             iprint, std_map)
        
@@ -310,7 +316,7 @@ contains
              ! Add new Gaussian if at least one reduced chi square of the field is > 1 
              call init_new_gauss(data, grid_params, std_map, n_gauss, dim_data(1), dim_data(2), dim_data(3), amp_fact_init, &
                   sig_init)
-             call update(data, grid_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
+             call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
                   lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, kernel, &
                   iprint, std_map)
           end do

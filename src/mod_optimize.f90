@@ -178,7 +178,7 @@ contains
   
   ! Minimize algorithn for a cube with regularization
   subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map, mean_amp, mean_mu, mean_sig)
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map)
     implicit none      
 
     integer, intent(in) :: n
@@ -193,7 +193,6 @@ contains
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
     real(xp), intent(in), dimension(:,:), allocatable :: std_map
-    real(xp), intent(in), dimension(:), allocatable :: mean_amp, mean_mu, mean_sig    
 
     real(xp), intent(in), dimension(:), allocatable :: x
     
@@ -236,7 +235,7 @@ contains
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
           call f_g_cube(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
-               lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map, mean_amp, mean_mu, mean_sig)
+               lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations
@@ -255,7 +254,7 @@ contains
   
   ! Compute the objective function for a cube and the gradient of the obkective function
   subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map, mean_amp, mean_mu, mean_sig)
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)
     implicit none
 
     integer, intent(in) :: n_gauss
@@ -266,14 +265,15 @@ contains
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
     real(xp), intent(in), dimension(:,:), allocatable :: std_map
-    real(xp), intent(in), dimension(:), allocatable :: mean_amp, mean_mu, mean_sig    
     real(xp), intent(inout) :: f
     real(xp), intent(inout), dimension(:), allocatable :: g
 
     integer :: i, j, k, l
+    integer :: n_beta
     real(xp), dimension(:,:,:), allocatable :: residual
     real(xp), dimension(:), allocatable :: residual_1D
     real(xp), dimension(:,:,:), allocatable :: params
+    real(xp), dimension(:), allocatable :: b_params
     real(xp), dimension(:,:), allocatable :: conv_amp, conv_mu, conv_sig
     real(xp), dimension(:,:), allocatable :: conv_conv_amp, conv_conv_mu, conv_conv_sig
     real(xp), dimension(:,:), allocatable :: image_amp, image_mu, image_sig
@@ -287,6 +287,7 @@ contains
     allocate(deriv(3*n_gauss, dim_y, dim_x))
     allocate(g_3D(3*n_gauss, dim_y, dim_x))
     allocate(residual(dim_v, dim_y, dim_x))
+    allocate(b_params(n_gauss))
     allocate(params(3*n_gauss, dim_y, dim_x))
     allocate(conv_amp(dim_y, dim_x), conv_mu(dim_y, dim_x), conv_sig(dim_y, dim_x))
     allocate(conv_conv_amp(dim_y, dim_x), conv_conv_mu(dim_y, dim_x), conv_conv_sig(dim_y, dim_x))
@@ -301,7 +302,12 @@ contains
     residual = 0._xp    
     params = 0._xp
     
+    n_beta = (3*n_gauss * dim_y * dim_x) + n_gauss
+
     call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)    
+    do i=1,n_gauss
+       b_params(i) = beta((n_beta-n_gauss)+i)
+    end do
 
     ! Compute the objective function and the gradient
     do j=1, dim_x
@@ -367,20 +373,22 @@ contains
 
        do j=1, dim_x
           do i=1, dim_y
-             f = f + (0.5_xp * lambda_amp * conv_amp(i,j)**2) + (0.5_xp * lambda_var_amp * (image_amp(i,j) - mean_amp(k))**2._xp)
-             f = f + (0.5_xp * lambda_mu * conv_mu(i,j)**2) + (0.5_xp * lambda_var_mu * (image_mu(i,j) - mean_mu(k))**2._xp)
-             f = f + (0.5_xp * lambda_sig * conv_sig(i,j)**2) + (0.5_xp * lambda_var_sig * (image_sig(i,j) - mean_sig(k))**2._xp)
+             f = f + (0.5_xp * lambda_amp * conv_amp(i,j)**2)
+             f = f + (0.5_xp * lambda_mu * conv_mu(i,j)**2)
+             f = f + (0.5_xp * lambda_sig * conv_sig(i,j)**2) + (0.5_xp * lambda_var_sig * (image_sig(i,j) - b_params(k))**2._xp)
                           
-             dR_over_dB(1+(3*(k-1)),i,j) = lambda_amp * conv_conv_amp(i,j) + (lambda_var_amp * (image_amp(i,j) - mean_amp(k)))
-             dR_over_dB(2+(3*(k-1)),i,j) = lambda_mu * conv_conv_mu(i,j) + (lambda_var_mu * (image_mu(i,j) - mean_mu(k)))
-             dR_over_dB(3+(3*(k-1)),i,j) = lambda_sig * conv_conv_sig(i,j) + (lambda_var_sig * (image_sig(i,j) - mean_sig(k)))
+             dR_over_dB(1+(3*(k-1)),i,j) = lambda_amp * conv_conv_amp(i,j)
+             dR_over_dB(2+(3*(k-1)),i,j) = lambda_mu * conv_conv_mu(i,j)
+             dR_over_dB(3+(3*(k-1)),i,j) = lambda_sig * conv_conv_sig(i,j) + (lambda_var_sig * (image_sig(i,j) - b_params(k)))
+
+             g((n_beta-n_gauss)+k) = - lambda_var_sig * (image_sig(i,j) - b_params(k))
           end do
        end do       
     end do
     
     g_3D = deriv + dR_over_dB
-
     call ravel_3D(g_3D, g, 3*n_gauss, dim_y, dim_x)
+
   end subroutine f_g_cube
 
 end module mod_optimize

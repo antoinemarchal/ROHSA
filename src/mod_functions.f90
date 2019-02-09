@@ -305,7 +305,7 @@ contains
   end subroutine upgrade
 
 
-  subroutine update(cube, params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, &
+  subroutine update(cube, params, b_params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, &
        lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, kernel, iprint, std_map)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
@@ -329,6 +329,7 @@ contains
     real(xp), intent(in) :: lb_sig !! lower bound sigma
     real(xp), intent(in) :: ub_sig !! upper bound sigma
 
+    real(xp), intent(inout), dimension(:), allocatable :: b_params !! unknown average sigma
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
     
     integer :: i,j
@@ -336,18 +337,13 @@ contains
     real(xp), dimension(:,:,:), allocatable :: lb_3D, ub_3D
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(:), allocatable :: beta
-    real(xp), dimension(:), allocatable :: ravel_amp, ravel_mu, ravel_sig
-    real(xp), dimension(:), allocatable :: mean_amp, mean_mu, mean_sig    
-    real(xp), dimension(:,:), allocatable :: image_amp, image_mu, image_sig
 
-    n_beta = 3*n_gauss * dim_y * dim_x
+    n_beta = (3*n_gauss * dim_y * dim_x) + n_gauss
 
     allocate(lb(n_beta), ub(n_beta), beta(n_beta))
     allocate(lb_3D(3*n_gauss,dim_y,dim_x), ub_3D(3*n_gauss,dim_y,dim_x))
-    allocate(mean_amp(n_gauss), mean_mu(n_gauss), mean_sig(n_gauss))
-    allocate(image_amp(dim_y, dim_x), image_mu(dim_y, dim_x), image_sig(dim_y, dim_x))
-    allocate(ravel_amp(dim_y*dim_x), ravel_mu(dim_y*dim_x), ravel_sig(dim_y*dim_x))
 
+    !Bounds
     do j=1, dim_x
        do i=1, dim_y
           call init_bounds(cube(:,i,j), n_gauss, dim_v, lb_3D(:,i,j), ub_3D(:,i,j), lb_sig, ub_sig)
@@ -358,26 +354,20 @@ contains
     call ravel_3D(ub_3D, ub, 3*n_gauss, dim_y, dim_x)
     call ravel_3D(params, beta, 3*n_gauss, dim_y, dim_x)
 
-    !Compute mean sig vector    
     do i=1,n_gauss
-       image_amp = params(1+(3*(i-1)),:,:)
-       image_mu = params(2+(3*(i-1)),:,:)
-       image_sig = params(3+(3*(i-1)),:,:)
-
-       call ravel_2D(image_amp, ravel_amp, dim_y, dim_x)
-       call ravel_2D(image_mu, ravel_mu, dim_y, dim_x)
-       call ravel_2D(image_sig, ravel_sig, dim_y, dim_x)
-
-       mean_amp(i) = mean(ravel_amp)
-       mean_mu(i) = mean(ravel_mu)
-       mean_sig(i) = mean(ravel_sig)
+       lb((n_beta-n_gauss)+i) = lb_sig
+       ub((n_beta-n_gauss)+i) = ub_sig
+       beta((n_beta-n_gauss)+i) = b_params(i)
     end do
-
+    
     call minimize(n_beta, m, beta, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-         lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map, mean_amp, mean_mu, mean_sig)
+         lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map)
 
     call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)
-        
+    do i=1,n_gauss
+       b_params(i) = beta((n_beta-n_gauss)+i)
+    end do        
+    ! print*, b_params
   end subroutine update
 
 
@@ -455,10 +445,7 @@ contains
 
     if (present(norm_value)) then
        spectrum = spectrum / (maxval(spectrum) / norm_value)
-    end if
-
-    
-    
+    end if    
   end subroutine max_spectrum  
 
 
