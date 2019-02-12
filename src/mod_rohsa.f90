@@ -164,6 +164,8 @@ contains
        allocate(fit_params(3*(n_gauss+(nside*n_gauss_add)), 1, 1))
        !Init sigma = 1 to avoid Nan
        do i=1,n_gauss
+          fit_params(1+(3*(i-1)),1,1) = 0._xp
+          fit_params(2+(3*(i-1)),1,1) = 1._xp
           fit_params(3+(3*(i-1)),1,1) = 1._xp
        end do
     else 
