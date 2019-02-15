@@ -40,8 +40,12 @@ program ROHSA
   character(len=512) :: filename_noise      !! name of the file with STD map (if noise .eq. true)
   character(len=8)   :: init_option !!Init ROHSA with the mean or the std spectrum    
 
+  real(xp) :: start, finish
+
   real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
   real(xp), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
+
+  call cpu_time(start)
 
   !Print header and get filename in argument
   call get_command_argument(1, filename_parameters)
@@ -57,7 +61,7 @@ program ROHSA
   lambda_var_sig = 1._xp
   amp_fact_init = 2._xp/3._xp
   sig_init = 5._xp
-  lb_sig_init = 1._xp
+  lb_sig_init = 0.001_xp
   ub_sig_init = 100._xp
   lb_sig = 0.001_xp
   ub_sig = 100._xp
@@ -100,5 +104,8 @@ program ROHSA
        iprint_init, save_grid)  
 
   call ender()
+
+  call cpu_time(finish)
+  print '("Time = ",f6.3," seconds.")',finish-start
    
 end program ROHSA

@@ -99,7 +99,8 @@ contains
           spectrum = 0.
        enddo
     enddo
-    
+
+    deallocate(spectrum)
   end subroutine mean_array
 
   
@@ -163,7 +164,8 @@ contains
           enddo
        enddo
     enddo
-    
+
+    deallocate(cube_params_down)
   end subroutine go_up_level
 
   
@@ -368,10 +370,13 @@ contains
        b_params(i) = beta((n_beta-n_gauss)+i)
     end do        
     ! print*, b_params
+
+    deallocate(lb, ub, beta)
+    deallocate(lb_3D, ub_3D)
   end subroutine update
 
 
-  subroutine set_stdmap(std_map, cube, lb, ub)
+  subroutine set_stdmap(std_map, cube, lb, ub) !fixme allocate deallocate
     !! Compute the STD map of a 3D array
     implicit none
 
@@ -385,6 +390,8 @@ contains
     integer, dimension(3) :: dim_cube
     integer :: i, j 
 
+    allocate(line(ub-lb))
+
     dim_cube = shape(cube)
 
     do j=1, dim_cube(3)
@@ -393,7 +400,8 @@ contains
           std_map(i,j) = std(line)
        end do
     end do
-    
+
+    deallocate(line)
   end subroutine set_stdmap
 
   
@@ -494,7 +502,7 @@ contains
   end subroutine init_grid_params
 
 
-  subroutine init_new_gauss(cube, params, std_map, n_gauss, dim_v, dim_y, dim_x, amp_fact_init, sig_init)
+  subroutine init_new_gauss(cube, params, std_map, n_gauss, dim_v, dim_y, dim_x, amp_fact_init, sig_init) !fixme to remove
     implicit none
     
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube   !! mean cube over spatial axis

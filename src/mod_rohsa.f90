@@ -219,7 +219,11 @@ contains
                 print*,  "Update level", n
                 call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
              end if
-             
+            
+             ! if (n .eq. 2) then 
+             !    stop
+             ! end if
+
              if (n > 0 .and. n < nside) then
                 allocate(std_map(power, power))
                 
