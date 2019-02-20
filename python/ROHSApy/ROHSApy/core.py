@@ -16,6 +16,7 @@ class ROHSA(object):
         self.cube = cube
         self.hdr = hdr if hdr is not None else None
         self.filename = filename if filename is not None else "cube.fits"
+        if self.hdr is not None : self.v = self.mean2vel(self.hdr["CRVAL3"]*1.e-3, self.hdr["CDELT3"]*1.e-3, self.hdr["CRPIX3"], np.arange(self.cube.shape[0]))
 
 
     def cube2dat(self, filename=None):
@@ -135,6 +136,17 @@ class ROHSA(object):
         
         return params
 
+    def physical_gaussian(self, gaussian):
+        n_gauss = gaussian.shape[0]/3
+        output = np.zeros(gaussian.shape)
+        if self.hdr is not None :
+            output[0::3] = gaussian[0::3]
+            output[1::3] = self.mean2vel(self.hdr["CRVAL3"]*1.e-3, self.hdr["CDELT3"]*1.e-3, self.hdr["CRPIX3"], gaussian[1::3])
+            output[2::3] = gaussian[2::3] * self.hdr["CDELT3"]*1.e-3
+            return output
+        else:
+            print("Missing header")
+            return 0        
 
     def gauss(self, x, a, mu, sig):
         return a * np.exp(-((x - mu)**2)/(2. * sig**2))
@@ -145,7 +157,7 @@ class ROHSA(object):
 
     
     def mean2vel(self, CRVAL, CDELT, CRPIX, mean):
-        return [(CRVAL + CDELT * (mean[i] - CRPIX)) for i in range(len(mean))]
+        return [(CRVAL + CDELT * (mean[i] - CRPIX)) for i in range(len(mean))]            
 
 
     def plot_spect(self, gaussian, idy=0, idx=0):
@@ -156,7 +168,7 @@ class ROHSA(object):
         ax = fig.add_subplot(111)
 
         if self.hdr is not None :
-            if not self.hdr["CRVAL3"] : print "Missing CRVAL3 keyword"
+            if not self.hdr["CRVAL3"] : print("Missing CRVAL3 keyword")
             v = self.mean2vel(self.hdr["CRVAL3"]*1.e-3, self.hdr["CDELT3"]*1.e-3, self.hdr["CRPIX3"], x)
             if v[0] > v[1] : v = v[::-1]
             ax.step(v, self.cube[:,idy,idx], color='cornflowerblue')
@@ -214,5 +226,5 @@ if __name__ == '__main__':
     core.gen_parameters(filename="mycube.dat", save_grid=".false.")
     # core.run("parameters.txt", nohup=False)
     gaussian = core.read_gaussian("result.dat")
-    foo = core.write_fits(gaussian)
-    core.plot_spect(gaussian, 14, 14)
+    # foo = core.write_fits(gaussian)
+    # core.plot_spect(gaussian, 14, 14)
