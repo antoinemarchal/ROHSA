@@ -193,12 +193,22 @@ class ROHSA(object):
              
         return 0 
 
-    def return_result_cube(self, gaussian):
-        result = np.zeros(self.cube.shape)
-        n_gauss = gaussian.shape[0]/3
-        for i in np.arange(n_gauss) :
-            result += self.gauss_2D(np.arange(self.cube.shape[0]), gaussian[int(0+(3*i))], gaussian[int(1+(3*i))], gaussian[int(2+(3*i))])
-        return result
+
+    def return_result_cube(self, gaussian=None, ampfield=None, pixfield=None, sigfield=None):
+        if gaussian is not None:
+            result = np.zeros(self.cube.shape)
+            n_gauss = gaussian.shape[0]/3
+            for i in np.arange(n_gauss) :
+                result += self.gauss_2D(np.arange(self.cube.shape[0]), gaussian[int(0+(3*i))], gaussian[int(1+(3*i))], gaussian[int(2+(3*i))])
+            return result
+        elif ampfield is not None and pixfield is not None and sigfield is not None:
+            result = np.zeros(self.cube.shape)
+            n_gauss = ampfield.shape[0]
+            for i in np.arange(n_gauss) :
+                result += self.gauss_2D(np.arange(self.cube.shape[0]), ampfield[i], pixfield[i], sigfield[i])
+            return result
+        else: print("error : 1 or 3 arguments needed")
+
 
     def write_fits(self, gaussian, fileout=None, hdr=False):
         if not fileout : fileout = self.filename[:-5] + "_ROHSA.fits" if self.filename is not None else "cube_ROHSA.fits"
