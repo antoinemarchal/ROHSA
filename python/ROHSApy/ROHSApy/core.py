@@ -47,7 +47,7 @@ class ROHSA(object):
                     f.write(line)
 
         
-    def gen_parameters(self, filename_parameters=None, filename=None, fileout="result.dat", filename_noise="", n_gauss=3, lambda_amp=1000, 
+    def gen_parameters(self, filename_parameters=None, filename=None, fileout="result.dat", timeout="timestep.dat", filename_noise="", n_gauss=3, lambda_amp=1000, 
                        lambda_mu=1000, lambda_sig=1000, lambda_var_amp=0, lambda_var_mu=0, lambda_var_sig=1000, amp_fact_init=0.66, sig_init = 4., 
                        lb_sig_init=1., ub_sig_init=100., lb_sig=0.001, ub_sig=100., init_option="mean", maxiter_init=15000, maxiter=800, m=10, 
                        noise=".false.", regul = ".true.", descent = ".true.", lstd = 1, ustd = 20, iprint = -1, iprint_init = -1, 
@@ -67,6 +67,7 @@ class ROHSA(object):
         input_file.write("&user_parameters"+'\n')
         input_file.write("    filename =  "+repr(filename)+'\n')
         input_file.write("    ,fileout =  "+repr(fileout)+'\n')
+        input_file.write("    ,timeout =  "+repr(timeout)+'\n')
         input_file.write("    ,filename_noise =  "+repr(filename_noise)+'\n')
         input_file.write("    ,n_gauss =  "+repr(n_gauss)+'\n')
         input_file.write("    ,lambda_amp =  "+repr(lambda_amp)+'d0'+'\n')
@@ -142,7 +143,7 @@ class ROHSA(object):
         if self.hdr is not None :
             output[0::3] = gaussian[0::3]
             output[1::3] = self.mean2vel(self.hdr["CRVAL3"]*1.e-3, self.hdr["CDELT3"]*1.e-3, self.hdr["CRPIX3"], gaussian[1::3])
-            output[2::3] = gaussian[2::3] * self.hdr["CDELT3"]*1.e-3
+            output[2::3] = gaussian[2::3] * np.abs(self.hdr["CDELT3"])*1.e-3
             return output
         else:
             print("Missing header")
