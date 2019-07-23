@@ -16,7 +16,7 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
+  subroutine main_rohsa(data, std_cube, fileout, timeout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
        lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, lb_sig_init, ub_sig_init, &
        lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, &
        iprint_init, save_grid)
@@ -50,6 +50,7 @@ contains
 
     character(len=8), intent(in)   :: init_option !!Init ROHSA with the mean or the std spectrum    
     character(len=512), intent(in) :: fileout   !! name of the output result
+    character(len=512), intent(in) :: timeout   !! name of the output result
 
     integer :: n_gauss      !! number of gaussian to fit
     integer :: nside        !! size of the reshaped data \(2^{nside}\)
@@ -76,14 +77,17 @@ contains
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
     
     real(xp), dimension(:,:), allocatable :: kernel !! convolution kernel 
+
+    real(xp) :: lctime, uctime
     
     integer :: ios=0 !! ios integer
     integer :: i     !! loop index
     integer :: j     !! loop index
     integer :: k     !! loop index
     integer :: l     !! loop index
-    
+        
     print*, "fileout = '",trim(fileout),"'"
+    print*, "timeout = '",trim(timeout),"'"
     
     print*,
     print*, "______Parameters_____"
@@ -178,6 +182,15 @@ contains
     
     if (descent .eqv. .true.) then
        print*, "Start hierarchical descent"
+
+       if (save_grid .eqv. .true.) then
+          !Open file time step
+          open(unit=11, file=timeout, status='replace', access='append', iostat=ios)
+          write(11,fmt=*) "# size grid, Time (s)"
+          close(11)
+          call cpu_time(lctime)
+       end if
+
        !Start iteration
        do n=0,nside-1
           power = 2**n
@@ -255,6 +268,16 @@ contains
           if (save_grid .eqv. .true.) then
              print*, "Save grid parameters"
              call save_process(n, n_gauss, fit_params, power, fileout)
+             !Save timestep
+             if (n .ne. 0) then
+                open(unit=11, file=timeout, status='unknown', access='append', iostat=ios)
+                if (ios /= 0) stop "opening file error"
+                call cpu_time(uctime)
+                print*, dim_cube(1)
+                ! write(11,fmt='(I6, f6.3)') power, uctime-lctime
+                write(11,fmt=*) power, uctime-lctime
+                close(11)
+             end if
           end if
 
           ! Propagate solution on new grid (higher resolution)
@@ -375,6 +398,13 @@ contains
        enddo
     enddo
     close(12)
+    
+    open(unit=11, file=timeout, status='unknown', access='append', iostat=ios)
+    if (ios /= 0) stop "opening file error"
+    call cpu_time(uctime)
+    print*, dim_cube(1)
+    write(11,fmt=*) dim_cube(2), uctime-lctime
+    close(11)
     
   end subroutine main_rohsa
   

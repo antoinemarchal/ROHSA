@@ -37,6 +37,7 @@ program ROHSA
   character(len=512) :: filename_parameters !! name of the parameters file (default parameters.txt)
   character(len=512) :: filename            !! name of the data file
   character(len=512) :: fileout             !! name of the output result
+  character(len=512) :: timeout             !! name of the output result
   character(len=512) :: filename_noise      !! name of the file with STD map (if noise .eq. true)
   character(len=8)   :: init_option !!Init ROHSA with the mean or the std spectrum    
 
@@ -78,7 +79,7 @@ program ROHSA
   save_grid = .true.
  
   !Read parameters
-  call read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, n_gauss_add, &
+  call read_parameters(filename_parameters, filename, fileout, timeout, filename_noise, n_gauss, n_gauss_add, &
        lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, &
        sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, noise, &
        regul, descent, lstd, ustd, iprint, iprint_init, save_grid)
@@ -98,7 +99,7 @@ program ROHSA
   end if
 
   !Call ROHSA subroutine
-  call main_rohsa(data, std_cube, fileout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
+  call main_rohsa(data, std_cube, fileout, timeout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
        lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, lb_sig_init, ub_sig_init, &
        lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, &
        iprint_init, save_grid)  

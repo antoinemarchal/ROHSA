@@ -12,7 +12,7 @@ module mod_inout
 
 contains
   
-  subroutine read_parameters(filename_parameters, filename, fileout, filename_noise, n_gauss, &
+  subroutine read_parameters(filename_parameters, filename, fileout, timeout, filename_noise, n_gauss, &
        n_gauss_add, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
        amp_fact_init, sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, noise, &
        regul, descent, lstd, ustd, iprint, iprint_init, save_grid)
@@ -36,10 +36,11 @@ contains
 
     character(len=512), intent(inout) :: filename
     character(len=512), intent(inout) :: fileout
+    character(len=512), intent(inout) :: timeout
     character(len=512), intent(inout) :: filename_noise
     character(len=8), intent(inout) :: init_option
 
-    namelist /user_parameters/ filename, fileout, filename_noise, n_gauss, n_gauss_add, lambda_amp, lambda_mu, &
+    namelist /user_parameters/ filename, fileout, timeout, filename_noise, n_gauss, n_gauss_add, lambda_amp, lambda_mu, &
          & lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, lb_sig_init, ub_sig_init, &
          lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init, &
          save_grid
