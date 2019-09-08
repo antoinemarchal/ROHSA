@@ -4,20 +4,26 @@
    ,fileout = ''            !! name of the output result
    ,filename_noise = ''     !! name of the file with STD map (if noise .eq. true)
    ,n_gauss = 3   	    !! number of gaussian to fit
+
    ,lambda_amp = 100.d0	    !! lambda for amplitude parameter
    ,lambda_mu = 100.d0	    !! lamnda for mean position parameter
    ,lambda_sig = 100.d0     !! lambda for dispersion parameter absorption
+
    ,lambda_abs_amp = 0.d0   !! lambda for amplitude parameter absorption
    ,lambda_abs_mu = 100.d0  !! lamnda for mean position parameter absorption
    ,lambda_abs_sig = 0.d0   !! lambda for dispersion parameter
+
    ,lambda_var_amp = 0.d0   !! lambda for dispersion amplitude parameter
    ,lambda_var_mu = 0.d0    !! lambda for dispersion mean position parameter   
    ,lambda_var_sig = 100.d0 !! lambda for dispersion variance parameter
+
+   ,lambda_lym_sig = 100.d0 !! lambda for dispersion variance parameter
+
    ,amp_fact_init = 0.66d0  !! times max amplitude of additional Gaussian
    ,sig_init = 5.d0         !! dispersion of additional Gaussian
-   ,lb_sig_init = 1.d0    !! upper bound sigma init
+   ,lb_sig_init = 1.d0      !! upper bound sigma init
    ,ub_sig_init = 100.d0    !! upper bound sigma init
-   ,lb_sig = 0.001d0         !! upper bound sigma
+   ,lb_sig = 0.001d0        !! upper bound sigma
    ,ub_sig = 100.d0         !! upper bound sigma
    ,init_option = "mean"    !! init ROHSA with the mean or the std spectrum	
    ,maxiter_init = 15000    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
