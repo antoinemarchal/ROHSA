@@ -17,9 +17,9 @@ module mod_rohsa
 contains
 
   subroutine main_rohsa(data, std_cube, fileout, timeout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, lb_sig_init, ub_sig_init, &
-       lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, iprint, &
-       iprint_init, save_grid)
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, amp_fact_init, sig_init, lb_sig_init, &
+       ub_sig_init, lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
+       iprint, iprint_init, save_grid, lym)
     
     implicit none
     
@@ -27,6 +27,7 @@ contains
     logical, intent(in) :: regul           !! if true --> activate regulation
     logical, intent(in) :: descent         !! if true --> activate hierarchical descent to initiate the optimization
     logical, intent(in) :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
+    logical, intent(in) :: lym             !! if true --> activate 2-Gaussian decomposition for Lyman alpha nebula emission
     integer, intent(in) :: n_gauss_add     !! number of gaussian to add at each step
     integer, intent(in) :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
@@ -35,12 +36,17 @@ contains
     integer, intent(in) :: iprint_init     !! print option init
     integer, intent(in) :: maxiter         !! max iteration for L-BFGS-B alogorithm
     integer, intent(in) :: maxiter_init    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
+
     real(xp), intent(in) :: lambda_amp     !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_mu      !! lamnda for mean position parameter
     real(xp), intent(in) :: lambda_sig     !! lambda for dispersion parameter
+
     real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
     real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
+
+    real(xp), intent(in) :: lambda_lym_sig !! lambda for difference dispersion parameter (2-gaussaian)
+
     real(xp), intent(in) :: amp_fact_init  !! times max amplitude of additional Gaussian
     real(xp), intent(in) :: sig_init       !! dispersion of additional Gaussian
     real(xp), intent(in) :: ub_sig_init    !! upper bound sigma init
@@ -93,12 +99,17 @@ contains
     print*, "______Parameters_____"
     print*, "n_gauss = ", n_gauss
     print*, "n_gauss_add = ", n_gauss_add
+
     print*, "lambda_amp = ", lambda_amp
     print*, "lambda_mu = ", lambda_mu
     print*, "lambda_sig = ", lambda_sig
+
     print*, "lambda_var_amp = ", lambda_var_amp
     print*, "lambda_var_mu = ", lambda_var_mu
     print*, "lambda_var_sig = ", lambda_var_sig
+
+    print*, "lambda_lym_sig = ", lambda_lym_sig
+
     print*, "amp_fact_init = ", amp_fact_init
     print*, "sig_init = ", sig_init
     print*, "lb_sig_init = ", lb_sig_init
@@ -114,6 +125,21 @@ contains
     print*, "regul = ", regul
     print*, "descent = ", descent
     print*, "save_grid = ", save_grid
+
+    print*, "lym = ", lym
+
+    print*,
+
+    ! Check n_gauss = 2 for Lym akpha mode
+    if (lym .eqv. .true.) then
+       if (n_gauss .eq. 2) then
+          print*, "Lym alpha mode activated"
+       else 
+          print*, "Lym alpha mode is based on a 2-Gaussian model / please select n_gauss = 2"
+          stop
+       end if
+    end if
+
     print*,
     
     allocate(kernel(3, 3))
@@ -249,8 +275,8 @@ contains
                 ! Update parameters 
                 print*,  "Update level", n, ">", power
                 call update(cube_mean, fit_params, b_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
-                     lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, kernel, &
-                     iprint, std_map)        
+                     lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, &
+                     m, kernel, iprint, std_map, lym)        
 
                 if (n_gauss_add .ne. 0) then !FIXME
                    ! Add new Gaussian if one reduced chi square > 1 
@@ -337,8 +363,8 @@ contains
     
     if (regul .eqv. .true.) then
        call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-            lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, kernel, &
-            iprint, std_map)
+            lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
+            kernel, iprint, std_map, lym)
        
        if (n_gauss_add .ne. 0) then !FIXME KEYWORD
           do l=1,n_gauss_add
@@ -346,8 +372,8 @@ contains
              call init_new_gauss(data, grid_params, std_map, n_gauss, dim_data(1), dim_data(2), dim_data(3), amp_fact_init, &
                   sig_init)
              call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-                  lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, kernel, &
-                  iprint, std_map)
+                  lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
+                  kernel, iprint, std_map, lym)
           end do
        end if
 
