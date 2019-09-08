@@ -48,10 +48,10 @@ class ROHSA(object):
 
         
     def gen_parameters(self, filename_parameters=None, filename=None, fileout="result.dat", timeout="timestep.dat", filename_noise="", n_gauss=3, lambda_amp=1000, 
-                       lambda_mu=1000, lambda_sig=1000, lambda_var_amp=0, lambda_var_mu=0, lambda_var_sig=1000, amp_fact_init=0.66, sig_init = 4., 
+                       lambda_mu=1000, lambda_sig=1000, lambda_var_amp=0, lambda_var_mu=0, lambda_var_sig=1000, lambda_lym_sig=0, amp_fact_init=0.66, sig_init = 4., 
                        lb_sig_init=1., ub_sig_init=100., lb_sig=0.001, ub_sig=100., init_option="mean", maxiter_init=15000, maxiter=800, m=10, 
                        noise=".false.", regul = ".true.", descent = ".true.", lstd = 1, ustd = 20, iprint = -1, iprint_init = -1, 
-                       save_grid=".true.", absorption=".false."):
+                       save_grid=".true.", lym=".false."):
 
         if not filename : 
             print("Need an input filename")
@@ -76,6 +76,7 @@ class ROHSA(object):
         input_file.write("    ,lambda_var_amp =  "+repr(lambda_var_amp)+'d0'+'\n')
         input_file.write("    ,lambda_var_mu =  "+repr(lambda_var_mu)+'d0'+'\n')
         input_file.write("    ,lambda_var_sig =  "+repr(lambda_var_sig)+'d0'+'\n')
+        input_file.write("    ,lambda_lym_sig =  "+repr(lambda_lym_sig)+'d0'+'\n')
         input_file.write("    ,amp_fact_init =  "+repr(amp_fact_init)+'d0'+'\n')
         input_file.write("    ,sig_init =  "+repr(sig_init)+'d0'+'\n')
         input_file.write("    ,lb_sig_init =  "+repr(lb_sig_init)+'d0'+'\n')
@@ -94,6 +95,7 @@ class ROHSA(object):
         input_file.write("    ,iprint =  "+repr(iprint)+'\n')
         input_file.write("    ,iprint_init =  "+repr(iprint_init)+'\n')
         input_file.write("    ,save_grid =  "+save_grid+'\n')
+        input_file.write("    ,lym =  "+lym+'\n')
         input_file.write("    /"+'\n')
         input_file.close()
 
