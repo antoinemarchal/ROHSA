@@ -4,6 +4,7 @@ module mod_minimize
   use mod_constants
   use mod_array
   use mod_optimize
+  use mod_optimize_lym
 
   implicit none
   
@@ -142,8 +143,13 @@ contains
        
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
-          call f_g_cube_fast(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
-               lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)
+          if (lym .eqv. .true.) then
+             call f_g_cube_fast_lym(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
+                  lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, std_map)
+          else
+             call f_g_cube_fast(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
+                  lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)
+          end if
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations

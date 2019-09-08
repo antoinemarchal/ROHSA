@@ -15,13 +15,14 @@ contains
     
   ! Compute the objective function for a cube and the gradient of the obkective function
   subroutine f_g_cube_fast_lym(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, std_map)
     implicit none
 
     integer, intent(in) :: n_gauss
     integer, intent(in) :: dim_v, dim_y, dim_x
     real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
     real(xp), intent(in) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
+    real(xp), intent(in) :: lambda_lym_sig
     real(xp), intent(in), dimension(:), allocatable :: beta
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
@@ -104,7 +105,14 @@ contains
              !Regularization
              f = f + (0.5_xp * lambda_amp * conv_amp(j,l)**2)
              f = f + (0.5_xp * lambda_mu * conv_mu(j,l)**2)
-             f = f + (0.5_xp * lambda_sig * conv_sig(j,l)**2) + (0.5_xp * lambda_var_sig * (image_sig(j,l) - b_params(i))**2._xp)
+             if (i .eq. 1) then             
+                f = f + (0.5_xp * lambda_sig * conv_sig(j,l)**2) &
+                     + (0.5_xp * lambda_var_sig * (image_sig(j,l) - b_params(i))**2._xp) &
+                     + (0.5_xp * lambda_lym_sig * (params(3+(3*((i+1)-1)),j,l) - params(3+(3*(i-1)),j,l))**2._xp)
+             else
+                f = f + (0.5_xp * lambda_sig * conv_sig(j,l)**2) &
+                     + (0.5_xp * lambda_var_sig * (image_sig(j,l) - b_params(i))**2._xp)
+             end if
              
              g((n_beta-n_gauss)+i) = g((n_beta-n_gauss)+i) - (lambda_var_sig * (image_sig(j,l) - b_params(i)))        
              
@@ -130,8 +138,15 @@ contains
 
              deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (lambda_amp * conv_conv_amp(j,l))
              deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (lambda_mu * conv_conv_mu(j,l))
-             deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (lambda_sig * conv_conv_sig(j,l) + &
-                  (lambda_var_sig * (image_sig(j,l) - b_params(i))))
+             if (i .eq. 1) then
+                deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (lambda_sig * conv_conv_sig(j,l)) &
+                     + (lambda_var_sig * (image_sig(j,l) - b_params(i))) &
+                     - (lambda_lym_sig * (params(3+(3*((i+1)-1)),j,l) - params(3+(3*(i-1)),j,l)))
+             else
+                deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (lambda_sig * conv_conv_sig(j,l)) &
+                     + (lambda_var_sig * (image_sig(j,l) - b_params(i))) &
+                     + (lambda_lym_sig * (params(3+(3*((i+1)-1)),j,l) - params(3+(3*(i-1)),j,l)))
+             end if
           end do
           !
        end do
