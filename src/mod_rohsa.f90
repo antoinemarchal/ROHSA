@@ -398,6 +398,7 @@ contains
     write(12,fmt=*) "# lambda_var_amp = ", lambda_var_amp
     write(12,fmt=*) "# lambda_var_mu = ", lambda_var_mu
     write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
+    write(12,fmt=*) "# lambda_lym_sig = ", lambda_lym_sig
     write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
     write(12,fmt=*) "# sig_init = ", sig_init
     write(12,fmt=*) "# lb_sig_init = ", lb_sig_init
