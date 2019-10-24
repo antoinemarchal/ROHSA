@@ -310,7 +310,7 @@ contains
 
   subroutine update(cube, params, b_params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
        lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, kernel, &
-       iprint, std_map, lym)
+       iprint, std_map, lym, c_lym)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
@@ -342,6 +342,8 @@ contains
 
     real(xp), intent(inout), dimension(:), allocatable :: b_params !! unknown average sigma
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
+
+    real(xp) :: c_lym
     
     integer :: i,j
     integer :: n_beta
@@ -372,13 +374,15 @@ contains
     end do
     
     call minimize(n_beta, m, beta, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-         lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, maxiter, kernel, iprint, std_map, lym)
+         lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, maxiter, kernel, iprint, std_map, lym, c_lym)
 
     call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)
     do i=1,n_gauss
        b_params(i) = beta((n_beta-n_gauss)+i)
     end do        
+
     ! print*, b_params
+    ! print*, c_lym
 
     deallocate(lb, ub, beta)
     deallocate(lb_3D, ub_3D)

@@ -89,7 +89,7 @@ contains
 
   ! Minimize algorithn for a cube with regularization
   subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, maxiter, kernel, iprint, std_map, lym)
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, maxiter, kernel, iprint, std_map, lym, c_lym)
     implicit none      
 
     integer, intent(in) :: n
@@ -98,6 +98,7 @@ contains
     integer, intent(in) :: n_gauss, maxiter
     integer, intent(in) :: iprint
     
+    real(xp), intent(in) :: c_lym
     real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
     real(xp), intent(in) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
     real(xp), intent(in) :: lambda_lym_sig
@@ -145,7 +146,7 @@ contains
           !     Compute function f and gradient g for the sample problem.
           if (lym .eqv. .true.) then
              call f_g_cube_fast_lym(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
-                  lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, std_map)
+                  lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, std_map, c_lym)
           else
              call f_g_cube_fast(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
                   lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)

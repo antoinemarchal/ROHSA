@@ -78,7 +78,9 @@ contains
     real(xp), dimension(:), allocatable :: max_spect_norm      !! max spectrum of the observation normalized by the max of the mean spectrum
     real(xp), dimension(:), allocatable :: mean_spect          !! mean spectrum of the observation
     real(xp), dimension(:), allocatable :: guess_spect         !! params obtain fi the optimization of the std spectrum of the observation
-    
+
+    real(xp) :: c_lym=1._xp !! minimized the variance of the ratio between dispersion 1 and dispersion of a 2-Gaussian model for Lym alpha nebula
+
     integer, dimension(3) :: dim_data !! dimension of original data
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
     
@@ -276,7 +278,7 @@ contains
                 print*,  "Update level", n, ">", power
                 call update(cube_mean, fit_params, b_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
                      lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, &
-                     m, kernel, iprint, std_map, lym)        
+                     m, kernel, iprint, std_map, lym, c_lym)        
 
                 if (n_gauss_add .ne. 0) then !FIXME
                    ! Add new Gaussian if one reduced chi square > 1 
@@ -364,7 +366,7 @@ contains
     if (regul .eqv. .true.) then
        call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
             lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
-            kernel, iprint, std_map, lym)
+            kernel, iprint, std_map, lym, c_lym)
        
        if (n_gauss_add .ne. 0) then !FIXME KEYWORD
           do l=1,n_gauss_add
@@ -373,7 +375,7 @@ contains
                   sig_init)
              call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
                   lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
-                  kernel, iprint, std_map, lym)
+                  kernel, iprint, std_map, lym, c_lym)
           end do
        end if
 
