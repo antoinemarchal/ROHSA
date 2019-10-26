@@ -108,6 +108,8 @@ contains
              f = f + (0.5_xp * lambda_mu * conv_mu(j,l)**2)
              f = f + (0.5_xp * lambda_sig * conv_sig(j,l)**2) &
                   + (0.5_xp * lambda_var_sig * (image_sig(j,l) - b_params(i))**2._xp)
+
+             f = f + (0.5_xp * lambda_lym_sig * ((params(6,j,l) / params(3,j,l)) - c_lym)**2._xp)
              
              g((n_beta-n_gauss)+i) = g((n_beta-n_gauss)+i) - (lambda_var_sig * (image_sig(j,l) - b_params(i)))        
              
@@ -136,22 +138,28 @@ contains
              deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (lambda_sig * conv_conv_sig(j,l)) &
                   + (lambda_var_sig * (image_sig(j,l) - b_params(i))) 
 
+             deriv(3,j,l) = deriv(3,j,l) - (lambda_lym_sig *  params(6,j,l) / params(3,j,l)**2._xp & 
+                  * (params(6,j,l) / params(3,j,l) - c_lym))
+             
+             deriv(6,j,l) = deriv(6,j,l) + (lambda_lym_sig / params(3,j,l) & 
+                  * (params(6,j,l) / params(3,j,l) - c_lym))
+
           end do
           !
        end do
     end do        
     
-    do l=1, dim_x
-       do j=1, dim_y
-          f = f + (0.5_xp * lambda_lym_sig * ((params(6,j,l) / params(3,j,l)) - c_lym)**2._xp)
+    ! do l=1, dim_x
+    !    do j=1, dim_y
+    !       f = f + (0.5_xp * lambda_lym_sig * ((params(6,j,l) / params(3,j,l)) - c_lym)**2._xp)
           
-          deriv(3,j,l) = deriv(3,j,l) - (lambda_lym_sig *  params(6,j,l) / params(3,j,l)**2._xp & 
-                     * (params(6,j,l) / params(3,j,l) - c_lym))
+    !       deriv(3,j,l) = deriv(3,j,l) - (lambda_lym_sig *  params(6,j,l) / params(3,j,l)**2._xp & 
+    !                  * (params(6,j,l) / params(3,j,l) - c_lym))
 
-          deriv(6,j,l) = deriv(6,j,l) + (lambda_lym_sig / params(3,j,l) & 
-               * (params(6,j,l) / params(3,j,l) - c_lym))
-       end do
-    end do
+    !       deriv(6,j,l) = deriv(6,j,l) + (lambda_lym_sig / params(3,j,l) & 
+    !            * (params(6,j,l) / params(3,j,l) - c_lym))
+    !    end do
+    ! end do
     
     call ravel_3D(deriv, g, 3*n_gauss, dim_y, dim_x)
 
