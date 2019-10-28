@@ -645,9 +645,7 @@ contains
              f = f + (0.5_xp * lambda_abs_mu * conv_abs_mu(i,j)**2)
              f = f + (0.5_xp * lambda_abs_sig * conv_abs_sig(i,j)**2)
 
-             f = f + (0.5_xp * lambda_abs_amp_joint * (image_amp(i,j) - image_amp_abs(i,j))**2._xp)
-             f = f + (0.5_xp * lambda_abs_mu_joint * (image_mu(i,j) - image_mu_abs(i,j))**2._xp)
-             f = f + (0.5_xp * lambda_abs_sig_joint * (image_sig(i,j) - image_sig_abs(i,j))**2._xp)
+             f = f + (0.5_xp * lambda_abs_mu_joint * (image_mu(i,j) - image_mu_abs(i,j))**2._xp) !FIXME
                           
              dR_over_dB(1+(3*(k-1)),i,j) = lambda_amp * conv_conv_amp(i,j) + (lambda_var_amp * (image_amp(i,j) - mean_amp(k))) 
              dR_over_dB(2+(3*(k-1)),i,j) = lambda_mu * conv_conv_mu(i,j) + (lambda_var_mu * (image_mu(i,j) - mean_mu(k)))
@@ -664,12 +662,8 @@ contains
              dR_over_dB_abs(2+(3*(k-1)),i,j) = lambda_abs_mu * conv_conv_abs_mu(i,j)
              dR_over_dB_abs(3+(3*(k-1)),i,j) = lambda_abs_sig * conv_conv_abs_sig(i,j)
 
-             dR_over_dB_abs(1+(3*(k-1)),i,j) = dR_over_dB_abs(1+(3*(k-1)),i,j) - (lambda_abs_amp_joint * &
-                  (image_amp(i,j) - image_amp_abs(i,j)))
              dR_over_dB_abs(2+(3*(k-1)),i,j) = dR_over_dB_abs(2+(3*(k-1)),i,j) - (lambda_abs_mu_joint * &
                   (image_mu(i,j) - image_mu_abs(i,j)))
-             dR_over_dB_abs(3+(3*(k-1)),i,j) = dR_over_dB_abs(3+(3*(k-1)),i,j) - (lambda_abs_sig_joint * &
-                  (image_sig(i,j) - image_sig_abs(i,j)))
           end do
        end do       
     end do
