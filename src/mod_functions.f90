@@ -11,7 +11,7 @@ module mod_functions
   
   public :: mean_array, mean_map, dim2nside, dim_data2dim_cube, reshape_up, reshape_down, go_up_level, init_spectrum, &
        upgrade, update, set_stdmap, std_spectrum, mean_spectrum, max_spectrum, init_grid_params, init_new_gauss, update_abs, &
-       init_params_abs, update_new_abs
+       init_params_abs
 
 contains
     
@@ -374,82 +374,82 @@ contains
   end subroutine update
 
 
-  subroutine update_new_abs(cube, params, params_mirror, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, &
-       lambda_sig, lambda_mu_mirror, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, &
-       std_map)
-    !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
-    implicit none
+  ! subroutine update_new_abs(cube, params, params_mirror, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, &
+  !      lambda_sig, lambda_mu_mirror, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, m, kernel, iprint, &
+  !      std_map)
+  !   !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
+  !   implicit none
     
-    real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube 
-    real(xp), intent(in), dimension(:,:), allocatable :: std_map !! Standard deviation map 
-    real(xp), intent(in), dimension(:,:), allocatable :: kernel !! convolution kernel
-    integer, intent(in) :: dim_v !! dimension along v axis
-    integer, intent(in) :: dim_y !! dimension along spatial axis y 
-    integer, intent(in) :: dim_x !! dimension along spatial axis x
-    integer, intent(in) :: n_gauss !! Number of Gaussian
-    integer, intent(in) :: maxiter !! max number of iteration
-    integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
-    integer, intent(in) :: iprint !! print option
-    real(xp), intent(in) :: lambda_amp !! lambda for amplitude parameter
-    real(xp), intent(in) :: lambda_mu !! lambda for mean position parameter
-    real(xp), intent(in) :: lambda_sig !! lambda for dispersion parameter
-    real(xp), intent(in) :: lambda_mu_mirror !! lambda for mean position parameter
-    real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
-    real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
-    real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
-    real(xp), intent(in), dimension(:,:,:), allocatable :: params_mirror !! parameters cube to update
+  !   real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube 
+  !   real(xp), intent(in), dimension(:,:), allocatable :: std_map !! Standard deviation map 
+  !   real(xp), intent(in), dimension(:,:), allocatable :: kernel !! convolution kernel
+  !   integer, intent(in) :: dim_v !! dimension along v axis
+  !   integer, intent(in) :: dim_y !! dimension along spatial axis y 
+  !   integer, intent(in) :: dim_x !! dimension along spatial axis x
+  !   integer, intent(in) :: n_gauss !! Number of Gaussian
+  !   integer, intent(in) :: maxiter !! max number of iteration
+  !   integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
+  !   integer, intent(in) :: iprint !! print option
+  !   real(xp), intent(in) :: lambda_amp !! lambda for amplitude parameter
+  !   real(xp), intent(in) :: lambda_mu !! lambda for mean position parameter
+  !   real(xp), intent(in) :: lambda_sig !! lambda for dispersion parameter
+  !   real(xp), intent(in) :: lambda_mu_mirror !! lambda for mean position parameter
+  !   real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
+  !   real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
+  !   real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
+  !   real(xp), intent(in), dimension(:,:,:), allocatable :: params_mirror !! parameters cube to update
 
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
+  !   real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
     
-    integer :: i,j
-    integer :: n_beta
-    real(xp), dimension(:,:,:), allocatable :: lb_3D, ub_3D
-    real(xp), dimension(:), allocatable :: lb, ub
-    real(xp), dimension(:), allocatable :: beta
-    real(xp), dimension(:), allocatable :: ravel_amp, ravel_mu, ravel_sig
-    real(xp), dimension(:), allocatable :: mean_amp, mean_mu, mean_sig    
-    real(xp), dimension(:,:), allocatable :: image_amp, image_mu, image_sig
+  !   integer :: i,j
+  !   integer :: n_beta
+  !   real(xp), dimension(:,:,:), allocatable :: lb_3D, ub_3D
+  !   real(xp), dimension(:), allocatable :: lb, ub
+  !   real(xp), dimension(:), allocatable :: beta
+  !   real(xp), dimension(:), allocatable :: ravel_amp, ravel_mu, ravel_sig
+  !   real(xp), dimension(:), allocatable :: mean_amp, mean_mu, mean_sig    
+  !   real(xp), dimension(:,:), allocatable :: image_amp, image_mu, image_sig
 
-    n_beta = 3*n_gauss * dim_y * dim_x
+  !   n_beta = 3*n_gauss * dim_y * dim_x
 
-    allocate(lb(n_beta), ub(n_beta), beta(n_beta))
-    allocate(lb_3D(3*n_gauss,dim_y,dim_x), ub_3D(3*n_gauss,dim_y,dim_x))
-    allocate(mean_amp(n_gauss), mean_mu(n_gauss), mean_sig(n_gauss))
-    allocate(image_amp(dim_y, dim_x), image_mu(dim_y, dim_x), image_sig(dim_y, dim_x))
-    allocate(ravel_amp(dim_y*dim_x), ravel_mu(dim_y*dim_x), ravel_sig(dim_y*dim_x))
+  !   allocate(lb(n_beta), ub(n_beta), beta(n_beta))
+  !   allocate(lb_3D(3*n_gauss,dim_y,dim_x), ub_3D(3*n_gauss,dim_y,dim_x))
+  !   allocate(mean_amp(n_gauss), mean_mu(n_gauss), mean_sig(n_gauss))
+  !   allocate(image_amp(dim_y, dim_x), image_mu(dim_y, dim_x), image_sig(dim_y, dim_x))
+  !   allocate(ravel_amp(dim_y*dim_x), ravel_mu(dim_y*dim_x), ravel_sig(dim_y*dim_x))
 
-    do j=1, dim_x
-       do i=1, dim_y
-          call init_bounds(cube(:,i,j), n_gauss, dim_v, lb_3D(:,i,j), ub_3D(:,i,j))
-       end do
-    end do
+  !   do j=1, dim_x
+  !      do i=1, dim_y
+  !         call init_bounds(cube(:,i,j), n_gauss, dim_v, lb_3D(:,i,j), ub_3D(:,i,j))
+  !      end do
+  !   end do
 
-    call ravel_3D(lb_3D, lb, 3*n_gauss, dim_y, dim_x)
-    call ravel_3D(ub_3D, ub, 3*n_gauss, dim_y, dim_x)
-    call ravel_3D(params, beta, 3*n_gauss, dim_y, dim_x)
+  !   call ravel_3D(lb_3D, lb, 3*n_gauss, dim_y, dim_x)
+  !   call ravel_3D(ub_3D, ub, 3*n_gauss, dim_y, dim_x)
+  !   call ravel_3D(params, beta, 3*n_gauss, dim_y, dim_x)
 
-    !Compute mean sig vector    
-    do i=1,n_gauss
-       image_amp = params(1+(3*(i-1)),:,:)
-       image_mu = params(2+(3*(i-1)),:,:)
-       image_sig = params(3+(3*(i-1)),:,:)
+  !   !Compute mean sig vector    
+  !   do i=1,n_gauss
+  !      image_amp = params(1+(3*(i-1)),:,:)
+  !      image_mu = params(2+(3*(i-1)),:,:)
+  !      image_sig = params(3+(3*(i-1)),:,:)
 
-       call ravel_2D(image_amp, ravel_amp, dim_y, dim_x)
-       call ravel_2D(image_mu, ravel_mu, dim_y, dim_x)
-       call ravel_2D(image_sig, ravel_sig, dim_y, dim_x)
+  !      call ravel_2D(image_amp, ravel_amp, dim_y, dim_x)
+  !      call ravel_2D(image_mu, ravel_mu, dim_y, dim_x)
+  !      call ravel_2D(image_sig, ravel_sig, dim_y, dim_x)
 
-       mean_amp(i) = mean(ravel_amp)
-       mean_mu(i) = mean(ravel_mu)
-       mean_sig(i) = mean(ravel_sig)
-    end do
+  !      mean_amp(i) = mean(ravel_amp)
+  !      mean_mu(i) = mean(ravel_mu)
+  !      mean_sig(i) = mean(ravel_sig)
+  !   end do
 
-    call minimize_new_abs(n_beta, m, beta, lb, ub, params_mirror, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, &
-         lambda_sig, lambda_mu_mirror, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map, mean_amp, &
-         mean_mu, mean_sig)
+  !   call minimize_new_abs(n_beta, m, beta, lb, ub, params_mirror, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, &
+  !        lambda_sig, lambda_mu_mirror, lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map, mean_amp, &
+  !        mean_mu, mean_sig)
 
-    call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)
+  !   call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)
         
-  end subroutine update_new_abs
+  ! end subroutine update_new_abs
 
 
   subroutine init_params_abs(cube_abs, params, params_abs, n_gauss, dim_v, dim_y, dim_x, amp_fact_init, sig_init_abs)
