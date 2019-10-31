@@ -73,9 +73,6 @@ contains
     real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:,:), allocatable :: std_map_abs       !! standard deviation map fo the absorp cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: b_params            !! unknow average Tdma
-    real(xp), dimension(:), allocatable :: std_spect           !! std spectrum of the observation
-    real(xp), dimension(:), allocatable :: max_spect           !! max spectrum of the observation
-    real(xp), dimension(:), allocatable :: max_spect_norm      !! max spectrum of the observation normalized by the max of the mean spectrum
     real(xp), dimension(:), allocatable :: mean_spect          !! mean spectrum of the observation
     real(xp), dimension(:), allocatable :: guess_spect         !! params obtain fi the optimization of the std spectrum of the observation
 
@@ -163,16 +160,11 @@ contains
     print*, 
     
     print*, "Compute mean and std spectrum"
-    allocate(std_spect(dim_data(1)))
-    allocate(max_spect(dim_data(1)), max_spect_norm(dim_data(1)))
     allocate(mean_spect(dim_data(1)))
     allocate(b_params(n_mbb))
 
-    call std_spectrum(data, std_spect, dim_data(1), dim_data(2), dim_data(3))
-    call mean_spectrum(data, mean_spect, dim_data(1), dim_data(2), dim_data(3))
-    call max_spectrum(data, max_spect, dim_data(1), dim_data(2), dim_data(3))
-    call max_spectrum(data, max_spect_norm, dim_data(1), dim_data(2), dim_data(3), maxval(mean_spect))
-    
+    call mean_spectrum(data, mean_spect, dim_data(1), dim_data(2), dim_data(3))    
+
     call reshape_up(data, cube, dim_data, dim_cube)
     
     !Allocate memory for parameters grids
