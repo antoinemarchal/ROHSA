@@ -22,22 +22,20 @@ program ROHSA
   integer :: maxiter         !! max iteration for L-BFGS-B alogorithm
   integer :: maxiter_init    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
 
-  real(xp) :: lambda_amp     !! lambda for amplitude parameter
-  real(xp) :: lambda_mu      !! lamnda for mean position parameter
-  real(xp) :: lambda_sig     !! lambda for dispersion parameter
+  real(xp) :: lambda_sig     !! lambda for dust opacity parameter
+  real(xp) :: lambda_beta    !! lamnda for spectral emissivity index parameter
+  real(xp) :: lambda_Td      !! lambda for dust temperature parameter
 
-  real(xp) :: lambda_var_amp !! lambda for variance amplitude parameter
-  real(xp) :: lambda_var_mu  !! lambda for variance mean position parameter
-  real(xp) :: lambda_var_sig !! lambda for variance dispersion parameter
+  real(xp) :: lambda_var_sig  !! lambda for variance dust opacity parameter
+  real(xp) :: lambda_var_beta !! lambda for variance spectral emissivity parameter
+  real(xp) :: lambda_var_Td   !! lambda for variance dust temperature parameter
 
-  real(xp) :: lambda_lym_sig !! lambda for variance dispersion parameter
-
-  real(xp) :: amp_fact_init  !! times max amplitude of additional Gaussian
-  real(xp) :: sig_init       !! dispersion of additional Gaussian
-  real(xp) :: lb_sig_init    !! lower bound sigma init
-  real(xp) :: ub_sig_init    !! upper bound sigma init
-  real(xp) :: lb_sig         !! lower bound sigma
-  real(xp) :: ub_sig         !! upper bound sigma
+  real(xp) :: sig_fact_init !! times max siglitude of additional Gaussian
+  real(xp) :: Td_init       !! dispersion of additional Gaussian
+  real(xp) :: lb_Td_init    !! lower bound Tdma init
+  real(xp) :: ub_Td_init    !! upper bound Tdma init
+  real(xp) :: lb_Td         !! lower bound Tdma
+  real(xp) :: ub_Td         !! upper bound Tdma
 
   character(len=512) :: filename_parameters !! name of the parameters file (default parameters.txt)
   character(len=512) :: filename            !! name of the data file
@@ -59,24 +57,22 @@ program ROHSA
   call get_command_argument(1, filename_parameters)
     
   !Default user parameters
-  n_mbb = 6
+  n_mbb = 2
 
-  lambda_amp = 1._xp
-  lambda_mu = 1._xp
   lambda_sig = 1._xp
+  lambda_beta = 1._xp
+  lambda_Td = 1._xp
 
-  lambda_var_amp = 0._xp
-  lambda_var_mu = 0._xp
-  lambda_var_sig = 1._xp
+  lambda_var_sig = 0._xp
+  lambda_var_beta = 0._xp
+  lambda_var_Td = 1._xp
 
-  lambda_lym_sig = 0._xp
-
-  amp_fact_init = 2._xp/3._xp
-  sig_init = 5._xp
-  lb_sig_init = 0.001_xp
-  ub_sig_init = 100._xp
-  lb_sig = 0.001_xp
-  ub_sig = 100._xp
+  sig_fact_init = 2._xp/3._xp
+  Td_init = 5._xp
+  lb_Td_init = 0.001_xp
+  ub_Td_init = 100._xp
+  lb_Td = 0.001_xp
+  ub_Td = 100._xp
   maxiter_init = 15000
   maxiter = 800
   m = 10
@@ -88,13 +84,12 @@ program ROHSA
   iprint = -1
   iprint_init = -1
   save_grid = .true.
-  lym = .false.
  
   !Read parameters
   call read_parameters(filename_parameters, filename, filename_NHI, fileout, timeout, filename_noise, n_mbb, &
-       lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
-       lambda_lym_sig, amp_fact_init, sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, &
-       maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid, lym)
+       lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
+       sig_fact_init, Td_init, lb_Td_init, ub_Td_init, lb_Td, ub_Td, init_option, maxiter_init, &
+       maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid)
 
   !Call header
   call header()  
@@ -113,10 +108,10 @@ program ROHSA
   end if
 
   !Call ROHSA subroutine
-  call main_rohsa(data, std_cube, fileout, timeout, n_mbb, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, amp_fact_init, sig_init, lb_sig_init, &
-       ub_sig_init, lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
-       iprint, iprint_init, save_grid, lym)  
+  call main_rohsa(data, std_cube, fileout, timeout, n_mbb, lambda_sig, lambda_beta, lambda_Td, &
+       lambda_var_sig, lambda_var_beta, lambda_var_Td, sig_fact_init, Td_init, lb_Td_init, &
+       ub_Td_init, lb_Td, ub_Td, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
+       iprint, iprint_init, save_grid)  
 
   call ender()
 

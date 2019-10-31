@@ -309,8 +309,8 @@ contains
 
 
   subroutine update(cube, params, b_params, n_mbb, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, kernel, &
-       iprint, std_map, lym, c_lym)
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, kernel, &
+       iprint, std_map)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
@@ -333,17 +333,11 @@ contains
     real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
 
-    real(xp), intent(in) :: lambda_lym_sig !! lambda for difference dispersion parameter (2-gaussaian)
-
     real(xp), intent(in) :: lb_sig !! lower bound sigma
     real(xp), intent(in) :: ub_sig !! upper bound sigma
 
-    logical, intent(in) :: lym !! if true --> activate 2-Gaussian decomposition for Lyman alpha nebula emission
-
     real(xp), intent(inout), dimension(:), allocatable :: b_params !! unknown average sigma
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
-
-    real(xp) :: c_lym
     
     integer :: i,j
     integer :: n_beta
@@ -374,7 +368,7 @@ contains
     end do
     
     call minimize(n_beta, m, beta, lb, ub, cube, n_mbb, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-         lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, maxiter, kernel, iprint, std_map, lym, c_lym)
+         lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map)
 
     call unravel_3D(beta, params, 3*n_mbb, dim_y, dim_x)
     do i=1,n_mbb

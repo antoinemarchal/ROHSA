@@ -11,7 +11,6 @@
    ,lambda_var_amp = 0.d0   !! lambda for dispersion amplitude parameter
    ,lambda_var_mu = 0.d0    !! lambda for dispersion mean position parameter   
    ,lambda_var_sig = 0.d0   !! lambda for dispersion variance parameter
-   ,lambda_lym_sig = 0.d0   !! lambda for dispersion variance parameter
    ,amp_fact_init = 0.66d0  !! times max amplitude of additional Gaussian
    ,sig_init = 5.d0         !! dispersion of additional Gaussian
    ,lb_sig_init = 1.d0      !! upper bound sigma init
@@ -30,6 +29,5 @@
    ,iprint = 1              !! print option 
    ,iprint_init = -1        !! print option init
    ,save_grid = .false.     !! if true --> save fitted parameters at each iteration of the multiresolution process
-   ,lym = .false.           !! if true --> activate lyman alpha module
    /
 

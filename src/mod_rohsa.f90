@@ -17,9 +17,9 @@ module mod_rohsa
 contains
 
   subroutine main_rohsa(data, std_cube, fileout, timeout, n_mbb, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, amp_fact_init, sig_init, lb_sig_init, &
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, lb_sig_init, &
        ub_sig_init, lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
-       iprint, iprint_init, save_grid, lym)
+       iprint, iprint_init, save_grid)
     
     implicit none
     
@@ -27,7 +27,6 @@ contains
     logical, intent(in) :: regul           !! if true --> activate regulation
     logical, intent(in) :: descent         !! if true --> activate hierarchical descent to initiate the optimization
     logical, intent(in) :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
-    logical, intent(in) :: lym             !! if true --> activate 2-Gaussian decomposition for Lyman alpha nebula emission
     integer, intent(in) :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
     integer, intent(in) :: ustd            !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
@@ -43,8 +42,6 @@ contains
     real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
     real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
-
-    real(xp), intent(in) :: lambda_lym_sig !! lambda for difference dispersion parameter (2-gaussaian)
 
     real(xp), intent(in) :: amp_fact_init  !! times max amplitude of additional Gaussian
     real(xp), intent(in) :: sig_init       !! dispersion of additional Gaussian
@@ -78,8 +75,6 @@ contains
     real(xp), dimension(:), allocatable :: mean_spect          !! mean spectrum of the observation
     real(xp), dimension(:), allocatable :: guess_spect         !! params obtain fi the optimization of the std spectrum of the observation
 
-    real(xp) :: c_lym=1._xp !! minimized the variance of the ratio between dispersion 1 and dispersion of a 2-Gaussian model for Lym alpha nebula
-
     integer, dimension(3) :: dim_data !! dimension of original data
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
     
@@ -108,8 +103,6 @@ contains
     print*, "lambda_var_mu = ", lambda_var_mu
     print*, "lambda_var_sig = ", lambda_var_sig
 
-    print*, "lambda_lym_sig = ", lambda_lym_sig
-
     print*, "amp_fact_init = ", amp_fact_init
     print*, "sig_init = ", sig_init
     print*, "lb_sig_init = ", lb_sig_init
@@ -125,20 +118,6 @@ contains
     print*, "regul = ", regul
     print*, "descent = ", descent
     print*, "save_grid = ", save_grid
-
-    print*, "lym = ", lym
-
-    print*,
-
-    ! Check n_mbb = 2 for Lym akpha mode
-    if (lym .eqv. .true.) then
-       if (n_mbb .eq. 2) then
-          print*, "Lym alpha mode activated"
-       else 
-          print*, "Lym alpha mode is based on a 2-Gaussian model / please select n_mbb = 2"
-          stop
-       end if
-    end if
 
     print*,
     
@@ -275,8 +254,8 @@ contains
                 ! Update parameters 
                 print*,  "Update level", n, ">", power
                 call update(cube_mean, fit_params, b_params, n_mbb, dim_cube(1), power, power, lambda_amp, lambda_mu, &
-                     lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, &
-                     m, kernel, iprint, std_map, lym, c_lym)        
+                     lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, &
+                     m, kernel, iprint, std_map)        
 
                 deallocate(std_map)
              end if
@@ -357,8 +336,8 @@ contains
     
     if (regul .eqv. .true.) then
        call update(data, grid_params, b_params, n_mbb, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-            lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
-            kernel, iprint, std_map, lym, c_lym)       
+            lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, &
+            kernel, iprint, std_map)       
     end if
     
     print*,
@@ -379,7 +358,6 @@ contains
     write(12,fmt=*) "# lambda_var_amp = ", lambda_var_amp
     write(12,fmt=*) "# lambda_var_mu = ", lambda_var_mu
     write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
-    write(12,fmt=*) "# lambda_lym_sig = ", lambda_lym_sig
     write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
     write(12,fmt=*) "# sig_init = ", sig_init
     write(12,fmt=*) "# lb_sig_init = ", lb_sig_init

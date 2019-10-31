@@ -4,7 +4,6 @@ module mod_minimize
   use mod_constants
   use mod_array
   use mod_optimize
-  use mod_optimize_lym
 
   implicit none
   
@@ -89,7 +88,7 @@ contains
 
   ! Minimize algorithn for a cube with regularization
   subroutine minimize(n, m, x, lb, ub, cube, n_mbb, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, maxiter, kernel, iprint, std_map, lym, c_lym)
+       lambda_var_amp, lambda_var_mu, lambda_var_sig, maxiter, kernel, iprint, std_map)
     implicit none      
 
     integer, intent(in) :: n
@@ -98,18 +97,14 @@ contains
     integer, intent(in) :: n_mbb, maxiter
     integer, intent(in) :: iprint
     
-    real(xp), intent(in) :: c_lym
     real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
     real(xp), intent(in) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
-    real(xp), intent(in) :: lambda_lym_sig
     real(xp), intent(in), dimension(:), allocatable :: lb, ub
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
     real(xp), intent(in), dimension(:,:), allocatable :: std_map
 
     real(xp), intent(in), dimension(:), allocatable :: x
-
-    logical, intent(in) :: lym !! if true --> activate 2-Gaussian decomposition for Lyman alpha nebula emission
     
     real(xp), parameter    :: factr  = 1.0d+7, pgtol  = 1.0d-5
     
@@ -144,13 +139,8 @@ contains
        
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
-          if (lym .eqv. .true.) then
-             call f_g_cube_fast_lym(f, g, cube, x, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_amp, lambda_mu, lambda_sig, &
-                  lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, std_map, c_lym)
-          else
-             call f_g_cube_fast(f, g, cube, x, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_amp, lambda_mu, lambda_sig, &
-                  lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)
-          end if
+          call f_g_cube_fast(f, g, cube, x, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_amp, lambda_mu, lambda_sig, &
+               lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations
