@@ -109,14 +109,14 @@ contains
 
   
   ! Compute the objective function for a cube and the gradient of the obkective function
-  subroutine f_g_cube_fast(f, g, cube, beta, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)
+  subroutine f_g_cube_fast(f, g, cube, beta, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_sig, lambda_beta, lambda_Td, &
+       lambda_var_sig, lambda_var_beta, lambda_var_Td, std_map)
     implicit none
 
     integer, intent(in) :: n_mbb
     integer, intent(in) :: dim_v, dim_y, dim_x
-    real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
-    real(xp), intent(in) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
+    real(xp), intent(in) :: lambda_sig, lambda_beta, lambda_Td
+    real(xp), intent(in) :: lambda_var_sig, lambda_var_beta, lambda_var_Td
     real(xp), intent(in), dimension(:), allocatable :: beta
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
@@ -130,9 +130,9 @@ contains
     real(xp), dimension(:), allocatable :: residual_1D
     real(xp), dimension(:,:,:), allocatable :: params
     real(xp), dimension(:), allocatable :: b_params
-    real(xp), dimension(:,:), allocatable :: conv_amp, conv_mu, conv_sig
-    real(xp), dimension(:,:), allocatable :: conv_conv_amp, conv_conv_mu, conv_conv_sig
-    real(xp), dimension(:,:), allocatable :: image_amp, image_mu, image_sig
+    real(xp), dimension(:,:), allocatable :: conv_sig, conv_beta, conv_Td
+    real(xp), dimension(:,:), allocatable :: conv_conv_sig, conv_conv_beta, conv_conv_Td
+    real(xp), dimension(:,:), allocatable :: image_sig, image_beta, image_Td
     real(xp), dimension(:,:,:), allocatable :: deriv
     real(xp), dimension(:), allocatable :: model
     real(xp) :: gauss
@@ -141,9 +141,9 @@ contains
     allocate(residual(dim_v, dim_y, dim_x))
     allocate(b_params(n_mbb))
     allocate(params(3*n_mbb, dim_y, dim_x))
-    allocate(conv_amp(dim_y, dim_x), conv_mu(dim_y, dim_x), conv_sig(dim_y, dim_x))
-    allocate(conv_conv_amp(dim_y, dim_x), conv_conv_mu(dim_y, dim_x), conv_conv_sig(dim_y, dim_x))
-    allocate(image_amp(dim_y, dim_x), image_mu(dim_y, dim_x), image_sig(dim_y, dim_x))
+    allocate(conv_sig(dim_y, dim_x), conv_beta(dim_y, dim_x), conv_Td(dim_y, dim_x))
+    allocate(conv_conv_sig(dim_y, dim_x), conv_conv_beta(dim_y, dim_x), conv_conv_Td(dim_y, dim_x))
+    allocate(image_sig(dim_y, dim_x), image_beta(dim_y, dim_x), image_Td(dim_y, dim_x))
     allocate(model(dim_v))
 
     deriv = 0._xp
@@ -178,30 +178,30 @@ contains
     ! Compute the objective function and the gradient
     do i=1, n_mbb
        !
-       conv_amp = 0._xp; conv_mu = 0._xp; conv_sig = 0._xp
-       conv_conv_amp = 0._xp; conv_conv_mu = 0._xp; conv_conv_sig = 0._xp
-       image_amp = 0._xp; image_mu = 0._xp; image_sig = 0._xp
+       conv_sig = 0._xp; conv_beta = 0._xp; conv_Td = 0._xp
+       conv_conv_sig = 0._xp; conv_conv_beta = 0._xp; conv_conv_Td = 0._xp
+       image_sig = 0._xp; image_beta = 0._xp; image_Td = 0._xp
        
-       image_amp = params(1+(3*(i-1)),:,:)
-       image_mu = params(2+(3*(i-1)),:,:)
-       image_sig = params(3+(3*(i-1)),:,:)
+       image_sig = params(1+(3*(i-1)),:,:)
+       image_beta = params(2+(3*(i-1)),:,:)
+       image_Td = params(3+(3*(i-1)),:,:)
        
-       call convolution_2D_mirror(image_amp, conv_amp, dim_y, dim_x, kernel, 3)
-       call convolution_2D_mirror(image_mu, conv_mu, dim_y, dim_x, kernel, 3)
        call convolution_2D_mirror(image_sig, conv_sig, dim_y, dim_x, kernel, 3)
+       call convolution_2D_mirror(image_beta, conv_beta, dim_y, dim_x, kernel, 3)
+       call convolution_2D_mirror(image_Td, conv_Td, dim_y, dim_x, kernel, 3)
        
-       call convolution_2D_mirror(conv_amp, conv_conv_amp, dim_y, dim_x, kernel, 3)
-       call convolution_2D_mirror(conv_mu, conv_conv_mu, dim_y, dim_x, kernel, 3)
        call convolution_2D_mirror(conv_sig, conv_conv_sig, dim_y, dim_x, kernel, 3)
+       call convolution_2D_mirror(conv_beta, conv_conv_beta, dim_y, dim_x, kernel, 3)
+       call convolution_2D_mirror(conv_Td, conv_conv_Td, dim_y, dim_x, kernel, 3)
        
        do l=1, dim_x
           do j=1, dim_y
              !Regularization
-             f = f + (0.5_xp * lambda_amp * conv_amp(j,l)**2)
-             f = f + (0.5_xp * lambda_mu * conv_mu(j,l)**2)
-             f = f + (0.5_xp * lambda_sig * conv_sig(j,l)**2) + (0.5_xp * lambda_var_sig * (image_sig(j,l) - b_params(i))**2._xp)
+             f = f + (0.5_xp * lambda_sig * conv_sig(j,l)**2)
+             f = f + (0.5_xp * lambda_beta * conv_beta(j,l)**2)
+             f = f + (0.5_xp * lambda_Td * conv_Td(j,l)**2) + (0.5_xp * lambda_var_Td * (image_Td(j,l) - b_params(i))**2._xp)
              
-             g((n_beta-n_mbb)+i) = g((n_beta-n_mbb)+i) - (lambda_var_sig * (image_sig(j,l) - b_params(i)))        
+             g((n_beta-n_mbb)+i) = g((n_beta-n_mbb)+i) - (lambda_var_Td * (image_Td(j,l) - b_params(i)))        
              
              !
              do k=1, dim_v                          
@@ -223,10 +223,10 @@ contains
                 end if
              end do
 
-             deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (lambda_amp * conv_conv_amp(j,l))
-             deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (lambda_mu * conv_conv_mu(j,l))
-             deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (lambda_sig * conv_conv_sig(j,l) + &
-                  (lambda_var_sig * (image_sig(j,l) - b_params(i))))
+             deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (lambda_sig * conv_conv_sig(j,l))
+             deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (lambda_beta * conv_conv_beta(j,l))
+             deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (lambda_Td * conv_conv_Td(j,l) + &
+                  (lambda_var_Td * (image_Td(j,l) - b_params(i))))
           end do
           !
        end do
@@ -238,9 +238,9 @@ contains
     deallocate(residual)
     deallocate(b_params)
     deallocate(params)
-    deallocate(conv_amp, conv_mu, conv_sig)
-    deallocate(conv_conv_amp, conv_conv_mu, conv_conv_sig)
-    deallocate(image_amp, image_mu, image_sig)
+    deallocate(conv_sig, conv_beta, conv_Td)
+    deallocate(conv_conv_sig, conv_conv_beta, conv_conv_Td)
+    deallocate(image_sig, image_beta, image_Td)
 
   end subroutine f_g_cube_fast
 
