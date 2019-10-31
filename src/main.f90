@@ -5,6 +5,7 @@ program ROHSA
   use mod_start
   use mod_inout
   use mod_rohsa
+  use mod_optimize
   
   implicit none
 
@@ -55,7 +56,7 @@ program ROHSA
 
   !Print header and get filename in argument
   call get_command_argument(1, filename_parameters)
-    
+
   !Default user parameters
   n_mbb = 2
 

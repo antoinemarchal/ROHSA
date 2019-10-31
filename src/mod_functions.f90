@@ -5,6 +5,7 @@ module mod_functions
   use mod_minimize
   use mod_optimize
   use mod_array
+  use mod_model
   
   implicit none
 

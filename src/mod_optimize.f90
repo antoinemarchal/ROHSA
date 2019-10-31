@@ -3,25 +3,15 @@ module mod_optimize
   !! This module contains optimization subroutine and parametric model
   use mod_constants
   use mod_array
+  use mod_model
 
   implicit none
   
   private
 
-  public :: gaussian, myfunc_spec, myresidual, mygrad_spec, f_g_cube_fast
+  public :: myfunc_spec, myresidual, mygrad_spec, f_g_cube_fast
   
 contains
-  
-  pure function gaussian(x, a, m, s)
-    !! Gaussian function   
-    implicit none
-    
-    integer, intent(in) :: x
-    real(xp), intent(in) :: a, m, s
-    real(xp) :: gaussian
-
-    gaussian = a * exp(-( (real(x,xp) - m)**2 ) / (2._xp * s**2) );
-  end function gaussian
   
   ! Compute the residual between model and data
   subroutine myresidual(params, line, residual, n_mbb, dim_v)

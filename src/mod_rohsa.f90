@@ -388,7 +388,6 @@ contains
     open(unit=11, file=timeout, status='unknown', access='append', iostat=ios)
     if (ios /= 0) stop "opening file error"
     call cpu_time(uctime)
-    print*, dim_cube(1)
     write(11,fmt=*) dim_cube(2), uctime-lctime
     close(11)
     
