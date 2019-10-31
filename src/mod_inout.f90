@@ -12,8 +12,8 @@ module mod_inout
 
 contains
   
-  subroutine read_parameters(filename_parameters, filename, fileout, timeout, filename_noise, n_gauss, &
-       n_gauss_add, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, &
+  subroutine read_parameters(filename_parameters, filename, filename_NHI, fileout, timeout, filename_noise, n_mbb, &
+       lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, &
        amp_fact_init, sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, noise, &
        regul, descent, lstd, ustd, iprint, iprint_init, save_grid, lym)
     implicit none
@@ -22,7 +22,7 @@ contains
 
     character(len=512), intent(in) :: filename_parameters
 
-    integer, intent(inout) :: n_gauss, n_gauss_add
+    integer, intent(inout) :: n_mbb
     integer, intent(inout) :: m 
     integer, intent(inout) :: lstd, ustd
     integer, intent(inout) :: iprint, iprint_init
@@ -37,15 +37,16 @@ contains
     logical, intent(inout) :: lym
 
     character(len=512), intent(inout) :: filename
+    character(len=512), intent(inout) :: filename_NHI
     character(len=512), intent(inout) :: fileout
     character(len=512), intent(inout) :: timeout
     character(len=512), intent(inout) :: filename_noise
     character(len=8), intent(inout) :: init_option
 
-    namelist /user_parameters/ filename, fileout, timeout, filename_noise, n_gauss, n_gauss_add, lambda_amp, lambda_mu, &
-         lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, amp_fact_init, sig_init, lb_sig_init, &
-         ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, &
-         iprint_init, save_grid, lym
+    namelist /user_parameters/ filename, filename_NHI, fileout, timeout, filename_noise, n_mbb, &
+         lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, &
+         amp_fact_init, sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, &
+         noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid, lym
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
     if (ios /= 0) stop "opening file error"
@@ -110,10 +111,10 @@ contains
     close(11)
   end subroutine read_map
   
-  subroutine save_process(nside, n_gauss, grid, dim_yx, fileout)
+  subroutine save_process(nside, n_mbb, grid, dim_yx, fileout)
     implicit none
 
-    integer, intent(in) :: n_gauss    !! number of gaussian to fit
+    integer, intent(in) :: n_mbb    !! number of gaussian to fit
     integer, intent(in) :: dim_yx     !! spatial dimension
     real(xp), intent(in), dimension(:,:,:), allocatable :: grid !! parameters to optimize with cube mean at each iteration
     character(len=512), intent(in) :: fileout   !! name of the output result
@@ -136,7 +137,7 @@ contains
 
     do i=1, dim_yx
        do j=1, dim_yx
-          do k=1, n_gauss
+          do k=1, n_mbb
              write(12,fmt=*) i-1, j-1, grid(1+((k-1)*3),i,j), grid(2+((k-1)*3),i,j), grid(3+((k-1)*3),i,j)
           enddo
        end do

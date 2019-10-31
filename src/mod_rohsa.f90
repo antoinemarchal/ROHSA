@@ -16,7 +16,7 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, std_cube, fileout, timeout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
+  subroutine main_rohsa(data, std_cube, fileout, timeout, n_mbb, lambda_amp, lambda_mu, lambda_sig, &
        lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, amp_fact_init, sig_init, lb_sig_init, &
        ub_sig_init, lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
        iprint, iprint_init, save_grid, lym)
@@ -28,7 +28,6 @@ contains
     logical, intent(in) :: descent         !! if true --> activate hierarchical descent to initiate the optimization
     logical, intent(in) :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
     logical, intent(in) :: lym             !! if true --> activate 2-Gaussian decomposition for Lyman alpha nebula emission
-    integer, intent(in) :: n_gauss_add     !! number of gaussian to add at each step
     integer, intent(in) :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
     integer, intent(in) :: ustd            !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
@@ -58,7 +57,7 @@ contains
     character(len=512), intent(in) :: fileout   !! name of the output result
     character(len=512), intent(in) :: timeout   !! name of the output result
 
-    integer :: n_gauss      !! number of gaussian to fit
+    integer :: n_mbb      !! number of gaussian to fit
     integer :: nside        !! size of the reshaped data \(2^{nside}\)
     integer :: n            !! loop index
     integer :: power        !! loop index
@@ -99,8 +98,7 @@ contains
     
     print*,
     print*, "______Parameters_____"
-    print*, "n_gauss = ", n_gauss
-    print*, "n_gauss_add = ", n_gauss_add
+    print*, "n_mbb = ", n_mbb
 
     print*, "lambda_amp = ", lambda_amp
     print*, "lambda_mu = ", lambda_mu
@@ -132,12 +130,12 @@ contains
 
     print*,
 
-    ! Check n_gauss = 2 for Lym akpha mode
+    ! Check n_mbb = 2 for Lym akpha mode
     if (lym .eqv. .true.) then
-       if (n_gauss .eq. 2) then
+       if (n_mbb .eq. 2) then
           print*, "Lym alpha mode activated"
        else 
-          print*, "Lym alpha mode is based on a 2-Gaussian model / please select n_gauss = 2"
+          print*, "Lym alpha mode is based on a 2-Gaussian model / please select n_mbb = 2"
           stop
        end if
     end if
@@ -181,7 +179,7 @@ contains
     allocate(std_spect(dim_data(1)))
     allocate(max_spect(dim_data(1)), max_spect_norm(dim_data(1)))
     allocate(mean_spect(dim_data(1)))
-    allocate(b_params(n_gauss))
+    allocate(b_params(n_mbb))
 
     call std_spectrum(data, std_spect, dim_data(1), dim_data(2), dim_data(3))
     call mean_spectrum(data, mean_spect, dim_data(1), dim_data(2), dim_data(3))
@@ -192,17 +190,17 @@ contains
     
     !Allocate memory for parameters grids
     if (descent .eqv. .true.) then
-       allocate(grid_params(3*(n_gauss+(nside*n_gauss_add)), dim_data(2), dim_data(3)))
-       allocate(fit_params(3*(n_gauss+(nside*n_gauss_add)), 1, 1))
+       allocate(grid_params(3*n_mbb, dim_data(2), dim_data(3)))
+       allocate(fit_params(3*n_mbb, 1, 1))
        !Init sigma = 1 to avoid Nan
-       do i=1,n_gauss
+       do i=1,n_mbb
           fit_params(1+(3*(i-1)),1,1) = 0._xp
           fit_params(2+(3*(i-1)),1,1) = 1._xp
           fit_params(3+(3*(i-1)),1,1) = 1._xp
        end do
     else 
        !Maybe fixme same sigma = 1
-       allocate(grid_params(3*(n_gauss+n_gauss_add), dim_data(2), dim_data(3)))
+       allocate(grid_params(3*n_mbb, dim_data(2), dim_data(3)))
     end if
     
     print*, "                    Start iteration"
@@ -230,35 +228,35 @@ contains
           if (n == 0) then
              if (init_option .eq. "mean") then
                 print*, "Init mean spectrum"        
-                call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, sig_init, &
+                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, sig_init, &
                      lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
              elseif (init_option .eq. "std") then
-                call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, sig_init, &
+                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, sig_init, &
                      lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
              elseif (init_option .eq. "max") then
-                call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), max_spect, amp_fact_init, sig_init, &
+                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), max_spect, amp_fact_init, sig_init, &
                      lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
              elseif (init_option .eq. "maxnorm") then
-                call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
+                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
                      lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
              else 
                 print*, "init_option keyword should be 'mean' or 'std' or 'max' or 'maxnorm'"
                 stop
              end if
              !Init b_params
-             do i=1, n_gauss       
+             do i=1, n_mbb       
                 b_params(i) = fit_params(3+(3*(i-1)),1,1)
              end do
           end if
                     
           if (regul .eqv. .false.) then
-             call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
+             call upgrade(cube_mean, fit_params, power, n_mbb, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
           end if
           
           if (regul .eqv. .true.) then
              if (n == 0) then                
                 print*,  "Update level", n
-                call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
+                call upgrade(cube_mean, fit_params, power, n_mbb, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
              end if
             
              ! if (n .eq. 2) then 
@@ -276,15 +274,9 @@ contains
 
                 ! Update parameters 
                 print*,  "Update level", n, ">", power
-                call update(cube_mean, fit_params, b_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
+                call update(cube_mean, fit_params, b_params, n_mbb, dim_cube(1), power, power, lambda_amp, lambda_mu, &
                      lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, &
                      m, kernel, iprint, std_map, lym, c_lym)        
-
-                if (n_gauss_add .ne. 0) then !FIXME
-                   ! Add new Gaussian if one reduced chi square > 1 
-                   call init_new_gauss(cube_mean, fit_params, std_map, n_gauss, dim_cube(1), power, power, amp_fact_init, &
-                        sig_init)
-                end if
 
                 deallocate(std_map)
              end if
@@ -295,7 +287,7 @@ contains
           ! Save grid in file
           if (save_grid .eqv. .true.) then
              print*, "Save grid parameters"
-             call save_process(n, n_gauss, fit_params, power, fileout)
+             call save_process(n, n_mbb, fit_params, power, fileout)
              !Save timestep
              if (n .ne. 0) then
                 open(unit=11, file=timeout, status='unknown', access='append', iostat=ios)
@@ -319,26 +311,26 @@ contains
        write(*,*) "Reshape cube, restore initial dimensions :"
        write(*,*) "dim_v, dim_y, dim_x = ", dim_data
               
-       call reshape_down(fit_params, grid_params,  (/ 3*n_gauss, dim_cube(2), dim_cube(3)/), &
-            (/ 3*n_gauss, dim_data(2), dim_data(3)/))       
+       call reshape_down(fit_params, grid_params,  (/ 3*n_mbb, dim_cube(2), dim_cube(3)/), &
+            (/ 3*n_mbb, dim_data(2), dim_data(3)/))       
 
        else
-          allocate(guess_spect(3*(n_gauss+n_gauss_add)))
+          allocate(guess_spect(3*n_mbb))
           if (init_option .eq. "mean") then
              print*, "Use of the mean spectrum to initialize each los"
-             call init_spectrum(n_gauss, guess_spect, dim_cube(1), mean_spect, amp_fact_init, sig_init, &
+             call init_spectrum(n_mbb, guess_spect, dim_cube(1), mean_spect, amp_fact_init, sig_init, &
                   lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
           else if (init_option .eq. "std") then
              print*, "Use of the std spectrum to initialize each los"
-             call init_spectrum(n_gauss, guess_spect, dim_cube(1), std_spect, amp_fact_init, sig_init, &
+             call init_spectrum(n_mbb, guess_spect, dim_cube(1), std_spect, amp_fact_init, sig_init, &
                   lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
           else if (init_option .eq. "max") then
              print*, "Use of the max spectrum to initialize each los"
-             call init_spectrum(n_gauss, guess_spect, dim_cube(1), max_spect, amp_fact_init, sig_init, &
+             call init_spectrum(n_mbb, guess_spect, dim_cube(1), max_spect, amp_fact_init, sig_init, &
                   lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
           else if (init_option .eq. "maxnorm") then
              print*, "Use of the std spectrum to initialize each los"
-             call init_spectrum(n_gauss, guess_spect, dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
+             call init_spectrum(n_mbb, guess_spect, dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
                   lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
           else
              print*, "init_option keyword should be 'mean' or 'std' or 'max'"
@@ -364,21 +356,9 @@ contains
     end if
     
     if (regul .eqv. .true.) then
-       call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
+       call update(data, grid_params, b_params, n_mbb, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
             lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
-            kernel, iprint, std_map, lym, c_lym)
-       
-       if (n_gauss_add .ne. 0) then !FIXME KEYWORD
-          do l=1,n_gauss_add
-             ! Add new Gaussian if at least one reduced chi square of the field is > 1 
-             call init_new_gauss(data, grid_params, std_map, n_gauss, dim_data(1), dim_data(2), dim_data(3), amp_fact_init, &
-                  sig_init)
-             call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-                  lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
-                  kernel, iprint, std_map, lym, c_lym)
-          end do
-       end if
-
+            kernel, iprint, std_map, lym, c_lym)       
     end if
     
     print*,
@@ -392,8 +372,7 @@ contains
     write(12,fmt=*) "# "
     write(12,fmt=*) "# ______Parameters_____"
     write(12,fmt=*) "# "
-    write(12,fmt=*) "# n_gauss = ", n_gauss
-    write(12,fmt=*) "# n_gauss_add = ", n_gauss_add
+    write(12,fmt=*) "# n_mbb = ", n_mbb
     write(12,fmt=*) "# lambda_amp = ", lambda_amp
     write(12,fmt=*) "# lambda_mu = ", lambda_mu
     write(12,fmt=*) "# lambda_sig = ", lambda_sig
@@ -421,13 +400,13 @@ contains
 
     do i=1, dim_data(2)
        do j=1, dim_data(3)
-          do k=1, n_gauss
+          do k=1, n_mbb
              write(12,fmt=*) i-1, j-1, grid_params(1+((k-1)*3),i,j), grid_params(2+((k-1)*3),i,j), grid_params(3+((k-1)*3),i,j)
           enddo
        enddo
     enddo
     close(12)
-    
+
     open(unit=11, file=timeout, status='unknown', access='append', iostat=ios)
     if (ios /= 0) stop "opening file error"
     call cpu_time(uctime)

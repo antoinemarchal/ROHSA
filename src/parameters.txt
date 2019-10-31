@@ -1,24 +1,17 @@
 &user_parameters
-   filename = ''            !! name of the data file
-   ,filename_abs = ''       !! name of the absorption data file
-   ,fileout = ''            !! name of the output result
-   ,filename_noise = ''     !! name of the file with STD map (if noise .eq. true)
-   ,n_gauss = 3   	    !! number of gaussian to fit
-
-   ,lambda_amp = 100.d0	    !! lambda for amplitude parameter
-   ,lambda_mu = 100.d0	    !! lamnda for mean position parameter
-   ,lambda_sig = 100.d0     !! lambda for dispersion parameter absorption
-
-   ,lambda_abs_amp = 0.d0   !! lambda for amplitude parameter absorption
-   ,lambda_abs_mu = 100.d0  !! lamnda for mean position parameter absorption
-   ,lambda_abs_sig = 0.d0   !! lambda for dispersion parameter
-
+   filename = 'GHIGLS_DFN_Tb.dat'              !! name of the data file
+   ,filename_NHI = 'GHIGLS_DFN_Tb.dat'         !! name of th NHI data cube file
+   ,fileout = 'GHIGLS_DFN_Tb_gauss_run_0.dat'  !! name of the output result
+   ,timeout = 'timestep.dat'                   !! write output time step
+   ,filename_noise = 'GHIGLS_DFN_Tb_rms.dat'   !! name of the file with STD map (if noise .eq. true)
+   ,n_mbb = 3   	    !! number of gaussian to fit
+   ,lambda_amp = 1.d0	    !! lambda for amplitude parameter
+   ,lambda_mu = 1.d0	    !! lamnda for mean position parameter
+   ,lambda_sig = 1.d0       !! lambda for dispersion parameter absorption
    ,lambda_var_amp = 0.d0   !! lambda for dispersion amplitude parameter
    ,lambda_var_mu = 0.d0    !! lambda for dispersion mean position parameter   
-   ,lambda_var_sig = 100.d0 !! lambda for dispersion variance parameter
-
-   ,lambda_lym_sig = 100.d0 !! lambda for dispersion variance parameter
-
+   ,lambda_var_sig = 0.d0   !! lambda for dispersion variance parameter
+   ,lambda_lym_sig = 0.d0   !! lambda for dispersion variance parameter
    ,amp_fact_init = 0.66d0  !! times max amplitude of additional Gaussian
    ,sig_init = 5.d0         !! dispersion of additional Gaussian
    ,lb_sig_init = 1.d0      !! upper bound sigma init
@@ -27,16 +20,16 @@
    ,ub_sig = 100.d0         !! upper bound sigma
    ,init_option = "mean"    !! init ROHSA with the mean or the std spectrum	
    ,maxiter_init = 15000    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
-   ,maxiter = 800           !! max iteration for L-BFGS-B alogorithm
+   ,maxiter = 20            !! max iteration for L-BFGS-B alogorithm
    ,m = 10                  !! number of corrections used in the limited memory matrix by LBFGS-B
    ,noise = .false.         !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
    ,regul = .true.          !! if true --> activate regulation
    ,descent = .true.        !! if true --> activate hierarchical descent to initiate the optimization
    ,lstd = 1                !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
    ,ustd = 20               !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
-   ,iprint = -1             !! print option 
+   ,iprint = 1              !! print option 
    ,iprint_init = -1        !! print option init
    ,save_grid = .false.     !! if true --> save fitted parameters at each iteration of the multiresolution process
-   ,absorption = .false.    !! if true --> fit emission and absoption lines jointly
+   ,lym = .false.           !! if true --> activate lyman alpha module
    /
 

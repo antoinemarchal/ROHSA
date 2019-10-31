@@ -14,14 +14,14 @@ module mod_minimize
   
 contains
 
-  subroutine minimize_spec(n, m, x, lb, ub, line, dim_v, n_gauss, maxiter, iprint)
+  subroutine minimize_spec(n, m, x, lb, ub, line, dim_v, n_mbb, maxiter, iprint)
     !! Minimize algorithn for a specturm
     implicit none      
 
     integer, intent(in) :: n
     integer, intent(in) :: m
     integer, intent(in) :: dim_v
-    integer, intent(in) :: n_gauss, maxiter
+    integer, intent(in) :: n_mbb, maxiter
     integer, intent(in) :: iprint
 
     real(xp), intent(in), dimension(:), allocatable :: lb, ub
@@ -64,9 +64,9 @@ contains
        
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
-          call myresidual(x, line, residual, n_gauss, dim_v)
+          call myresidual(x, line, residual, n_mbb, dim_v)
           f = myfunc_spec(residual)          
-          call mygrad_spec(n_gauss, g, residual, x, dim_v)
+          call mygrad_spec(n_mbb, g, residual, x, dim_v)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations
@@ -88,14 +88,14 @@ contains
   end subroutine minimize_spec
 
   ! Minimize algorithn for a cube with regularization
-  subroutine minimize(n, m, x, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
+  subroutine minimize(n, m, x, lb, ub, cube, n_mbb, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
        lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, maxiter, kernel, iprint, std_map, lym, c_lym)
     implicit none      
 
     integer, intent(in) :: n
     integer, intent(in) :: m
     integer, intent(in) :: dim_v, dim_y, dim_x
-    integer, intent(in) :: n_gauss, maxiter
+    integer, intent(in) :: n_mbb, maxiter
     integer, intent(in) :: iprint
     
     real(xp), intent(in) :: c_lym
@@ -145,10 +145,10 @@ contains
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
           if (lym .eqv. .true.) then
-             call f_g_cube_fast_lym(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
+             call f_g_cube_fast_lym(f, g, cube, x, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_amp, lambda_mu, lambda_sig, &
                   lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, std_map, c_lym)
           else
-             call f_g_cube_fast(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
+             call f_g_cube_fast(f, g, cube, x, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_amp, lambda_mu, lambda_sig, &
                   lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)
           end if
           
