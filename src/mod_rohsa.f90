@@ -16,9 +16,9 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, std_cube, fileout, timeout, n_mbb, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, amp_fact_init, sig_init, lb_sig_init, &
-       ub_sig_init, lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
+  subroutine main_rohsa(data, std_cube, fileout, timeout, n_mbb, lambda_amp, lambda_beta, lambda_Td, &
+       lambda_var_amp, lambda_var_beta, lambda_var_Td, amp_fact_init, Td_init, lb_Td_init, &
+       ub_Td_init, lb_Td, ub_Td, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
        iprint, iprint_init, save_grid)
     
     implicit none
@@ -36,19 +36,19 @@ contains
     integer, intent(in) :: maxiter_init    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
 
     real(xp), intent(in) :: lambda_amp     !! lambda for amplitude parameter
-    real(xp), intent(in) :: lambda_mu      !! lamnda for mean position parameter
-    real(xp), intent(in) :: lambda_sig     !! lambda for dispersion parameter
+    real(xp), intent(in) :: lambda_beta      !! lamnda for mean position parameter
+    real(xp), intent(in) :: lambda_Td     !! lambda for dispersion parameter
 
     real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
-    real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
-    real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
+    real(xp), intent(in) :: lambda_var_beta  !! lambda for mean position dispersion parameter
+    real(xp), intent(in) :: lambda_var_Td !! lambda for variance dispersion parameter
 
     real(xp), intent(in) :: amp_fact_init  !! times max amplitude of additional Gaussian
-    real(xp), intent(in) :: sig_init       !! dispersion of additional Gaussian
-    real(xp), intent(in) :: ub_sig_init    !! upper bound sigma init
-    real(xp), intent(in) :: lb_sig_init    !! lower bound sigma init
-    real(xp), intent(in) :: lb_sig         !! lower bound sigma
-    real(xp), intent(in) :: ub_sig         !! upper bound sigma
+    real(xp), intent(in) :: Td_init       !! dispersion of additional Gaussian
+    real(xp), intent(in) :: ub_Td_init    !! upper bound Tdma init
+    real(xp), intent(in) :: lb_Td_init    !! lower bound Tdma init
+    real(xp), intent(in) :: lb_Td         !! lower bound Tdma
+    real(xp), intent(in) :: ub_Td         !! upper bound Tdma
 
     character(len=8), intent(in)   :: init_option !!Init ROHSA with the mean or the std spectrum    
     character(len=512), intent(in) :: fileout   !! name of the output result
@@ -68,7 +68,7 @@ contains
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:,:), allocatable :: std_map_abs       !! standard deviation map fo the absorp cube computed by ROHSA with lb and ub
-    real(xp), dimension(:), allocatable :: b_params            !! unknow average sigma
+    real(xp), dimension(:), allocatable :: b_params            !! unknow average Tdma
     real(xp), dimension(:), allocatable :: std_spect           !! std spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect           !! max spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect_norm      !! max spectrum of the observation normalized by the max of the mean spectrum
@@ -96,19 +96,19 @@ contains
     print*, "n_mbb = ", n_mbb
 
     print*, "lambda_amp = ", lambda_amp
-    print*, "lambda_mu = ", lambda_mu
-    print*, "lambda_sig = ", lambda_sig
+    print*, "lambda_beta = ", lambda_beta
+    print*, "lambda_Td = ", lambda_Td
 
     print*, "lambda_var_amp = ", lambda_var_amp
-    print*, "lambda_var_mu = ", lambda_var_mu
-    print*, "lambda_var_sig = ", lambda_var_sig
+    print*, "lambda_var_beta = ", lambda_var_beta
+    print*, "lambda_var_Td = ", lambda_var_Td
 
     print*, "amp_fact_init = ", amp_fact_init
-    print*, "sig_init = ", sig_init
-    print*, "lb_sig_init = ", lb_sig_init
-    print*, "ub_sig_init = ", ub_sig_init
-    print*, "lb_sig = ", lb_sig
-    print*, "ub_sig = ", ub_sig
+    print*, "Td_init = ", Td_init
+    print*, "lb_Td_init = ", lb_Td_init
+    print*, "ub_Td_init = ", ub_Td_init
+    print*, "lb_Td = ", lb_Td
+    print*, "ub_Td = ", ub_Td
     print*, "init_option = ", init_option
     print*, "maxiter_init = ", maxiter_init
     print*, "maxiter = ", maxiter
@@ -171,14 +171,14 @@ contains
     if (descent .eqv. .true.) then
        allocate(grid_params(3*n_mbb, dim_data(2), dim_data(3)))
        allocate(fit_params(3*n_mbb, 1, 1))
-       !Init sigma = 1 to avoid Nan
+       !Init Tdma = 1 to avoid Nan
        do i=1,n_mbb
           fit_params(1+(3*(i-1)),1,1) = 0._xp
           fit_params(2+(3*(i-1)),1,1) = 1._xp
           fit_params(3+(3*(i-1)),1,1) = 1._xp
        end do
     else 
-       !Maybe fixme same sigma = 1
+       !Maybe fixme same Tdma = 1
        allocate(grid_params(3*n_mbb, dim_data(2), dim_data(3)))
     end if
     
@@ -207,17 +207,17 @@ contains
           if (n == 0) then
              if (init_option .eq. "mean") then
                 print*, "Init mean spectrum"        
-                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, sig_init, &
-                     lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, Td_init, &
+                     lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
              elseif (init_option .eq. "std") then
-                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, sig_init, &
-                     lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, Td_init, &
+                     lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
              elseif (init_option .eq. "max") then
-                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), max_spect, amp_fact_init, sig_init, &
-                     lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), max_spect, amp_fact_init, Td_init, &
+                     lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
              elseif (init_option .eq. "maxnorm") then
-                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
-                     lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), max_spect_norm, amp_fact_init, Td_init, &
+                     lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
              else 
                 print*, "init_option keyword should be 'mean' or 'std' or 'max' or 'maxnorm'"
                 stop
@@ -229,13 +229,13 @@ contains
           end if
                     
           if (regul .eqv. .false.) then
-             call upgrade(cube_mean, fit_params, power, n_mbb, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
+             call upgrade(cube_mean, fit_params, power, n_mbb, dim_cube(1), lb_Td, ub_Td, maxiter, m, iprint)
           end if
           
           if (regul .eqv. .true.) then
              if (n == 0) then                
                 print*,  "Update level", n
-                call upgrade(cube_mean, fit_params, power, n_mbb, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
+                call upgrade(cube_mean, fit_params, power, n_mbb, dim_cube(1), lb_Td, ub_Td, maxiter, m, iprint)
              end if
             
              ! if (n .eq. 2) then 
@@ -253,8 +253,8 @@ contains
 
                 ! Update parameters 
                 print*,  "Update level", n, ">", power
-                call update(cube_mean, fit_params, b_params, n_mbb, dim_cube(1), power, power, lambda_amp, lambda_mu, &
-                     lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, &
+                call update(cube_mean, fit_params, b_params, n_mbb, dim_cube(1), power, power, lambda_amp, lambda_beta, &
+                     lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_Td, ub_Td, maxiter, &
                      m, kernel, iprint, std_map)        
 
                 deallocate(std_map)
@@ -297,20 +297,20 @@ contains
           allocate(guess_spect(3*n_mbb))
           if (init_option .eq. "mean") then
              print*, "Use of the mean spectrum to initialize each los"
-             call init_spectrum(n_mbb, guess_spect, dim_cube(1), mean_spect, amp_fact_init, sig_init, &
-                  lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+             call init_spectrum(n_mbb, guess_spect, dim_cube(1), mean_spect, amp_fact_init, Td_init, &
+                  lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
           else if (init_option .eq. "std") then
              print*, "Use of the std spectrum to initialize each los"
-             call init_spectrum(n_mbb, guess_spect, dim_cube(1), std_spect, amp_fact_init, sig_init, &
-                  lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+             call init_spectrum(n_mbb, guess_spect, dim_cube(1), std_spect, amp_fact_init, Td_init, &
+                  lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
           else if (init_option .eq. "max") then
              print*, "Use of the max spectrum to initialize each los"
-             call init_spectrum(n_mbb, guess_spect, dim_cube(1), max_spect, amp_fact_init, sig_init, &
-                  lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+             call init_spectrum(n_mbb, guess_spect, dim_cube(1), max_spect, amp_fact_init, Td_init, &
+                  lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
           else if (init_option .eq. "maxnorm") then
              print*, "Use of the std spectrum to initialize each los"
-             call init_spectrum(n_mbb, guess_spect, dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
-                  lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+             call init_spectrum(n_mbb, guess_spect, dim_cube(1), max_spect_norm, amp_fact_init, Td_init, &
+                  lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
           else
              print*, "init_option keyword should be 'mean' or 'std' or 'max'"
              stop
@@ -335,8 +335,8 @@ contains
     end if
     
     if (regul .eqv. .true.) then
-       call update(data, grid_params, b_params, n_mbb, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-            lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lb_sig, ub_sig, maxiter, m, &
+       call update(data, grid_params, b_params, n_mbb, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_beta, &
+            lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_Td, ub_Td, maxiter, m, &
             kernel, iprint, std_map)       
     end if
     
@@ -353,17 +353,17 @@ contains
     write(12,fmt=*) "# "
     write(12,fmt=*) "# n_mbb = ", n_mbb
     write(12,fmt=*) "# lambda_amp = ", lambda_amp
-    write(12,fmt=*) "# lambda_mu = ", lambda_mu
-    write(12,fmt=*) "# lambda_sig = ", lambda_sig
+    write(12,fmt=*) "# lambda_beta = ", lambda_beta
+    write(12,fmt=*) "# lambda_Td = ", lambda_Td
     write(12,fmt=*) "# lambda_var_amp = ", lambda_var_amp
-    write(12,fmt=*) "# lambda_var_mu = ", lambda_var_mu
-    write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
+    write(12,fmt=*) "# lambda_var_beta = ", lambda_var_beta
+    write(12,fmt=*) "# lambda_var_Td = ", lambda_var_Td
     write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
-    write(12,fmt=*) "# sig_init = ", sig_init
-    write(12,fmt=*) "# lb_sig_init = ", lb_sig_init
-    write(12,fmt=*) "# ub_sig_init = ", ub_sig_init
-    write(12,fmt=*) "# lb_sig = ", lb_sig
-    write(12,fmt=*) "# ub_sig = ", ub_sig
+    write(12,fmt=*) "# Td_init = ", Td_init
+    write(12,fmt=*) "# lb_Td_init = ", lb_Td_init
+    write(12,fmt=*) "# ub_Td_init = ", ub_Td_init
+    write(12,fmt=*) "# lb_Td = ", lb_Td
+    write(12,fmt=*) "# ub_Td = ", ub_Td
     write(12,fmt=*) "# init_option = ", init_option
     write(12,fmt=*) "# maxiter_itit = ", maxiter_init
     write(12,fmt=*) "# maxiter = ", maxiter
@@ -374,7 +374,7 @@ contains
     write(12,fmt=*) "# descent = ", descent
     write(12,fmt=*) "# "
     
-    write(12,fmt=*) "# i, j, A, mean, sigma"
+    write(12,fmt=*) "# i, j, Td, beta, Td"
 
     do i=1, dim_data(2)
        do j=1, dim_data(3)

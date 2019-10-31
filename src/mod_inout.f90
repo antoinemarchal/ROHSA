@@ -13,8 +13,8 @@ module mod_inout
 contains
   
   subroutine read_parameters(filename_parameters, filename, filename_NHI, fileout, timeout, filename_noise, n_mbb, &
-       lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
-       amp_fact_init, sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, noise, &
+       lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
+       sig_fact_init, Td_init, lb_Td_init, ub_Td_init, lb_Td, ub_Td, init_option, maxiter_init, maxiter, m, noise, &
        regul, descent, lstd, ustd, iprint, iprint_init, save_grid)
     implicit none
 
@@ -27,11 +27,11 @@ contains
     integer, intent(inout) :: lstd, ustd
     integer, intent(inout) :: iprint, iprint_init
     integer, intent(inout) :: maxiter, maxiter_init
-    real(xp), intent(inout) :: lambda_amp, lambda_mu, lambda_sig
-    real(xp), intent(inout) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
-    real(xp), intent(inout) :: amp_fact_init, sig_init
-    real(xp), intent(inout) :: ub_sig_init, ub_sig
-    real(xp), intent(inout) :: lb_sig_init, lb_sig
+    real(xp), intent(inout) :: lambda_sig, lambda_beta, lambda_Td
+    real(xp), intent(inout) :: lambda_var_sig, lambda_var_beta, lambda_var_Td
+    real(xp), intent(inout) :: sig_fact_init, Td_init
+    real(xp), intent(inout) :: ub_Td_init, ub_Td
+    real(xp), intent(inout) :: lb_Td_init, lb_Td
     logical, intent(inout) :: noise, regul, descent, save_grid
 
     character(len=512), intent(inout) :: filename
@@ -42,8 +42,8 @@ contains
     character(len=8), intent(inout) :: init_option
 
     namelist /user_parameters/ filename, filename_NHI, fileout, timeout, filename_noise, n_mbb, &
-         lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, &
-         amp_fact_init, sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, &
+         lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
+         sig_fact_init, Td_init, lb_Td_init, ub_Td_init, lb_Td, ub_Td, init_option, maxiter_init, maxiter, m, &
          noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
@@ -131,7 +131,7 @@ contains
     open(unit=12, file=fileout_nside, action="write", iostat=ios)
     if (ios /= 0) stop "opening file error"
 
-    write(12,fmt=*) "# i, j, A, mean, sigma"
+    write(12,fmt=*) "# i, j, sig, beta, Td"
 
     do i=1, dim_yx
        do j=1, dim_yx
