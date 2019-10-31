@@ -1,33 +1,43 @@
 &user_parameters
    filename = 'GHIGLS_DFN_Tb.dat'              !! name of the data file
    ,filename_NHI = 'GHIGLS_DFN_Tb.dat'         !! name of th NHI data cube file
+   ,filename_wavelength = 'wavelength.dat'     !! name of th NHI data cube file
+   ,filename_noise = 'GHIGLS_DFN_Tb_rms.dat'   !! name of the file with STD map (if noise .eq. true)
+
    ,fileout = 'GHIGLS_DFN_Tb_gauss_run_0.dat'  !! name of the output result
    ,timeout = 'timestep.dat'                   !! write output time step
-   ,filename_noise = 'GHIGLS_DFN_Tb_rms.dat'   !! name of the file with STD map (if noise .eq. true)
-   ,n_mbb = 3   	    !! number of gaussian to fit
-   ,lambda_sig = 1.d0	    !! lambda for siglitude parameter
-   ,lambda_beta = 1.d0	    !! lamnda for mean position parameter
-   ,lambda_Td = 1.d0        !! lambda for dispersion parameter absorption
-   ,lambda_var_sig = 0.d0   !! lambda for dispersion siglitude parameter
-   ,lambda_var_beta = 0.d0  !! lambda for dispersion mean position parameter   
-   ,lambda_var_Td = 0.d0    !! lambda for dispersion variance parameter
-   ,sig_fact_init = 0.66d0  !! times max siglitude of additional Gaussian
-   ,Td_init = 5.d0          !! dispersion of additional Gaussian
-   ,lb_Td_init = 1.d0       !! upper bound Td init
-   ,ub_Td_init = 100.d0     !! upper bound Td init
-   ,lb_Td = 0.001d0         !! upper bound Td
-   ,ub_Td = 100.d0          !! upper bound Td
-   ,init_option = "mean"    !! init ROHSA with the mean or the std spectrum	
-   ,maxiter_init = 15000    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
-   ,maxiter = 20            !! max iteration for L-BFGS-B alogorithm
-   ,m = 10                  !! number of corrections used in the limited memory matrix by LBFGS-B
-   ,noise = .false.         !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
-   ,regul = .true.          !! if true --> activate regulation
-   ,descent = .true.        !! if true --> activate hierarchical descent to initiate the optimization
-   ,lstd = 1                !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
-   ,ustd = 20               !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
-   ,iprint = 1              !! print option 
-   ,iprint_init = -1        !! print option init
-   ,save_grid = .false.     !! if true --> save fitted parameters at each iteration of the multiresolution process
+
+   ,n_mbb = 3   	                       !! number of gaussian to fit
+
+   ,lambda_sig = 1.d0	                       !! lambda for siglitude parameter
+   ,lambda_beta = 1.d0	                       !! lamnda for mean position parameter
+   ,lambda_Td = 1.d0                           !! lambda for dispersion parameter absorption
+
+   ,lambda_var_sig = 0.d0                      !! lambda for dispersion siglitude parameter
+   ,lambda_var_beta = 0.d0  		       !! lambda for dispersion mean position parameter   
+   ,lambda_var_Td = 0.d0    		       !! lambda for dispersion variance parameter
+
+   ,sig_fact_init = 0.66d0 		       !! times max siglitude of additional Gaussian
+
+   ,sig_init = 1.d0         		       !! dispersion of additional Gaussian
+   ,beta_init = 1.7d0         		       !! dispersion of additional Gaussian
+   ,Td_init = 17.d0         		       !! dispersion of additional Gaussian
+
+   ,lb_sig = 0.d0         		       !! upper bound Td
+   ,ub_sig = 100.d0         		       !! upper bound Td
+   ,lb_beta = 1.d0         		       !! upper bound Td
+   ,ub_beta = 2.5d0         		       !! upper bound Td
+   ,lb_Td = 8.2d0         		       !! upper bound Td
+   ,ub_Td = 50.d0         		       !! upper bound Td
+
+   ,maxiter_init = 15000    		       !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
+   ,maxiter = 20            		       !! max iteration for L-BFGS-B alogorithm
+   ,m = 10                  		       !! number of corrections used in the limited memory matrix by LBFGS-B
+   ,noise = .false.         		       !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
+   ,lstd = 1                		       !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
+   ,ustd = 20               		       !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
+   ,iprint = 1              		       !! print option 
+   ,iprint_init = -1        		       !! print option init
+   ,save_grid = .false.     		       !! if true --> save fitted parameters at each iteration of the multiresolution process
    /
 

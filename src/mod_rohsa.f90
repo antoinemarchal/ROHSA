@@ -16,16 +16,13 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, std_cube, fileout, timeout, n_mbb, lambda_amp, lambda_beta, lambda_Td, &
-       lambda_var_amp, lambda_var_beta, lambda_var_Td, amp_fact_init, Td_init, lb_Td_init, &
-       ub_Td_init, lb_Td, ub_Td, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
-       iprint, iprint_init, save_grid)
+  subroutine main_rohsa(data, wavelength, std_cube, NHI, fileout, timeout, n_mbb, lambda_amp, lambda_beta, lambda_Td, &
+       lambda_var_amp, lambda_var_beta, lambda_var_Td, amp_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, &
+       lb_beta, ub_beta, lb_Td, ub_Td, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
     
     implicit none
     
     logical, intent(in) :: noise           !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
-    logical, intent(in) :: regul           !! if true --> activate regulation
-    logical, intent(in) :: descent         !! if true --> activate hierarchical descent to initiate the optimization
     logical, intent(in) :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
     integer, intent(in) :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
@@ -36,21 +33,26 @@ contains
     integer, intent(in) :: maxiter_init    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
 
     real(xp), intent(in) :: lambda_amp     !! lambda for amplitude parameter
-    real(xp), intent(in) :: lambda_beta      !! lamnda for mean position parameter
-    real(xp), intent(in) :: lambda_Td     !! lambda for dispersion parameter
+    real(xp), intent(in) :: lambda_beta    !! lamnda for mean position parameter
+    real(xp), intent(in) :: lambda_Td      !! lambda for dispersion parameter
 
-    real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
-    real(xp), intent(in) :: lambda_var_beta  !! lambda for mean position dispersion parameter
-    real(xp), intent(in) :: lambda_var_Td !! lambda for variance dispersion parameter
+    real(xp), intent(in) :: lambda_var_amp  !! lambda for amp dispersion parameter
+    real(xp), intent(in) :: lambda_var_beta !! lambda for mean position dispersion parameter
+    real(xp), intent(in) :: lambda_var_Td   !! lambda for variance dispersion parameter
 
     real(xp), intent(in) :: amp_fact_init  !! times max amplitude of additional Gaussian
-    real(xp), intent(in) :: Td_init       !! dispersion of additional Gaussian
-    real(xp), intent(in) :: ub_Td_init    !! upper bound Tdma init
-    real(xp), intent(in) :: lb_Td_init    !! lower bound Tdma init
-    real(xp), intent(in) :: lb_Td         !! lower bound Tdma
-    real(xp), intent(in) :: ub_Td         !! upper bound Tdma
 
-    character(len=8), intent(in)   :: init_option !!Init ROHSA with the mean or the std spectrum    
+    real(xp), intent(in) :: sig_init      !! 
+    real(xp), intent(in) :: beta_init     !! 
+    real(xp), intent(in) :: Td_init       !! 
+
+    real(xp), intent(in) :: lb_sig        !! lower bound
+    real(xp), intent(in) :: ub_sig        !! upper bound
+    real(xp), intent(in) :: lb_beta       !! lower bound
+    real(xp), intent(in) :: ub_beta       !! upper bound
+    real(xp), intent(in) :: lb_Td         !! lower bound
+    real(xp), intent(in) :: ub_Td         !! upper bound
+
     character(len=512), intent(in) :: fileout   !! name of the output result
     character(len=512), intent(in) :: timeout   !! name of the output result
 
@@ -60,7 +62,9 @@ contains
     integer :: power        !! loop index
 
     real(xp), intent(in), dimension(:,:,:), allocatable :: data        !! initial fits data
+    real(xp), intent(in), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
     real(xp), intent(in), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
+    real(xp), intent(in), dimension(:,:,:), allocatable :: NHI         !! initial fits data NHI
 
     real(xp), dimension(:,:,:), allocatable :: cube            !! reshape data with nside --> cube
     real(xp), dimension(:,:,:), allocatable :: cube_mean       !! mean cube over spatial axis
@@ -104,19 +108,23 @@ contains
     print*, "lambda_var_Td = ", lambda_var_Td
 
     print*, "amp_fact_init = ", amp_fact_init
+
+    print*, "sig_init = ", sig_init
+    print*, "beta_init = ", beta_init
     print*, "Td_init = ", Td_init
-    print*, "lb_Td_init = ", lb_Td_init
-    print*, "ub_Td_init = ", ub_Td_init
+
+    print*, "lb_sig = ", lb_sig
+    print*, "ub_sig = ", ub_sig
+    print*, "lb_beta = ", lb_beta
+    print*, "ub_beta = ", ub_beta
     print*, "lb_Td = ", lb_Td
     print*, "ub_Td = ", ub_Td
-    print*, "init_option = ", init_option
+
     print*, "maxiter_init = ", maxiter_init
     print*, "maxiter = ", maxiter
     print*, "lstd = ", lstd
     print*, "ustd = ", ustd
     print*, "noise = ", noise
-    print*, "regul = ", regul
-    print*, "descent = ", descent
     print*, "save_grid = ", save_grid
 
     print*,
@@ -168,158 +176,102 @@ contains
     call reshape_up(data, cube, dim_data, dim_cube)
     
     !Allocate memory for parameters grids
-    if (descent .eqv. .true.) then
-       allocate(grid_params(3*n_mbb, dim_data(2), dim_data(3)))
-       allocate(fit_params(3*n_mbb, 1, 1))
-       !Init Tdma = 1 to avoid Nan
-       do i=1,n_mbb
-          fit_params(1+(3*(i-1)),1,1) = 0._xp
-          fit_params(2+(3*(i-1)),1,1) = 1._xp
-          fit_params(3+(3*(i-1)),1,1) = 1._xp
-       end do
-    else 
-       !Maybe fixme same Tdma = 1
-       allocate(grid_params(3*n_mbb, dim_data(2), dim_data(3)))
-    end if
+    allocate(grid_params(3*n_mbb, dim_data(2), dim_data(3)))
+    allocate(fit_params(3*n_mbb, 1, 1))
+    !Init Tdma = 1 to avoid Nan
+    do i=1,n_mbb
+       fit_params(1+(3*(i-1)),1,1) = 0._xp
+       fit_params(2+(3*(i-1)),1,1) = 1._xp
+       fit_params(3+(3*(i-1)),1,1) = 1._xp
+    end do
     
     print*, "                    Start iteration"
     print*,
     
-    if (descent .eqv. .true.) then
-       print*, "Start hierarchical descent"
+    print*, "Start hierarchical descent"
 
-       if (save_grid .eqv. .true.) then
-          !Open file time step
-          open(unit=11, file=timeout, status='replace', access='append', iostat=ios)
-          write(11,fmt=*) "# size grid, Time (s)"
-          close(11)
-          call cpu_time(lctime)
-       end if
-
-       !Start iteration
-       do n=0,nside-1
-          power = 2**n
-          
-          allocate(cube_mean(dim_cube(1), power, power))
-          
-          call mean_array(power, cube, cube_mean)
-          
-          if (n == 0) then
-             if (init_option .eq. "mean") then
-                print*, "Init mean spectrum"        
-                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, Td_init, &
-                     lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
-             elseif (init_option .eq. "std") then
-                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, Td_init, &
-                     lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
-             elseif (init_option .eq. "max") then
-                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), max_spect, amp_fact_init, Td_init, &
-                     lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
-             elseif (init_option .eq. "maxnorm") then
-                call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), max_spect_norm, amp_fact_init, Td_init, &
-                     lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
-             else 
-                print*, "init_option keyword should be 'mean' or 'std' or 'max' or 'maxnorm'"
-                stop
-             end if
-             !Init b_params
-             do i=1, n_mbb       
-                b_params(i) = fit_params(3+(3*(i-1)),1,1)
-             end do
-          end if
-                    
-          if (regul .eqv. .false.) then
-             call upgrade(cube_mean, fit_params, power, n_mbb, dim_cube(1), lb_Td, ub_Td, maxiter, m, iprint)
-          end if
-          
-          if (regul .eqv. .true.) then
-             if (n == 0) then                
-                print*,  "Update level", n
-                call upgrade(cube_mean, fit_params, power, n_mbb, dim_cube(1), lb_Td, ub_Td, maxiter, m, iprint)
-             end if
-            
-             ! if (n .eq. 2) then 
-             !    stop
-             ! end if
-
-             if (n > 0 .and. n < nside) then
-                allocate(std_map(power, power))
-                
-                if (noise .eqv. .true.) then
-                   call mean_map(power, std_cube, std_map)           
-                else
-                   call set_stdmap(std_map, cube_mean, lstd, ustd)
-                end if
-
-                ! Update parameters 
-                print*,  "Update level", n, ">", power
-                call update(cube_mean, fit_params, b_params, n_mbb, dim_cube(1), power, power, lambda_amp, lambda_beta, &
-                     lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_Td, ub_Td, maxiter, &
-                     m, kernel, iprint, std_map)        
-
-                deallocate(std_map)
-             end if
-          end if
-          
-          deallocate(cube_mean)
-
-          ! Save grid in file
-          if (save_grid .eqv. .true.) then
-             print*, "Save grid parameters"
-             call save_process(n, n_mbb, fit_params, power, fileout)
-             !Save timestep
-             if (n .ne. 0) then
-                open(unit=11, file=timeout, status='unknown', access='append', iostat=ios)
-                if (ios /= 0) stop "opening file error"
-                call cpu_time(uctime)
-                print*, dim_cube(1)
-                ! write(11,fmt='(I6, f6.3)') power, uctime-lctime
-                write(11,fmt=*) power, uctime-lctime
-                close(11)
-             end if
-          end if
-
-          ! Propagate solution on new grid (higher resolution)
-          call go_up_level(fit_params)
-          write(*,*) ""
-          write(*,*) "Interpolate parameters level ", n!, ">", power
-
-       enddo
-       
-       print*,
-       write(*,*) "Reshape cube, restore initial dimensions :"
-       write(*,*) "dim_v, dim_y, dim_x = ", dim_data
-              
-       call reshape_down(fit_params, grid_params,  (/ 3*n_mbb, dim_cube(2), dim_cube(3)/), &
-            (/ 3*n_mbb, dim_data(2), dim_data(3)/))       
-
-       else
-          allocate(guess_spect(3*n_mbb))
-          if (init_option .eq. "mean") then
-             print*, "Use of the mean spectrum to initialize each los"
-             call init_spectrum(n_mbb, guess_spect, dim_cube(1), mean_spect, amp_fact_init, Td_init, &
-                  lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
-          else if (init_option .eq. "std") then
-             print*, "Use of the std spectrum to initialize each los"
-             call init_spectrum(n_mbb, guess_spect, dim_cube(1), std_spect, amp_fact_init, Td_init, &
-                  lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
-          else if (init_option .eq. "max") then
-             print*, "Use of the max spectrum to initialize each los"
-             call init_spectrum(n_mbb, guess_spect, dim_cube(1), max_spect, amp_fact_init, Td_init, &
-                  lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
-          else if (init_option .eq. "maxnorm") then
-             print*, "Use of the std spectrum to initialize each los"
-             call init_spectrum(n_mbb, guess_spect, dim_cube(1), max_spect_norm, amp_fact_init, Td_init, &
-                  lb_Td_init, ub_Td_init, maxiter_init, m, iprint_init)
-          else
-             print*, "init_option keyword should be 'mean' or 'std' or 'max'"
-             stop
-          end if
-          call init_grid_params(grid_params, guess_spect, dim_data(2), dim_data(3))
-
-          deallocate(guess_spect)      
+    if (save_grid .eqv. .true.) then
+       !Open file time step
+       open(unit=11, file=timeout, status='replace', access='append', iostat=ios)
+       write(11,fmt=*) "# size grid, Time (s)"
+       close(11)
+       call cpu_time(lctime)
     end if
     
+    !Start iteration
+    do n=0,nside-1
+       power = 2**n
+       
+       allocate(cube_mean(dim_cube(1), power, power))
+       
+       call mean_array(power, cube, cube_mean)
+       
+       if (n == 0) then
+          print*, "Init mean spectrum"        
+          call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, Td_init, &
+               lb_Td, ub_Td, maxiter_init, m, iprint_init)
+          
+          !Init b_params
+          do i=1, n_mbb       
+             b_params(i) = fit_params(3+(3*(i-1)),1,1)
+          end do
+       end if
+              
+       if (n == 0) then                
+          print*,  "Update level", n
+          call upgrade(cube_mean, fit_params, power, n_mbb, dim_cube(1), lb_Td, ub_Td, maxiter, m, iprint)
+       end if
+              
+       if (n > 0 .and. n < nside) then
+          allocate(std_map(power, power))
+          
+          if (noise .eqv. .true.) then
+             call mean_map(power, std_cube, std_map)           
+          else
+             call set_stdmap(std_map, cube_mean, lstd, ustd)
+          end if
+          
+          ! Update parameters 
+          print*,  "Update level", n, ">", power
+          call update(cube_mean, fit_params, b_params, n_mbb, dim_cube(1), power, power, lambda_amp, lambda_beta, &
+               lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_Td, ub_Td, maxiter, &
+               m, kernel, iprint, std_map)        
+          
+          deallocate(std_map)
+       end if
+       
+       deallocate(cube_mean)
+       
+       ! Save grid in file
+       if (save_grid .eqv. .true.) then
+          print*, "Save grid parameters"
+          call save_process(n, n_mbb, fit_params, power, fileout)
+          !Save timestep
+          if (n .ne. 0) then
+             open(unit=11, file=timeout, status='unknown', access='append', iostat=ios)
+             if (ios /= 0) stop "opening file error"
+             call cpu_time(uctime)
+             print*, dim_cube(1)
+             ! write(11,fmt='(I6, f6.3)') power, uctime-lctime
+             write(11,fmt=*) power, uctime-lctime
+             close(11)
+          end if
+       end if
+       
+       ! Propagate solution on new grid (higher resolution)
+       call go_up_level(fit_params)
+       write(*,*) ""
+       write(*,*) "Interpolate parameters level ", n!, ">", power
+       
+    enddo
+    
+    print*,
+    write(*,*) "Reshape cube, restore initial dimensions :"
+    write(*,*) "dim_v, dim_y, dim_x = ", dim_data
+    
+    call reshape_down(fit_params, grid_params,  (/ 3*n_mbb, dim_cube(2), dim_cube(3)/), &
+         (/ 3*n_mbb, dim_data(2), dim_data(3)/))       
+        
     !Update last level
     print*,
     print*, "Start updating last level."
@@ -334,11 +286,9 @@ contains
        call set_stdmap(std_map, data, lstd, ustd)
     end if
     
-    if (regul .eqv. .true.) then
-       call update(data, grid_params, b_params, n_mbb, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_beta, &
-            lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_Td, ub_Td, maxiter, m, &
-            kernel, iprint, std_map)       
-    end if
+    call update(data, grid_params, b_params, n_mbb, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_beta, &
+         lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_Td, ub_Td, maxiter, m, &
+         kernel, iprint, std_map)       
     
     print*,
     print*, "_____ Write output file _____"
@@ -359,19 +309,20 @@ contains
     write(12,fmt=*) "# lambda_var_beta = ", lambda_var_beta
     write(12,fmt=*) "# lambda_var_Td = ", lambda_var_Td
     write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
+    write(12,fmt=*) "# sig_init = ", sig_init
+    write(12,fmt=*) "# beta_init = ", beta_init
     write(12,fmt=*) "# Td_init = ", Td_init
-    write(12,fmt=*) "# lb_Td_init = ", lb_Td_init
-    write(12,fmt=*) "# ub_Td_init = ", ub_Td_init
+    write(12,fmt=*) "# lb_sig = ", lb_sig
+    write(12,fmt=*) "# ub_sig = ", ub_sig
+    write(12,fmt=*) "# lb_beta = ", lb_beta
+    write(12,fmt=*) "# ub_beta = ", ub_beta
     write(12,fmt=*) "# lb_Td = ", lb_Td
     write(12,fmt=*) "# ub_Td = ", ub_Td
-    write(12,fmt=*) "# init_option = ", init_option
     write(12,fmt=*) "# maxiter_itit = ", maxiter_init
     write(12,fmt=*) "# maxiter = ", maxiter
     write(12,fmt=*) "# lstd = ", lstd
     write(12,fmt=*) "# ustd = ", ustd
     write(12,fmt=*) "# noise = ", noise
-    write(12,fmt=*) "# regul = ", regul
-    write(12,fmt=*) "# descent = ", descent
     write(12,fmt=*) "# "
     
     write(12,fmt=*) "# i, j, Td, beta, Td"

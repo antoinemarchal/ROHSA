@@ -10,10 +10,7 @@ program ROHSA
   implicit none
 
   logical :: noise           !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
-  logical :: regul           !! if true --> activate regulation
-  logical :: descent         !! if true --> activate hierarchical descent to initiate the optimization
   logical :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
-  logical :: lym             !! if true --> activate 2-Gaussian decomposition for Lyman alpha nebula emission
   integer :: n_mbb           !! number of gaussian to fit
   integer :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
   integer :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
@@ -32,25 +29,34 @@ program ROHSA
   real(xp) :: lambda_var_Td   !! lambda for variance dust temperature parameter
 
   real(xp) :: sig_fact_init !! times max siglitude of additional Gaussian
-  real(xp) :: Td_init       !! dispersion of additional Gaussian
-  real(xp) :: lb_Td_init    !! lower bound Tdma init
-  real(xp) :: ub_Td_init    !! upper bound Tdma init
-  real(xp) :: lb_Td         !! lower bound Tdma
-  real(xp) :: ub_Td         !! upper bound Tdma
+
+  real(xp) :: Td_init       !! dust opacity init
+  real(xp) :: beta_init     !! 
+  real(xp) :: sig_init      !!
+
+  real(xp) :: lb_sig         !! lower bound 
+  real(xp) :: ub_sig         !! upper bound
+  real(xp) :: lb_beta         !! lower bound
+  real(xp) :: ub_beta         !! upper bound
+  real(xp) :: lb_Td         !! lower bound 
+  real(xp) :: ub_Td         !! upper bound
 
   character(len=512) :: filename_parameters !! name of the parameters file (default parameters.txt)
   character(len=512) :: filename            !! name of the data file
   character(len=512) :: filename_NHI        !! name of the data file
+  character(len=512) :: filename_wavelength !! name of the wavelength file
   character(len=512) :: fileout             !! name of the output result
   character(len=512) :: timeout             !! name of the output result
   character(len=512) :: filename_noise      !! name of the file with STD map (if noise .eq. true)
-  character(len=8)   :: init_option !!Init ROHSA with the mean or the std spectrum    
 
   real(xp) :: start, finish
 
   real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
-  real(xp), dimension(:,:,:), allocatable :: NHI         !! initial fits data NHI
+  real(xp), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
   real(xp), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
+  real(xp), dimension(:,:,:), allocatable :: NHI         !! initial fits data NHI
+
+  integer, dimension(3) :: dim_data !! number of frequencies
 
   call cpu_time(start)
 
@@ -69,28 +75,33 @@ program ROHSA
   lambda_var_Td = 1._xp
 
   sig_fact_init = 2._xp/3._xp
-  Td_init = 5._xp
-  lb_Td_init = 0.001_xp
-  ub_Td_init = 100._xp
-  lb_Td = 0.001_xp
-  ub_Td = 100._xp
+
+  sig_init = 1._xp
+  beta_init = 1.7_xp
+  Td_init = 17._xp
+
+  !FIXME VALUE
+  lb_sig = 0._xp     
+  ub_sig = 100._xp
+  lb_beta = 1._xp
+  ub_beta = 2.5_xp
+  lb_Td = 8.2_xp       		   
+  ub_Td = 50._xp       
+
   maxiter_init = 15000
   maxiter = 800
   m = 10
   noise = .false.
-  regul = .true.
-  descent = .false.
   lstd = 1; ustd = 20
-  init_option = "mean"
   iprint = -1
   iprint_init = -1
   save_grid = .true.
  
   !Read parameters
-  call read_parameters(filename_parameters, filename, filename_NHI, fileout, timeout, filename_noise, n_mbb, &
-       lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
-       sig_fact_init, Td_init, lb_Td_init, ub_Td_init, lb_Td, ub_Td, init_option, maxiter_init, &
-       maxiter, m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid)
+  call read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, fileout, timeout, &
+       filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
+       lambda_var_Td, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
+       maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
 
   !Call header
   call header()  
@@ -99,8 +110,8 @@ program ROHSA
 
   !Load data
   call read_cube(filename, data)
-  call read_cube(filename_NHI, NHI)
-  
+  call read_array(filename_wavelength, wavelength)
+
   if (noise .eqv. .true.) then
      if (filename_noise == " ") then
         print*, "--> noise = .true. (no input rms map)"
@@ -108,11 +119,12 @@ program ROHSA
      call read_map(filename_noise, std_cube)
   end if
 
+  call read_cube(filename_NHI, NHI)
+
   !Call ROHSA subroutine
-  call main_rohsa(data, std_cube, fileout, timeout, n_mbb, lambda_sig, lambda_beta, lambda_Td, &
-       lambda_var_sig, lambda_var_beta, lambda_var_Td, sig_fact_init, Td_init, lb_Td_init, &
-       ub_Td_init, lb_Td, ub_Td, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
-       iprint, iprint_init, save_grid)  
+  call main_rohsa(data, wavelength, std_cube, NHI, fileout, timeout, n_mbb, lambda_sig, lambda_beta, lambda_Td, &
+       lambda_var_sig, lambda_var_beta, lambda_var_Td, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, &
+       lb_beta, ub_beta, lb_Td, ub_Td, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)  
 
   call ender()
 

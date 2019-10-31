@@ -8,43 +8,45 @@ module mod_inout
   
   private
   
-  public :: read_cube, read_map, read_parameters, save_process
+  public :: read_cube, read_map, read_array, read_parameters, save_process
 
 contains
   
-  subroutine read_parameters(filename_parameters, filename, filename_NHI, fileout, timeout, filename_noise, n_mbb, &
-       lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
-       sig_fact_init, Td_init, lb_Td_init, ub_Td_init, lb_Td, ub_Td, init_option, maxiter_init, maxiter, m, noise, &
-       regul, descent, lstd, ustd, iprint, iprint_init, save_grid)
+  subroutine read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, fileout, timeout, &
+       filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
+       sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
+       maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
     implicit none
 
     integer :: ios=0
 
     character(len=512), intent(in) :: filename_parameters
 
-    integer, intent(inout) :: n_mbb
-    integer, intent(inout) :: m 
-    integer, intent(inout) :: lstd, ustd
-    integer, intent(inout) :: iprint, iprint_init
-    integer, intent(inout) :: maxiter, maxiter_init
+    integer, intent(inout)  :: n_mbb
+    integer, intent(inout)  :: m 
+    integer, intent(inout)  :: lstd, ustd
+    integer, intent(inout)  :: iprint, iprint_init
+    integer, intent(inout)  :: maxiter, maxiter_init
     real(xp), intent(inout) :: lambda_sig, lambda_beta, lambda_Td
     real(xp), intent(inout) :: lambda_var_sig, lambda_var_beta, lambda_var_Td
-    real(xp), intent(inout) :: sig_fact_init, Td_init
-    real(xp), intent(inout) :: ub_Td_init, ub_Td
-    real(xp), intent(inout) :: lb_Td_init, lb_Td
-    logical, intent(inout) :: noise, regul, descent, save_grid
+    real(xp), intent(inout) :: sig_fact_init
+    real(xp), intent(inout) :: sig_init, beta_init, Td_init
+    real(xp), intent(inout) :: lb_sig, ub_sig
+    real(xp), intent(inout) :: lb_beta, ub_beta
+    real(xp), intent(inout) :: lb_Td, ub_Td
+    logical, intent(inout)  :: noise, save_grid
 
     character(len=512), intent(inout) :: filename
     character(len=512), intent(inout) :: filename_NHI
+    character(len=512), intent(inout) :: filename_wavelength
     character(len=512), intent(inout) :: fileout
     character(len=512), intent(inout) :: timeout
     character(len=512), intent(inout) :: filename_noise
-    character(len=8), intent(inout) :: init_option
 
-    namelist /user_parameters/ filename, filename_NHI, fileout, timeout, filename_noise, n_mbb, &
-         lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
-         sig_fact_init, Td_init, lb_Td_init, ub_Td_init, lb_Td, ub_Td, init_option, maxiter_init, maxiter, m, &
-         noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid
+    namelist /user_parameters/ filename, filename_NHI, filename_wavelength, fileout, timeout, filename_noise, &
+         n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
+         sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
+         maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
     if (ios /= 0) stop "opening file error"
@@ -108,6 +110,31 @@ contains
     
     close(11)
   end subroutine read_map
+
+
+  subroutine read_array(filename, array)
+    implicit none
+    integer           :: ios=0, i
+    integer           :: nl
+    real(xp)          :: val
+    character(len=512), intent(in) :: filename
+    real(xp), intent(inout), dimension(:), allocatable :: array
+
+    open(unit=11, file=filename, action="read", status="old", iostat=ios)
+    if (ios /= 0) stop "opening file error"
+    
+    read(11,fmt=*) nl
+
+    allocate(array(nl))
+
+    do i=1,nl
+       read(11,fmt=*) val
+       array(i) = val
+    enddo
+    
+    close(11)
+  end subroutine read_array
+
   
   subroutine save_process(nside, n_mbb, grid, dim_yx, fileout)
     implicit none
