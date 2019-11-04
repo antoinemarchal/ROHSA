@@ -57,6 +57,7 @@ program ROHSA
   real(xp), dimension(:,:,:), allocatable :: NHI         !! initial fits data NHI
 
   integer, dimension(3) :: dim_data !! number of frequencies
+  integer, dimension(3) :: dim_NHI !! number of NHI maps
 
   call cpu_time(start)
 
@@ -120,6 +121,13 @@ program ROHSA
   end if
 
   call read_cube(filename_NHI, NHI)
+
+  !Check if n_mbb == number of NHI maps
+  dim_NHI = shape(NHI)
+  if (n_mbb .ne. dim_NHI(1)) then
+     print*, "n_mbb .ne. number of NHI maps / please correct your parameter file."
+     stop
+  end if
 
   !Call ROHSA subroutine
   call main_rohsa(data, wavelength, std_cube, NHI, fileout, timeout, n_mbb, lambda_sig, lambda_beta, lambda_Td, &

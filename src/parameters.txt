@@ -1,13 +1,13 @@
 &user_parameters
-   filename = 'GHIGLS_DFN_Tb.dat'              !! name of the data file
-   ,filename_NHI = 'GHIGLS_DFN_Tb.dat'         !! name of th NHI data cube file
+   filename = 'SED.dat'              !! name of the data file
+   ,filename_NHI = 'NHI.dat'         !! name of th NHI data cube file
    ,filename_wavelength = 'wavelength.dat'     !! name of th NHI data cube file
-   ,filename_noise = 'GHIGLS_DFN_Tb_rms.dat'   !! name of the file with STD map (if noise .eq. true)
+   ,filename_noise = 'rms.dat'   !! name of the file with STD map (if noise .eq. true)
 
-   ,fileout = 'GHIGLS_DFN_Tb_gauss_run_0.dat'  !! name of the output result
+   ,fileout = 'SED_mbb_run_0.dat'  !! name of the output result
    ,timeout = 'timestep.dat'                   !! write output time step
 
-   ,n_mbb = 3   	                       !! number of gaussian to fit
+   ,n_mbb = 2   	                       !! number of gaussian to fit
 
    ,lambda_sig = 1.d0	                       !! lambda for siglitude parameter
    ,lambda_beta = 1.d0	                       !! lamnda for mean position parameter
@@ -33,9 +33,9 @@
    ,maxiter_init = 15000    		       !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
    ,maxiter = 20            		       !! max iteration for L-BFGS-B alogorithm
    ,m = 10                  		       !! number of corrections used in the limited memory matrix by LBFGS-B
-   ,noise = .false.         		       !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
-   ,lstd = 1                		       !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
-   ,ustd = 20               		       !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
+   ,noise = .true.         		       !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
+   ,lstd = 0                		       !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
+   ,ustd = 0               		       !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
    ,iprint = 1              		       !! print option 
    ,iprint_init = -1        		       !! print option init
    ,save_grid = .false.     		       !! if true --> save fitted parameters at each iteration of the multiresolution process
