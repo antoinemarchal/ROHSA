@@ -20,7 +20,7 @@
    ,sig_fact_init = 0.66d0 		       !! times max siglitude of additional Gaussian
 
    ,sig_init = 1.d0         		       !! dispersion of additional Gaussian
-   ,beta_init = 1.7d0         		       !! dispersion of additional Gaussian
+   ,beta_init = 2.d0         		       !! dispersion of additional Gaussian
    ,Td_init = 17.d0         		       !! dispersion of additional Gaussian
 
    ,lb_sig = 0.d0         		       !! upper bound Td
@@ -32,14 +32,14 @@
 
    ,l0 = 0.03498162d0                          !! reference wavelength in cm
 
-   ,maxiter_init = 15000    		       !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
-   ,maxiter = 20            		       !! max iteration for L-BFGS-B alogorithm
+   ,maxiter_init = 200    		       !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
+   ,maxiter = 200            		       !! max iteration for L-BFGS-B alogorithm
    ,m = 10                  		       !! number of corrections used in the limited memory matrix by LBFGS-B
    ,noise = .true.         		       !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
    ,lstd = 0                		       !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
    ,ustd = 0               		       !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
    ,iprint = 1              		       !! print option 
-   ,iprint_init = -1        		       !! print option init
+   ,iprint_init = 1        		       !! print option init
    ,save_grid = .false.     		       !! if true --> save fitted parameters at each iteration of the multiresolution process
    /
 

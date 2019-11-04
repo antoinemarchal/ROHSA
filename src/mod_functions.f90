@@ -171,8 +171,8 @@ contains
   end subroutine go_up_level
 
   
-  subroutine init_spectrum(n_mbb, params, dim_v, line, sig_fact_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, &
-       lb_Td, ub_Td, maxiter, m, iprint)
+  subroutine init_spectrum(n_mbb, params, dim_v, line, NHI, wavelength, sig_fact_init, sig_init, beta_init, &
+       Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, iprint)
     !! Initialization of the mean sprectrum with N Gaussian
     implicit none
     
@@ -183,7 +183,12 @@ contains
     integer, intent(in) :: iprint !! print option
 
     real(xp), intent(in), dimension(dim_v) :: line !! spectrum
+    real(xp), intent(in), dimension(dim_v)  :: wavelength  !! wavelength Planck + IRAS
+    real(xp), intent(in), dimension(n_mbb) :: NHI !! spectrum
     real(xp), intent(in) :: sig_fact_init !! times max siglitude of additional Gaussian
+
+    real(xp), intent(in) :: sig_init !! dispersion of additional Gaussian
+    real(xp), intent(in) :: beta_init !! dispersion of additional Gaussian
     real(xp), intent(in) :: Td_init !! dispersion of additional Gaussian
 
     real(xp), intent(in) :: lb_sig !! lower bound sigma
@@ -193,49 +198,42 @@ contains
     real(xp), intent(in) :: lb_Td !! lower bound Td
     real(xp), intent(in) :: ub_Td !! upper bound Td
 
+    real(xp), intent(in) :: l0 !! reference wavelength
+
     real(xp), intent(inout), dimension(3*n_mbb)  :: params !! params to optimize
 
     integer :: i, j, k, p
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(dim_v) :: model, residual
     real(xp), dimension(:), allocatable :: x
+
+    allocate(lb(3*n_mbb), ub(3*n_mbb))
+    allocate(x(3*n_mbb))
+    model = 0._xp
+    residual = 0._xp
+    lb = 0._xp; ub=0._xp
+    x = 0._xp
+
+    call init_bounds(line, n_mbb, dim_v, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)
+            
+    do p=1, 3*n_mbb
+       x(p) = params(p);
+    end do
+   
+    do i=1, n_mbb    
+       x(1+(3*(i-1))) = sig_init
+       x(2+(3*(i-1))) = beta_init
+       x(3+(3*(i-1))) = Td_init
+    end do
+
+    call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, iprint)
+
+    do p=1, 3*n_mbb
+       params(p) = x(p);
+    end do
     
-    do i=1, n_mbb
-       allocate(lb(3*i), ub(3*i))
-       model = 0._xp
-       residual = 0._xp
-       lb = 0._xp; ub=0._xp
-       
-       call init_bounds(line, i, dim_v, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)
-
-       do j=1, i
-          do k=1, dim_v
-             model(k) = model(k) + gaussian(k, params(1+(3*(j-1))), params(2+(3*(j-1))), params(3+(3*(j-1))))
-          end do
-       enddo
-
-       residual = model - line
-       
-       allocate(x(3*i))
-       x = 0._xp
-       
-       do p=1, 3*(i-1)
-          x(p) = params(p);
-       end do
-       
-       x(2+(3*(i-1))) = minloc(residual, dim_v)
-       x(1+(3*(i-1))) = line(int(x(2+(3*(i-1))))) * sig_fact_init
-       x(3+(3*(i-1))) = Td_init;
-       
-       call minimize_spec(3*i, m, x, lb, ub, line, dim_v, i, maxiter, iprint)
-       
-       do p=1, 3*i   
-          params(p) = x(p);
-       end do
-       
-       deallocate(x)
-       deallocate(lb, ub)
-    enddo
+    deallocate(x)
+    deallocate(lb, ub)
   end subroutine init_spectrum
   
 
@@ -273,11 +271,15 @@ contains
   end subroutine init_bounds
 
 
-  subroutine upgrade(cube, params, power, n_mbb, dim_v, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, maxiter, m, iprint)
+  subroutine upgrade(cube, params, NHI, wavelength, power, n_mbb, dim_v, lb_sig, ub_sig, lb_beta, ub_beta, &
+       lb_Td, ub_Td, l0, maxiter, m, iprint)
     !! Upgrade parameters (spectra to spectra) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
 
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube
+    real(xp), intent(in), dimension(dim_v)  :: wavelength  !! wavelength Planck + IRAS
+    real(xp), intent(in), dimension(n_mbb) :: NHI !! spectrum
+
     real(xp), intent(in) :: lb_sig !! lower bound sigma
     real(xp), intent(in) :: ub_sig !! upper bound sigma
     real(xp), intent(in) :: lb_beta !! lower bound beta
@@ -290,6 +292,8 @@ contains
     integer, intent(in) :: maxiter !! max number of iteration
     integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: iprint !! print option
+
+    real(xp), intent(in) :: l0 !! reference wavelength
 
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! cube parameters to update
 
@@ -308,7 +312,7 @@ contains
           x = params(:,i,j)
           
           call init_bounds(line, n_mbb, dim_v, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)
-          call minimize_spec(3*n_mbb, m, x, lb, ub, line, dim_v, n_mbb, maxiter, iprint)
+          call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, iprint)
           
           params(:,i,j) = x
           

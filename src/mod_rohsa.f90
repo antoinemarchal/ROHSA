@@ -181,12 +181,12 @@ contains
     !Allocate memory for parameters grids
     allocate(grid_params(3*n_mbb, dim_data(2), dim_data(3)))
     allocate(fit_params(3*n_mbb, 1, 1))
-    !Init Tdma = 1 to avoid Nan
-    do i=1,n_mbb
-       fit_params(1+(3*(i-1)),1,1) = 0._xp
-       fit_params(2+(3*(i-1)),1,1) = 1._xp
-       fit_params(3+(3*(i-1)),1,1) = 1._xp
-    end do
+    ! !Init Tdma = 1 to avoid Nan
+    ! do i=1,n_mbb
+    !    fit_params(1+(3*(i-1)),1,1) = 0._xp
+    !    fit_params(2+(3*(i-1)),1,1) = 1._xp
+    !    fit_params(3+(3*(i-1)),1,1) = 1._xp
+    ! end do
     
     print*, "                    Start iteration"
     print*,
@@ -213,9 +213,10 @@ contains
        
        if (n == 0) then
           print*, "Init mean spectrum"        
-          call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, Td_init, &
-               lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, maxiter_init, m, iprint_init)
-          
+          call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), cube_HI_mean(:,1,1), &
+               wavelength, amp_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
+               l0, maxiter_init, m, iprint_init)
+
           !Init b_params
           do i=1, n_mbb       
              b_params(i) = fit_params(3+(3*(i-1)),1,1)
@@ -224,8 +225,8 @@ contains
               
        if (n == 0) then                
           print*,  "Update level", n
-          call upgrade(cube_mean, fit_params, power, n_mbb, dim_cube(1), lb_sig, ub_sig, lb_beta, ub_beta, &
-               lb_Td, ub_Td, maxiter, m, iprint)
+          call upgrade(cube_mean, fit_params, cube_HI_mean, wavelength, power, n_mbb, dim_cube(1), lb_sig, ub_sig, &
+               lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, iprint)
        end if
               
        if (n > 0 .and. n < nside) then
@@ -242,6 +243,7 @@ contains
           call update(cube_mean, fit_params, b_params, n_mbb, dim_cube(1), power, power, lambda_amp, lambda_beta, &
                lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_sig, ub_sig, lb_beta, ub_beta, &
                lb_Td, ub_Td, maxiter, m, kernel, iprint, std_map)        
+          stop
           
           deallocate(std_map)
        end if

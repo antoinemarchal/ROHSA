@@ -14,11 +14,14 @@ module mod_optimize
 contains
   
   ! Compute the residual between model and data
-  subroutine myresidual(params, line, residual, n_mbb, dim_v)
+  subroutine myresidual(params, line, residual, n_mbb, dim_v, NHI, l0, wavelength)
     implicit none
 
     integer, intent(in) :: dim_v, n_mbb
     real(xp), intent(in), dimension(dim_v) :: line
+    real(xp), intent(in), dimension(dim_v) :: wavelength
+    real(xp), intent(in), dimension(n_mbb) :: NHI
+    real(xp), intent(in) :: l0
     real(xp), intent(in), dimension(3*n_mbb) :: params
     real(xp), intent(inout), dimension(:), allocatable :: residual
 
@@ -28,10 +31,10 @@ contains
 
     g = 0._xp
     model = 0._xp
-    
+
     do i=1, n_mbb
        do k=1, dim_v
-          g = gaussian(k, params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))))
+          g = mbb_l(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i))
           model(k) = model(k) + g
        enddo
     enddo
@@ -54,12 +57,15 @@ contains
 
   
   ! Griadient of the objective function to minimize for a spectrum
-  subroutine mygrad_spec(n_mbb, gradient, residual, params, dim_v)
+  subroutine mygrad_spec(n_mbb, gradient, residual, params, dim_v, NHI, l0, wavelength)
     implicit none
 
     integer, intent(in) :: n_mbb, dim_v
     real(xp), intent(in), dimension(3*n_mbb) :: params
     real(xp), intent(in), dimension(:), allocatable :: residual
+    real(xp), intent(in), dimension(dim_v) :: wavelength
+    real(xp), intent(in), dimension(n_mbb) :: NHI
+    real(xp), intent(in) :: l0
     real(xp), intent(inout), dimension(3*n_mbb) :: gradient
 
     integer :: i, k
@@ -75,16 +81,20 @@ contains
 
     do i=1, n_mbb
        do k=1, dim_v          
-          dF_over_dB(1+(3*(i-1)),k) = dF_over_dB(1+(3*(i-1)),k) +&
-               exp( ( -(real(k,xp) - params(2+(3*(i-1))))**2._xp) / (2._xp * params(3+(3*(i-1)))**2._xp))
+          dF_over_dB(1+(3*(i-1)),k) = dF_over_dB(1+(3*(i-1)),k) + ( &
+               (l0/wavelength(k))**params(2+(3*(i-1))) * NHI(i) * planck_l(wavelength(k),params(3+(3*(i-1)))) &
+               )
 
-          dF_over_dB(2+(3*(i-1)),k) = dF_over_dB(2+(3*(i-1)),k) +&
-               params(1+(3*(i-1))) * ( real(k,xp) - params(2+(3*(i-1))) ) / (params(3+(3*(i-1)))**2._xp) *&
-               exp( ( -(real(k,xp) - params(2+(3*(i-1))))**2._xp) / (2._xp * params(3+(3*(i-1)))**2._xp))
+          dF_over_dB(2+(3*(i-1)),k) = dF_over_dB(2+(3*(i-1)),k) + ( &
+               params(1+(3*(i-1))) * log(l0/wavelength(k)) * (l0/wavelength(k))**params(2+(3*(i-1))) * NHI(i) * &
+               planck_l(wavelength(k),params(3+(3*(i-1)))) &
+               )
           
-          dF_over_dB(3+(3*(i-1)),k) = dF_over_dB(3+(3*(i-1)),k) +&
-               params(1+(3*(i-1))) * ( real(k,xp) - params(2+(3*(i-1))) )**2._xp / (params(3+(3*(i-1)))**3._xp) *&
-               exp( ( -(real(k,xp) - params(2+(3*(i-1))))**2._xp) / (2._xp * params(3+(3*(i-1)))**2._xp))
+          dF_over_dB(3+(3*(i-1)),k) = dF_over_dB(3+(3*(i-1)),k) + ( &
+               params(1+(3*(i-1))) * (l0/wavelength(k))**params(2+(3*(i-1))) * NHI(i) * &
+               (h*c/wavelength(k)/kb) * exp(h*c/wavelength(k)/kb/(params(3+(3*(i-1))))) * &
+               1._xp / (params(3+(3*(i-1)))**2._xp * (exp(h*c/wavelength(k)/kb/(params(3+(3*(i-1))))) - 1._xp)**2._xp) &
+               )
        enddo
     enddo
     
@@ -156,7 +166,7 @@ contains
        do i=1, dim_y
           allocate(residual_1D(dim_v))
           residual_1D = 0._xp
-          call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_mbb, dim_v)
+          ! call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_mbb, dim_v) !!FIXMEEEEEEEEEEEEE
           residual(:,i,j) = residual_1D
           if (std_map(i,j) > 0._xp) then
              f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2._xp)

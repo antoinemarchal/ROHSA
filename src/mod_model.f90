@@ -34,7 +34,7 @@ contains
     real(xp), intent(in) :: NHI
     real(xp) :: mbb_l
 
-    mbb_l = sig * (x/x0)**beta * NHI * planck_l(x,Td)
+    mbb_l = sig * (x0/x)**beta * NHI * planck_l(x,Td)
   end function mbb_l
 
 

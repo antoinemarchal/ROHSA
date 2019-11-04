@@ -13,7 +13,7 @@ module mod_minimize
   
 contains
 
-  subroutine minimize_spec(n, m, x, lb, ub, line, dim_v, n_mbb, maxiter, iprint)
+  subroutine minimize_spec(n, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, iprint)
     !! Minimize algorithn for a specturm
     implicit none      
 
@@ -25,6 +25,10 @@ contains
 
     real(xp), intent(in), dimension(:), allocatable :: lb, ub
     real(xp), intent(in), dimension(dim_v) :: line
+    real(xp), intent(in), dimension(dim_v) :: wavelength
+    real(xp), intent(in), dimension(n_mbb) :: NHI
+
+    real(xp), intent(in) :: l0
 
     real(xp), intent(in), dimension(:), allocatable :: x
     
@@ -60,12 +64,12 @@ contains
        
        !     This is the call to the L-BFGS-B code.
        call setulb (n, m, x, lb, ub, nbd, f, g, factr, pgtol, wa, iwa, task, iprint, csave, lsave, isave, dsave)
-       
+
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
-          call myresidual(x, line, residual, n_mbb, dim_v)
+          call myresidual(x, line, residual, n_mbb, dim_v, NHI, l0, wavelength)
           f = myfunc_spec(residual)          
-          call mygrad_spec(n_mbb, g, residual, x, dim_v)
+          call mygrad_spec(n_mbb, g, residual, x, dim_v, NHI, l0, wavelength)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations
