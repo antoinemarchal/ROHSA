@@ -16,9 +16,9 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, wavelength, std_cube, NHI, fileout, timeout, n_mbb, lambda_amp, lambda_beta, lambda_Td, &
+  subroutine main_rohsa(data, wavelength, std_cube, data_HI, fileout, timeout, n_mbb, lambda_amp, lambda_beta, lambda_Td, &
        lambda_var_amp, lambda_var_beta, lambda_var_Td, amp_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, &
-       lb_beta, ub_beta, lb_Td, ub_Td, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
+       lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
     
     implicit none
     
@@ -53,6 +53,8 @@ contains
     real(xp), intent(in) :: lb_Td         !! lower bound
     real(xp), intent(in) :: ub_Td         !! upper bound
 
+    real(xp), intent(in) :: l0 !! reference wavelength
+
     character(len=512), intent(in) :: fileout   !! name of the output result
     character(len=512), intent(in) :: timeout   !! name of the output result
 
@@ -64,20 +66,23 @@ contains
     real(xp), intent(in), dimension(:,:,:), allocatable :: data        !! initial fits data
     real(xp), intent(in), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
     real(xp), intent(in), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
-    real(xp), intent(in), dimension(:,:,:), allocatable :: NHI         !! initial fits data NHI
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data_HI         !! initial fits data data_HI
 
     real(xp), dimension(:,:,:), allocatable :: cube            !! reshape data with nside --> cube
+    real(xp), dimension(:,:,:), allocatable :: cube_HI         !! reshape data with nside --> cube
     real(xp), dimension(:,:,:), allocatable :: cube_mean       !! mean cube over spatial axis
+    real(xp), dimension(:,:,:), allocatable :: cube_HI_mean    !! mean cube over spatial axis
     real(xp), dimension(:,:,:), allocatable :: fit_params      !! parameters to optimize with cube mean at each iteration
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
-    real(xp), dimension(:,:), allocatable :: std_map_abs       !! standard deviation map fo the absorp cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: b_params            !! unknow average Tdma
-    real(xp), dimension(:), allocatable :: mean_spect          !! mean spectrum of the observation
-    real(xp), dimension(:), allocatable :: guess_spect         !! params obtain fi the optimization of the std spectrum of the observation
+    ! real(xp), dimension(:), allocatable :: mean_spect          !! mean spectrum of the observation
+    ! real(xp), dimension(:), allocatable :: guess_spect         !! params obtain fi the optimization of the std spectrum of the observation
 
     integer, dimension(3) :: dim_data !! dimension of original data
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
+    integer, dimension(3) :: dim_data_HI !! dimension of original data
+    integer, dimension(3) :: dim_cube_HI !! dimension of reshape cube
     
     real(xp), dimension(:,:), allocatable :: kernel !! convolution kernel 
 
@@ -117,6 +122,8 @@ contains
     print*, "lb_Td = ", lb_Td
     print*, "ub_Td = ", ub_Td
 
+    print*, "l0 = ", l0
+
     print*, "maxiter_init = ", maxiter_init
     print*, "maxiter = ", maxiter
     print*, "lstd = ", lstd
@@ -139,6 +146,7 @@ contains
     kernel(3,3) = 0._xp
         
     dim_data = shape(data)
+    dim_data_HI = shape(data_HI)
     
     write(*,*) "dim_v, dim_y, dim_x = ", dim_data
     write(*,*) ""
@@ -149,9 +157,11 @@ contains
     write(*,*) "nside = ", nside
     
     call dim_data2dim_cube(nside, dim_data, dim_cube)
+    call dim_data2dim_cube(nside, dim_data_HI, dim_cube_HI)
     
     !Allocate moemory for cube
     allocate(cube(dim_cube(1), dim_cube(2), dim_cube(3)))
+    allocate(cube_HI(dim_cube_HI(1), dim_cube_HI(2), dim_cube_HI(3)))
     
     !Reshape the data (new cube of size nside)
     print*,
@@ -160,12 +170,13 @@ contains
     print*, 
     
     print*, "Compute mean and std spectrum"
-    allocate(mean_spect(dim_data(1)))
+    ! allocate(mean_spect(dim_data(1)))
     allocate(b_params(n_mbb))
 
-    call mean_spectrum(data, mean_spect, dim_data(1), dim_data(2), dim_data(3))    
+    ! call mean_spectrum(data, mean_spect, dim_data(1), dim_data(2), dim_data(3))    
 
     call reshape_up(data, cube, dim_data, dim_cube)
+    call reshape_up(data_HI, cube_HI, dim_data_HI, dim_cube_HI)
     
     !Allocate memory for parameters grids
     allocate(grid_params(3*n_mbb, dim_data(2), dim_data(3)))
@@ -271,7 +282,6 @@ contains
     print*,
     
     allocate(std_map(dim_data(2), dim_data(3)))
-    allocate(std_map_abs(dim_data(2), dim_data(3)))
     
     if (noise .eqv. .true.) then
        std_map = std_cube

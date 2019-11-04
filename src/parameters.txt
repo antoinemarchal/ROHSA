@@ -30,6 +30,8 @@
    ,lb_Td = 8.2d0         		       !! upper bound Td
    ,ub_Td = 50.d0         		       !! upper bound Td
 
+   ,l0 = 0.03498162d0                          !! reference wavelength in cm
+
    ,maxiter_init = 15000    		       !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
    ,maxiter = 20            		       !! max iteration for L-BFGS-B alogorithm
    ,m = 10                  		       !! number of corrections used in the limited memory matrix by LBFGS-B

@@ -14,7 +14,7 @@ contains
   
   subroutine read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, fileout, timeout, &
        filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
-       sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
+       sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, &
        maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
     implicit none
 
@@ -34,6 +34,7 @@ contains
     real(xp), intent(inout) :: lb_sig, ub_sig
     real(xp), intent(inout) :: lb_beta, ub_beta
     real(xp), intent(inout) :: lb_Td, ub_Td
+    real(xp), intent(inout) :: l0
     logical, intent(inout)  :: noise, save_grid
 
     character(len=512), intent(inout) :: filename
@@ -45,7 +46,7 @@ contains
 
     namelist /user_parameters/ filename, filename_NHI, filename_wavelength, fileout, timeout, filename_noise, &
          n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
-         sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
+         sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, &
          maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
