@@ -64,9 +64,9 @@ contains
     integer :: power        !! loop index
 
     real(xp), intent(in), dimension(:,:,:), allocatable :: data        !! initial fits data
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data_HI         !! initial fits data data_HI
     real(xp), intent(in), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
     real(xp), intent(in), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
-    real(xp), intent(in), dimension(:,:,:), allocatable :: data_HI         !! initial fits data data_HI
 
     real(xp), dimension(:,:,:), allocatable :: cube            !! reshape data with nside --> cube
     real(xp), dimension(:,:,:), allocatable :: cube_HI         !! reshape data with nside --> cube
@@ -206,8 +206,10 @@ contains
        power = 2**n
        
        allocate(cube_mean(dim_cube(1), power, power))
+       allocate(cube_HI_mean(dim_cube_HI(1), power, power))
        
        call mean_array(power, cube, cube_mean)
+       call mean_array(power, cube_HI, cube_HI_mean)
        
        if (n == 0) then
           print*, "Init mean spectrum"        
@@ -245,6 +247,7 @@ contains
        end if
        
        deallocate(cube_mean)
+       deallocate(cube_HI_mean)
        
        ! Save grid in file
        if (save_grid .eqv. .true.) then
