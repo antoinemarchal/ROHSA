@@ -316,9 +316,9 @@ contains
   end subroutine upgrade
 
 
-  subroutine update(cube, cube_HI, wavelength, params, b_params, n_mbb, dim_v, dim_y, dim_x, lambda_sig, lambda_beta, lambda_Td, &
-       lambda_var_sig, lambda_var_beta, lambda_var_Td, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, &
-       m, kernel, iprint, std_map)
+  subroutine update(cube, cube_HI, wavelength, params, b_params, stefan_params, n_mbb, dim_v, dim_y, dim_x, &
+       lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_stefan, lb_sig, ub_sig, &
+       lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, iprint, std_map)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
@@ -341,7 +341,7 @@ contains
 
     real(xp), intent(in) :: lambda_var_sig !! lambda for sig dispersion parameter
     real(xp), intent(in) :: lambda_var_beta  !! lambda for mean position dispersion parameter
-    real(xp), intent(in) :: lambda_var_Td !! lambda for variance dispersion parameter
+    real(xp), intent(in) :: lambda_stefan !! lambda for variance dispersion parameter
 
     real(xp), intent(in) :: lb_sig !! lower bound sigma
     real(xp), intent(in) :: ub_sig !! upper bound sigma
@@ -353,15 +353,19 @@ contains
     real(xp), intent(in) :: l0 !! reference wavelength
 
     real(xp), intent(inout), dimension(:), allocatable :: b_params !! unknown average Tdma
+    real(xp), intent(inout), dimension(:), allocatable :: stefan_params !! 
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
     
     integer :: i,j
     integer :: n_beta
+    integer :: n_cube
+
     real(xp), dimension(:,:,:), allocatable :: lb_3D, ub_3D
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(:), allocatable :: beta
 
-    n_beta = (3*n_mbb * dim_y * dim_x) + n_mbb
+    n_beta = (3*n_mbb * dim_y * dim_x) + (2*n_mbb)
+    n_cube = (3*n_mbb * dim_y * dim_x)
 
     allocate(lb(n_beta), ub(n_beta), beta(n_beta))
     allocate(lb_3D(3*n_mbb,dim_y,dim_x), ub_3D(3*n_mbb,dim_y,dim_x))
@@ -379,17 +383,23 @@ contains
     call ravel_3D(params, beta, 3*n_mbb, dim_y, dim_x)
 
     do i=1,n_mbb
-       lb((n_beta-n_mbb)+i) = lb_sig
-       ub((n_beta-n_mbb)+i) = ub_sig
-       beta((n_beta-n_mbb)+i) = b_params(i)
+       lb(n_cube+i) = lb_sig
+       ub(n_cube+i) = ub_sig
+       beta(n_cube+i) = b_params(i)
+
+       lb(n_cube+n_mbb+i) = lb_sig !FIXME MAYBE
+       ub(n_cube+n_mbb+i) = ub_sig !FIXME MAYBE
+       beta(n_cube+n_mbb+i) = stefan_params(i)
     end do
 
     call minimize(n_beta, m, beta, lb, ub, cube, cube_HI, n_mbb, dim_v, dim_y, dim_x, lambda_sig, lambda_beta, lambda_Td, &
-         lambda_var_sig, lambda_var_beta, lambda_var_Td, l0, maxiter, kernel, iprint, std_map, wavelength)
+         lambda_var_sig, lambda_var_beta, lambda_stefan, l0, maxiter, kernel, iprint, std_map, wavelength)
 
+    !Unravel data
     call unravel_3D(beta, params, 3*n_mbb, dim_y, dim_x)
     do i=1,n_mbb
-       b_params(i) = beta((n_beta-n_mbb)+i)
+       b_params(i) = beta(n_cube+i)
+       stefan_params(i) = beta(n_cube+n_mbb+i)
     end do        
 
     deallocate(lb, ub, beta)

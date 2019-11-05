@@ -16,8 +16,8 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, wavelength, std_cube, data_HI, fileout, timeout, n_mbb, lambda_amp, lambda_beta, lambda_Td, &
-       lambda_var_amp, lambda_var_beta, lambda_var_Td, amp_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, &
+  subroutine main_rohsa(data, wavelength, std_cube, data_HI, fileout, timeout, n_mbb, lambda_sig, lambda_beta, lambda_Td, &
+       lambda_var_sig, lambda_var_beta, lambda_stefan, amp_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, &
        lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
     
     implicit none
@@ -32,13 +32,13 @@ contains
     integer, intent(in) :: maxiter         !! max iteration for L-BFGS-B alogorithm
     integer, intent(in) :: maxiter_init    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
 
-    real(xp), intent(in) :: lambda_amp     !! lambda for amplitude parameter
+    real(xp), intent(in) :: lambda_sig     !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_beta    !! lamnda for mean position parameter
     real(xp), intent(in) :: lambda_Td      !! lambda for dispersion parameter
 
-    real(xp), intent(in) :: lambda_var_amp  !! lambda for amp dispersion parameter
+    real(xp), intent(in) :: lambda_var_sig  !! lambda for amp dispersion parameter
     real(xp), intent(in) :: lambda_var_beta !! lambda for mean position dispersion parameter
-    real(xp), intent(in) :: lambda_var_Td   !! lambda for variance dispersion parameter
+    real(xp), intent(in) :: lambda_stefan   !! lambda for variance dispersion parameter
 
     real(xp), intent(in) :: amp_fact_init  !! times max amplitude of additional Gaussian
 
@@ -76,6 +76,7 @@ contains
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: b_params            !! unknow average Tdma
+    real(xp), dimension(:), allocatable :: stefan_params            !! unknow average Tdma
     ! real(xp), dimension(:), allocatable :: mean_spect          !! mean spectrum of the observation
     ! real(xp), dimension(:), allocatable :: guess_spect         !! params obtain fi the optimization of the std spectrum of the observation
 
@@ -101,13 +102,13 @@ contains
     print*, "______Parameters_____"
     print*, "n_mbb = ", n_mbb
 
-    print*, "lambda_amp = ", lambda_amp
+    print*, "lambda_sig = ", lambda_sig
     print*, "lambda_beta = ", lambda_beta
     print*, "lambda_Td = ", lambda_Td
 
-    print*, "lambda_var_amp = ", lambda_var_amp
+    print*, "lambda_var_sig = ", lambda_var_sig
     print*, "lambda_var_beta = ", lambda_var_beta
-    print*, "lambda_var_Td = ", lambda_var_Td
+    print*, "lambda_stefan = ", lambda_stefan
 
     print*, "amp_fact_init = ", amp_fact_init
 
@@ -170,10 +171,8 @@ contains
     print*, 
     
     print*, "Compute mean and std spectrum"
-    ! allocate(mean_spect(dim_data(1)))
     allocate(b_params(n_mbb))
-
-    ! call mean_spectrum(data, mean_spect, dim_data(1), dim_data(2), dim_data(3))    
+    allocate(stefan_params(n_mbb))
 
     call reshape_up(data, cube, dim_data, dim_cube)
     call reshape_up(data_HI, cube_HI, dim_data_HI, dim_cube_HI)
@@ -213,13 +212,6 @@ contains
              fit_params(2+(3*(i-1)),1,1) = beta_init
              fit_params(3+(3*(i-1)),1,1) = Td_init
           end do
-
-          ! print*, fit_params(:,1,1)
-          print*, n_mbb
-          print*, wavelength
-          print*, cube_mean(:,1,1)
-          print*, l0
-          print*, cube_HI_mean(:,1,1)
                    
           call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), cube_HI_mean(:,1,1), &
                wavelength, amp_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
@@ -228,6 +220,8 @@ contains
           !Init b_params
           do i=1, n_mbb       
              b_params(i) = fit_params(1+(3*(i-1)),1,1)
+             stefan_params(i) = fit_params(3+(3*(i-1)),1,1) / &
+                  (fit_params(1+(3*(i-1)),1,1)**(-1._xp / (4._xp + fit_params(2+(3*(i-1)),1,1))))
           end do
        end if
               
@@ -248,8 +242,8 @@ contains
           
           ! Update parameters 
           print*,  "Update level", n, ">", power
-          call update(cube_mean, cube_HI_mean, wavelength, fit_params, b_params, n_mbb, dim_cube(1), power, power, &
-               lambda_amp, lambda_beta, lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_sig, ub_sig, &
+          call update(cube_mean, cube_HI_mean, wavelength, fit_params, b_params, stefan_params, n_mbb, dim_cube(1), power, power, &
+               lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_stefan, lb_sig, ub_sig, &
                lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, iprint, std_map)
           
           deallocate(std_map)
@@ -301,9 +295,9 @@ contains
        call set_stdmap(std_map, data, lstd, ustd)
     end if
     
-    call update(data, data_HI, wavelength, grid_params, b_params, n_mbb, dim_data(1), dim_data(2), dim_data(3), &
-         lambda_amp, lambda_beta, lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_sig, ub_sig, &
-         lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, iprint, std_map)       
+    call update(data, data_HI, wavelength, grid_params, b_params, stefan_params, n_mbb, dim_data(1), dim_data(2), &
+         dim_data(3), lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_stefan, &
+         lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, iprint, std_map)       
     
     print*,
     print*, "_____ Write output file _____"
@@ -317,12 +311,12 @@ contains
     write(12,fmt=*) "# ______Parameters_____"
     write(12,fmt=*) "# "
     write(12,fmt=*) "# n_mbb = ", n_mbb
-    write(12,fmt=*) "# lambda_amp = ", lambda_amp
+    write(12,fmt=*) "# lambda_sig = ", lambda_sig
     write(12,fmt=*) "# lambda_beta = ", lambda_beta
     write(12,fmt=*) "# lambda_Td = ", lambda_Td
-    write(12,fmt=*) "# lambda_var_amp = ", lambda_var_amp
+    write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
     write(12,fmt=*) "# lambda_var_beta = ", lambda_var_beta
-    write(12,fmt=*) "# lambda_var_Td = ", lambda_var_Td
+    write(12,fmt=*) "# lambda_stefan = ", lambda_stefan
     write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
     write(12,fmt=*) "# sig_init = ", sig_init
     write(12,fmt=*) "# beta_init = ", beta_init

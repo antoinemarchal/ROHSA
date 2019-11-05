@@ -7,23 +7,22 @@
    ,fileout = 'SED_mbb_run_0.dat'  !! name of the output result
    ,timeout = 'timestep.dat'                   !! write output time step
 
-   ,n_mbb = 1   	                       !! number of gaussian to fit
+   ,n_mbb = 4   	                       !! number of gaussian to fit
 
    ,lambda_sig = 1.d0	                       !! lambda for siglitude parameter
    ,lambda_beta = 1.d0	                       !! lamnda for mean position parameter
    ,lambda_Td = 1.d0                           !! lambda for dispersion parameter absorption
-
-   ,lambda_var_sig = 0.d0                    !! lambda for dispersion siglitude parameter
+   ,lambda_var_sig = 1.d0                    !! lambda for dispersion siglitude parameter
    ,lambda_var_beta = 0.d0  		       !! lambda for dispersion mean position parameter   
-   ,lambda_var_Td = 0.d0    		       !! lambda for dispersion variance parameter
+   ,lambda_stefan = 1.d0    		       !! lambda for dispersion variance parameter
 
    ,sig_fact_init = 0.66d0 		       !! times max siglitude of additional Gaussian
 
    ,sig_init = 1.d0         		       !! dispersion of additional Gaussian
-   ,beta_init = 2.d0         		       !! dispersion of additional Gaussian
+   ,beta_init = 1.d0         		       !! dispersion of additional Gaussian
    ,Td_init = 17.d0         		       !! dispersion of additional Gaussian
 
-   ,lb_sig = 0.d0         		       !! upper bound Td
+   ,lb_sig = 1.d-10         		       !! upper bound Td
    ,ub_sig = 100.d0         		       !! upper bound Td
    ,lb_beta = 1.d0         		       !! upper bound Td
    ,ub_beta = 2.5d0         		       !! upper bound Td

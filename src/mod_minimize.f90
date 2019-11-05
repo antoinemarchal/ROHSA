@@ -92,7 +92,7 @@ contains
 
   ! Minimize algorithn for a cube with regularization
   subroutine minimize(n, m, x, lb, ub, cube, cube_HI, n_mbb, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, l0, maxiter, kernel, iprint, std_map, wavelength)
+       lambda_var_sig, lambda_var_beta, lambda_stefan, l0, maxiter, kernel, iprint, std_map, wavelength)
     implicit none      
 
     integer, intent(in) :: n
@@ -102,7 +102,7 @@ contains
     integer, intent(in) :: iprint
     
     real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
-    real(xp), intent(in) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
+    real(xp), intent(in) :: lambda_var_sig, lambda_var_beta, lambda_stefan
     real(xp), intent(in), dimension(:), allocatable :: lb, ub
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube_HI
@@ -147,7 +147,7 @@ contains
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
           call f_g_cube_fast(f, g, cube, cube_HI, x, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_amp, lambda_mu, lambda_sig, &
-               lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map, l0, wavelength)
+               lambda_var_sig, lambda_var_beta, lambda_stefan, std_map, l0, wavelength)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations

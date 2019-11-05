@@ -13,7 +13,7 @@ module mod_inout
 contains
   
   subroutine read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, fileout, timeout, &
-       filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
+       filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_stefan, &
        sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, &
        maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
     implicit none
@@ -28,7 +28,7 @@ contains
     integer, intent(inout)  :: iprint, iprint_init
     integer, intent(inout)  :: maxiter, maxiter_init
     real(xp), intent(inout) :: lambda_sig, lambda_beta, lambda_Td
-    real(xp), intent(inout) :: lambda_var_sig, lambda_var_beta, lambda_var_Td
+    real(xp), intent(inout) :: lambda_var_sig, lambda_var_beta, lambda_stefan
     real(xp), intent(inout) :: sig_fact_init
     real(xp), intent(inout) :: sig_init, beta_init, Td_init
     real(xp), intent(inout) :: lb_sig, ub_sig
@@ -45,7 +45,7 @@ contains
     character(len=512), intent(inout) :: filename_noise
 
     namelist /user_parameters/ filename, filename_NHI, filename_wavelength, fileout, timeout, filename_noise, &
-         n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
+         n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_stefan, &
          sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, &
          maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid
     
