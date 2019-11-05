@@ -181,12 +181,6 @@ contains
     !Allocate memory for parameters grids
     allocate(grid_params(3*n_mbb, dim_data(2), dim_data(3)))
     allocate(fit_params(3*n_mbb, 1, 1))
-    ! !Init Tdma = 1 to avoid Nan
-    ! do i=1,n_mbb
-    !    fit_params(1+(3*(i-1)),1,1) = 0._xp
-    !    fit_params(2+(3*(i-1)),1,1) = 1._xp
-    !    fit_params(3+(3*(i-1)),1,1) = 1._xp
-    ! end do
     
     print*, "                    Start iteration"
     print*,
@@ -219,7 +213,7 @@ contains
 
           !Init b_params
           do i=1, n_mbb       
-             b_params(i) = fit_params(3+(3*(i-1)),1,1)
+             b_params(i) = fit_params(1+(3*(i-1)),1,1)
           end do
        end if
               
@@ -240,10 +234,9 @@ contains
           
           ! Update parameters 
           print*,  "Update level", n, ">", power
-          call update(cube_mean, fit_params, b_params, n_mbb, dim_cube(1), power, power, lambda_amp, lambda_beta, &
-               lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_sig, ub_sig, lb_beta, ub_beta, &
-               lb_Td, ub_Td, maxiter, m, kernel, iprint, std_map)        
-          stop
+          call update(cube_mean, cube_HI_mean, wavelength, fit_params, b_params, n_mbb, dim_cube(1), power, power, &
+               lambda_amp, lambda_beta, lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_sig, ub_sig, &
+               lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, iprint, std_map)
           
           deallocate(std_map)
        end if
@@ -294,9 +287,9 @@ contains
        call set_stdmap(std_map, data, lstd, ustd)
     end if
     
-    call update(data, grid_params, b_params, n_mbb, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_beta, &
-         lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
-         maxiter, m, kernel, iprint, std_map)       
+    call update(data, data_HI, wavelength, grid_params, b_params, n_mbb, dim_data(1), dim_data(2), dim_data(3), &
+         lambda_amp, lambda_beta, lambda_Td, lambda_var_amp, lambda_var_beta, lambda_var_Td, lb_sig, ub_sig, &
+         lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, iprint, std_map)       
     
     print*,
     print*, "_____ Write output file _____"

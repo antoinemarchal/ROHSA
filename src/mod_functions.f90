@@ -323,13 +323,15 @@ contains
   end subroutine upgrade
 
 
-  subroutine update(cube, params, b_params, n_mbb, dim_v, dim_y, dim_x, lambda_sig, lambda_beta, lambda_Td, &
-       lambda_var_sig, lambda_var_beta, lambda_var_Td, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, maxiter, &
+  subroutine update(cube, cube_HI, wavelength, params, b_params, n_mbb, dim_v, dim_y, dim_x, lambda_sig, lambda_beta, lambda_Td, &
+       lambda_var_sig, lambda_var_beta, lambda_var_Td, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, &
        m, kernel, iprint, std_map)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube 
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube_HI !! cube HI
+    real(xp), intent(in), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
     real(xp), intent(in), dimension(:,:), allocatable :: std_map !! Standard deviation map 
     real(xp), intent(in), dimension(:,:), allocatable :: kernel !! convolution kernel
     integer, intent(in) :: dim_v !! dimension along v axis
@@ -354,6 +356,8 @@ contains
     real(xp), intent(in) :: ub_beta !! upper bound beta
     real(xp), intent(in) :: lb_Td !! lower bound Td
     real(xp), intent(in) :: ub_Td !! upper bound Td
+
+    real(xp), intent(in) :: l0 !! reference wavelength
 
     real(xp), intent(inout), dimension(:), allocatable :: b_params !! unknown average Tdma
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
@@ -382,13 +386,13 @@ contains
     call ravel_3D(params, beta, 3*n_mbb, dim_y, dim_x)
 
     do i=1,n_mbb
-       lb((n_beta-n_mbb)+i) = lb_Td
-       ub((n_beta-n_mbb)+i) = ub_Td
+       lb((n_beta-n_mbb)+i) = lb_sig
+       ub((n_beta-n_mbb)+i) = ub_sig
        beta((n_beta-n_mbb)+i) = b_params(i)
     end do
-    
-    call minimize(n_beta, m, beta, lb, ub, cube, n_mbb, dim_v, dim_y, dim_x, lambda_sig, lambda_beta, lambda_Td, &
-         lambda_var_sig, lambda_var_beta, lambda_var_Td, maxiter, kernel, iprint, std_map)
+
+    call minimize(n_beta, m, beta, lb, ub, cube, cube_HI, n_mbb, dim_v, dim_y, dim_x, lambda_sig, lambda_beta, lambda_Td, &
+         lambda_var_sig, lambda_var_beta, lambda_var_Td, l0, maxiter, kernel, iprint, std_map, wavelength)
 
     call unravel_3D(beta, params, 3*n_mbb, dim_y, dim_x)
     do i=1,n_mbb

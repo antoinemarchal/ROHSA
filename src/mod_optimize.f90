@@ -109,8 +109,8 @@ contains
 
   
   ! Compute the objective function for a cube and the gradient of the obkective function
-  subroutine f_g_cube_fast(f, g, cube, beta, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_sig, lambda_beta, lambda_Td, &
-       lambda_var_sig, lambda_var_beta, lambda_var_Td, std_map)
+  subroutine f_g_cube_fast(f, g, cube, cube_HI, beta, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_sig, lambda_beta, lambda_Td, &
+       lambda_var_sig, lambda_var_beta, lambda_var_Td, std_map, l0, wavelength)
     implicit none
 
     integer, intent(in) :: n_mbb
@@ -119,8 +119,12 @@ contains
     real(xp), intent(in) :: lambda_var_sig, lambda_var_beta, lambda_var_Td
     real(xp), intent(in), dimension(:), allocatable :: beta
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube_HI
+    real(xp), intent(in), dimension(:), allocatable :: wavelength
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
     real(xp), intent(in), dimension(:,:), allocatable :: std_map
+    real(xp), intent(in) :: l0
+
     real(xp), intent(inout) :: f
     real(xp), intent(inout), dimension(:), allocatable :: g
 
@@ -166,7 +170,7 @@ contains
        do i=1, dim_y
           allocate(residual_1D(dim_v))
           residual_1D = 0._xp
-          ! call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_mbb, dim_v) !!FIXMEEEEEEEEEEEEE
+          call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_mbb, dim_v, cube_HI(:,i,j), l0, wavelength)
           residual(:,i,j) = residual_1D
           if (std_map(i,j) > 0._xp) then
              f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2._xp)
@@ -197,36 +201,48 @@ contains
        do l=1, dim_x
           do j=1, dim_y
              !Regularization
-             f = f + (0.5_xp * lambda_sig * conv_sig(j,l)**2)
+             f = f + (0.5_xp * lambda_sig * conv_sig(j,l)**2 &
+                  + (0.5_xp * lambda_var_sig * (image_sig(j,l) - b_params(i))**2._xp))
              f = f + (0.5_xp * lambda_beta * conv_beta(j,l)**2)
-             f = f + (0.5_xp * lambda_Td * conv_Td(j,l)**2) + (0.5_xp * lambda_var_Td * (image_Td(j,l) - b_params(i))**2._xp)
+             f = f + (0.5_xp * lambda_Td * conv_Td(j,l)**2) 
              
-             g((n_beta-n_mbb)+i) = g((n_beta-n_mbb)+i) - (lambda_var_Td * (image_Td(j,l) - b_params(i)))        
+             g((n_beta-n_mbb)+i) = g((n_beta-n_mbb)+i) - (lambda_var_sig * (image_sig(j,l) - b_params(i)))        
              
              !
              do k=1, dim_v                          
                 if (std_map(j,l) > 0._xp) then
-                   deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) &
-                        / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))) &
-                        * (residual(k,j,l)/std_map(j,l)**2._xp) 
+                   deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + ( &
 
-                   deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params(1+(3*(i-1)),j,l) * &
-                        ( real(k,xp) - params(2+(3*(i-1)),j,l) ) / (params(3+(3*(i-1)),j,l)**2._xp) * &
-                        exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) &
-                        / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))) &
-                        * (residual(k,j,l)/std_map(j,l)**2._xp) 
+                        (l0/wavelength(k))**params(2+(3*(i-1)),j,l) * cube_HI(i,j,l) &
+                        * planck_l(wavelength(k),params(3+(3*(i-1)),j,l)) &
 
-                   deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params(1+(3*(i-1)),j,l) * &
-                        ( real(k,xp) - params(2+(3*(i-1)),j,l) )**2._xp / (params(3+(3*(i-1)),j,l)**3._xp) * &
-                        exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))) &
-                        * (residual(k,j,l)/std_map(j,l)**2._xp)
+                        * (residual(k,j,l)/std_map(j,l)**2._xp) &
+                        )
+
+                   deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + ( &
+
+                        params(1+(3*(i-1)),j,l) * log(l0/wavelength(k)) * (l0/wavelength(k))**params(2+(3*(i-1)),j,l) &
+                        * cube_HI(i,j,l) * planck_l(wavelength(k),params(3+(3*(i-1)),j,l)) &
+
+                        * (residual(k,j,l)/std_map(j,l)**2._xp) &
+                        )
+
+                   deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + ( &
+
+                        params(1+(3*(i-1)),j,l) * (l0/wavelength(k))**params(2+(3*(i-1)),j,l) * cube_HI(i,j,l) * &
+                        (h*c/wavelength(k)/kb) * exp(h*c/wavelength(k)/kb/(params(3+(3*(i-1)),j,l))) * &
+                        1._xp / (params(3+(3*(i-1)),j,l)**2._xp * &
+                        (exp(h*c/wavelength(k)/kb/(params(3+(3*(i-1)),j,l))) - 1._xp)**2._xp) &                        
+
+                        * (residual(k,j,l)/std_map(j,l)**2._xp) &
+                        )
                 end if
              end do
 
-             deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (lambda_sig * conv_conv_sig(j,l))
+             deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + ((lambda_sig * conv_conv_sig(j,l)) + &
+                  (lambda_var_sig * (image_sig(j,l) - b_params(i))))
              deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (lambda_beta * conv_conv_beta(j,l))
-             deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (lambda_Td * conv_conv_Td(j,l) + &
-                  (lambda_var_Td * (image_Td(j,l) - b_params(i))))
+             deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (lambda_Td * conv_conv_Td(j,l)) 
           end do
           !
        end do
