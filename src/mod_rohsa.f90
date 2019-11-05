@@ -207,6 +207,20 @@ contains
        
        if (n == 0) then
           print*, "Init mean spectrum"        
+
+          do i=1, n_mbb    
+             fit_params(1+(3*(i-1)),1,1) = sig_init
+             fit_params(2+(3*(i-1)),1,1) = beta_init
+             fit_params(3+(3*(i-1)),1,1) = Td_init
+          end do
+
+          ! print*, fit_params(:,1,1)
+          print*, n_mbb
+          print*, wavelength
+          print*, cube_mean(:,1,1)
+          print*, l0
+          print*, cube_HI_mean(:,1,1)
+                   
           call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), cube_HI_mean(:,1,1), &
                wavelength, amp_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
                l0, maxiter_init, m, iprint_init)

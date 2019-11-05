@@ -213,23 +213,16 @@ contains
     residual = 0._xp
     lb = 0._xp; ub=0._xp
     x = 0._xp
-
-    call init_bounds(line, n_mbb, dim_v, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)
             
     do p=1, 3*n_mbb
-       x(p) = params(p);
-    end do
-   
-    do i=1, n_mbb    
-       x(1+(3*(i-1))) = sig_init
-       x(2+(3*(i-1))) = beta_init
-       x(3+(3*(i-1))) = Td_init
+       x(p) = params(p)
     end do
 
+    call init_bounds(line, n_mbb, dim_v, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)   
     call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, iprint)
 
     do p=1, 3*n_mbb
-       params(p) = x(p);
+       params(p) = x(p)
     end do
     
     deallocate(x)

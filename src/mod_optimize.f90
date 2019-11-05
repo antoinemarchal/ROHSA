@@ -149,7 +149,7 @@ contains
     allocate(conv_conv_sig(dim_y, dim_x), conv_conv_beta(dim_y, dim_x), conv_conv_Td(dim_y, dim_x))
     allocate(image_sig(dim_y, dim_x), image_beta(dim_y, dim_x), image_Td(dim_y, dim_x))
     allocate(model(dim_v))
-
+    
     deriv = 0._xp
     f = 0._xp
     g = 0._xp
