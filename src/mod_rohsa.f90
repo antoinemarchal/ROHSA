@@ -2,6 +2,7 @@
 module mod_rohsa
   !! This module contains ROHSA subrtoutine
   use mod_constants
+  use mod_model
   use mod_array
   use mod_functions
   use mod_start
@@ -220,8 +221,10 @@ contains
           !Init b_params
           do i=1, n_mbb       
              b_params(i) = fit_params(1+(3*(i-1)),1,1)
-             stefan_params(i) = fit_params(3+(3*(i-1)),1,1) / &
-                  (fit_params(1+(3*(i-1)),1,1)**(-1._xp / (4._xp + fit_params(2+(3*(i-1)),1,1))))
+             stefan_params(i) = lumi_cst(fit_params(1+(3*(i-1)),1,1), fit_params(2+(3*(i-1)),1,1), &
+                  fit_params(3+(3*(i-1)),1,1))
+             ! stefan_params(i) = fit_params(3+(3*(i-1)),1,1) / &
+             !      (fit_params(1+(3*(i-1)),1,1)**(-1._xp / (4._xp + fit_params(2+(3*(i-1)),1,1))))
           end do
        end if
               

@@ -7,12 +7,12 @@
    ,fileout = 'SED_mbb_run_0.dat'  !! name of the output result
    ,timeout = 'timestep.dat'                   !! write output time step
 
-   ,n_mbb = 1   	                       !! number of gaussian to fit
+   ,n_mbb = 4   	                       !! number of gaussian to fit
 
    ,lambda_sig = 1.d0	                       !! lambda for siglitude parameter
    ,lambda_beta = 1.d0	                       !! lamnda for mean position parameter
    ,lambda_Td = 1.d0                           !! lambda for dispersion parameter absorption
-   ,lambda_var_sig = 1.d0                    !! lambda for dispersion siglitude parameter
+   ,lambda_var_sig = 0.d0                      !! lambda for dispersion siglitude parameter
    ,lambda_var_beta = 0.d0  		       !! lambda for dispersion mean position parameter   
    ,lambda_stefan = 1.d0    		       !! lambda for dispersion variance parameter
 
@@ -32,7 +32,7 @@
    ,l0 = 0.03498162d0                          !! reference wavelength in cm
 
    ,maxiter_init = 15000    		       !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
-   ,maxiter = 800            		       !! max iteration for L-BFGS-B alogorithm
+   ,maxiter = 2000            		       !! max iteration for L-BFGS-B alogorithm
    ,m = 10                  		       !! number of corrections used in the limited memory matrix by LBFGS-B
    ,noise = .true.         		       !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
    ,lstd = 0                		       !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
