@@ -214,18 +214,12 @@ contains
              f = f + (0.5_xp * lambda_beta * conv_beta(j,l)**2._xp)
              f = f + (0.5_xp * lambda_Td * conv_Td(j,l)**2._xp) 
                           
-             ! f = f + (0.5_xp * lambda_stefan * &
-             !      (image_Td(j,l)*image_sig(j,l)**(1._xp / (4._xp + image_beta(j,l))) - stefan_params(i))**2._xp)
-
              f = f + (0.5_xp * lambda_stefan * &
                   (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l)) - stefan_params(i))**2._xp)
              
              g(n_cube+i) = g(n_cube+i) - (lambda_var_sig * (image_sig(j,l) - b_params(i)))                     
              g(n_cube+n_mbb+i) = g(n_cube+n_mbb+i) - lambda_stefan * ( &
                    lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l)) - stefan_params(i))
-
-             ! g(n_cube+n_mbb+i) = g(n_cube+n_mbb+i) - lambda_stefan * ( &
-             !      image_Td(j,l) * image_sig(j,l)**(1._xp / (4._xp + image_beta(j,l))) - stefan_params(i))
              
              !
              do k=1, dim_v                          
@@ -277,32 +271,6 @@ contains
                   d_lumi_cst_dTd(image_sig(j,l),image_beta(j,l),image_Td(j,l)) * &
                   (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l)) - stefan_params(i)) &
                   )
-
-             ! print*, lambda_stefan * ( &
-             !      d_lumi_cst_dsig(image_sig(j,l),image_beta(j,l),image_Td(j,l)) * &
-             !      (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l)) - stefan_params(i)) &
-             !      )  - (lambda_stefan * ( &
-             !      image_Td(j,l) * 1._xp / (4._xp + image_beta(j,l)) * &
-             !      image_sig(j,l)**((1._xp / (4._xp + image_beta(j,l))) - 1._xp) * &
-             !      (image_Td(j,l) * image_sig(j,l)**(1._xp / (4._xp + image_beta(j,l))) - stefan_params(i)) &
-             !      ))
-
-             ! deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + lambda_stefan * ( &
-             !      image_Td(j,l) * 1._xp / (4._xp + image_beta(j,l)) * &
-             !      image_sig(j,l)**((1._xp / (4._xp + image_beta(j,l))) - 1._xp) * &
-             !      (image_Td(j,l) * image_sig(j,l)**(1._xp / (4._xp + image_beta(j,l))) - stefan_params(i)) &
-             !      )
-
-             ! deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + lambda_stefan * ( &
-             !      image_Td(j,l) * (- 1._xp / (4._xp + image_beta(j,l))**2._xp) * log(image_sig(j,l)) * &
-             !      image_sig(j,l)**(1._xp / (4._xp + image_beta(j,l))) * &
-             !      (image_Td(j,l) * image_sig(j,l)**(1._xp / (4._xp + image_beta(j,l))) - stefan_params(i)) &
-             !      )
-
-             ! deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + lambda_stefan * ( &
-             !      image_sig(j,l)**(1._xp / (4._xp + image_beta(j,l))) * &
-             !      (image_Td(j,l) * image_sig(j,l)**(1._xp / (4._xp + image_beta(j,l))) - stefan_params(i)) &
-             !      )
              
           end do
           !
