@@ -12,10 +12,10 @@ module mod_inout
 
 contains
   
-  subroutine read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, fileout, timeout, &
-       filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
-       lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, &
-       maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
+  subroutine read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, &
+       fileout, timeout, filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
+       lambda_var_Td, lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, &
+       lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
     implicit none
 
     integer :: ios=0
@@ -41,12 +41,13 @@ contains
     character(len=512), intent(inout) :: filename
     character(len=512), intent(inout) :: filename_NHI
     character(len=512), intent(inout) :: filename_wavelength
+    character(len=512), intent(inout) :: filename_color
     character(len=512), intent(inout) :: fileout
     character(len=512), intent(inout) :: timeout
     character(len=512), intent(inout) :: filename_noise
 
-    namelist /user_parameters/ filename, filename_NHI, filename_wavelength, fileout, timeout, filename_noise, &
-         n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
+    namelist /user_parameters/ filename, filename_NHI, filename_wavelength, filename_color, fileout, timeout, &
+         filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
          lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, &
          lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid
     

@@ -48,6 +48,7 @@ program ROHSA
   character(len=512) :: filename            !! name of the data file
   character(len=512) :: filename_NHI        !! name of the data file
   character(len=512) :: filename_wavelength !! name of the wavelength file
+  character(len=512) :: filename_color      !! name of the wavelength file
   character(len=512) :: fileout             !! name of the output result
   character(len=512) :: timeout             !! name of the output result
   character(len=512) :: filename_noise      !! name of the file with STD map (if noise .eq. true)
@@ -56,6 +57,7 @@ program ROHSA
 
   real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
   real(xp), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
+  real(xp), dimension(:,:), allocatable   :: color       !! polynomial coefficient for color correction
   real(xp), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
   real(xp), dimension(:,:,:), allocatable :: NHI         !! initial fits data NHI
 
@@ -103,10 +105,10 @@ program ROHSA
   save_grid = .true.
  
   !Read parameters
-  call read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, fileout, timeout, &
-       filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
-       lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
-       l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
+  call read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, fileout, &
+       timeout, filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
+       lambda_var_Td, lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, &
+       lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
 
   !Call header
   call header()  
@@ -116,6 +118,7 @@ program ROHSA
   !Load data
   call read_cube(filename, data)
   call read_array(filename_wavelength, wavelength)
+  call read_map(filename_color, color)
 
   if (noise .eqv. .true.) then
      if (filename_noise == " ") then
