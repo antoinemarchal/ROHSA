@@ -51,67 +51,88 @@ contains
   end function planck_l
 
 
-  pure function lumi_cst(sig, beta, Td)
-    !! LHI constant equation for regularization : sig * T^4 * Q_approx(beta)
+  pure function lumi_cst(sig, beta, Td, l0)
+    !! LHI constant equation for regularization :
     !! neglect the zeta function zeta(4+beta)/zeta(4)
     !! gamma(4) = 6.
     implicit none
     
     real(xp), intent(in) :: sig, beta, Td
-    real(xp) :: a, q
+    real(xp), intent(in) :: l0 !! reference wavelength
+    real(xp) :: a, b
     real(xp) :: lumi_cst
+    real(xp) :: norm
 
     a = 4._xp + beta
-    q = 1._xp / a
+    b = kb * l0 / h / c
+    norm = 1.d-5
 
-    lumi_cst = Td * sig**q * gamma(a)**q
+    ! lumi_cst = Td * sig**q * gamma(a)**q
+    lumi_cst = sig * Td**a * gamma(a) * b**beta * norm
+    ! print*, lumi_cst
+    ! stop
+    ! lumi_cst = Td**a * gamma(a) * b**beta * norm
   end function lumi_cst
 
 
-  pure function d_lumi_cst_dsig(sig, beta, Td)
+  pure function d_lumi_cst_dsig(sig, beta, Td, l0)
     !! Derivative lumi_cst function with respect to sigma
     implicit none 
 
     real(xp), intent(in) :: sig, beta, Td
-    real(xp) :: a, q
+    real(xp), intent(in) :: l0 !! reference wavelength
+    real(xp) :: a, b
     real(xp) :: d_lumi_cst_dsig
+    real(xp) :: norm
 
     a = 4._xp + beta
-    q = 1._xp / a
+    b = kb * l0 / h / c
+    norm = 1.d-5
 
-    d_lumi_cst_dsig = Td * q * sig**(q-1._xp) * gamma(a)**q
+    ! d_lumi_cst_dsig = Td * q * sig**(q-1._xp) * gamma(a)**q
+    d_lumi_cst_dsig = Td**a * b**beta * gamma(a) * norm
   end function d_lumi_cst_dsig
 
 
-  function d_lumi_cst_dbeta(sig, beta, Td)
+  function d_lumi_cst_dbeta(sig, beta, Td, l0)
     !! Derivative lumi_cst function with respect to beta
     implicit none 
 
     real(xp), intent(in) :: sig, beta, Td
-    real(xp) :: a, b, q
+    real(xp), intent(in) :: l0 !! reference wavelength
+    real(xp) :: a, b
     real(xp) :: d_lumi_cst_dbeta
+    real(xp) :: norm
     integer :: ifault
 
     a = 4._xp + beta
-    q = 1._xp / a
+    b = kb * l0 / h / c
+    norm = 1.d-5
 
     ! d_lumi_cst_dbeta = - Td * sig**q * log(sig) / a**2._xp
-    d_lumi_cst_dbeta = - Td * sig**q * gamma(a)**q * (log(sig) - a*digamma(a, ifault) + log(gamma(a))) / a**2._xp
+    ! d_lumi_cst_dbeta = - Td * sig**q * gamma(a)**q * (log(sig) - a*digamma(a, ifault) + log(gamma(a))) / a**2._xp
+    d_lumi_cst_dbeta = sig * b**beta * Td**a * gamma(a) * (log(b) + log(Td) + digamma(a, ifault)) * norm
+    ! d_lumi_cst_dbeta = b**beta * Td**a * gamma(a) * (log(b) + log(Td) + digamma(a, ifault)) * norm
   end function d_lumi_cst_dbeta
 
 
-  pure function d_lumi_cst_dTd(sig, beta, Td)
+  pure function d_lumi_cst_dTd(sig, beta, Td, l0)
     !! Derivative lumi_cst function with respect to Td
     implicit none 
 
     real(xp), intent(in) :: sig, beta, Td
-    real(xp) :: a, q
+    real(xp), intent(in) :: l0 !! reference wavelength
+    real(xp) :: a, b
     real(xp) :: d_lumi_cst_dTd
+    real(xp) :: norm
 
     a = 4._xp + beta
-    q = 1._xp / a
+    b = kb * l0 / h / c
+    norm = 1.d-5
 
-    d_lumi_cst_dTd = sig**q * gamma(a)**q
+    ! d_lumi_cst_dTd = sig**q * gamma(a)**q
+    d_lumi_cst_dTd = sig * a * Td**(a-1._xp) * b**beta * gamma(a) * norm
+    ! d_lumi_cst_dTd = a * Td**(a-1._xp) * b**beta * gamma(a) * norm
   end function d_lumi_cst_dTd
 
 

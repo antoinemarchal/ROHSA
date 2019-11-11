@@ -109,14 +109,15 @@ contains
 
   
   ! Compute the objective function for a cube and the gradient of the obkective function
-  subroutine f_g_cube_fast(f, g, cube, cube_HI, beta, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_sig, lambda_beta, lambda_Td, &
-       lambda_var_sig, lambda_var_beta, lambda_stefan, std_map, l0, wavelength)
+  subroutine f_g_cube_fast(f, g, cube, cube_HI, beta, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_sig, lambda_beta, &
+       lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, std_map, l0, wavelength)
     implicit none
 
     integer, intent(in) :: n_mbb
     integer, intent(in) :: dim_v, dim_y, dim_x
     real(xp), intent(in) :: lambda_sig, lambda_beta, lambda_Td
-    real(xp), intent(in) :: lambda_var_sig, lambda_var_beta, lambda_stefan
+    real(xp), intent(in) :: lambda_var_sig, lambda_var_beta, lambda_var_Td
+    real(xp), intent(in) :: lambda_stefan
     real(xp), intent(in), dimension(:), allocatable :: beta
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube_HI
@@ -135,6 +136,8 @@ contains
     real(xp), dimension(:), allocatable :: residual_1D
     real(xp), dimension(:,:,:), allocatable :: params
     real(xp), dimension(:), allocatable :: b_params
+    real(xp), dimension(:), allocatable :: c_params
+    real(xp), dimension(:), allocatable :: d_params
     real(xp), dimension(:), allocatable :: stefan_params
     real(xp), dimension(:,:), allocatable :: conv_sig, conv_beta, conv_Td
     real(xp), dimension(:,:), allocatable :: conv_conv_sig, conv_conv_beta, conv_conv_Td
@@ -146,6 +149,8 @@ contains
     allocate(deriv(3*n_mbb, dim_y, dim_x))
     allocate(residual(dim_v, dim_y, dim_x))
     allocate(b_params(n_mbb))
+    allocate(c_params(n_mbb))
+    allocate(d_params(n_mbb))
     allocate(stefan_params(n_mbb))
     allocate(params(3*n_mbb, dim_y, dim_x))
     allocate(conv_sig(dim_y, dim_x), conv_beta(dim_y, dim_x), conv_Td(dim_y, dim_x))
@@ -161,17 +166,21 @@ contains
     model = 0._xp
     gauss = 0._xp
     
-    n_beta = (3*n_mbb * dim_y * dim_x) + (2*n_mbb)
+    n_beta = (3*n_mbb * dim_y * dim_x) + (4*n_mbb)
     n_cube = (3*n_mbb * dim_y * dim_x)
 
     call unravel_3D(beta, params, 3*n_mbb, dim_y, dim_x)    
     do i=1,n_mbb
-       b_params(i) = beta(n_cube+i)
-       stefan_params(i) = beta(n_cube+n_mbb+i)
+       b_params(i) = beta(n_cube+(0*n_mbb)+i)
+       stefan_params(i) = beta(n_cube+(1*n_mbb)+i)
+       c_params(i) = beta(n_cube+(2*n_mbb)+i)
+       d_params(i) = beta(n_cube+(3*n_mbb)+i)
     end do
 
     ! print*, b_params
     ! print*, stefan_params
+    ! print*, c_params
+    ! print*, d_params
 
     ! Compute the objective function and the gradient
     do j=1, dim_x
@@ -209,17 +218,22 @@ contains
        do l=1, dim_x
           do j=1, dim_y
              !Regularization
-             f = f + (0.5_xp * lambda_sig * conv_sig(j,l)**2 &
-                  + (0.5_xp * lambda_var_sig * (image_sig(j,l) - b_params(i))**2._xp))
+             f = f + (0.5_xp * lambda_sig * conv_sig(j,l)**2._xp) 
              f = f + (0.5_xp * lambda_beta * conv_beta(j,l)**2._xp)
              f = f + (0.5_xp * lambda_Td * conv_Td(j,l)**2._xp) 
+
+             f = f + (0.5_xp * lambda_var_sig * (image_sig(j,l) - b_params(i))**2._xp)
+             f = f + (0.5_xp * lambda_var_beta * (image_beta(j,l) - c_params(i))**2._xp)
+             f = f + (0.5_xp * lambda_var_Td * (image_Td(j,l) - d_params(i))**2._xp)
                           
              f = f + (0.5_xp * lambda_stefan * &
-                  (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l)) - stefan_params(i))**2._xp)
+                  (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i))**2._xp)
              
-             g(n_cube+i) = g(n_cube+i) - (lambda_var_sig * (image_sig(j,l) - b_params(i)))                     
-             g(n_cube+n_mbb+i) = g(n_cube+n_mbb+i) - lambda_stefan * ( &
-                   lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l)) - stefan_params(i))
+             g(n_cube+(0*n_mbb)+i) = g(n_cube+(0*n_mbb)+i) - (lambda_var_sig * (image_sig(j,l) - b_params(i)))                     
+             g(n_cube+(1*n_mbb)+i) = g(n_cube+(1*n_mbb)+i) - lambda_stefan * ( &
+                   lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i))
+             g(n_cube+(2*n_mbb)+i) = g(n_cube+(2*n_mbb)+i) - (lambda_var_beta * (image_beta(j,l) - c_params(i)))                     
+             g(n_cube+(3*n_mbb)+i) = g(n_cube+(3*n_mbb)+i) - (lambda_var_Td * (image_Td(j,l) - d_params(i)))                     
              
              !
              do k=1, dim_v                          
@@ -252,24 +266,27 @@ contains
                 end if
              end do
 
-             deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + ((lambda_sig * conv_conv_sig(j,l)) + &
-                  (lambda_var_sig * (image_sig(j,l) - b_params(i))))
+             deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (lambda_sig * conv_conv_sig(j,l))
              deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (lambda_beta * conv_conv_beta(j,l))
              deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (lambda_Td * conv_conv_Td(j,l)) 
 
 
+             deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (lambda_var_sig * (image_sig(j,l) - b_params(i)))
+             deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (lambda_var_beta * (image_beta(j,l) - c_params(i)))
+             deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (lambda_var_Td * (image_Td(j,l) - d_params(i)))
+
              deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + lambda_stefan * ( &
-                  d_lumi_cst_dsig(image_sig(j,l),image_beta(j,l),image_Td(j,l)) * &
-                  (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l)) - stefan_params(i)) &
+                  d_lumi_cst_dsig(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) * &
+                  (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i)) &
                   )
 
              deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + lambda_stefan * ( &
-                  d_lumi_cst_dbeta(image_sig(j,l),image_beta(j,l),image_Td(j,l)) * &
-                  (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l)) - stefan_params(i)) &
+                  d_lumi_cst_dbeta(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) * &
+                  (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i)) &
                   )
              deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + lambda_stefan * ( &
-                  d_lumi_cst_dTd(image_sig(j,l),image_beta(j,l),image_Td(j,l)) * &
-                  (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l)) - stefan_params(i)) &
+                  d_lumi_cst_dTd(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) * &
+                  (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i)) &
                   )
              
           end do
@@ -282,6 +299,7 @@ contains
     deallocate(deriv)
     deallocate(residual)
     deallocate(b_params)
+    deallocate(c_params)
     deallocate(stefan_params)
     deallocate(params)
     deallocate(conv_sig, conv_beta, conv_Td)

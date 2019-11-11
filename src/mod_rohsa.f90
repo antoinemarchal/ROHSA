@@ -18,8 +18,9 @@ module mod_rohsa
 contains
 
   subroutine main_rohsa(data, wavelength, std_cube, data_HI, fileout, timeout, n_mbb, lambda_sig, lambda_beta, lambda_Td, &
-       lambda_var_sig, lambda_var_beta, lambda_stefan, amp_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, &
-       lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
+       lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, amp_fact_init, sig_init, beta_init, Td_init, &
+       lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, &
+       iprint_init, save_grid)
     
     implicit none
     
@@ -39,6 +40,7 @@ contains
 
     real(xp), intent(in) :: lambda_var_sig  !! lambda for amp dispersion parameter
     real(xp), intent(in) :: lambda_var_beta !! lambda for mean position dispersion parameter
+    real(xp), intent(in) :: lambda_var_Td !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_stefan   !! lambda for variance dispersion parameter
 
     real(xp), intent(in) :: amp_fact_init  !! times max amplitude of additional Gaussian
@@ -76,7 +78,9 @@ contains
     real(xp), dimension(:,:,:), allocatable :: fit_params      !! parameters to optimize with cube mean at each iteration
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
-    real(xp), dimension(:), allocatable :: b_params            !! unknow average Tdma
+    real(xp), dimension(:), allocatable :: b_params            !! unknow average Tdm
+    real(xp), dimension(:), allocatable :: c_params            !! unknow average Tdma
+    real(xp), dimension(:), allocatable :: d_params            !! unknow average Tdma
     real(xp), dimension(:), allocatable :: stefan_params            !! unknow average Tdma
     ! real(xp), dimension(:), allocatable :: mean_spect          !! mean spectrum of the observation
     ! real(xp), dimension(:), allocatable :: guess_spect         !! params obtain fi the optimization of the std spectrum of the observation
@@ -109,6 +113,7 @@ contains
 
     print*, "lambda_var_sig = ", lambda_var_sig
     print*, "lambda_var_beta = ", lambda_var_beta
+    print*, "lambda_var_Td = ", lambda_var_Td
     print*, "lambda_stefan = ", lambda_stefan
 
     print*, "amp_fact_init = ", amp_fact_init
@@ -173,6 +178,8 @@ contains
     
     print*, "Compute mean and std spectrum"
     allocate(b_params(n_mbb))
+    allocate(c_params(n_mbb))
+    allocate(d_params(n_mbb))
     allocate(stefan_params(n_mbb))
 
     call reshape_up(data, cube, dim_data, dim_cube)
@@ -221,10 +228,10 @@ contains
           !Init b_params
           do i=1, n_mbb       
              b_params(i) = fit_params(1+(3*(i-1)),1,1)
+             c_params(i) = fit_params(2+(3*(i-1)),1,1)
+             d_params(i) = fit_params(3+(3*(i-1)),1,1)
              stefan_params(i) = lumi_cst(fit_params(1+(3*(i-1)),1,1), fit_params(2+(3*(i-1)),1,1), &
-                  fit_params(3+(3*(i-1)),1,1))
-             ! stefan_params(i) = fit_params(3+(3*(i-1)),1,1) / &
-             !      (fit_params(1+(3*(i-1)),1,1)**(-1._xp / (4._xp + fit_params(2+(3*(i-1)),1,1))))
+                  fit_params(3+(3*(i-1)),1,1), l0)
           end do
        end if
               
@@ -245,9 +252,13 @@ contains
           
           ! Update parameters 
           print*,  "Update level", n, ">", power
-          call update(cube_mean, cube_HI_mean, wavelength, fit_params, b_params, stefan_params, n_mbb, dim_cube(1), power, power, &
-               lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_stefan, lb_sig, ub_sig, &
-               lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, iprint, std_map)
+          ! print*, "b = ", b_params
+          ! print*, "stefan = ", stefan_params
+          ! print*,
+          call update(cube_mean, cube_HI_mean, wavelength, fit_params, b_params, c_params, d_params, stefan_params, &
+               n_mbb, dim_cube(1), power, power, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
+               lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, &
+               iprint, std_map)
           
           deallocate(std_map)
        end if
@@ -298,9 +309,10 @@ contains
        call set_stdmap(std_map, data, lstd, ustd)
     end if
     
-    call update(data, data_HI, wavelength, grid_params, b_params, stefan_params, n_mbb, dim_data(1), dim_data(2), &
-         dim_data(3), lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_stefan, &
-         lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, iprint, std_map)       
+    call update(data, data_HI, wavelength, grid_params, b_params, c_params, d_params, stefan_params, n_mbb, &
+         dim_data(1), dim_data(2), dim_data(3), lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, &
+         lambda_var_beta, lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, &
+         m, kernel, iprint, std_map)       
     
     print*,
     print*, "_____ Write output file _____"
@@ -319,6 +331,7 @@ contains
     write(12,fmt=*) "# lambda_Td = ", lambda_Td
     write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
     write(12,fmt=*) "# lambda_var_beta = ", lambda_var_beta
+    write(12,fmt=*) "# lambda_var_Td = ", lambda_var_Td
     write(12,fmt=*) "# lambda_stefan = ", lambda_stefan
     write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
     write(12,fmt=*) "# sig_init = ", sig_init
