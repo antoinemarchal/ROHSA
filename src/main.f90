@@ -6,6 +6,7 @@ program ROHSA
   use mod_inout
   use mod_rohsa
   use mod_optimize
+  use mod_color
   
   implicit none
 
