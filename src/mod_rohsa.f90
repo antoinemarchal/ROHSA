@@ -17,9 +17,9 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, wavelength, std_cube, data_HI, fileout, timeout, n_mbb, lambda_sig, lambda_beta, lambda_Td, &
-       lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, amp_fact_init, sig_init, beta_init, Td_init, &
-       lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, &
+  subroutine main_rohsa(data, wavelength, std_cube, data_HI, color, fileout, timeout, n_mbb, lambda_sig, lambda_beta, &
+       lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, amp_fact_init, sig_init, beta_init, &
+       Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, &
        iprint_init, save_grid)
     
     implicit none
@@ -67,7 +67,8 @@ contains
     integer :: power        !! loop index
 
     real(xp), intent(in), dimension(:,:,:), allocatable :: data        !! initial fits data
-    real(xp), intent(in), dimension(:,:,:), allocatable :: data_HI         !! initial fits data data_HI
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data_HI     !! initial fits data data_HI
+    real(xp), intent(in), dimension(:,:), allocatable   :: color       !! polynomial coefficient for color correction
     real(xp), intent(in), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
     real(xp), intent(in), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
 
@@ -82,8 +83,6 @@ contains
     real(xp), dimension(:), allocatable :: c_params            !! unknow average Tdma
     real(xp), dimension(:), allocatable :: d_params            !! unknow average Tdma
     real(xp), dimension(:), allocatable :: stefan_params            !! unknow average Tdma
-    ! real(xp), dimension(:), allocatable :: mean_spect          !! mean spectrum of the observation
-    ! real(xp), dimension(:), allocatable :: guess_spect         !! params obtain fi the optimization of the std spectrum of the observation
 
     integer, dimension(3) :: dim_data !! dimension of original data
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
