@@ -4,13 +4,14 @@ module mod_model
   use mod_constants
   use mod_math
   use mod_array
+  use mod_color
 
   implicit none
   
   private
 
-  public :: gaussian, mbb_l, d_mbb_l_dsig, d_mbb_l_db, d_mbb_l_dT, planck_l, lumi_cst, d_lumi_cst_dsig, &
-       d_lumi_cst_dbeta, d_lumi_cst_dTd
+  public :: gaussian, mbb_l, d_mbb_l_dsig, d_mbb_l_db, d_mbb_l_dT, d_mbbcc_l_dsig, d_mbbcc_l_db, d_mbbcc_l_dT, &
+       planck_l, lumi_cst, d_lumi_cst_dsig, d_lumi_cst_dbeta, d_lumi_cst_dTd
   
 contains
   
@@ -64,7 +65,7 @@ contains
     real(xp), intent(in) :: NHI
     real(xp) :: d_mbb_l_db
 
-    d_mbb_l_db = sig * (x0/x)**beta * NHI * planck_l(x,Td)
+    d_mbb_l_db = sig * log(x0/x) * (x0/x)**beta * NHI * planck_l(x,Td)
   end function d_mbb_l_db
 
 
@@ -78,9 +79,59 @@ contains
     real(xp), intent(in) :: NHI
     real(xp) :: d_mbb_l_dT
 
-    d_mbb_l_dT = sig * (x0/x)**beta * NHI * planck_l(x,Td)
+    d_mbb_l_dT = sig * (x0/x)**beta * NHI * (h*c/x/kb) * exp(h*c/x/kb/Td) / &
+         (Td**2._xp * (exp(h*c/x/kb/(Td)) - 1._xp)**2._xp)                         
   end function d_mbb_l_dT
 
+
+  function d_mbbcc_l_dsig(x, beta, Td, x0, NHI, color, degree)
+    !! Modified black body function derivative sigma
+    implicit none
+    
+    real(xp), intent(in) :: x
+    real(xp), intent(in) :: beta, Td
+    real(xp), intent(in) :: x0
+    real(xp), intent(in) :: NHI
+    real(xp) :: d_mbbcc_l_dsig
+    real(xp), intent(in), dimension(:) :: color
+    integer, intent(in) :: degree
+
+    d_mbbcc_l_dsig = poly_color(color, beta, Td, degree) * d_mbb_l_dsig(x, beta, Td, x0, NHI)
+  end function d_mbbcc_l_dsig
+
+
+  function d_mbbcc_l_db(x, sig, beta, Td, x0, NHI, color, degree)
+    !! Modified black body function derivative sigma
+    implicit none
+    
+    real(xp), intent(in) :: x
+    real(xp), intent(in) :: sig, beta, Td
+    real(xp), intent(in) :: x0
+    real(xp), intent(in) :: NHI
+    real(xp) :: d_mbbcc_l_db
+    real(xp), intent(in), dimension(:) :: color
+    integer, intent(in) :: degree
+
+    d_mbbcc_l_db = (d_poly_color_dx(color, beta, Td, degree) * mbb_l(x, sig, beta, Td, x0, NHI)) &
+         + (poly_color(color, beta, Td, degree) * d_mbb_l_db(x, sig, beta, Td, x0, NHI))
+  end function d_mbbcc_l_db
+
+
+  function d_mbbcc_l_dT(x, sig, beta, Td, x0, NHI, color, degree)
+    !! Modified black body function derivative sigma
+    implicit none
+    
+    real(xp), intent(in) :: x
+    real(xp), intent(in) :: sig, beta, Td
+    real(xp), intent(in) :: x0
+    real(xp), intent(in) :: NHI
+    real(xp) :: d_mbbcc_l_dT
+    real(xp), intent(in), dimension(:) :: color
+    integer, intent(in) :: degree
+
+    d_mbbcc_l_dT = (d_poly_color_dy(color, beta, Td, degree) * mbb_l(x, sig, beta, Td, x0, NHI)) &
+         + (poly_color(color, beta, Td, degree) * d_mbb_l_dT(x, sig, beta, Td, x0, NHI))
+  end function d_mbbcc_l_dT
 
   pure function planck_l(l, T)
     !! Modified black body function
