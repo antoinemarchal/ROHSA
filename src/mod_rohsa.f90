@@ -17,10 +17,10 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, wavelength, std_cube, data_HI, color, fileout, timeout, n_mbb, lambda_sig, lambda_beta, &
+  subroutine main_rohsa(data, wavelength, std_cube, data_HI, fileout, timeout, n_mbb, lambda_sig, lambda_beta, &
        lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, amp_fact_init, sig_init, beta_init, &
        Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, &
-       iprint_init, save_grid)
+       iprint_init, save_grid, color, degree)
     
     implicit none
     
@@ -57,6 +57,7 @@ contains
     real(xp), intent(in) :: ub_Td         !! upper bound
 
     real(xp), intent(in) :: l0 !! reference wavelength
+    integer, intent(in) :: degree
 
     character(len=512), intent(in) :: fileout   !! name of the output result
     character(len=512), intent(in) :: timeout   !! name of the output result
@@ -222,7 +223,7 @@ contains
                    
           call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), cube_HI_mean(:,1,1), &
                wavelength, amp_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
-               l0, maxiter_init, m, iprint_init)
+               l0, maxiter_init, m, iprint_init, color, degree)
 
           !Init b_params
           do i=1, n_mbb       
@@ -237,7 +238,7 @@ contains
        if (n == 0) then                
           print*,  "Update level", n
           call upgrade(cube_mean, fit_params, cube_HI_mean, wavelength, power, n_mbb, dim_cube(1), lb_sig, ub_sig, &
-               lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, iprint)
+               lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree)
        end if
               
        if (n > 0 .and. n < nside) then
@@ -254,10 +255,10 @@ contains
           ! print*, "b = ", b_params
           ! print*, "stefan = ", stefan_params
           ! print*,
-          call update(cube_mean, cube_HI_mean, wavelength, color, fit_params, b_params, c_params, d_params, stefan_params, &
+          call update(cube_mean, cube_HI_mean, wavelength, fit_params, b_params, c_params, d_params, stefan_params, &
                n_mbb, dim_cube(1), power, power, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
                lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, &
-               iprint, std_map)
+               iprint, std_map, color, degree)
           
           deallocate(std_map)
        end if
@@ -308,10 +309,10 @@ contains
        call set_stdmap(std_map, data, lstd, ustd)
     end if
     
-    call update(data, data_HI, wavelength, color, grid_params, b_params, c_params, d_params, stefan_params, n_mbb, &
+    call update(data, data_HI, wavelength, grid_params, b_params, c_params, d_params, stefan_params, n_mbb, &
          dim_data(1), dim_data(2), dim_data(3), lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, &
          lambda_var_beta, lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, &
-         m, kernel, iprint, std_map)       
+         m, kernel, iprint, std_map, color, degree)       
     
     print*,
     print*, "_____ Write output file _____"

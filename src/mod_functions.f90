@@ -172,7 +172,7 @@ contains
 
   
   subroutine init_spectrum(n_mbb, params, dim_v, line, NHI, wavelength, sig_fact_init, sig_init, beta_init, &
-       Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, iprint)
+       Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree)
     !! Initialization of the mean sprectrum with N Gaussian
     implicit none
     
@@ -184,6 +184,7 @@ contains
 
     real(xp), intent(in), dimension(dim_v) :: line !! spectrum
     real(xp), intent(in), dimension(dim_v)  :: wavelength  !! wavelength Planck + IRAS
+    real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in), dimension(n_mbb) :: NHI !! spectrum
     real(xp), intent(in) :: sig_fact_init !! times max siglitude of additional Gaussian
 
@@ -199,6 +200,7 @@ contains
     real(xp), intent(in) :: ub_Td !! upper bound Td
 
     real(xp), intent(in) :: l0 !! reference wavelength
+    integer, intent(in) :: degree
 
     real(xp), intent(inout), dimension(3*n_mbb)  :: params !! params to optimize
 
@@ -219,7 +221,8 @@ contains
     end do
 
     call init_bounds(line, n_mbb, dim_v, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)   
-    call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, iprint)
+    call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, &
+         iprint, color, degree)
 
     do p=1, 3*n_mbb
        params(p) = x(p)
@@ -265,12 +268,13 @@ contains
 
 
   subroutine upgrade(cube, params, NHI, wavelength, power, n_mbb, dim_v, lb_sig, ub_sig, lb_beta, ub_beta, &
-       lb_Td, ub_Td, l0, maxiter, m, iprint)
+       lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree)
     !! Upgrade parameters (spectra to spectra) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
 
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube
     real(xp), intent(in), dimension(dim_v)  :: wavelength  !! wavelength Planck + IRAS
+    real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in), dimension(n_mbb) :: NHI !! spectrum
 
     real(xp), intent(in) :: lb_sig !! lower bound sigma
@@ -287,6 +291,7 @@ contains
     integer, intent(in) :: iprint !! print option
 
     real(xp), intent(in) :: l0 !! reference wavelength
+    integer, intent(in):: degree
 
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! cube parameters to update
 
@@ -305,7 +310,8 @@ contains
           x = params(:,i,j)
           
           call init_bounds(line, n_mbb, dim_v, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)
-          call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, iprint)
+          call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, &
+               iprint, color, degree)
           
           params(:,i,j) = x
           
@@ -316,10 +322,10 @@ contains
   end subroutine upgrade
 
 
-  subroutine update(cube, cube_HI, wavelength, color, params, b_params, c_params, d_params, stefan_params, n_mbb, &
-       dim_v, dim_y, dim_x, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
+  subroutine update(cube, cube_HI, wavelength, params, b_params, c_params, d_params, stefan_params, &
+       n_mbb, dim_v, dim_y, dim_x, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
        lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, &
-       iprint, std_map)
+       iprint, std_map, color, degree)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
@@ -354,6 +360,7 @@ contains
     real(xp), intent(in) :: ub_Td !! upper bound Td
 
     real(xp), intent(in) :: l0 !! reference wavelength
+    integer, intent(in) :: degree
 
     real(xp), intent(inout), dimension(:), allocatable :: b_params !! unknown average Tdma
     real(xp), intent(inout), dimension(:), allocatable :: c_params !! unknown average Tdma
@@ -408,7 +415,7 @@ contains
 
     call minimize(n_beta, m, beta, lb, ub, cube, cube_HI, n_mbb, dim_v, dim_y, dim_x, lambda_sig, &
          lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, l0, &
-         maxiter, kernel, iprint, std_map, wavelength, color)
+         maxiter, kernel, iprint, std_map, wavelength, color, degree)
 
     !Unravel data
     call unravel_3D(beta, params, 3*n_mbb, dim_y, dim_x)

@@ -13,7 +13,7 @@ module mod_minimize
   
 contains
 
-  subroutine minimize_spec(n, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, iprint)
+  subroutine minimize_spec(n, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, iprint, color, degree)
     !! Minimize algorithn for a specturm
     implicit none      
 
@@ -26,9 +26,11 @@ contains
     real(xp), intent(in), dimension(:), allocatable :: lb, ub
     real(xp), intent(in), dimension(dim_v) :: line
     real(xp), intent(in), dimension(dim_v) :: wavelength
+    real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in), dimension(n_mbb) :: NHI
 
     real(xp), intent(in) :: l0
+    integer, intent(in):: degree
 
     real(xp), intent(in), dimension(:), allocatable :: x
     
@@ -67,9 +69,9 @@ contains
 
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
-          call myresidual(x, line, residual, n_mbb, dim_v, NHI, l0, wavelength)
+          call myresidual(x, line, residual, n_mbb, dim_v, NHI, l0, wavelength, color, degree)
           f = myfunc_spec(residual)          
-          call mygrad_spec(n_mbb, g, residual, x, dim_v, NHI, l0, wavelength)
+          call mygrad_spec(n_mbb, g, residual, x, dim_v, NHI, l0, wavelength, color, degree)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations
@@ -93,7 +95,7 @@ contains
   ! Minimize algorithn for a cube with regularization
   subroutine minimize(n, m, x, lb, ub, cube, cube_HI, n_mbb, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
        lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, l0, maxiter, kernel, iprint, std_map, wavelength, &
-       color)
+       color, degree)
     implicit none      
 
     integer, intent(in) :: n
@@ -113,6 +115,7 @@ contains
     real(xp), intent(in), dimension(:), allocatable :: wavelength
     real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in) :: l0
+    integer, intent(in):: degree
 
     real(xp), intent(in), dimension(:), allocatable :: x
     
@@ -150,7 +153,7 @@ contains
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
           call f_g_cube_fast(f, g, cube, cube_HI, x, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_amp, lambda_mu, lambda_sig, &
-               lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, std_map, l0, wavelength, color)
+               lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, std_map, l0, wavelength, color, degree)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations

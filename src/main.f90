@@ -44,6 +44,7 @@ program ROHSA
   real(xp) :: ub_Td         !! upper bound
 
   real(xp) :: l0 !! reference wavelength
+  integer :: degree
 
   character(len=512) :: filename_parameters !! name of the parameters file (default parameters.txt)
   character(len=512) :: filename            !! name of the data file
@@ -109,7 +110,7 @@ program ROHSA
   call read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, fileout, &
        timeout, filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
        lambda_var_Td, lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, &
-       lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid)
+       lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree)
 
   !Call header
   call header()  
@@ -138,10 +139,10 @@ program ROHSA
   end if
 
   !Call ROHSA subroutine
-  call main_rohsa(data, wavelength, std_cube, NHI, color, fileout, timeout, n_mbb, lambda_sig, lambda_beta, lambda_Td, &
+  call main_rohsa(data, wavelength, std_cube, NHI, fileout, timeout, n_mbb, lambda_sig, lambda_beta, lambda_Td, &
        lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, &
        lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, &
-       iprint_init, save_grid)  
+       iprint_init, save_grid, color, degree)  
 
   call ender()
 

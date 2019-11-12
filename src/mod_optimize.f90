@@ -4,6 +4,7 @@ module mod_optimize
   use mod_constants
   use mod_array
   use mod_model
+  use mod_color
 
   implicit none
   
@@ -14,7 +15,7 @@ module mod_optimize
 contains
   
   ! Compute the residual between model and data
-  subroutine myresidual(params, line, residual, n_mbb, dim_v, NHI, l0, wavelength)
+  subroutine myresidual(params, line, residual, n_mbb, dim_v, NHI, l0, wavelength, color, degree)
     implicit none
 
     integer, intent(in) :: dim_v, n_mbb
@@ -23,6 +24,8 @@ contains
     real(xp), intent(in), dimension(n_mbb) :: NHI
     real(xp), intent(in) :: l0
     real(xp), intent(in), dimension(3*n_mbb) :: params
+    real(xp), intent(in), dimension(:,:) :: color
+    integer, intent(in) :: degree
     real(xp), intent(inout), dimension(:), allocatable :: residual
 
     integer :: i, k
@@ -34,6 +37,8 @@ contains
 
     do i=1, n_mbb
        do k=1, dim_v
+          ! g = poly_color(color(k,:), params(2+(3*(i-1))), params(3+(3*(i-1))), degree) * &
+          !      mbb_l(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i))
           g = mbb_l(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i))
           model(k) = model(k) + g
        enddo
@@ -57,15 +62,17 @@ contains
 
   
   ! Griadient of the objective function to minimize for a spectrum
-  subroutine mygrad_spec(n_mbb, gradient, residual, params, dim_v, NHI, l0, wavelength)
+  subroutine mygrad_spec(n_mbb, gradient, residual, params, dim_v, NHI, l0, wavelength, color, degree)
     implicit none
 
     integer, intent(in) :: n_mbb, dim_v
     real(xp), intent(in), dimension(3*n_mbb) :: params
     real(xp), intent(in), dimension(:), allocatable :: residual
     real(xp), intent(in), dimension(dim_v) :: wavelength
+    real(xp), intent(in), dimension(:,:) :: color
     real(xp), intent(in), dimension(n_mbb) :: NHI
     real(xp), intent(in) :: l0
+    integer, intent(in) :: degree
     real(xp), intent(inout), dimension(3*n_mbb) :: gradient
 
     integer :: i, k
@@ -110,7 +117,7 @@ contains
   
   ! Compute the objective function for a cube and the gradient of the obkective function
   subroutine f_g_cube_fast(f, g, cube, cube_HI, beta, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_sig, lambda_beta, &
-       lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, std_map, l0, wavelength, color)
+       lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, std_map, l0, wavelength, color, degree)
     implicit none
 
     integer, intent(in) :: n_mbb
@@ -126,6 +133,7 @@ contains
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
     real(xp), intent(in), dimension(:,:), allocatable :: std_map
     real(xp), intent(in) :: l0
+    integer, intent(in) :: degree
 
     real(xp), intent(inout) :: f
     real(xp), intent(inout), dimension(:), allocatable :: g
@@ -188,7 +196,7 @@ contains
        do i=1, dim_y
           allocate(residual_1D(dim_v))
           residual_1D = 0._xp
-          call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_mbb, dim_v, cube_HI(:,i,j), l0, wavelength)
+          call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_mbb, dim_v, cube_HI(:,i,j), l0, wavelength, color, degree)
           residual(:,i,j) = residual_1D
           if (std_map(i,j) > 0._xp) then
              f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2._xp)
