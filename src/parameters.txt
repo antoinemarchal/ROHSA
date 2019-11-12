@@ -34,7 +34,7 @@
    ,l0 = 0.03498162d0                          !! reference wavelength in cm
 
    ,maxiter_init = 15000    		       !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
-   ,maxiter = 4000            		       !! max iteration for L-BFGS-B alogorithm
+   ,maxiter = 20            		       !! max iteration for L-BFGS-B alogorithm
    ,m = 10                  		       !! number of corrections used in the limited memory matrix by LBFGS-B
    ,noise = .true.         		       !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
    ,lstd = 0                		       !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)

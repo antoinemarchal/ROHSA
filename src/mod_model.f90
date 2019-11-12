@@ -9,7 +9,8 @@ module mod_model
   
   private
 
-  public :: gaussian, mbb_l, planck_l, lumi_cst, d_lumi_cst_dsig, d_lumi_cst_dbeta, d_lumi_cst_dTd
+  public :: gaussian, mbb_l, d_mbb_l_dsig, d_mbb_l_db, d_mbb_l_dT, planck_l, lumi_cst, d_lumi_cst_dsig, &
+       d_lumi_cst_dbeta, d_lumi_cst_dTd
   
 contains
   
@@ -37,6 +38,48 @@ contains
 
     mbb_l = sig * (x0/x)**beta * NHI * planck_l(x,Td)
   end function mbb_l
+
+
+  pure function d_mbb_l_dsig(x, beta, Td, x0, NHI)
+    !! Modified black body function derivative sigma
+    implicit none
+    
+    real(xp), intent(in) :: x
+    real(xp), intent(in) :: beta, Td
+    real(xp), intent(in) :: x0
+    real(xp), intent(in) :: NHI
+    real(xp) :: d_mbb_l_dsig
+
+    d_mbb_l_dsig = (x0/x)**beta * NHI * planck_l(x,Td)
+  end function d_mbb_l_dsig
+
+
+  pure function d_mbb_l_db(x, sig, beta, Td, x0, NHI)
+    !! Modified black body function derivative beta
+    implicit none
+    
+    real(xp), intent(in) :: x
+    real(xp), intent(in) :: sig, beta, Td
+    real(xp), intent(in) :: x0
+    real(xp), intent(in) :: NHI
+    real(xp) :: d_mbb_l_db
+
+    d_mbb_l_db = sig * (x0/x)**beta * NHI * planck_l(x,Td)
+  end function d_mbb_l_db
+
+
+  pure function d_mbb_l_dT(x, sig, beta, Td, x0, NHI)
+    !! Modified black body function derivative sigma
+    implicit none
+    
+    real(xp), intent(in) :: x
+    real(xp), intent(in) :: sig, beta, Td
+    real(xp), intent(in) :: x0
+    real(xp), intent(in) :: NHI
+    real(xp) :: d_mbb_l_dT
+
+    d_mbb_l_dT = sig * (x0/x)**beta * NHI * planck_l(x,Td)
+  end function d_mbb_l_dT
 
 
   pure function planck_l(l, T)
