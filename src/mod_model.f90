@@ -133,6 +133,7 @@ contains
          + (poly_color(color, beta, Td, degree) * d_mbb_l_dT(x, sig, beta, Td, x0, NHI))
   end function d_mbbcc_l_dT
 
+
   pure function planck_l(l, T)
     !! Modified black body function
     implicit none

@@ -90,22 +90,21 @@ contains
        do k=1, dim_v          
           dF_over_dB(1+(3*(i-1)),k) = dF_over_dB(1+(3*(i-1)),k) + ( &
                d_mbb_l_dsig(wavelength(k), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i)) &               
-               ! (l0/wavelength(k))**params(2+(3*(i-1))) * NHI(i) * planck_l(wavelength(k),params(3+(3*(i-1)))) &
+               ! d_mbbcc_l_dsig(wavelength(k), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i), color(k,:), degree) &               
                )
 
           dF_over_dB(2+(3*(i-1)),k) = dF_over_dB(2+(3*(i-1)),k) + ( &
                d_mbb_l_db(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), &
                l0, NHI(i)) &               
-               ! params(1+(3*(i-1))) * log(l0/wavelength(k)) * (l0/wavelength(k))**params(2+(3*(i-1))) * NHI(i) * &
-               ! planck_l(wavelength(k),params(3+(3*(i-1)))) &
+               ! d_mbbcc_l_db(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), &
+               ! l0, NHI(i), color(k,:), degree) &               
                )
           
           dF_over_dB(3+(3*(i-1)),k) = dF_over_dB(3+(3*(i-1)),k) + ( &
                d_mbb_l_dT(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), &
                l0, NHI(i)) &                              
-               ! params(1+(3*(i-1))) * (l0/wavelength(k))**params(2+(3*(i-1))) * NHI(i) * &
-               ! (h*c/wavelength(k)/kb) * exp(h*c/wavelength(k)/kb/(params(3+(3*(i-1))))) * &
-               ! 1._xp / (params(3+(3*(i-1)))**2._xp * (exp(h*c/wavelength(k)/kb/(params(3+(3*(i-1))))) - 1._xp)**2._xp) &
+               ! d_mbbcc_l_dT(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), &
+               ! l0, NHI(i), color(k,:), degree) &                              
                )
        enddo
     enddo
@@ -253,13 +252,18 @@ contains
              do k=1, dim_v                          
                 if (std_map(j,l) > 0._xp) then
                    deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + ( &
-                        d_mbb_l_dsig(wavelength(k), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), l0, cube_HI(i,j,l)) &
+                        d_mbb_l_dsig(wavelength(k), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), l0, &
+                        cube_HI(i,j,l)) &
+                        ! d_mbbcc_l_dsig(wavelength(k), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), l0, &
+                        ! cube_HI(i,j,l), color(k,:), degree) &
                         * (residual(k,j,l)/std_map(j,l)**2._xp) &
                         )
 
                    deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + ( &
                         d_mbb_l_db(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
                         l0, cube_HI(i,j,l)) &
+                        ! d_mbbcc_l_db(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
+                        ! l0, cube_HI(i,j,l), color(k,:), degree) &
 
                         * (residual(k,j,l)/std_map(j,l)**2._xp) &
                         )
@@ -267,6 +271,8 @@ contains
                    deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + ( &
                         d_mbb_l_dT(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
                         l0, cube_HI(i,j,l)) &
+                        ! d_mbbcc_l_dT(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
+                        ! l0, cube_HI(i,j,l), color(k,:), degree) &
 
                         * (residual(k,j,l)/std_map(j,l)**2._xp) &
                         )
