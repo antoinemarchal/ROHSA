@@ -254,7 +254,7 @@ contains
           ! print*, "b = ", b_params
           ! print*, "stefan = ", stefan_params
           ! print*,
-          call update(cube_mean, cube_HI_mean, wavelength, fit_params, b_params, c_params, d_params, stefan_params, &
+          call update(cube_mean, cube_HI_mean, wavelength, color, fit_params, b_params, c_params, d_params, stefan_params, &
                n_mbb, dim_cube(1), power, power, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
                lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, &
                iprint, std_map)
@@ -308,7 +308,7 @@ contains
        call set_stdmap(std_map, data, lstd, ustd)
     end if
     
-    call update(data, data_HI, wavelength, grid_params, b_params, c_params, d_params, stefan_params, n_mbb, &
+    call update(data, data_HI, wavelength, color, grid_params, b_params, c_params, d_params, stefan_params, n_mbb, &
          dim_data(1), dim_data(2), dim_data(3), lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, &
          lambda_var_beta, lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, &
          m, kernel, iprint, std_map)       

@@ -316,7 +316,7 @@ contains
   end subroutine upgrade
 
 
-  subroutine update(cube, cube_HI, wavelength, params, b_params, c_params, d_params, stefan_params, n_mbb, &
+  subroutine update(cube, cube_HI, wavelength, color, params, b_params, c_params, d_params, stefan_params, n_mbb, &
        dim_v, dim_y, dim_x, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
        lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, &
        iprint, std_map)
@@ -326,6 +326,7 @@ contains
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube 
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube_HI !! cube HI
     real(xp), intent(in), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
+    real(xp), intent(in), dimension(:,:), allocatable   :: color       !! polynomial coefficient for color correction
     real(xp), intent(in), dimension(:,:), allocatable :: std_map !! Standard deviation map 
     real(xp), intent(in), dimension(:,:), allocatable :: kernel !! convolution kernel
     integer, intent(in) :: dim_v !! dimension along v axis
@@ -405,8 +406,9 @@ contains
        beta(n_cube+(3*n_mbb)+i) = d_params(i)
     end do
 
-    call minimize(n_beta, m, beta, lb, ub, cube, cube_HI, n_mbb, dim_v, dim_y, dim_x, lambda_sig, lambda_beta, lambda_Td, &
-         lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, l0, maxiter, kernel, iprint, std_map, wavelength)
+    call minimize(n_beta, m, beta, lb, ub, cube, cube_HI, n_mbb, dim_v, dim_y, dim_x, lambda_sig, &
+         lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, l0, &
+         maxiter, kernel, iprint, std_map, wavelength, color)
 
     !Unravel data
     call unravel_3D(beta, params, 3*n_mbb, dim_y, dim_x)

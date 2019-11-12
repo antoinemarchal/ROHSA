@@ -110,7 +110,7 @@ contains
   
   ! Compute the objective function for a cube and the gradient of the obkective function
   subroutine f_g_cube_fast(f, g, cube, cube_HI, beta, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_sig, lambda_beta, &
-       lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, std_map, l0, wavelength)
+       lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, std_map, l0, wavelength, color)
     implicit none
 
     integer, intent(in) :: n_mbb
@@ -122,6 +122,7 @@ contains
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube_HI
     real(xp), intent(in), dimension(:), allocatable :: wavelength
+    real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
     real(xp), intent(in), dimension(:,:), allocatable :: std_map
     real(xp), intent(in) :: l0
