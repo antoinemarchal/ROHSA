@@ -96,7 +96,7 @@ contains
     real(xp), intent(in), dimension(:) :: color
     integer, intent(in) :: degree
 
-    d_mbbcc_l_dsig = poly_color(color, beta, Td, degree) * d_mbb_l_dsig(x, beta, Td, x0, NHI)
+    d_mbbcc_l_dsig = d_mbb_l_dsig(x, beta, Td, x0, NHI) / poly_color(color, beta, Td, degree)
   end function d_mbbcc_l_dsig
 
 
@@ -112,8 +112,9 @@ contains
     real(xp), intent(in), dimension(:) :: color
     integer, intent(in) :: degree
 
-    d_mbbcc_l_db = (d_poly_color_dx(color, beta, Td, degree) * mbb_l(x, sig, beta, Td, x0, NHI)) &
-         + (poly_color(color, beta, Td, degree) * d_mbb_l_db(x, sig, beta, Td, x0, NHI))
+    d_mbbcc_l_db = (d_mbb_l_db(x, sig, beta, Td, x0, NHI) / poly_color(color, beta, Td, degree)) &
+         - (mbb_l(x, sig, beta, Td, x0, NHI) * d_poly_color_dx(color, beta, Td, degree)) & 
+         / poly_color(color, beta, Td, degree)**2._xp
   end function d_mbbcc_l_db
 
 
@@ -129,8 +130,9 @@ contains
     real(xp), intent(in), dimension(:) :: color
     integer, intent(in) :: degree
 
-    d_mbbcc_l_dT = (d_poly_color_dy(color, beta, Td, degree) * mbb_l(x, sig, beta, Td, x0, NHI)) &
-         + (poly_color(color, beta, Td, degree) * d_mbb_l_dT(x, sig, beta, Td, x0, NHI))
+    d_mbbcc_l_dT = (d_mbb_l_dT(x, sig, beta, Td, x0, NHI) / poly_color(color, beta, Td, degree)) &
+         - (mbb_l(x, sig, beta, Td, x0, NHI) * d_poly_color_dy(color, beta, Td, degree)) & 
+         / poly_color(color, beta, Td, degree)**2._xp
   end function d_mbbcc_l_dT
 
 
