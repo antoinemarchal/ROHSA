@@ -85,7 +85,7 @@ contains
 
 
   function d_mbbcc_l_dsig(x, beta, Td, x0, NHI, color, degree)
-    !! Modified black body function derivative sigma
+    !! Modified black body function derivative sigam with colour correction
     implicit none
     
     real(xp), intent(in) :: x
@@ -101,7 +101,7 @@ contains
 
 
   function d_mbbcc_l_db(x, sig, beta, Td, x0, NHI, color, degree)
-    !! Modified black body function derivative sigma
+    !! Modified black body function derivative beta with colour correction
     implicit none
     
     real(xp), intent(in) :: x
@@ -119,7 +119,7 @@ contains
 
 
   function d_mbbcc_l_dT(x, sig, beta, Td, x0, NHI, color, degree)
-    !! Modified black body function derivative sigma
+    !! Modified black body function derivative temperature with colour correction
     implicit none
     
     real(xp), intent(in) :: x
