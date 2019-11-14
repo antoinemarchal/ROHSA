@@ -191,9 +191,9 @@ contains
     end do
 
     ! print*, b_params
-    ! print*, stefan_params
     ! print*, c_params
     ! print*, d_params
+    ! print*, stefan_params
 
     ! Compute the objective function and the gradient
     do j=1, dim_x
