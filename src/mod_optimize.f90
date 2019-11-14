@@ -63,7 +63,7 @@ contains
 
   
   ! Griadient of the objective function to minimize for a spectrum
-  subroutine mygrad_spec(n_mbb, gradient, residual, params, dim_v, NHI, l0, wavelength, color, degree)
+  subroutine mygrad_spec(n_mbb, gradient, residual, params, dim_v, NHI, l0, wavelength, color, degree, std)
     implicit none
 
     integer, intent(in) :: n_mbb, dim_v
@@ -75,6 +75,7 @@ contains
     real(xp), intent(in) :: l0
     integer, intent(in) :: degree
     real(xp), intent(inout), dimension(3*n_mbb) :: gradient
+    real(xp), intent(in), dimension(:) :: std
 
     integer :: i, k
     real(xp) :: g
@@ -112,7 +113,7 @@ contains
     
     do i=1, dim_v
        do k=1, 3*n_mbb
-          gradient(k) = gradient(k) + dF_over_dB(k,i) * residual(i)
+          gradient(k) = gradient(k) + dF_over_dB(k,i) * residual(i)/std(i)
        end do
     end do
 
@@ -235,18 +236,24 @@ contains
              f = f + (0.5_xp * lambda_beta * conv_beta(j,l)**2._xp)
              f = f + (0.5_xp * lambda_Td * conv_Td(j,l)**2._xp) 
 
+             
              f = f + (0.5_xp * lambda_var_sig * (image_sig(j,l) - b_params(i))**2._xp)
              f = f + (0.5_xp * lambda_var_beta * (image_beta(j,l) - c_params(i))**2._xp)
              f = f + (0.5_xp * lambda_var_Td * (image_Td(j,l) - d_params(i))**2._xp)
-                          
-             f = f + (0.5_xp * lambda_stefan * &
-                  (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i))**2._xp)
+
+             if (lambda_stefan .ne. 0._xp) then                          
+                f = f + (0.5_xp * lambda_stefan * &
+                     (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i))**2._xp)
+             end if
              
              g(n_cube+(0*n_mbb)+i) = g(n_cube+(0*n_mbb)+i) - (lambda_var_sig * (image_sig(j,l) - b_params(i)))                     
-             g(n_cube+(1*n_mbb)+i) = g(n_cube+(1*n_mbb)+i) - lambda_stefan * ( &
-                   lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i))
              g(n_cube+(2*n_mbb)+i) = g(n_cube+(2*n_mbb)+i) - (lambda_var_beta * (image_beta(j,l) - c_params(i)))                     
              g(n_cube+(3*n_mbb)+i) = g(n_cube+(3*n_mbb)+i) - (lambda_var_Td * (image_Td(j,l) - d_params(i)))                     
+
+             if (lambda_stefan .ne. 0._xp) then
+                g(n_cube+(1*n_mbb)+i) = g(n_cube+(1*n_mbb)+i) - lambda_stefan * ( &
+                     lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i))
+             end if
              
              !
              do k=1, dim_v                          
@@ -255,7 +262,8 @@ contains
                      ! cube_HI(i,j,l)) &
                      d_mbbcc_l_dsig(wavelength(k), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), l0, &
                      cube_HI(i,j,l), color(k,:), degree) &
-                     * residual(k,j,l) &
+
+                     * residual(k,j,l) / std_cube(k,j,l) &
                      )
                 
                 deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + ( &
@@ -264,7 +272,7 @@ contains
                      d_mbbcc_l_db(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
                      l0, cube_HI(i,j,l), color(k,:), degree) &
                      
-                     * residual(k,j,l) &
+                     * residual(k,j,l) / std_cube(k,j,l) &
                      )
                 
                 deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + ( &
@@ -273,7 +281,7 @@ contains
                      d_mbbcc_l_dT(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
                      l0, cube_HI(i,j,l), color(k,:), degree) &
                      
-                     * residual(k,j,l) &
+                     * residual(k,j,l) / std_cube(k,j,l)&
                      )
              end do
 
@@ -286,19 +294,21 @@ contains
              deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (lambda_var_beta * (image_beta(j,l) - c_params(i)))
              deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (lambda_var_Td * (image_Td(j,l) - d_params(i)))
 
-             deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + lambda_stefan * ( &
-                  d_lumi_cst_dsig(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) * &
-                  (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i)) &
-                  )
-
-             deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + lambda_stefan * ( &
-                  d_lumi_cst_dbeta(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) * &
-                  (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i)) &
-                  )
-             deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + lambda_stefan * ( &
-                  d_lumi_cst_dTd(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) * &
-                  (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i)) &
-                  )
+             if (lambda_stefan .ne. 0._xp) then
+                deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + lambda_stefan * ( &
+                     d_lumi_cst_dsig(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) * &
+                     (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i)) &
+                     )
+                
+                deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + lambda_stefan * ( &
+                     d_lumi_cst_dbeta(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) * &
+                     (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i)) &
+                     )
+                deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + lambda_stefan * ( &
+                     d_lumi_cst_dTd(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) * &
+                     (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i)) &
+                     )
+             end if
              
           end do
           !

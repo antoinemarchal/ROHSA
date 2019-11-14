@@ -14,10 +14,10 @@
    ,lambda_sig = 1.d0	                       !! lambda for siglitude parameter
    ,lambda_beta = 1.d0	                       !! lamnda for mean position parameter
    ,lambda_Td = 1.d0                           !! lambda for dispersion parameter absorption
-   ,lambda_var_sig = 100.d0                      !! lambda for dispersion siglitude parameter
-   ,lambda_var_beta = 100.d0  		       !! lambda for dispersion mean position parameter   
-   ,lambda_var_Td = 100.d0  		       !! lambda for dispersion mean position parameter   
-   ,lambda_stefan = 1.d0    		       !! lambda for dispersion variance parameter
+   ,lambda_var_sig = 0.d0                      !! lambda for dispersion siglitude parameter
+   ,lambda_var_beta = 0.d0  		       !! lambda for dispersion mean position parameter   
+   ,lambda_var_Td = 0.d0  		       !! lambda for dispersion mean position parameter   
+   ,lambda_stefan = 0.d0    		       !! lambda for dispersion variance parameter
 
    ,sig_fact_init = 0.66d0 		       !! times max siglitude of additional Gaussian
 
@@ -26,7 +26,7 @@
    ,Td_init = 17.d0         		       !! dispersion of additional Gaussian
 
    ,lb_sig = 1.d-10         		       !! upper bound Td
-   ,ub_sig = 100.d0         		       !! upper bound Td
+   ,ub_sig = 1000.d0         		       !! upper bound Td
    ,lb_beta = 1.d0         		       !! upper bound Td
    ,ub_beta = 2.5d0         		       !! upper bound Td
    ,lb_Td = 8.2d0         		       !! upper bound Td
@@ -40,8 +40,8 @@
    ,noise = .true.         		       !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
    ,lstd = 0                		       !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
    ,ustd = 0               		       !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
-   ,iprint = 1              		       !! print option 
-   ,iprint_init = 1        		       !! print option init
-   ,save_grid = .false.     		       !! if true --> save fitted parameters at each iteration of the multiresolution process
+   ,iprint = -1              		       !! print option 
+   ,iprint_init = -1        		       !! print option init
+   ,save_grid = .true.     		       !! if true --> save fitted parameters at each iteration of the multiresolution process
    /
 

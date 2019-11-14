@@ -73,7 +73,7 @@ contains
           !     Compute function f and gradient g for the sample problem.
           call myresidual(x, line, residual, n_mbb, dim_v, NHI, l0, wavelength, color, degree, std)
           f = myfunc_spec(residual)          
-          call mygrad_spec(n_mbb, g, residual, x, dim_v, NHI, l0, wavelength, color, degree)
+          call mygrad_spec(n_mbb, g, residual, x, dim_v, NHI, l0, wavelength, color, degree, std)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations
