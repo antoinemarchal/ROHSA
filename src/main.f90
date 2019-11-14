@@ -60,7 +60,7 @@ program ROHSA
   real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
   real(xp), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
   real(xp), dimension(:,:), allocatable   :: color       !! polynomial coefficient for color correction
-  real(xp), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
+  real(xp), dimension(:,:,:), allocatable :: std_cube  !! standard deviation cube
   real(xp), dimension(:,:,:), allocatable :: NHI         !! initial fits data NHI
 
   integer, dimension(3) :: dim_data !! number of frequencies
@@ -122,12 +122,11 @@ program ROHSA
   call read_array(filename_wavelength, wavelength)
   call read_map(filename_color, color)
 
-  if (noise .eqv. .true.) then
-     if (filename_noise == " ") then
-        print*, "--> noise = .true. (no input rms map)"
-     end if
-     call read_map(filename_noise, std_cube)
+  if (noise .eqv. .false.) then
+     print*, "no .false. option for rohsa-mbb, please provide a rms cube."
+     stop
   end if
+  call read_cube(filename_noise, std_cube)
 
   call read_cube(filename_NHI, NHI)
 

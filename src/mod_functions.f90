@@ -172,7 +172,7 @@ contains
 
   
   subroutine init_spectrum(n_mbb, params, dim_v, line, NHI, wavelength, sig_fact_init, sig_init, beta_init, &
-       Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree)
+       Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree, std)
     !! Initialization of the mean sprectrum with N Gaussian
     implicit none
     
@@ -186,6 +186,7 @@ contains
     real(xp), intent(in), dimension(dim_v)  :: wavelength  !! wavelength Planck + IRAS
     real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in), dimension(n_mbb) :: NHI !! spectrum
+    real(xp), intent(in), dimension(:) :: std
     real(xp), intent(in) :: sig_fact_init !! times max siglitude of additional Gaussian
 
     real(xp), intent(in) :: sig_init !! dispersion of additional Gaussian
@@ -222,7 +223,7 @@ contains
 
     call init_bounds(line, n_mbb, dim_v, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)   
     call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, &
-         iprint, color, degree)
+         iprint, color, degree, std)
 
     do p=1, 3*n_mbb
        params(p) = x(p)
@@ -268,7 +269,7 @@ contains
 
 
   subroutine upgrade(cube, params, NHI, wavelength, power, n_mbb, dim_v, lb_sig, ub_sig, lb_beta, ub_beta, &
-       lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree)
+       lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree, std_cube)
     !! Upgrade parameters (spectra to spectra) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
 
@@ -276,6 +277,7 @@ contains
     real(xp), intent(in), dimension(dim_v)  :: wavelength  !! wavelength Planck + IRAS
     real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in), dimension(n_mbb) :: NHI !! spectrum
+    real(xp), intent(in), dimension(:,:,:), allocatable :: std_cube !! standard deviation cube
 
     real(xp), intent(in) :: lb_sig !! lower bound sigma
     real(xp), intent(in) :: ub_sig !! upper bound sigma
@@ -299,6 +301,7 @@ contains
     real(xp), dimension(:), allocatable :: line
     real(xp), dimension(:), allocatable :: x
     real(xp), dimension(:), allocatable :: lb, ub
+    real(xp), dimension(:), allocatable :: std
 
     do i=1, power
        do j=1, power
@@ -308,10 +311,11 @@ contains
 
           line = cube(:,i,j)
           x = params(:,i,j)
+          std = std_cube(:,i,j)
           
           call init_bounds(line, n_mbb, dim_v, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)
           call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, &
-               iprint, color, degree)
+               iprint, color, degree, std)
           
           params(:,i,j) = x
           
@@ -325,15 +329,15 @@ contains
   subroutine update(cube, cube_HI, wavelength, params, b_params, c_params, d_params, stefan_params, &
        n_mbb, dim_v, dim_y, dim_x, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
        lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, &
-       iprint, std_map, color, degree)
+       iprint, std_cube, color, degree)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
-    real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube 
-    real(xp), intent(in), dimension(:,:,:), allocatable :: cube_HI !! cube HI
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube        !! cube 
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube_HI     !! cube HI
     real(xp), intent(in), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
     real(xp), intent(in), dimension(:,:), allocatable   :: color       !! polynomial coefficient for color correction
-    real(xp), intent(in), dimension(:,:), allocatable :: std_map !! Standard deviation map 
+    real(xp), intent(in), dimension(:,:,:), allocatable :: std_cube    !! Standard deviation cube
     real(xp), intent(in), dimension(:,:), allocatable :: kernel !! convolution kernel
     integer, intent(in) :: dim_v !! dimension along v axis
     integer, intent(in) :: dim_y !! dimension along spatial axis y 
@@ -415,7 +419,7 @@ contains
 
     call minimize(n_beta, m, beta, lb, ub, cube, cube_HI, n_mbb, dim_v, dim_y, dim_x, lambda_sig, &
          lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, l0, &
-         maxiter, kernel, iprint, std_map, wavelength, color, degree)
+         maxiter, kernel, iprint, std_cube, wavelength, color, degree)
 
     !Unravel data
     call unravel_3D(beta, params, 3*n_mbb, dim_y, dim_x)

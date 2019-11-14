@@ -67,11 +67,11 @@ contains
     integer :: n            !! loop index
     integer :: power        !! loop index
 
-    real(xp), intent(in), dimension(:,:,:), allocatable :: data        !! initial fits data
-    real(xp), intent(in), dimension(:,:,:), allocatable :: data_HI     !! initial fits data data_HI
-    real(xp), intent(in), dimension(:,:), allocatable   :: color       !! polynomial coefficient for color correction
-    real(xp), intent(in), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
-    real(xp), intent(in), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data          !! initial fits data
+    real(xp), intent(in), dimension(:,:,:), allocatable :: data_HI       !! initial fits data data_HI
+    real(xp), intent(in), dimension(:,:), allocatable   :: color         !! polynomial coefficient for color correction
+    real(xp), intent(in), dimension(:), allocatable     :: wavelength    !! wavelength Planck + IRAS
+    real(xp), intent(in), dimension(:,:,:), allocatable :: std_cube      !! standard deviation cube
 
     real(xp), dimension(:,:,:), allocatable :: cube            !! reshape data with nside --> cube
     real(xp), dimension(:,:,:), allocatable :: cube_HI         !! reshape data with nside --> cube
@@ -79,11 +79,11 @@ contains
     real(xp), dimension(:,:,:), allocatable :: cube_HI_mean    !! mean cube over spatial axis
     real(xp), dimension(:,:,:), allocatable :: fit_params      !! parameters to optimize with cube mean at each iteration
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
-    real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
-    real(xp), dimension(:), allocatable :: b_params            !! unknow average Tdm
-    real(xp), dimension(:), allocatable :: c_params            !! unknow average Tdma
-    real(xp), dimension(:), allocatable :: d_params            !! unknow average Tdma
-    real(xp), dimension(:), allocatable :: stefan_params            !! unknow average Tdma
+    real(xp), dimension(:,:,:), allocatable :: std_cube_mean   !! standard deviation cube
+    real(xp), dimension(:), allocatable :: b_params            !! unknow average sigma
+    real(xp), dimension(:), allocatable :: c_params            !! unknow average beta
+    real(xp), dimension(:), allocatable :: d_params            !! unknow average Td
+    real(xp), dimension(:), allocatable :: stefan_params       !! unknow average propto Luminosity
 
     integer, dimension(3) :: dim_data !! dimension of original data
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
@@ -208,9 +208,11 @@ contains
        
        allocate(cube_mean(dim_cube(1), power, power))
        allocate(cube_HI_mean(dim_cube_HI(1), power, power))
+       allocate(std_cube_mean(dim_cube(1),power, power))          
        
        call mean_array(power, cube, cube_mean)
        call mean_array(power, cube_HI, cube_HI_mean)
+       call mean_array(power, std_cube, std_cube_mean)           
        
        if (n == 0) then
           print*, "Init mean spectrum"        
@@ -223,7 +225,7 @@ contains
                    
           call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), cube_HI_mean(:,1,1), &
                wavelength, amp_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
-               l0, maxiter_init, m, iprint_init, color, degree)
+               l0, maxiter_init, m, iprint_init, color, degree, std_cube_mean(:,1,1))
 
           !Init b_params
           do i=1, n_mbb       
@@ -238,33 +240,22 @@ contains
        if (n == 0) then                
           print*,  "Update level", n
           call upgrade(cube_mean, fit_params, cube_HI_mean, wavelength, power, n_mbb, dim_cube(1), lb_sig, ub_sig, &
-               lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree)
+               lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree, std_cube_mean)
        end if
               
-       if (n > 0 .and. n < nside) then
-          allocate(std_map(power, power))
-          
-          if (noise .eqv. .true.) then
-             call mean_map(power, std_cube, std_map)           
-          else
-             call set_stdmap(std_map, cube_mean, lstd, ustd)
-          end if
-          
+       if (n > 0 .and. n < nside) then          
           ! Update parameters 
           print*,  "Update level", n, ">", power
-          ! print*, "b = ", b_params
-          ! print*, "stefan = ", stefan_params
-          ! print*,
           call update(cube_mean, cube_HI_mean, wavelength, fit_params, b_params, c_params, d_params, stefan_params, &
                n_mbb, dim_cube(1), power, power, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
                lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, &
-               iprint, std_map, color, degree)
+               iprint, std_cube_mean, color, degree)
           
-          deallocate(std_map)
        end if
        
        deallocate(cube_mean)
        deallocate(cube_HI_mean)
+       deallocate(std_cube_mean)
        
        ! Save grid in file
        if (save_grid .eqv. .true.) then
@@ -301,18 +292,11 @@ contains
     print*, "Start updating last level."
     print*,
     
-    allocate(std_map(dim_data(2), dim_data(3)))
-    
-    if (noise .eqv. .true.) then
-       std_map = std_cube
-    else   
-       call set_stdmap(std_map, data, lstd, ustd)
-    end if
-    
+        
     call update(data, data_HI, wavelength, grid_params, b_params, c_params, d_params, stefan_params, n_mbb, &
          dim_data(1), dim_data(2), dim_data(3), lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, &
          lambda_var_beta, lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, &
-         m, kernel, iprint, std_map, color, degree)       
+         m, kernel, iprint, std_cube, color, degree)       
     
     print*,
     print*, "_____ Write output file _____"

@@ -15,7 +15,7 @@ module mod_optimize
 contains
   
   ! Compute the residual between model and data
-  subroutine myresidual(params, line, residual, n_mbb, dim_v, NHI, l0, wavelength, color, degree)
+  subroutine myresidual(params, line, residual, n_mbb, dim_v, NHI, l0, wavelength, color, degree, std)
     implicit none
 
     integer, intent(in) :: dim_v, n_mbb
@@ -26,6 +26,7 @@ contains
     real(xp), intent(in), dimension(3*n_mbb) :: params
     real(xp), intent(in), dimension(:,:) :: color
     integer, intent(in) :: degree
+    real(xp), intent(in), dimension(:) :: std
     real(xp), intent(inout), dimension(:), allocatable :: residual
 
     integer :: i, k
@@ -44,7 +45,7 @@ contains
        enddo
     enddo
 
-    residual = model - line
+    residual = (model - line)/std
   end subroutine myresidual
 
 
@@ -121,7 +122,7 @@ contains
   
   ! Compute the objective function for a cube and the gradient of the obkective function
   subroutine f_g_cube_fast(f, g, cube, cube_HI, beta, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_sig, lambda_beta, &
-       lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, std_map, l0, wavelength, color, degree)
+       lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, std_cube, l0, wavelength, color, degree)
     implicit none
 
     integer, intent(in) :: n_mbb
@@ -135,7 +136,7 @@ contains
     real(xp), intent(in), dimension(:), allocatable :: wavelength
     real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
-    real(xp), intent(in), dimension(:,:), allocatable :: std_map
+    real(xp), intent(in), dimension(:,:,:), allocatable :: std_cube
     real(xp), intent(in) :: l0
     integer, intent(in) :: degree
 
@@ -200,11 +201,10 @@ contains
        do i=1, dim_y
           allocate(residual_1D(dim_v))
           residual_1D = 0._xp
-          call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_mbb, dim_v, cube_HI(:,i,j), l0, wavelength, color, degree)
+          call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_mbb, dim_v, cube_HI(:,i,j), l0, wavelength, color, &
+               degree, std_cube(:,i,j))
           residual(:,i,j) = residual_1D
-          if (std_map(i,j) > 0._xp) then
-             f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2._xp)
-          end if
+          f = f + (myfunc_spec(residual_1D))
           deallocate(residual_1D)
        end do
     end do
@@ -250,33 +250,31 @@ contains
              
              !
              do k=1, dim_v                          
-                if (std_map(j,l) > 0._xp) then
-                   deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + ( &
-                        ! d_mbb_l_dsig(wavelength(k), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), l0, &
-                        ! cube_HI(i,j,l)) &
-                        d_mbbcc_l_dsig(wavelength(k), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), l0, &
-                        cube_HI(i,j,l), color(k,:), degree) &
-                        * (residual(k,j,l)/std_map(j,l)**2._xp) &
-                        )
-
-                   deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + ( &
-                        ! d_mbb_l_db(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
-                        ! l0, cube_HI(i,j,l)) &
-                        d_mbbcc_l_db(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
-                        l0, cube_HI(i,j,l), color(k,:), degree) &
-
-                        * (residual(k,j,l)/std_map(j,l)**2._xp) &
-                        )
-
-                   deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + ( &
-                        ! d_mbb_l_dT(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
-                        ! l0, cube_HI(i,j,l)) &
-                        d_mbbcc_l_dT(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
-                        l0, cube_HI(i,j,l), color(k,:), degree) &
-
-                        * (residual(k,j,l)/std_map(j,l)**2._xp) &
-                        )
-                end if
+                deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + ( &
+                     ! d_mbb_l_dsig(wavelength(k), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), l0, &
+                     ! cube_HI(i,j,l)) &
+                     d_mbbcc_l_dsig(wavelength(k), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), l0, &
+                     cube_HI(i,j,l), color(k,:), degree) &
+                     * residual(k,j,l) &
+                     )
+                
+                deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + ( &
+                     ! d_mbb_l_db(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
+                     ! l0, cube_HI(i,j,l)) &
+                     d_mbbcc_l_db(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
+                     l0, cube_HI(i,j,l), color(k,:), degree) &
+                     
+                     * residual(k,j,l) &
+                     )
+                
+                deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + ( &
+                     ! d_mbb_l_dT(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
+                     ! l0, cube_HI(i,j,l)) &
+                     d_mbbcc_l_dT(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
+                     l0, cube_HI(i,j,l), color(k,:), degree) &
+                     
+                     * residual(k,j,l) &
+                     )
              end do
 
              deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (lambda_sig * conv_conv_sig(j,l))
