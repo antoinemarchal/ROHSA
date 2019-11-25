@@ -15,7 +15,7 @@ contains
   subroutine read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, &
        fileout, timeout, filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
        lambda_var_Td, lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, &
-       lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree)
+       lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc)
     implicit none
 
     integer :: ios=0
@@ -38,6 +38,7 @@ contains
     real(xp), intent(inout) :: l0
     integer, intent(inout)  :: degree
     logical, intent(inout)  :: noise, save_grid
+    logical, intent(inout)  :: cc
 
     character(len=512), intent(inout) :: filename
     character(len=512), intent(inout) :: filename_NHI
@@ -50,7 +51,7 @@ contains
     namelist /user_parameters/ filename, filename_NHI, filename_wavelength, filename_color, fileout, timeout, &
          filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
          lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, &
-         lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree
+         lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
     if (ios /= 0) stop "opening file error"

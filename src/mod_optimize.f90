@@ -15,7 +15,7 @@ module mod_optimize
 contains
   
   ! Compute the residual between model and data
-  subroutine myresidual(params, line, residual, n_mbb, dim_v, NHI, l0, wavelength, color, degree, std)
+  subroutine myresidual(params, line, residual, n_mbb, dim_v, NHI, l0, wavelength, color, degree, std, cc)
     implicit none
 
     integer, intent(in) :: dim_v, n_mbb
@@ -28,6 +28,7 @@ contains
     integer, intent(in) :: degree
     real(xp), intent(in), dimension(:) :: std
     real(xp), intent(inout), dimension(:), allocatable :: residual
+    logical, intent(in) :: cc
 
     integer :: i, k
     real(xp) :: g    
@@ -38,10 +39,13 @@ contains
 
     do i=1, n_mbb
        do k=1, dim_v
-          g = mbb_l(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i)) &
-               ! / poly_color(color(k,:), params(2+(3*(i-1))), params(3+(3*(i-1))), degree) 
-               * poly_color(color(k,:), params(2+(3*(i-1))), params(3+(3*(i-1))), degree) 
-          ! g = mbb_l(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i))
+          if (cc .eqv. .true.) then
+             g = mbb_l(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i)) &
+                  ! / poly_color(color(k,:), params(2+(3*(i-1))), params(3+(3*(i-1))), degree) 
+                  * poly_color(color(k,:), params(2+(3*(i-1))), params(3+(3*(i-1))), degree) 
+          else
+             g = mbb_l(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i))
+          end if
           model(k) = model(k) + g
        enddo
     enddo
@@ -64,7 +68,7 @@ contains
 
   
   ! Griadient of the objective function to minimize for a spectrum
-  subroutine mygrad_spec(n_mbb, gradient, residual, params, dim_v, NHI, l0, wavelength, color, degree, std)
+  subroutine mygrad_spec(n_mbb, gradient, residual, params, dim_v, NHI, l0, wavelength, color, degree, std, cc)
     implicit none
 
     integer, intent(in) :: n_mbb, dim_v
@@ -77,6 +81,7 @@ contains
     integer, intent(in) :: degree
     real(xp), intent(inout), dimension(3*n_mbb) :: gradient
     real(xp), intent(in), dimension(:) :: std
+    logical, intent(in) :: cc
 
     integer :: i, k
     real(xp) :: g
@@ -89,28 +94,43 @@ contains
     dF_over_dB = 0._xp
     gradient = 0._xp
 
-    do i=1, n_mbb
-       do k=1, dim_v          
-          dF_over_dB(1+(3*(i-1)),k) = dF_over_dB(1+(3*(i-1)),k) + ( &
-               ! d_mbb_l_dsig(wavelength(k), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i)) &               
-               d_mbbcc_l_dsig(wavelength(k), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i), color(k,:), degree) &               
-               )
-
-          dF_over_dB(2+(3*(i-1)),k) = dF_over_dB(2+(3*(i-1)),k) + ( &
-               ! d_mbb_l_db(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), &
-               ! l0, NHI(i)) &               
-               d_mbbcc_l_db(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), &
-               l0, NHI(i), color(k,:), degree) &               
-               )
-          
-          dF_over_dB(3+(3*(i-1)),k) = dF_over_dB(3+(3*(i-1)),k) + ( &
-               ! d_mbb_l_dT(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), &
-               ! l0, NHI(i)) &                              
-               d_mbbcc_l_dT(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), &
-               l0, NHI(i), color(k,:), degree) &                              
-               )
+    if (cc .eqv. .true.) then
+       do i=1, n_mbb
+          do k=1, dim_v          
+             dF_over_dB(1+(3*(i-1)),k) = dF_over_dB(1+(3*(i-1)),k) + ( &
+                  d_mbbcc_l_dsig(wavelength(k), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i), color(k,:), degree) &    
+                  )
+             
+             dF_over_dB(2+(3*(i-1)),k) = dF_over_dB(2+(3*(i-1)),k) + ( &
+                  d_mbbcc_l_db(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), &
+                  l0, NHI(i), color(k,:), degree) &               
+                  )
+             
+             dF_over_dB(3+(3*(i-1)),k) = dF_over_dB(3+(3*(i-1)),k) + ( &
+                  d_mbbcc_l_dT(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), &
+                  l0, NHI(i), color(k,:), degree) &                              
+                  )
+          enddo
        enddo
-    enddo
+    else       
+       do i=1, n_mbb
+          do k=1, dim_v          
+             dF_over_dB(1+(3*(i-1)),k) = dF_over_dB(1+(3*(i-1)),k) + ( &
+                  d_mbb_l_dsig(wavelength(k), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i)) &               
+                  )
+             
+             dF_over_dB(2+(3*(i-1)),k) = dF_over_dB(2+(3*(i-1)),k) + ( &
+                  d_mbb_l_db(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), &
+                  l0, NHI(i)) &               
+                  )
+             
+             dF_over_dB(3+(3*(i-1)),k) = dF_over_dB(3+(3*(i-1)),k) + ( &
+                  d_mbb_l_dT(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), &
+                  l0, NHI(i)) &                              
+                  )
+          enddo
+       enddo
+    end if
     
     do i=1, dim_v
        do k=1, 3*n_mbb
@@ -123,8 +143,9 @@ contains
 
   
   ! Compute the objective function for a cube and the gradient of the obkective function
-  subroutine f_g_cube_fast(f, g, cube, cube_HI, beta, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_sig, lambda_beta, &
-       lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, std_cube, l0, wavelength, color, degree)
+  subroutine f_g_cube_fast(f, g, cube, cube_HI, beta, dim_v, dim_y, dim_x, n_mbb, kernel, lambda_sig, &
+       lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, std_cube, &
+       l0, wavelength, color, degree, cc)
     implicit none
 
     integer, intent(in) :: n_mbb
@@ -141,6 +162,7 @@ contains
     real(xp), intent(in), dimension(:,:,:), allocatable :: std_cube
     real(xp), intent(in) :: l0
     integer, intent(in) :: degree
+    logical, intent(in) :: cc
 
     real(xp), intent(inout) :: f
     real(xp), intent(inout), dimension(:), allocatable :: g
@@ -204,7 +226,7 @@ contains
           allocate(residual_1D(dim_v))
           residual_1D = 0._xp
           call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_mbb, dim_v, cube_HI(:,i,j), l0, wavelength, color, &
-               degree, std_cube(:,i,j))
+               degree, std_cube(:,i,j), cc)
           residual(:,i,j) = residual_1D
           f = f + (myfunc_spec(residual_1D))
           deallocate(residual_1D)

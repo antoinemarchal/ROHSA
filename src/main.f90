@@ -12,6 +12,7 @@ program ROHSA
 
   logical :: noise           !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
   logical :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
+  logical :: cc              !! if true --> apply colour correction PLANCK+IRAS
   integer :: n_mbb           !! number of gaussian to fit
   integer :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
   integer :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
@@ -105,12 +106,13 @@ program ROHSA
   iprint = -1
   iprint_init = -1
   save_grid = .true.
+  cc = .false.
  
   !Read parameters
   call read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, fileout, &
        timeout, filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
        lambda_var_Td, lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, &
-       lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree)
+       lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc)
 
   !Call header
   call header()  
@@ -136,12 +138,12 @@ program ROHSA
      print*, "n_mbb .ne. number of NHI maps / please correct your parameter file."
      stop
   end if
-
+  
   !Call ROHSA subroutine
   call main_rohsa(data, wavelength, std_cube, NHI, fileout, timeout, n_mbb, lambda_sig, lambda_beta, lambda_Td, &
        lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, &
        lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, &
-       iprint_init, save_grid, color, degree)  
+       iprint_init, save_grid, color, degree, cc)  
 
   call ender()
 
