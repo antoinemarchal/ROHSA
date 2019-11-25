@@ -39,7 +39,8 @@ contains
     do i=1, n_mbb
        do k=1, dim_v
           g = mbb_l(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i)) &
-               / poly_color(color(k,:), params(2+(3*(i-1))), params(3+(3*(i-1))), degree) 
+               ! / poly_color(color(k,:), params(2+(3*(i-1))), params(3+(3*(i-1))), degree) 
+               * poly_color(color(k,:), params(2+(3*(i-1))), params(3+(3*(i-1))), degree) 
           ! g = mbb_l(wavelength(k), params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))), l0, NHI(i))
           model(k) = model(k) + g
        enddo
