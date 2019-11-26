@@ -23,7 +23,7 @@
 
    ,sig_init = 1.d0         		       !! dispersion of additional Gaussian
    ,beta_init = 1.d0         		       !! dispersion of additional Gaussian
-   ,Td_init = 17.d0         		       !! dispersion of additional Gaussian
+   ,Td_init = 15.d0         		       !! dispersion of additional Gaussian
 
    ,lb_sig = 1.d-10         		       !! upper bound Td
    ,ub_sig = 1000.d0         		       !! upper bound Td
@@ -32,7 +32,7 @@
    ,lb_Td = 8.2d0         		       !! upper bound Td
    ,ub_Td = 50.d0         		       !! upper bound Td
 
-   ,l0 = 0.03498162d0                          !! reference wavelength in cm
+   ,l0 = 0.055007790459d0                      !! reference wavelength in cm
 
    ,maxiter_init = 15000    		       !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
    ,maxiter = 4000            		       !! max iteration for L-BFGS-B alogorithm
