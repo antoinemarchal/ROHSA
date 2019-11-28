@@ -17,7 +17,7 @@ reload(mod_opt)
 
 
 #Open data GNILC_IRIS-SFD_adim
-fitsname = "/data/amarchal/SIMUSED/data/intensity_adim.fits"
+fitsname = "/mnt/raid-cita/amarchal/SIMUSED/data/intensity_adim.fits"
 hdu = fits.open(fitsname)
 hdr = hdu[0].header
 cube = hdu[0].data
@@ -31,7 +31,7 @@ wavelength = (const.c / freq).to(u.micron)
 wavelength_full = np.array([np.full((cube.shape[1],cube.shape[2]),i) for i in np.arange(100,900,1)]) * u.micron
 
 #Open color correction file
-color = fits.open("/data/amarchal/PLANCK/col_cor_iras_hfi_DX9v2_poly.fits")[0].data
+color = fits.open("/mnt/raid-cita/amarchal/PLANCK/col_cor_iras_hfi_DX9v2_poly.fits")[0].data
 
 gaussian = core_cube.read_gaussian("./SED_mbb_run_0.dat")
 gaussian[1::3] += 1. #ATTENTION beta -1
