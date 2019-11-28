@@ -18,7 +18,7 @@ all: blas.o lbfgsb.o linpack.o timer.o mod_constants.o mod_math.o mod_convert.o 
 main.o: main.f90
 	$(FC) $(GFLAGS) -c $^
 
-# L-BFGS-B package
+#L-BFGS-B package
 blas.o: blas.f
 	$(FC) $(GFLAGS) -c $^
 lbfgsb.o: lbfgsb.f
@@ -28,7 +28,11 @@ linpack.o: linpack.f
 timer.o: timer.f
 	$(FC) $(GFLAGS) -c $^
 
-# My files
+#FFTPACK5
+# fftpack5.o: fftpack5.f90
+# 	$(FC) $(GFLAGS) -c $^
+
+#MY FILES
 mod_constants.o: mod_constants.f90
 	$(FC) $(GFLAGS) -c $^
 
