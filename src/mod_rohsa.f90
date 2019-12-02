@@ -134,12 +134,12 @@ contains
 
     ! Check n_gauss = 2 for Lym akpha mode
     if (lym .eqv. .true.) then
-       if (n_gauss .eq. 2) then
+       ! if (n_gauss .eq. 2) then
           print*, "Lym alpha mode activated"
-       else 
-          print*, "Lym alpha mode is based on a 2-Gaussian model / please select n_gauss = 2"
-          stop
-       end if
+       ! else 
+       !    print*, "Lym alpha mode is based on a 2-Gaussian model / please select n_gauss = 2"
+       !    stop
+       ! end if
     end if
 
     print*,
