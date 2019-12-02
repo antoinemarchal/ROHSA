@@ -3,6 +3,7 @@ program ROHSA
 
   use mod_constants
   use mod_start
+  use mod_fft
   use mod_inout
   use mod_rohsa
   use mod_optimize
@@ -61,8 +62,10 @@ program ROHSA
   real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
   real(xp), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
   real(xp), dimension(:,:), allocatable   :: color       !! polynomial coefficient for color correction
-  real(xp), dimension(:,:,:), allocatable :: std_cube  !! standard deviation cube
+  real(xp), dimension(:,:,:), allocatable :: std_cube    !! standard deviation cube
   real(xp), dimension(:,:,:), allocatable :: NHI         !! initial fits data NHI
+
+  real(xp), dimension(:,:), allocatable   :: test_fft !! test fft
 
   integer, dimension(3) :: dim_data !! number of frequencies
   integer, dimension(3) :: dim_NHI !! number of NHI maps
@@ -123,6 +126,12 @@ program ROHSA
   call read_cube(filename, data)
   call read_array(filename_wavelength, wavelength)
   call read_map(filename_color, color)
+
+  !Test fft
+  allocate(test_fft(32,64))
+  test_fft = 0._xp
+  call fft2d(32,64,test_fft,test_fft)
+  stop
 
   if (noise .eqv. .false.) then
      print*, "no .false. option for rohsa-mbb, please provide a rms cube."

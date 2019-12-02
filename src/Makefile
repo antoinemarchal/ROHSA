@@ -12,7 +12,7 @@ CFLAGS= -lm -g -O2 #-lcfitsio -openmp -llapack
 
 OUT=ROHSA
 
-all: blas.o lbfgsb.o linpack.o timer.o mod_constants.o mod_math.o mod_convert.o mod_inout.o mod_array.o mod_color.o mod_model.o mod_optimize.o mod_minimize.o mod_functions.o mod_start.o mod_rohsa.o main.o
+all: blas.o lbfgsb.o linpack.o timer.o fftpack5_1d.o mod_constants.o mod_math.o mod_convert.o mod_fft.o mod_inout.o mod_array.o mod_color.o mod_model.o mod_optimize.o mod_minimize.o mod_functions.o mod_start.o mod_rohsa.o main.o
 	$(FC) $^ $(CFLAGS) -o $(OUT)
 
 main.o: main.f90
@@ -29,11 +29,14 @@ timer.o: timer.f
 	$(FC) $(GFLAGS) -c $^
 
 #FFTPACK5
-# fftpack5.o: fftpack5.f90
-# 	$(FC) $(GFLAGS) -c $^
+fftpack5_1d.o: fftpack5_1d.f90
+	$(FC) $(GFLAGS) -c $^
 
 #MY FILES
 mod_constants.o: mod_constants.f90
+	$(FC) $(GFLAGS) -c $^
+
+mod_fft.o: mod_fft.f90
 	$(FC) $(GFLAGS) -c $^
 
 mod_math.o: mod_math.f90

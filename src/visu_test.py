@@ -10,7 +10,7 @@ from astropy import units as u
 from scipy.special import gamma
 
 from ROHSApy import ROHSA
-import turbulence as tb
+import marchalib as ml
 
 import mod_optimize as mod_opt
 reload(mod_opt)
