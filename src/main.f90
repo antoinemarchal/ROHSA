@@ -65,7 +65,8 @@ program ROHSA
   real(xp), dimension(:,:,:), allocatable :: std_cube    !! standard deviation cube
   real(xp), dimension(:,:,:), allocatable :: NHI         !! initial fits data NHI
 
-  real(xp), dimension(:,:), allocatable   :: test_fft !! test fft
+  real(xp), dimension(:,:), allocatable    :: test_fft !! test fft
+  complex(xp), dimension(:,:), allocatable :: c_test_fft !! test fft
 
   integer, dimension(3) :: dim_data !! number of frequencies
   integer, dimension(3) :: dim_NHI !! number of NHI maps
@@ -129,8 +130,9 @@ program ROHSA
 
   !Test fft
   allocate(test_fft(32,64))
+  allocate(c_test_fft(32,64))
   test_fft = 0._xp
-  call fft2d(32,64,test_fft,test_fft)
+  call cfft2d(32,64,test_fft,c_test_fft)
   stop
 
   if (noise .eqv. .false.) then
