@@ -4,10 +4,10 @@ FC=gfortran
 
 # GFLAGS=-Wall -Wextra -pedantic -std=f2008 -g -O2 -fno-second-underscore -Wno-compare-reals -fcheck=all -fimplicit-none -fbacktrace -gdwarf-2 -fall-intrinsics -Wno-unused-function -fcheck=bounds -I/usr/local/include
 
-# GFLAGS= -O2 -I/usr/local/include -ffixed-line-length-none -Wno-uninitialized -Wall -fbounds-check
-GFLAGS= -O2 -I/usr/local/include -ffixed-line-length-none #-fbounds-check
+GFLAGS= -O2 -I/usr/local/include -ffixed-line-length-none -Wno-uninitialized -Wall #-fbounds-check
+# GFLAGS= -O2 -I/usr/local/include -ffixed-line-length-none #-w -fbounds-check
 
-CFLAGS= -lm -g -O2 #-lcfitsio -openmp -llapack
+cflags= -lm -g -O2 #-lcfitsio -openmp -llapack
 # -L/Users/antoinemarchal/mylib/cfitsio-master
 
 OUT=ROHSA
@@ -16,21 +16,21 @@ all: blas.o lbfgsb.o linpack.o timer.o fftpack5_1d.o mod_constants.o mod_math.o 
 	$(FC) $^ $(CFLAGS) -o $(OUT)
 
 main.o: main.f90
-	$(FC) $(GFLAGS) -c $^
+	$(FC) $(GFLAGS) -w -c $^
 
 #L-BFGS-B package
 blas.o: blas.f
-	$(FC) $(GFLAGS) -c $^
+	$(FC) $(GFLAGS) -w -c $^
 lbfgsb.o: lbfgsb.f
-	$(FC) $(GFLAGS) -c $^
+	$(FC) $(GFLAGS) -w -c $^
 linpack.o: linpack.f
-	$(FC) $(GFLAGS) -c $^
+	$(FC) $(GFLAGS) -w -c $^
 timer.o: timer.f
-	$(FC) $(GFLAGS) -c $^
+	$(FC) $(GFLAGS) -w -c $^
 
 #FFTPACK5
 fftpack5_1d.o: fftpack5_1d.f90
-	$(FC) $(GFLAGS) -c $^
+	$(FC) $(GFLAGS) -w -c $^
 
 #MY FILES
 mod_constants.o: mod_constants.f90

@@ -319,7 +319,7 @@ contains
 
              if (lambda_stefan .ne. 0._xp) then
                 deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + lambda_stefan * ( &
-                     d_lumi_cst_dsig(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) * &
+                     d_lumi_cst_dsig(image_beta(j,l),image_Td(j,l),l0) * &
                      (lumi_cst(image_sig(j,l),image_beta(j,l),image_Td(j,l),l0) - stefan_params(i)) &
                      )
                 

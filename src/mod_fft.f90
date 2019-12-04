@@ -7,11 +7,119 @@ module mod_fft
   
   private
 
-  public :: cfft2d
+  public :: rfft2d, cfft2d, icfft2d
 
 contains
-  
+
   subroutine cfft2d(l,m,data,cfft)
+    implicit none
+    
+    complex(xp), intent(in), allocatable, dimension(:,:) :: data
+
+    integer, intent(in) :: l
+    integer, intent(in) :: m
+    
+    integer ( kind = 4 ) ier
+    integer ( kind = 4 ) ldim
+    integer ( kind = 4 ) lensav
+    integer ( kind = 4 ) lenwrk
+    integer ( kind = 4 ) seed
+    real ( kind = 8 ), allocatable, dimension ( : ) :: work
+    real ( kind = 8 ), allocatable, dimension ( : ) :: wsave
+
+    complex(xp), allocatable, dimension(:,:) :: c
+    complex(xp), intent(inout), allocatable, dimension(:,:) :: cfft
+
+    allocate(c(l,m))
+    
+    !  Allocate work arrays.
+    lenwrk = 2 * l * m
+
+    lensav = 2 * l + int ( log ( real ( l, kind = 8 ) ) / log ( 2.0D+00 ) ) &
+         + 2 * m + int ( log ( real ( m, kind = 8 ) ) / log ( 2.0D+00 ) ) &
+         + 8 
+
+    allocate(work(1:lenwrk))
+    allocate(wsave(1:lensav))
+
+    call cfft2i ( l, m, wsave, lensav, ier )
+
+    !data input in working complex array c
+    c = data
+
+    !  Compute the FFT coefficients.
+    ldim = l
+
+    call cfft2f(ldim, l, m, c, wsave, lensav, work, lenwrk, ier)
+
+    !no normalization
+    ! c = c * real((l*m),xp)
+
+    !working complex array c in output cfft
+    cfft = c
+
+    deallocate(c)
+    deallocate(work)
+    deallocate(wsave)
+
+    return
+  end subroutine cfft2d
+
+  subroutine icfft2d(l,m,data,icfft)
+    implicit none
+    
+    complex(xp), intent(in), allocatable, dimension(:,:) :: data
+
+    integer, intent(in) :: l
+    integer, intent(in) :: m
+    
+    integer ( kind = 4 ) ier
+    integer ( kind = 4 ) ldim
+    integer ( kind = 4 ) lensav
+    integer ( kind = 4 ) lenwrk
+    integer ( kind = 4 ) seed
+    real ( kind = 8 ), allocatable, dimension ( : ) :: work
+    real ( kind = 8 ), allocatable, dimension ( : ) :: wsave
+
+    complex(xp), allocatable, dimension(:,:) :: c
+    complex(xp), intent(inout), allocatable, dimension(:,:) :: icfft
+
+    allocate(c(l,m))
+    
+    !  Allocate work arrays.
+    lenwrk = 2 * l * m
+
+    lensav = 2 * l + int ( log ( real ( l, kind = 8 ) ) / log ( 2.0D+00 ) ) &
+         + 2 * m + int ( log ( real ( m, kind = 8 ) ) / log ( 2.0D+00 ) ) &
+         + 8 
+
+    allocate ( work(1:lenwrk) )
+    allocate ( wsave(1:lensav) )
+
+    call cfft2i ( l, m, wsave, lensav, ier )
+
+    !data input in working complex array c
+    c = data
+
+    !  Compute the inverse FFT coefficients.
+    ldim = l
+
+    call cfft2b(ldim, l, m, c, wsave, lensav, work, lenwrk, ier)
+
+    !no normalization
+    ! c = c * real((l*m),xp)
+
+    !working complex array c in output cfft
+    icfft = c
+
+    deallocate(c)
+    deallocate(work)
+    deallocate(wsave)
+
+    return
+  end subroutine icfft2d
+
+  subroutine cfft2d_test(l,m,data,cfft)
     implicit none
     
     real(xp), intent(in), allocatable, dimension(:,:) :: data
@@ -32,7 +140,7 @@ contains
 
     allocate(c(l,m))
 
-    call c8mat_uniform_01(l, m, seed, data)
+    ! call c8mat_uniform_01(l, m, seed, c)
     
     write ( *, '(a)' ) ' '
     write ( *, '(a)' ) 'TEST02'
@@ -66,7 +174,7 @@ contains
     seed = 1973
 
     !data input in working complex array c
-    c = data
+    c = cmplx(data,0._xp,xp)
 
     call c8mat_print_some ( l, m, c, 1, 1, 5, 5, &
          '  Part of the original data:' )
@@ -95,7 +203,7 @@ contains
     deallocate(wsave)
 
     return
-  end subroutine cfft2d
+  end subroutine cfft2d_test
 
   subroutine rfft2d(l,m,data,fft)
     implicit none
@@ -123,7 +231,7 @@ contains
     allocate(r(ldim,m))
     r = 0._xp
 
-    call r8mat_uniform_01 (l, m, seed, data)
+    ! call r8mat_uniform_01 (l, m, seed, data)
 
     r(:l,:m) = data(:l,:m)
     

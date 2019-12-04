@@ -57,6 +57,8 @@ program ROHSA
   character(len=512) :: timeout             !! name of the output result
   character(len=512) :: filename_noise      !! name of the file with STD map (if noise .eq. true)
 
+  character(len=512) :: filename_fBm="fBm.dat"
+
   real(xp) :: start, finish
 
   real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
@@ -67,7 +69,9 @@ program ROHSA
 
   real(xp), dimension(:,:), allocatable    :: test_fft !! test fft
   complex(xp), dimension(:,:), allocatable :: c_test_fft !! test fft
-
+  complex(xp), dimension(:,:), allocatable :: c_test_fft2 !! test fft
+  !
+  !
   integer, dimension(3) :: dim_data !! number of frequencies
   integer, dimension(3) :: dim_NHI !! number of NHI maps
 
@@ -129,11 +133,12 @@ program ROHSA
   call read_map(filename_color, color)
 
   !Test fft
-  allocate(test_fft(32,64))
-  allocate(c_test_fft(32,64))
-  test_fft = 0._xp
-  call cfft2d(32,64,test_fft,c_test_fft)
-  stop
+  ! call read_map(filename_fBm, test_fft)
+  ! allocate(c_test_fft(64,64), c_test_fft2(64,64))
+  ! c_test_fft = cmplx(test_fft,0._xp,xp)
+  ! call cfft2d(64,64,c_test_fft,c_test_fft2)
+  ! call icfft2d(64,64,c_test_fft2,c_test_fft)
+  ! stop
 
   if (noise .eqv. .false.) then
      print*, "no .false. option for rohsa-mbb, please provide a rms cube."

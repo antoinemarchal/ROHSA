@@ -171,8 +171,8 @@ contains
   end subroutine go_up_level
 
   
-  subroutine init_spectrum(n_mbb, params, dim_v, line, NHI, wavelength, sig_fact_init, sig_init, beta_init, &
-       Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree, std, &
+  subroutine init_spectrum(n_mbb, params, dim_v, line, NHI, wavelength, lb_sig, ub_sig, lb_beta, ub_beta, &
+       lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree, std, &
        cc)
     !! Initialization of the mean sprectrum with N Gaussian
     implicit none
@@ -188,11 +188,6 @@ contains
     real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in), dimension(n_mbb) :: NHI !! spectrum
     real(xp), intent(in), dimension(:) :: std
-    real(xp), intent(in) :: sig_fact_init !! times max siglitude of additional Gaussian
-
-    real(xp), intent(in) :: sig_init !! dispersion of additional Gaussian
-    real(xp), intent(in) :: beta_init !! dispersion of additional Gaussian
-    real(xp), intent(in) :: Td_init !! dispersion of additional Gaussian
 
     real(xp), intent(in) :: lb_sig !! lower bound sigma
     real(xp), intent(in) :: ub_sig !! upper bound sigma
@@ -207,7 +202,7 @@ contains
 
     real(xp), intent(inout), dimension(3*n_mbb)  :: params !! params to optimize
 
-    integer :: i, j, k, p
+    integer :: i
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(dim_v) :: model, residual
     real(xp), dimension(:), allocatable :: x
@@ -219,16 +214,16 @@ contains
     lb = 0._xp; ub=0._xp
     x = 0._xp
             
-    do p=1, 3*n_mbb
-       x(p) = params(p)
+    do i=1, 3*n_mbb
+       x(i) = params(i)
     end do
 
-    call init_bounds(line, n_mbb, dim_v, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)   
+    call init_bounds(n_mbb, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)   
     call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, &
          iprint, color, degree, std, cc)
 
-    do p=1, 3*n_mbb
-       params(p) = x(p)
+    do i=1, 3*n_mbb
+       params(i) = x(i)
     end do
     
     deallocate(x)
@@ -236,19 +231,17 @@ contains
   end subroutine init_spectrum
   
 
-  subroutine init_bounds(line, n_mbb, dim_v, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)
+  subroutine init_bounds(n_mbb, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)
     !! Initialize parameters bounds for optimization
     implicit none
     
     integer, intent(in) :: n_mbb !! number of Gaussian
-    integer, intent(in) :: dim_v !! dimension along v axis
     real(xp), intent(in) :: lb_sig !! lower bound sigma
     real(xp), intent(in) :: ub_sig !! upper bound sigma
     real(xp), intent(in) :: lb_beta !! lower bound beta
     real(xp), intent(in) :: ub_beta !! upper bound beta
     real(xp), intent(in) :: lb_Td !! lower bound Td
     real(xp), intent(in) :: ub_Td !! upper bound Td
-    real(xp), intent(in), dimension(dim_v) :: line !! spectrum   
     real(xp), intent(inout), dimension(3*n_mbb) :: lb !! lower bounds
     real(xp), intent(inout), dimension(3*n_mbb) :: ub !! upper bounds
     
@@ -316,7 +309,7 @@ contains
           x = params(:,i,j)
           std = std_cube(:,i,j)
           
-          call init_bounds(line, n_mbb, dim_v, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)
+          call init_bounds(n_mbb, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)
           call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, &
                iprint, color, degree, std, cc)
           
@@ -393,7 +386,7 @@ contains
     !Bounds
     do j=1, dim_x
        do i=1, dim_y
-          call init_bounds(cube(:,i,j), n_mbb, dim_v, lb_3D(:,i,j), ub_3D(:,i,j), lb_sig, ub_sig, &
+          call init_bounds(n_mbb, lb_3D(:,i,j), ub_3D(:,i,j), lb_sig, ub_sig, &
                lb_beta, ub_beta, lb_Td, ub_Td)
        end do
     end do

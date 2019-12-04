@@ -99,12 +99,11 @@ contains
     integer :: i     !! loop index
     integer :: j     !! loop index
     integer :: k     !! loop index
-    integer :: l     !! loop index
         
     print*, "fileout = '",trim(fileout),"'"
     print*, "timeout = '",trim(timeout),"'"
     
-    print*,
+    print*, " "
     print*, "______Parameters_____"
     print*, "n_mbb = ", n_mbb
 
@@ -140,7 +139,7 @@ contains
     print*, "save_grid = ", save_grid
     print*, "cc = ", cc
 
-    print*,
+    print*, " "
     
     allocate(kernel(3, 3))
     
@@ -173,10 +172,10 @@ contains
     allocate(cube_HI(dim_cube_HI(1), dim_cube_HI(2), dim_cube_HI(3)))
     
     !Reshape the data (new cube of size nside)
-    print*,
+    print*, " "
     write(*,*) "Reshape cube, new dimensions :"
     write(*,*) "dim_v, dim_y, dim_x = ", dim_cube
-    print*, 
+    print*, " "
     
     print*, "Compute mean and std spectrum"
     allocate(b_params(n_mbb))
@@ -192,7 +191,7 @@ contains
     allocate(fit_params(3*n_mbb, 1, 1))
     
     print*, "                    Start iteration"
-    print*,
+    print*, " "
     
     print*, "Start hierarchical descent"
 
@@ -226,8 +225,8 @@ contains
           end do
                    
           call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), cube_HI_mean(:,1,1), &
-               wavelength, amp_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, &
-               l0, maxiter_init, m, iprint_init, color, degree, std_cube_mean(:,1,1), cc)
+               wavelength, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, m, iprint_init, &
+               color, degree, std_cube_mean(:,1,1), cc)
 
           !Init b_params
           do i=1, n_mbb       
@@ -282,7 +281,7 @@ contains
        
     enddo
     
-    print*,
+    print*, " "
     write(*,*) "Reshape cube, restore initial dimensions :"
     write(*,*) "dim_v, dim_y, dim_x = ", dim_data
     
@@ -290,9 +289,9 @@ contains
          (/ 3*n_mbb, dim_data(2), dim_data(3)/))       
         
     !Update last level
-    print*,
+    print*, " "
     print*, "Start updating last level."
-    print*,
+    print*, " "
     
         
     call update(data, data_HI, wavelength, grid_params, b_params, c_params, d_params, stefan_params, n_mbb, &
@@ -300,9 +299,9 @@ contains
          lambda_var_beta, lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, &
          m, kernel, iprint, std_cube, color, degree, cc)       
     
-    print*,
+    print*, " "
     print*, "_____ Write output file _____"
-    print*,
+    print*, " "
     
     ! Open file
     open(unit=12, file=fileout, action="write", iostat=ios)

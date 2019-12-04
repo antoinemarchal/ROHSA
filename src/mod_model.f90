@@ -221,11 +221,11 @@ contains
   end function lumi_cst
 
 
-  pure function d_lumi_cst_dsig(sig, beta, Td, l0)
+  pure function d_lumi_cst_dsig(beta, Td, l0)
     !! Derivative lumi_cst function with respect to sigma
     implicit none 
 
-    real(xp), intent(in) :: sig, beta, Td
+    real(xp), intent(in) :: beta, Td
     real(xp), intent(in) :: l0 !! reference wavelength
     real(xp) :: a, b
     real(xp) :: d_lumi_cst_dsig

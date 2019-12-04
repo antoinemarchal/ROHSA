@@ -4,7 +4,7 @@ from astropy import constants as const
 from astropy import units as u
 
 from ROHSApy import ROHSA
-import turbulence as tb
+import marchalib as ml
 
 #Open data GNILC_IRIS-SFD_adim
 fitsname = "/mnt/raid-cita/amarchal/SIMUSED/data/intensity_adim.fits"
@@ -27,3 +27,11 @@ core_cube.cube2dat(filename="/home/amarchal/ROHSA/src/SED.dat")
 core_NHI.cube2dat(filename="/home/amarchal/ROHSA/src/NHI.dat")
 core_rms.cube2dat(filename="/home/amarchal/ROHSA/src/rms.dat")
 core_color.rms_map(color, filename="/home/amarchal/ROHSA/src/color.dat")
+
+
+#Open fBm for fft test
+field = fits.open("/mnt/raid-cita/amarchal/DUST/output/fft_fBm.fits")[0].data[0]
+core_fft = ROHSA(np.zeros((0,field.shape[0],field.shape[1])))
+core_fft.rms_map(field, filename="/home/amarchal/ROHSA/src/fBm.dat")
+
+
