@@ -2,30 +2,60 @@
 module mod_fft
   !! This module contains optimization subroutine and parametric model
   use mod_constants
+  use mod_array
   use mod_random
 
   implicit none
   
   private
 
-  public :: cfft2d, icfft2d, fftfreq
+  public :: cfft2d, icfft2d, kgrid
 
 contains
 
-  subroutine fftfreq(x,y,k)
+  subroutine kgrid(nx,ny,kmat)
     implicit none
     
-    real(xp), intent(in), dimension(:,:) :: x
-    real(xp), intent(in), dimension(:,:) :: y
-    real(xp), intent(inout), dimension(:,:) :: k
+    integer, intent(in) :: nx, ny
+    real(xp), intent(inout), dimension(:,:), allocatable :: kmat
 
-    integer :: nx, ny
+    real(xp), dimension(:), allocatable :: x, y
+    real(xp), dimension(:,:), allocatable :: xx, yy
+
+    real(xp), dimension(:,:), allocatable :: kx
+    real(xp), dimension(:,:), allocatable :: ky
+
+    integer :: na, nb
+
+    na = ny
+    nb = nx
+
+    allocate(x(na), y(nb))
+    allocate(xx(nb,na), yy(nb,na))
+    allocate(kx(nb,na), ky(nb,na))
+
+    call linspace(x,1._xp,real(na,xp))
+    call linspace(y,1._xp,real(nb,xp))
+    call meshgrid(x,y,xx,yy)
+
+    xx = xx - 1._xp
+    yy = yy - 1._xp
+
+    if (mod(na,2) .eq. 0) then
+       kx = (1._xp*xx - ((na)/2._xp) ) / na
+    else
+       kx = (1._xp*xx - (na-1)/2._xp)/ na
+    end if
+
+    if (mod(nb,2) .eq. 0) then
+       ky = (1._xp*yy - ((nb)/2._xp) ) / nb
+    else
+       ky = (1._xp*yy - (nb-1)/2._xp)/ nb
+    end if
     
-    nx=size(x,1)
-    ny=size(x,2)
+    kmat = sqrt(kx**2._xp + ky**2._xp)
 
-    !FIXME
-  end subroutine fftfreq
+  end subroutine kgrid
 
   subroutine cfft2d(l,m,data,cfft)
     implicit none

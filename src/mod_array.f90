@@ -7,10 +7,86 @@ module mod_array
   private
 
   public :: convolution_2D_mirror, ravel_2D, ravel_3D, unravel_3D, mean, std, std_2D, mean_2D, max_2D, &
-       ravel_3D_abs, unravel_3D_abs, meshgrid, linspace
+       ravel_3D_abs, unravel_3D_abs, meshgrid, linspace, shift, apodize
   
   
 contains
+
+  subroutine apodize(tapper,radius,dimx,dimy)
+    implicit none
+    
+    integer, intent(in) :: dimx, dimy
+    real(xp), intent(in) :: radius
+    real(xp), intent(inout), dimension(:,:), allocatable :: tapper
+
+    integer :: nx=0, ny=0
+    integer :: dni, dnj
+    real(xp), dimension(:), allocatable :: tap1dx, tap1dy
+    real(xp), dimension(:), allocatable :: xdni, ydnj
+
+    real(xp) :: pi_over_2
+    integer :: i
+
+    nx = dimy
+    ny = dimx
+
+    allocate(tap1dx(nx),tap1dy(ny))
+
+    tap1dx = 1._xp
+    tap1dy = 1._xp
+
+    if (radius .le. 0._xp .or. radius .ge. 1._xp) then
+       print*, "Error: radius must be lower than 1 and greater than 0."
+       stop
+    end if
+    
+    dni = nx - int(radius*nx)
+    dnj = ny - int(radius*ny)
+
+    allocate(xdni(dni),ydnj(dnj))
+    
+    pi_over_2 = pi/2._xp
+
+    call linspace(xdni,1._xp,real(dni,xp))
+    call linspace(ydnj,1._xp,real(dnj,xp))
+
+    xdni = xdni - 1._xp
+    ydnj = ydnj - 1._xp
+
+    tap1dx(1:dni) = (cos(3._xp * pi_over_2 + pi_over_2 * (1._xp * xdni / (dni-1))))
+    tap1dx(nx-dni+1:) = (cos(0._xp + pi_over_2 * (1._xp * xdni / (dni-1))))
+    tap1dy(1:dnj) = (cos(3._xp * pi_over_2 + pi_over_2 * (1._xp * ydnj / (dnj-1))))
+    tap1dy(ny-dnj+1:) = (cos(0._xp + pi_over_2 * (1._xp * ydnj / (dnj-1))))
+
+    do i=1,nx
+       tapper(:,i) = tap1dy
+    end do
+    
+    do i=1,ny
+       tapper(i,:) = tapper(i,:) * tap1dx
+    end do
+  end subroutine apodize
+
+  subroutine shift(x, xshift)
+    implicit none
+
+    real(xp), intent(in), dimension(:,:), allocatable :: x
+    real(xp), intent(inout), dimension(:,:), allocatable :: xshift
+
+    integer :: nx, ny
+    integer :: i, j
+
+    nx = size(x,2)
+    ny = size(x,1)
+
+    do i=1,nx
+       do j=1,ny
+          xshift(i,j) = x(i,j) * (-1._xp)**(real(i+j,xp))
+       end do
+    end do
+    
+  end subroutine shift
+
 
   subroutine meshgrid(x,y,xx,yy)
     implicit none

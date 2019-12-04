@@ -69,6 +69,8 @@ program ROHSA
   real(xp), dimension(:,:,:), allocatable :: NHI         !! initial fits data NHI
 
   real(xp), dimension(:,:), allocatable    :: test_fft !! test fft
+  real(xp), dimension(:,:), allocatable    :: tapper !! test fft
+  real(xp), dimension(:,:), allocatable    :: test_fft_shift !! test fft
   complex(xp), dimension(:,:), allocatable :: c_test_fft !! test fft
   complex(xp), dimension(:,:), allocatable :: c_test_fft2 !! test fft
 
@@ -76,6 +78,7 @@ program ROHSA
   real(xp), dimension(:), allocatable :: y
   real(xp), dimension(:,:), allocatable :: xx
   real(xp), dimension(:,:), allocatable :: yy
+  real(xp), dimension(:,:), allocatable :: kmat
   !
   !
   integer, dimension(3) :: dim_data !! number of frequencies
@@ -139,22 +142,22 @@ program ROHSA
   call read_map(filename_color, color)
 
   !Test fft
-  ! call read_map(filename_fBm, test_fft)
-  ! allocate(c_test_fft(64,64), c_test_fft2(64,64))
-  ! c_test_fft = cmplx(test_fft,0._xp,xp)
-  ! call cfft2d(64,64,c_test_fft,c_test_fft2)
-  ! call icfft2d(64,64,c_test_fft2,c_test_fft)
-  stop
+  call read_map(filename_fBm, test_fft)
+  allocate(test_fft_shift(64,64))
 
-  !Test array meshgrid 
-  ! allocate(x(8), y(12))
-  ! allocate(xx(12,8), yy(12,8))
-  ! call linspace(x,1._xp,8._xp)
-  ! call linspace(y,1._xp,12._xp)
-  ! call meshgrid(x,y,xx,yy)
-  ! print*, xx(5,:)
-  ! print*, yy(5,:)
-  ! stop
+  call shift(test_fft, test_fft_shift)
+  allocate(c_test_fft(64,64), c_test_fft2(64,64))
+  c_test_fft = cmplx(test_fft_shift,0._xp,xp)
+
+  call cfft2d(64,64,c_test_fft,c_test_fft2)
+
+  allocate(kmat(64,64))
+  call kgrid(64,64,kmat)
+
+  allocate(tapper(34,64))
+  call apodize(tapper, 0.86_xp, 34,64)
+
+  stop
 
   if (noise .eqv. .false.) then
      print*, "no .false. option for rohsa-mbb, please provide a rms cube."
