@@ -9,6 +9,7 @@ program ROHSA
   use mod_rohsa
   use mod_optimize
   use mod_color
+  use mod_model
   
   implicit none
 
@@ -70,6 +71,7 @@ program ROHSA
 
   real(xp), dimension(:,:), allocatable    :: test_fft !! test fft
   real(xp), dimension(:,:), allocatable    :: tapper !! test fft
+  real(xp), dimension(:,:), allocatable    :: butter !! test fft
   real(xp), dimension(:,:), allocatable    :: test_fft_shift !! test fft
   complex(xp), dimension(:,:), allocatable :: c_test_fft !! test fft
   complex(xp), dimension(:,:), allocatable :: c_test_fft2 !! test fft
@@ -157,7 +159,10 @@ program ROHSA
   allocate(tapper(34,64))
   call apodize(tapper, 0.86_xp, 34,64)
 
+  call butterworth(butter,kmat,1._xp,1._xp,2._xp)
+
   stop
+  !
 
   if (noise .eqv. .false.) then
      print*, "no .false. option for rohsa-mbb, please provide a rms cube."

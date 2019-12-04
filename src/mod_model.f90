@@ -11,10 +11,25 @@ module mod_model
   private
 
   public :: gaussian, mbb_l, d_mbb_l_dsig, d_mbb_l_db, d_mbb_l_dT, d_mbbcc_l_dsig, d_mbbcc_l_db, d_mbbcc_l_dT, &
-       planck_l, lumi_cst, d_lumi_cst_dsig, d_lumi_cst_dbeta, d_lumi_cst_dTd
+       planck_l, lumi_cst, d_lumi_cst_dsig, d_lumi_cst_dbeta, d_lumi_cst_dTd, butterworth
   
 contains
+
+  subroutine butterworth(butter, k, H0, k0, n)
+    !! Butterworth filter
+    implicit none
+
+    real(xp), intent(inout), dimension(:,:), allocatable :: butter
+    real(xp), intent(in), dimension(:,:), allocatable :: k
+    real(xp), intent(in) :: H0
+    real(xp), intent(in) :: k0
+    real(xp), intent(in) :: n
+
+    butter = H0 / (1. + (k/k0)**(2*n))
+    
+  end subroutine butterworth
   
+
   pure function gaussian(x, a, m, s)
     !! Gaussian function   
     implicit none
