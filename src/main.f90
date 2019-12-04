@@ -144,7 +144,7 @@ program ROHSA
   ! c_test_fft = cmplx(test_fft,0._xp,xp)
   ! call cfft2d(64,64,c_test_fft,c_test_fft2)
   ! call icfft2d(64,64,c_test_fft2,c_test_fft)
-  ! stop
+  stop
 
   !Test array meshgrid 
   ! allocate(x(8), y(12))

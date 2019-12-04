@@ -11,6 +11,21 @@ module mod_fft
 
 contains
 
+  subroutine fftfreq(x,y,k)
+    implicit none
+    
+    real(xp), intent(in), dimension(:,:) :: x
+    real(xp), intent(in), dimension(:,:) :: y
+    real(xp), intent(inout), dimension(:,:) :: k
+
+    integer :: nx, ny
+    
+    nx=size(x,1)
+    ny=size(x,2)
+
+    !FIXME
+  end subroutine fftfreq
+
   subroutine cfft2d(l,m,data,cfft)
     implicit none
     
