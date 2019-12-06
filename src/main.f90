@@ -16,9 +16,8 @@ program ROHSA
   logical :: noise           !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
   logical :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
   logical :: cc              !! if true --> apply colour correction PLANCK+IRAS
+  logical :: ciba            !! if true --> model CIBA
   integer :: n_mbb           !! number of mbb to fit
-  integer :: n_mbb_dust      !! number of mbb dust to fit
-  integer :: n_mbb_cib       !! number of mbb cib to fit
   integer :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
   integer :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
   integer :: ustd            !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
@@ -33,14 +32,16 @@ program ROHSA
 
   real(xp) :: lambda_var_tau  !! lambda for variance dust opacity parameter
   real(xp) :: lambda_var_beta !! lambda for variance spectral emissivity parameter
-  real(xp) :: lambda_var_Td !! lambda for variance spectral emissivity parameter
+  real(xp) :: lambda_var_Td   !! lambda for variance spectral emissivity parameter
   real(xp) :: lambda_stefan   !! lambda for variance dust temperature parameter
 
-  real(xp) :: tau_fact_init !! times max taulitude of additional Gaussian
-
-  real(xp) :: Td_init       !!
-  real(xp) :: beta_init     !! 
   real(xp) :: tau_init      !!
+  real(xp) :: beta_init     !! 
+  real(xp) :: Td_init       !!
+
+  real(xp) :: tau_init_cib  !!
+  real(xp) :: beta_init_cib !! 
+  real(xp) :: Td_init_cib   !!
 
   real(xp) :: lb_tau        !! lower bound 
   real(xp) :: ub_tau        !! upper bound
@@ -101,8 +102,7 @@ program ROHSA
   call get_command_argument(1, filename_parameters)
 
   !Default user parameters
-  n_mbb_dust = 1
-  n_mbb_cib  = 1
+  n_mbb = 1
 
   lambda_tau = 1._xp
   lambda_beta = 1._xp
@@ -113,11 +113,13 @@ program ROHSA
   lambda_var_Td = 0._xp
   lambda_stefan = 1._xp
 
-  tau_fact_init = 2._xp/3._xp
-
   tau_init = 1._xp
   beta_init = 1.7_xp
   Td_init = 17._xp
+
+  tau_init_cib = 1._xp
+  beta_init_cib = 1._xp
+  Td_init_cib = 17._xp
 
   lb_tau = 0._xp     
   ub_tau = 100._xp
@@ -145,13 +147,10 @@ program ROHSA
  
   !Read parameters
   call read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, fileout, &
-       timeout, filename_noise, n_mbb_dust, n_mbb_cib, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
-       lambda_var_Td, lambda_stefan, tau_fact_init, tau_init, beta_init, Td_init, lb_tau, ub_tau, lb_beta, ub_beta, &
-       lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, l0, maxiter_init, maxiter, &
-       m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc)
-
-  !Total number of mbb
-  n_mbb = n_mbb_dust + n_mbb_cib
+       timeout, filename_noise, n_mbb, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
+       lambda_var_Td, lambda_stefan, tau_init, beta_init, Td_init, tau_init_cib, beta_init_cib, Td_init_cib, lb_tau, &
+       ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, &
+       l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc, ciba)
 
   !Call header
   call header()  
@@ -191,18 +190,19 @@ program ROHSA
 
   call read_cube(filename_NHI, NHI)
 
-  !Check if n_mbb == number of NHI maps
-  dim_NHI = shape(NHI)
-  if (n_mbb_dust .ne. dim_NHI(1)) then
-     print*, "n_mbb_dust .ne. number of NHI maps / please correct your parameter file."
-     stop
-  end if
+  ! !Check if n_mbb == number of NHI maps
+  ! dim_NHI = shape(NHI)
+  ! if (n_mbb .ne. dim_NHI(1)) then
+  !    print*, "n_mbb_dust .ne. number of NHI maps / please correct your parameter file."
+  !    stop
+  ! end if
   
   !Call ROHSA subroutine
   call main_rohsa(data, wavelength, std_cube, NHI, fileout, timeout, n_mbb, lambda_tau, lambda_beta, lambda_Td, &
-       lambda_var_tau, lambda_var_beta, lambda_var_Td, lambda_stefan, tau_fact_init, tau_init, beta_init, Td_init, &
-       lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, &
-       iprint_init, save_grid, color, degree, cc)  
+       lambda_var_tau, lambda_var_beta, lambda_var_Td, lambda_stefan, tau_init, beta_init, Td_init, &
+       tau_init_cib, beta_init_cib, Td_init_cib, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, &
+       lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, l0, maxiter_init, maxiter, &
+       m, noise, lstd, ustd, iprint, iprint_init, save_grid, color, degree, cc, ciba)  
 
   call ender()
 

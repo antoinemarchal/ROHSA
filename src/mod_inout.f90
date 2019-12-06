@@ -13,37 +13,44 @@ module mod_inout
 contains
   
   subroutine read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, &
-       fileout, timeout, filename_noise, n_mbb_dust, n_mbb_cib, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, &
-       lambda_var_beta, lambda_var_Td, lambda_stefan, tau_fact_init, tau_init, beta_init, Td_init, lb_tau, ub_tau, &
-       lb_beta, ub_beta, lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, l0, &
-       maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc)
+       fileout, timeout, filename_noise, n_mbb, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, &
+       lambda_var_beta, lambda_var_Td, lambda_stefan, tau_init, beta_init, Td_init, tau_init_cib, beta_init_cib, &
+       Td_init_cib, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, &
+       lb_Td_cib, ub_Td_cib, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, &
+       cc, ciba)
     implicit none
 
     integer :: ios=0
 
     character(len=512), intent(in) :: filename_parameters
 
-    integer, intent(inout)  :: n_mbb_dust
-    integer, intent(inout)  :: n_mbb_cib
+    integer, intent(inout)  :: n_mbb
+
     integer, intent(inout)  :: m 
     integer, intent(inout)  :: lstd, ustd
     integer, intent(inout)  :: iprint, iprint_init
     integer, intent(inout)  :: maxiter, maxiter_init
+
     real(xp), intent(inout) :: lambda_tau, lambda_beta, lambda_Td
     real(xp), intent(inout) :: lambda_var_tau, lambda_var_beta, lambda_var_Td
     real(xp), intent(inout) :: lambda_stefan
-    real(xp), intent(inout) :: tau_fact_init
+
     real(xp), intent(inout) :: tau_init, beta_init, Td_init
+    real(xp), intent(inout) :: tau_init_cib, beta_init_cib, Td_init_cib
+
     real(xp), intent(inout) :: lb_tau, ub_tau
     real(xp), intent(inout) :: lb_beta, ub_beta
     real(xp), intent(inout) :: lb_Td, ub_Td
+
     real(xp), intent(inout) :: lb_tau_cib, ub_tau_cib
     real(xp), intent(inout) :: lb_beta_cib, ub_beta_cib
     real(xp), intent(inout) :: lb_Td_cib, ub_Td_cib
+
     real(xp), intent(inout) :: l0
     integer, intent(inout)  :: degree
     logical, intent(inout)  :: noise, save_grid
     logical, intent(inout)  :: cc
+    logical, intent(inout)  :: ciba
 
     character(len=512), intent(inout) :: filename
     character(len=512), intent(inout) :: filename_NHI
@@ -54,10 +61,11 @@ contains
     character(len=512), intent(inout) :: filename_noise
 
     namelist /user_parameters/ filename, filename_NHI, filename_wavelength, filename_color, fileout, timeout, &
-         filename_noise, n_mbb_dust, n_mbb_cib, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
-         lambda_var_Td, lambda_stefan, tau_fact_init, tau_init, beta_init, Td_init, lb_tau, ub_tau, lb_beta, ub_beta, &
-         lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, l0, maxiter_init, &
-         maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc
+         filename_noise, n_mbb, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
+         lambda_var_Td, lambda_stefan, tau_init, beta_init, Td_init, tau_init_cib, beta_init_cib, Td_init_cib, &
+         lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, &
+         lb_Td_cib, ub_Td_cib, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, &
+         degree, cc, ciba
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
     if (ios /= 0) stop "opening file error"
