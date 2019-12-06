@@ -42,7 +42,7 @@
    ,lb_Td_cib = 8.2d0         		       !! upper bound Td
    ,ub_Td_cib = 50.d0         		       !! upper bound Td
 
-   ,l0 = 0.055007790459d0                      !! reference wavelength in cm
+   ,l0=0.084927041926d0 
 
    ,maxiter_init = 15000    		       !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
    ,maxiter = 4000            		       !! max iteration for L-BFGS-B alogorithm
