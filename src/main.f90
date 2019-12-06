@@ -16,7 +16,9 @@ program ROHSA
   logical :: noise           !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
   logical :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
   logical :: cc              !! if true --> apply colour correction PLANCK+IRAS
-  integer :: n_mbb           !! number of gaussian to fit
+  integer :: n_mbb           !! number of mbb to fit
+  integer :: n_mbb_dust      !! number of mbb dust to fit
+  integer :: n_mbb_cib       !! number of mbb cib to fit
   integer :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
   integer :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
   integer :: ustd            !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
@@ -25,23 +27,23 @@ program ROHSA
   integer :: maxiter         !! max iteration for L-BFGS-B alogorithm
   integer :: maxiter_init    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
 
-  real(xp) :: lambda_sig     !! lambda for dust opacity parameter
+  real(xp) :: lambda_tau     !! lambda for dust opacity parameter
   real(xp) :: lambda_beta    !! lamnda for spectral emissivity index parameter
   real(xp) :: lambda_Td      !! lambda for dust temperature parameter
 
-  real(xp) :: lambda_var_sig  !! lambda for variance dust opacity parameter
+  real(xp) :: lambda_var_tau  !! lambda for variance dust opacity parameter
   real(xp) :: lambda_var_beta !! lambda for variance spectral emissivity parameter
   real(xp) :: lambda_var_Td !! lambda for variance spectral emissivity parameter
   real(xp) :: lambda_stefan   !! lambda for variance dust temperature parameter
 
-  real(xp) :: sig_fact_init !! times max siglitude of additional Gaussian
+  real(xp) :: tau_fact_init !! times max taulitude of additional Gaussian
 
   real(xp) :: Td_init       !! dust opacity init
   real(xp) :: beta_init     !! 
-  real(xp) :: sig_init      !!
+  real(xp) :: tau_init      !!
 
-  real(xp) :: lb_sig        !! lower bound 
-  real(xp) :: ub_sig        !! upper bound
+  real(xp) :: lb_tau        !! lower bound 
+  real(xp) :: ub_tau        !! upper bound
   real(xp) :: lb_beta       !! lower bound
   real(xp) :: ub_beta       !! upper bound
   real(xp) :: lb_Td         !! lower bound 
@@ -92,26 +94,27 @@ program ROHSA
   call get_command_argument(1, filename_parameters)
 
   !Default user parameters
-  n_mbb = 2
+  n_mbb_dust = 1
+  n_mbb_cib  = 1
 
-  lambda_sig = 1._xp
+  lambda_tau = 1._xp
   lambda_beta = 1._xp
   lambda_Td = 1._xp
 
-  lambda_var_sig = 0._xp
+  lambda_var_tau = 0._xp
   lambda_var_beta = 0._xp
   lambda_var_Td = 0._xp
   lambda_stefan = 1._xp
 
-  sig_fact_init = 2._xp/3._xp
+  tau_fact_init = 2._xp/3._xp
 
-  sig_init = 1._xp
+  tau_init = 1._xp
   beta_init = 1.7_xp
   Td_init = 17._xp
 
   !FIXME VALUE
-  lb_sig = 0._xp     
-  ub_sig = 100._xp
+  lb_tau = 0._xp     
+  ub_tau = 100._xp
   lb_beta = 1._xp
   ub_beta = 2.5_xp
   lb_Td = 8.2_xp       		   
@@ -129,9 +132,12 @@ program ROHSA
  
   !Read parameters
   call read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, fileout, &
-       timeout, filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
-       lambda_var_Td, lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, &
+       timeout, filename_noise, n_mbb_dust, n_mbb_cib, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
+       lambda_var_Td, lambda_stefan, tau_fact_init, tau_init, beta_init, Td_init, lb_tau, ub_tau, lb_beta, ub_beta, &
        lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc)
+
+  !Total number of mbb
+  n_mbb = n_mbb_dust + n_mbb_cib
 
   !Call header
   call header()  
@@ -144,24 +150,25 @@ program ROHSA
   call read_map(filename_color, color)
 
   !Test fft
-  call read_map(filename_fBm, test_fft)
-  allocate(test_fft_shift(64,64))
+  ! call read_map(filename_fBm, test_fft)
+  ! allocate(test_fft_shift(64,64))
 
-  call shift(test_fft, test_fft_shift)
-  allocate(c_test_fft(64,64), c_test_fft2(64,64))
-  c_test_fft = cmplx(test_fft_shift,0._xp,xp)
+  ! call shift(test_fft, test_fft_shift)
+  ! allocate(c_test_fft(64,64), c_test_fft2(64,64))
+  ! c_test_fft = cmplx(test_fft_shift,0._xp,xp)
 
-  call cfft2d(64,64,c_test_fft,c_test_fft2)
+  ! call cfft2d(64,64,c_test_fft,c_test_fft2)
 
-  allocate(kmat(64,64))
-  call kgrid(64,64,kmat)
+  ! allocate(kmat(64,64))
+  ! call kgrid(64,64,kmat)
 
-  allocate(tapper(34,64))
-  call apodize(tapper, 0.86_xp, 34,64)
+  ! allocate(tapper(34,64))
+  ! call apodize(tapper, 0.86_xp, 34,64)
 
-  call butterworth(butter,kmat,1._xp,1._xp,2._xp)
+  ! call butterworth(butter,kmat,1._xp,1._xp,2._xp)
 
-  stop
+  ! print*, n_mbb_cib
+  ! stop
   !
 
   if (noise .eqv. .false.) then
@@ -174,15 +181,15 @@ program ROHSA
 
   !Check if n_mbb == number of NHI maps
   dim_NHI = shape(NHI)
-  if (n_mbb .ne. dim_NHI(1)) then
-     print*, "n_mbb .ne. number of NHI maps / please correct your parameter file."
+  if (n_mbb_dust .ne. dim_NHI(1)) then
+     print*, "n_mbb_dust .ne. number of NHI maps / please correct your parameter file."
      stop
   end if
   
   !Call ROHSA subroutine
-  call main_rohsa(data, wavelength, std_cube, NHI, fileout, timeout, n_mbb, lambda_sig, lambda_beta, lambda_Td, &
-       lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, &
-       lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, &
+  call main_rohsa(data, wavelength, std_cube, NHI, fileout, timeout, n_mbb, lambda_tau, lambda_beta, lambda_Td, &
+       lambda_var_tau, lambda_var_beta, lambda_var_Td, lambda_stefan, tau_fact_init, tau_init, beta_init, Td_init, &
+       lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, &
        iprint_init, save_grid, color, degree, cc)  
 
   call ender()

@@ -13,26 +13,28 @@ module mod_inout
 contains
   
   subroutine read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, &
-       fileout, timeout, filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
-       lambda_var_Td, lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, &
-       lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc)
+       fileout, timeout, filename_noise, n_mbb_dust, n_mbb_cib, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, &
+       lambda_var_beta, lambda_var_Td, lambda_stefan, tau_fact_init, tau_init, beta_init, Td_init, lb_tau, ub_tau, &
+       lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, &
+       save_grid, degree, cc)
     implicit none
 
     integer :: ios=0
 
     character(len=512), intent(in) :: filename_parameters
 
-    integer, intent(inout)  :: n_mbb
+    integer, intent(inout)  :: n_mbb_dust
+    integer, intent(inout)  :: n_mbb_cib
     integer, intent(inout)  :: m 
     integer, intent(inout)  :: lstd, ustd
     integer, intent(inout)  :: iprint, iprint_init
     integer, intent(inout)  :: maxiter, maxiter_init
-    real(xp), intent(inout) :: lambda_sig, lambda_beta, lambda_Td
-    real(xp), intent(inout) :: lambda_var_sig, lambda_var_beta, lambda_var_Td
+    real(xp), intent(inout) :: lambda_tau, lambda_beta, lambda_Td
+    real(xp), intent(inout) :: lambda_var_tau, lambda_var_beta, lambda_var_Td
     real(xp), intent(inout) :: lambda_stefan
-    real(xp), intent(inout) :: sig_fact_init
-    real(xp), intent(inout) :: sig_init, beta_init, Td_init
-    real(xp), intent(inout) :: lb_sig, ub_sig
+    real(xp), intent(inout) :: tau_fact_init
+    real(xp), intent(inout) :: tau_init, beta_init, Td_init
+    real(xp), intent(inout) :: lb_tau, ub_tau
     real(xp), intent(inout) :: lb_beta, ub_beta
     real(xp), intent(inout) :: lb_Td, ub_Td
     real(xp), intent(inout) :: l0
@@ -49,8 +51,8 @@ contains
     character(len=512), intent(inout) :: filename_noise
 
     namelist /user_parameters/ filename, filename_NHI, filename_wavelength, filename_color, fileout, timeout, &
-         filename_noise, n_mbb, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, &
-         lambda_stefan, sig_fact_init, sig_init, beta_init, Td_init, lb_sig, ub_sig, lb_beta, ub_beta, &
+         filename_noise, n_mbb_dust, n_mbb_cib, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
+         lambda_var_Td, lambda_stefan, tau_fact_init, tau_init, beta_init, Td_init, lb_tau, ub_tau, lb_beta, ub_beta, &
          lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
@@ -163,7 +165,7 @@ contains
     open(unit=12, file=fileout_nside, action="write", iostat=ios)
     if (ios /= 0) stop "opening file error"
 
-    write(12,fmt=*) "# i, j, sig, beta, Td"
+    write(12,fmt=*) "# i, j, tau, beta, Td"
 
     do i=1, dim_yx
        do j=1, dim_yx

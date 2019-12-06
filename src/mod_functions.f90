@@ -171,7 +171,7 @@ contains
   end subroutine go_up_level
 
   
-  subroutine init_spectrum(n_mbb, params, dim_v, line, NHI, wavelength, lb_sig, ub_sig, lb_beta, ub_beta, &
+  subroutine init_spectrum(n_mbb, params, dim_v, line, wavelength, lb_tau, ub_tau, lb_beta, ub_beta, &
        lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree, std, &
        cc)
     !! Initialization of the mean sprectrum with N Gaussian
@@ -186,11 +186,10 @@ contains
     real(xp), intent(in), dimension(dim_v) :: line !! spectrum
     real(xp), intent(in), dimension(dim_v)  :: wavelength  !! wavelength Planck + IRAS
     real(xp), intent(in), dimension(:,:), allocatable :: color
-    real(xp), intent(in), dimension(n_mbb) :: NHI !! spectrum
     real(xp), intent(in), dimension(:) :: std
 
-    real(xp), intent(in) :: lb_sig !! lower bound sigma
-    real(xp), intent(in) :: ub_sig !! upper bound sigma
+    real(xp), intent(in) :: lb_tau !! lower bound tauma
+    real(xp), intent(in) :: ub_tau !! upper bound tauma
     real(xp), intent(in) :: lb_beta !! lower bound beta
     real(xp), intent(in) :: ub_beta !! upper bound beta
     real(xp), intent(in) :: lb_Td !! lower bound Td
@@ -218,8 +217,8 @@ contains
        x(i) = params(i)
     end do
 
-    call init_bounds(n_mbb, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)   
-    call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, &
+    call init_bounds(n_mbb, lb, ub, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td)   
+    call minimize_spec(3*n_mbb, m, x, lb, ub, line, wavelength, dim_v, n_mbb, l0, maxiter, &
          iprint, color, degree, std, cc)
 
     do i=1, 3*n_mbb
@@ -231,13 +230,13 @@ contains
   end subroutine init_spectrum
   
 
-  subroutine init_bounds(n_mbb, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)
+  subroutine init_bounds(n_mbb, lb, ub, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td)
     !! Initialize parameters bounds for optimization
     implicit none
     
     integer, intent(in) :: n_mbb !! number of Gaussian
-    real(xp), intent(in) :: lb_sig !! lower bound sigma
-    real(xp), intent(in) :: ub_sig !! upper bound sigma
+    real(xp), intent(in) :: lb_tau !! lower bound tauma
+    real(xp), intent(in) :: ub_tau !! upper bound tauma
     real(xp), intent(in) :: lb_beta !! lower bound beta
     real(xp), intent(in) :: ub_beta !! upper bound beta
     real(xp), intent(in) :: lb_Td !! lower bound Td
@@ -248,9 +247,9 @@ contains
     integer :: i
     
     do i=1, n_mbb       
-       ! sigma bounds
-       lb(1+(3*(i-1))) = lb_sig
-       ub(1+(3*(i-1))) = ub_sig
+       ! tauma bounds
+       lb(1+(3*(i-1))) = lb_tau
+       ub(1+(3*(i-1))) = ub_tau
        
        ! beta bounds 
        lb(2+(3*(i-1))) = lb_beta
@@ -263,7 +262,7 @@ contains
   end subroutine init_bounds
 
 
-  subroutine upgrade(cube, params, NHI, wavelength, power, n_mbb, dim_v, lb_sig, ub_sig, lb_beta, ub_beta, &
+  subroutine upgrade(cube, params, wavelength, power, n_mbb, dim_v, lb_tau, ub_tau, lb_beta, ub_beta, &
        lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree, std_cube, cc)
     !! Upgrade parameters (spectra to spectra) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
@@ -271,11 +270,10 @@ contains
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube
     real(xp), intent(in), dimension(dim_v)  :: wavelength  !! wavelength Planck + IRAS
     real(xp), intent(in), dimension(:,:), allocatable :: color
-    real(xp), intent(in), dimension(n_mbb) :: NHI !! spectrum
     real(xp), intent(in), dimension(:,:,:), allocatable :: std_cube !! standard deviation cube
 
-    real(xp), intent(in) :: lb_sig !! lower bound sigma
-    real(xp), intent(in) :: ub_sig !! upper bound sigma
+    real(xp), intent(in) :: lb_tau !! lower bound tauma
+    real(xp), intent(in) :: ub_tau !! upper bound tauma
     real(xp), intent(in) :: lb_beta !! lower bound beta
     real(xp), intent(in) :: ub_beta !! upper bound beta
     real(xp), intent(in) :: lb_Td !! lower bound Td
@@ -309,8 +307,8 @@ contains
           x = params(:,i,j)
           std = std_cube(:,i,j)
           
-          call init_bounds(n_mbb, lb, ub, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td)
-          call minimize_spec(3*n_mbb, m, x, lb, ub, line, NHI, wavelength, dim_v, n_mbb, l0, maxiter, &
+          call init_bounds(n_mbb, lb, ub, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td)
+          call minimize_spec(3*n_mbb, m, x, lb, ub, line, wavelength, dim_v, n_mbb, l0, maxiter, &
                iprint, color, degree, std, cc)
           
           params(:,i,j) = x
@@ -323,8 +321,8 @@ contains
 
 
   subroutine update(cube, cube_HI, wavelength, params, b_params, c_params, d_params, stefan_params, &
-       n_mbb, dim_v, dim_y, dim_x, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
-       lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, &
+       n_mbb, dim_v, dim_y, dim_x, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
+       lambda_var_Td, lambda_stefan, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, &
        iprint, std_cube, color, degree, cc)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
@@ -343,17 +341,17 @@ contains
     integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: iprint !! print option
 
-    real(xp), intent(in) :: lambda_sig !! lambda for siglitude parameter
+    real(xp), intent(in) :: lambda_tau !! lambda for taulitude parameter
     real(xp), intent(in) :: lambda_beta !! lambda for mean position parameter
     real(xp), intent(in) :: lambda_Td !! lambda for dispersion parameter
 
-    real(xp), intent(in) :: lambda_var_sig !! lambda for sig dispersion parameter
+    real(xp), intent(in) :: lambda_var_tau !! lambda for tau dispersion parameter
     real(xp), intent(in) :: lambda_var_beta  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_Td  !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_stefan !! lambda for variance dispersion parameter
 
-    real(xp), intent(in) :: lb_sig !! lower bound sigma
-    real(xp), intent(in) :: ub_sig !! upper bound sigma
+    real(xp), intent(in) :: lb_tau !! lower bound tauma
+    real(xp), intent(in) :: ub_tau !! upper bound tauma
     real(xp), intent(in) :: lb_beta !! lower bound beta
     real(xp), intent(in) :: ub_beta !! upper bound beta
     real(xp), intent(in) :: lb_Td !! lower bound Td
@@ -386,7 +384,7 @@ contains
     !Bounds
     do j=1, dim_x
        do i=1, dim_y
-          call init_bounds(n_mbb, lb_3D(:,i,j), ub_3D(:,i,j), lb_sig, ub_sig, &
+          call init_bounds(n_mbb, lb_3D(:,i,j), ub_3D(:,i,j), lb_tau, ub_tau, &
                lb_beta, ub_beta, lb_Td, ub_Td)
        end do
     end do
@@ -396,11 +394,11 @@ contains
     call ravel_3D(params, beta, 3*n_mbb, dim_y, dim_x)
 
     do i=1,n_mbb
-       lb(n_cube+(0*n_mbb)+i) = lb_sig
-       ub(n_cube+(0*n_mbb)+i) = ub_sig
+       lb(n_cube+(0*n_mbb)+i) = lb_tau
+       ub(n_cube+(0*n_mbb)+i) = ub_tau
 
-       lb(n_cube+(1*n_mbb)+i) = lb_sig !FIXME MAYBE
-       ub(n_cube+(1*n_mbb)+i) = ub_sig !FIXME MAYBE
+       lb(n_cube+(1*n_mbb)+i) = lb_tau !FIXME MAYBE
+       ub(n_cube+(1*n_mbb)+i) = ub_tau !FIXME MAYBE
 
        lb(n_cube+(2*n_mbb)+i) = lb_beta
        ub(n_cube+(2*n_mbb)+i) = ub_beta
@@ -414,8 +412,8 @@ contains
        beta(n_cube+(3*n_mbb)+i) = d_params(i)
     end do
 
-    call minimize(n_beta, m, beta, lb, ub, cube, cube_HI, n_mbb, dim_v, dim_y, dim_x, lambda_sig, &
-         lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, l0, &
+    call minimize(n_beta, m, beta, lb, ub, cube, cube_HI, n_mbb, dim_v, dim_y, dim_x, lambda_tau, &
+         lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, lambda_var_Td, lambda_stefan, l0, &
          maxiter, kernel, iprint, std_cube, wavelength, color, degree, cc)
 
     !Unravel data

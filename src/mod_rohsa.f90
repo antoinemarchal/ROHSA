@@ -17,9 +17,9 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, wavelength, std_cube, data_HI, fileout, timeout, n_mbb, lambda_sig, lambda_beta, &
-       lambda_Td, lambda_var_sig, lambda_var_beta, lambda_var_Td, lambda_stefan, amp_fact_init, sig_init, beta_init, &
-       Td_init, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, &
+  subroutine main_rohsa(data, wavelength, std_cube, data_HI, fileout, timeout, n_mbb, lambda_tau, lambda_beta, &
+       lambda_Td, lambda_var_tau, lambda_var_beta, lambda_var_Td, lambda_stefan, amp_fact_init, tau_init, beta_init, &
+       Td_init, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, &
        iprint_init, save_grid, color, degree, cc)
     
     implicit none
@@ -35,23 +35,23 @@ contains
     integer, intent(in) :: maxiter         !! max iteration for L-BFGS-B alogorithm
     integer, intent(in) :: maxiter_init    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
 
-    real(xp), intent(in) :: lambda_sig     !! lambda for amplitude parameter
+    real(xp), intent(in) :: lambda_tau     !! lambda for amplitude parameter
     real(xp), intent(in) :: lambda_beta    !! lamnda for mean position parameter
     real(xp), intent(in) :: lambda_Td      !! lambda for dispersion parameter
 
-    real(xp), intent(in) :: lambda_var_sig  !! lambda for amp dispersion parameter
+    real(xp), intent(in) :: lambda_var_tau  !! lambda for amp dispersion parameter
     real(xp), intent(in) :: lambda_var_beta !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_var_Td !! lambda for mean position dispersion parameter
     real(xp), intent(in) :: lambda_stefan   !! lambda for variance dispersion parameter
 
     real(xp), intent(in) :: amp_fact_init  !! times max amplitude of additional Gaussian
 
-    real(xp), intent(in) :: sig_init      !! 
+    real(xp), intent(in) :: tau_init      !! 
     real(xp), intent(in) :: beta_init     !! 
     real(xp), intent(in) :: Td_init       !! 
 
-    real(xp), intent(in) :: lb_sig        !! lower bound
-    real(xp), intent(in) :: ub_sig        !! upper bound
+    real(xp), intent(in) :: lb_tau        !! lower bound
+    real(xp), intent(in) :: ub_tau        !! upper bound
     real(xp), intent(in) :: lb_beta       !! lower bound
     real(xp), intent(in) :: ub_beta       !! upper bound
     real(xp), intent(in) :: lb_Td         !! lower bound
@@ -81,7 +81,7 @@ contains
     real(xp), dimension(:,:,:), allocatable :: fit_params      !! parameters to optimize with cube mean at each iteration
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:,:), allocatable :: std_cube_mean   !! standard deviation cube
-    real(xp), dimension(:), allocatable :: b_params            !! unknow average sigma
+    real(xp), dimension(:), allocatable :: b_params            !! unknow average tauma
     real(xp), dimension(:), allocatable :: c_params            !! unknow average beta
     real(xp), dimension(:), allocatable :: d_params            !! unknow average Td
     real(xp), dimension(:), allocatable :: stefan_params       !! unknow average propto Luminosity
@@ -107,23 +107,23 @@ contains
     print*, "______Parameters_____"
     print*, "n_mbb = ", n_mbb
 
-    print*, "lambda_sig = ", lambda_sig
+    print*, "lambda_tau = ", lambda_tau
     print*, "lambda_beta = ", lambda_beta
     print*, "lambda_Td = ", lambda_Td
 
-    print*, "lambda_var_sig = ", lambda_var_sig
+    print*, "lambda_var_tau = ", lambda_var_tau
     print*, "lambda_var_beta = ", lambda_var_beta
     print*, "lambda_var_Td = ", lambda_var_Td
     print*, "lambda_stefan = ", lambda_stefan
 
     print*, "amp_fact_init = ", amp_fact_init
 
-    print*, "sig_init = ", sig_init
+    print*, "tau_init = ", tau_init
     print*, "beta_init = ", beta_init
     print*, "Td_init = ", Td_init
 
-    print*, "lb_sig = ", lb_sig
-    print*, "ub_sig = ", ub_sig
+    print*, "lb_tau = ", lb_tau
+    print*, "ub_tau = ", ub_tau
     print*, "lb_beta = ", lb_beta
     print*, "ub_beta = ", ub_beta
     print*, "lb_Td = ", lb_Td
@@ -219,13 +219,13 @@ contains
           print*, "Init mean spectrum"        
 
           do i=1, n_mbb    
-             fit_params(1+(3*(i-1)),1,1) = sig_init
+             fit_params(1+(3*(i-1)),1,1) = tau_init
              fit_params(2+(3*(i-1)),1,1) = beta_init
              fit_params(3+(3*(i-1)),1,1) = Td_init
           end do
                    
-          call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), cube_HI_mean(:,1,1), &
-               wavelength, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, m, iprint_init, &
+          call init_spectrum(n_mbb, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), wavelength, &
+               lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, m, iprint_init, &
                color, degree, std_cube_mean(:,1,1), cc)
 
           !Init b_params
@@ -240,7 +240,7 @@ contains
               
        if (n == 0) then                
           print*,  "Update level", n
-          call upgrade(cube_mean, fit_params, cube_HI_mean, wavelength, power, n_mbb, dim_cube(1), lb_sig, ub_sig, &
+          call upgrade(cube_mean, fit_params, wavelength, power, n_mbb, dim_cube(1), lb_tau, ub_tau, &
                lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, iprint, color, degree, std_cube_mean, cc)
        end if
               
@@ -248,8 +248,8 @@ contains
           ! Update parameters 
           print*,  "Update level", n, ">", power
           call update(cube_mean, cube_HI_mean, wavelength, fit_params, b_params, c_params, d_params, stefan_params, &
-               n_mbb, dim_cube(1), power, power, lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, lambda_var_beta, &
-               lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, &
+               n_mbb, dim_cube(1), power, power, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
+               lambda_var_Td, lambda_stefan, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, m, kernel, &
                iprint, std_cube_mean, color, degree, cc)
           
        end if
@@ -295,8 +295,8 @@ contains
     
         
     call update(data, data_HI, wavelength, grid_params, b_params, c_params, d_params, stefan_params, n_mbb, &
-         dim_data(1), dim_data(2), dim_data(3), lambda_sig, lambda_beta, lambda_Td, lambda_var_sig, &
-         lambda_var_beta, lambda_var_Td, lambda_stefan, lb_sig, ub_sig, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, &
+         dim_data(1), dim_data(2), dim_data(3), lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, &
+         lambda_var_beta, lambda_var_Td, lambda_stefan, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter, &
          m, kernel, iprint, std_cube, color, degree, cc)       
     
     print*, " "
@@ -311,19 +311,19 @@ contains
     write(12,fmt=*) "# ______Parameters_____"
     write(12,fmt=*) "# "
     write(12,fmt=*) "# n_mbb = ", n_mbb
-    write(12,fmt=*) "# lambda_sig = ", lambda_sig
+    write(12,fmt=*) "# lambda_tau = ", lambda_tau
     write(12,fmt=*) "# lambda_beta = ", lambda_beta
     write(12,fmt=*) "# lambda_Td = ", lambda_Td
-    write(12,fmt=*) "# lambda_var_sig = ", lambda_var_sig
+    write(12,fmt=*) "# lambda_var_tau = ", lambda_var_tau
     write(12,fmt=*) "# lambda_var_beta = ", lambda_var_beta
     write(12,fmt=*) "# lambda_var_Td = ", lambda_var_Td
     write(12,fmt=*) "# lambda_stefan = ", lambda_stefan
     write(12,fmt=*) "# amp_fact_init = ", amp_fact_init
-    write(12,fmt=*) "# sig_init = ", sig_init
+    write(12,fmt=*) "# tau_init = ", tau_init
     write(12,fmt=*) "# beta_init = ", beta_init
     write(12,fmt=*) "# Td_init = ", Td_init
-    write(12,fmt=*) "# lb_sig = ", lb_sig
-    write(12,fmt=*) "# ub_sig = ", ub_sig
+    write(12,fmt=*) "# lb_tau = ", lb_tau
+    write(12,fmt=*) "# ub_tau = ", ub_tau
     write(12,fmt=*) "# lb_beta = ", lb_beta
     write(12,fmt=*) "# ub_beta = ", ub_beta
     write(12,fmt=*) "# lb_Td = ", lb_Td
