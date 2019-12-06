@@ -38,7 +38,7 @@ program ROHSA
 
   real(xp) :: tau_fact_init !! times max taulitude of additional Gaussian
 
-  real(xp) :: Td_init       !! dust opacity init
+  real(xp) :: Td_init       !!
   real(xp) :: beta_init     !! 
   real(xp) :: tau_init      !!
 
@@ -48,6 +48,13 @@ program ROHSA
   real(xp) :: ub_beta       !! upper bound
   real(xp) :: lb_Td         !! lower bound 
   real(xp) :: ub_Td         !! upper bound
+
+  real(xp) :: lb_tau_cib        !! lower bound 
+  real(xp) :: ub_tau_cib        !! upper bound
+  real(xp) :: lb_beta_cib       !! lower bound
+  real(xp) :: ub_beta_cib       !! upper bound
+  real(xp) :: lb_Td_cib         !! lower bound 
+  real(xp) :: ub_Td_cib         !! upper bound
 
   real(xp) :: l0 !! reference wavelength
   integer :: degree
@@ -112,13 +119,19 @@ program ROHSA
   beta_init = 1.7_xp
   Td_init = 17._xp
 
-  !FIXME VALUE
   lb_tau = 0._xp     
   ub_tau = 100._xp
   lb_beta = 1._xp
   ub_beta = 2.5_xp
   lb_Td = 8.2_xp       		   
   ub_Td = 50._xp       
+
+  lb_tau_cib = -100._xp     
+  ub_tau_cib = 100._xp
+  lb_beta_cib = 1._xp
+  ub_beta_cib = 2.5_xp
+  lb_Td_cib = 8.2_xp       		   
+  ub_Td_cib = 50._xp       
 
   maxiter_init = 15000
   maxiter = 800
@@ -134,7 +147,8 @@ program ROHSA
   call read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, fileout, &
        timeout, filename_noise, n_mbb_dust, n_mbb_cib, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
        lambda_var_Td, lambda_stefan, tau_fact_init, tau_init, beta_init, Td_init, lb_tau, ub_tau, lb_beta, ub_beta, &
-       lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc)
+       lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, l0, maxiter_init, maxiter, &
+       m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc)
 
   !Total number of mbb
   n_mbb = n_mbb_dust + n_mbb_cib
@@ -149,7 +163,7 @@ program ROHSA
   call read_array(filename_wavelength, wavelength)
   call read_map(filename_color, color)
 
-  !Test fft
+  ! !Test fft
   ! call read_map(filename_fBm, test_fft)
   ! allocate(test_fft_shift(64,64))
 
@@ -166,10 +180,8 @@ program ROHSA
   ! call apodize(tapper, 0.86_xp, 34,64)
 
   ! call butterworth(butter,kmat,1._xp,1._xp,2._xp)
-
-  ! print*, n_mbb_cib
   ! stop
-  !
+  ! !
 
   if (noise .eqv. .false.) then
      print*, "no .false. option for rohsa-mbb, please provide a rms cube."

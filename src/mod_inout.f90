@@ -15,8 +15,8 @@ contains
   subroutine read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, &
        fileout, timeout, filename_noise, n_mbb_dust, n_mbb_cib, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, &
        lambda_var_beta, lambda_var_Td, lambda_stefan, tau_fact_init, tau_init, beta_init, Td_init, lb_tau, ub_tau, &
-       lb_beta, ub_beta, lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, &
-       save_grid, degree, cc)
+       lb_beta, ub_beta, lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, l0, &
+       maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc)
     implicit none
 
     integer :: ios=0
@@ -37,6 +37,9 @@ contains
     real(xp), intent(inout) :: lb_tau, ub_tau
     real(xp), intent(inout) :: lb_beta, ub_beta
     real(xp), intent(inout) :: lb_Td, ub_Td
+    real(xp), intent(inout) :: lb_tau_cib, ub_tau_cib
+    real(xp), intent(inout) :: lb_beta_cib, ub_beta_cib
+    real(xp), intent(inout) :: lb_Td_cib, ub_Td_cib
     real(xp), intent(inout) :: l0
     integer, intent(inout)  :: degree
     logical, intent(inout)  :: noise, save_grid
@@ -53,7 +56,8 @@ contains
     namelist /user_parameters/ filename, filename_NHI, filename_wavelength, filename_color, fileout, timeout, &
          filename_noise, n_mbb_dust, n_mbb_cib, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
          lambda_var_Td, lambda_stefan, tau_fact_init, tau_init, beta_init, Td_init, lb_tau, ub_tau, lb_beta, ub_beta, &
-         lb_Td, ub_Td, l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc
+         lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, l0, maxiter_init, &
+         maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
     if (ios /= 0) stop "opening file error"

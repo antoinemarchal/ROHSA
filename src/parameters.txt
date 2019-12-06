@@ -9,7 +9,7 @@
    ,timeout = 'timestep.dat'                   !! write output time step
 
    ,n_mbb_dust = 1   	                       !! number of mmb dust to fit
-   ,n_mbb_cib = 1                              !! number of mmb cib to fit
+   ,n_mbb_cib = 0                              !! number of mmb cib to fit
 
    ,degree = 5
 
@@ -34,17 +34,24 @@
    ,lb_Td = 8.2d0         		       !! upper bound Td
    ,ub_Td = 50.d0         		       !! upper bound Td
 
+   ,lb_tau_cib = -1000.d0        	       !! upper bound Td
+   ,ub_tau_cib = 1000.d0        	       !! upper bound Td
+   ,lb_beta_cib = 0.5d0         	       !! upper bound Td
+   ,ub_beta_cib = 1.5d0         	       !! upper bound Td
+   ,lb_Td_cib = 8.2d0         		       !! upper bound Td
+   ,ub_Td_cib = 50.d0         		       !! upper bound Td
+
    ,l0 = 0.055007790459d0                      !! reference wavelength in cm
 
    ,maxiter_init = 15000    		       !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
    ,maxiter = 4000            		       !! max iteration for L-BFGS-B alogorithm
    ,m = 10                  		       !! number of corrections used in the limited memory matrix by LBFGS-B
-   ,noise = .true.         		       !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
+   ,noise = .true.         		       !! if false --> STD map computed by ROHSA btw lstd and ustd (if true given by the user)
    ,lstd = 0                		       !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
    ,ustd = 0               		       !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
    ,iprint = 1              		       !! print option 
    ,iprint_init = 1        		       !! print option init
    ,save_grid = .true.     		       !! if true --> save fitted parameters at each iteration of the multiresolution process
-   ,cc = .true.
+   ,cc = .true.                                !! if true --> activate colour corrections PLANCK+IRAS
    /
 

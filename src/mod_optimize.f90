@@ -277,34 +277,51 @@ contains
              end if
              
              !
-             do k=1, dim_v                          
-                deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + ( &
-                     ! d_mbb_l_dtau(wavelength(k), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), l0, &
-                     ! ) &
-                     d_mbbcc_l_dtau(wavelength(k), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), l0, &
-                     color(k,:), degree) &
+             if (cc .eqv. .true.) then
+                do k=1, dim_v                          
+                   deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + ( &
+                        d_mbbcc_l_dtau(wavelength(k), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), l0, &
+                        color(k,:), degree) &
+                        
+                        * residual(k,j,l) / std_cube(k,j,l) &
+                        )
+                   
+                   deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + ( &
+                        d_mbbcc_l_db(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
+                        l0, color(k,:), degree) &
+                        
+                        * residual(k,j,l) / std_cube(k,j,l) &
+                        )
+                   
+                   deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + ( &
+                        d_mbbcc_l_dT(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
+                        l0, color(k,:), degree) &
+                        
+                        * residual(k,j,l) / std_cube(k,j,l)&
+                        )
+                end do
+             else
+                do k=1, dim_v                          
+                   deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + ( &
+                        d_mbb_l_dtau(wavelength(k), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), l0 &
+                        ) &                        
+                        * residual(k,j,l) / std_cube(k,j,l) &
+                        )
+                   
+                   deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + ( &
+                        d_mbb_l_db(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
+                        l0) &                        
+                        * residual(k,j,l) / std_cube(k,j,l) &
+                        )
+                   
+                   deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + ( &
+                        d_mbb_l_dT(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
+                        l0) &
+                        * residual(k,j,l) / std_cube(k,j,l)&
+                        )
+                end do
+             end if
 
-                     * residual(k,j,l) / std_cube(k,j,l) &
-                     )
-                
-                deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + ( &
-                     ! d_mbb_l_db(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
-                     ! l0) &
-                     d_mbbcc_l_db(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
-                     l0, color(k,:), degree) &
-                     
-                     * residual(k,j,l) / std_cube(k,j,l) &
-                     )
-                
-                deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + ( &
-                     ! d_mbb_l_dT(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
-                     ! l0) &
-                     d_mbbcc_l_dT(wavelength(k), params(1+(3*(i-1)),j,l), params(2+(3*(i-1)),j,l), params(3+(3*(i-1)),j,l), &
-                     l0, color(k,:), degree) &
-                     
-                     * residual(k,j,l) / std_cube(k,j,l)&
-                     )
-             end do
 
              deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (lambda_tau * conv_conv_tau(j,l))
              deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (lambda_beta * conv_conv_beta(j,l))
