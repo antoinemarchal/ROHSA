@@ -13,62 +13,7 @@ program ROHSA
   
   implicit none
 
-  logical :: noise           !! if false --> STD map computed by ROHSA with lstd and ustd (if true given by the user)
-  logical :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
-  logical :: cc              !! if true --> apply colour correction PLANCK+IRAS
-  logical :: ciba            !! if true --> model CIBA
-  integer :: n_mbb           !! number of mbb to fit
-  integer :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
-  integer :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
-  integer :: ustd            !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
-  integer :: iprint          !! print option 
-  integer :: iprint_init     !! print option init
-  integer :: maxiter         !! max iteration for L-BFGS-B alogorithm
-  integer :: maxiter_init    !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
-
-  real(xp) :: lambda_tau     !! lambda for dust opacity parameter
-  real(xp) :: lambda_beta    !! lamnda for spectral emissivity index parameter
-  real(xp) :: lambda_Td      !! lambda for dust temperature parameter
-
-  real(xp) :: lambda_var_tau  !! lambda for variance dust opacity parameter
-  real(xp) :: lambda_var_beta !! lambda for variance spectral emissivity parameter
-  real(xp) :: lambda_var_Td   !! lambda for variance spectral emissivity parameter
-  real(xp) :: lambda_stefan   !! lambda for variance dust temperature parameter
-
-  real(xp) :: tau_init      !!
-  real(xp) :: beta_init     !! 
-  real(xp) :: Td_init       !!
-
-  real(xp) :: tau_init_cib  !!
-  real(xp) :: beta_init_cib !! 
-  real(xp) :: Td_init_cib   !!
-
-  real(xp) :: lb_tau        !! lower bound 
-  real(xp) :: ub_tau        !! upper bound
-  real(xp) :: lb_beta       !! lower bound
-  real(xp) :: ub_beta       !! upper bound
-  real(xp) :: lb_Td         !! lower bound 
-  real(xp) :: ub_Td         !! upper bound
-
-  real(xp) :: lb_tau_cib        !! lower bound 
-  real(xp) :: ub_tau_cib        !! upper bound
-  real(xp) :: lb_beta_cib       !! lower bound
-  real(xp) :: ub_beta_cib       !! upper bound
-  real(xp) :: lb_Td_cib         !! lower bound 
-  real(xp) :: ub_Td_cib         !! upper bound
-
-  real(xp) :: l0 !! reference wavelength
-  integer :: degree
-
   character(len=512) :: filename_parameters !! name of the parameters file (default parameters.txt)
-  character(len=512) :: filename            !! name of the data file
-  character(len=512) :: filename_NHI        !! name of the data file
-  character(len=512) :: filename_wavelength !! name of the wavelength file
-  character(len=512) :: filename_color      !! name of the wavelength file
-  character(len=512) :: fileout             !! name of the output result
-  character(len=512) :: timeout             !! name of the output result
-  character(len=512) :: filename_noise      !! name of the file with STD map (if noise .eq. true)
-
   character(len=512) :: filename_fBm="fBm.dat"
 
   real(xp) :: start, finish
@@ -100,24 +45,24 @@ program ROHSA
 
   !Print header and get filename in argument
   call get_command_argument(1, filename_parameters)
-  ! call get_parameters(filename_parameters)
+  call get_parameters(filename_parameters)
  
   !Read parameters
-  call read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, fileout, &
-       timeout, filename_noise, n_mbb, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
-       lambda_var_Td, lambda_stefan, tau_init, beta_init, Td_init, tau_init_cib, beta_init_cib, Td_init_cib, lb_tau, &
-       ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, &
-       l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc, ciba)
+  ! call read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, fileout, &
+  !      timeout, filename_noise, n_mbb, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
+  !      lambda_var_Td, lambda_stefan, tau_init, beta_init, Td_init, tau_init_cib, beta_init_cib, Td_init_cib, lb_tau, &
+  !      ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, &
+  !      l0, maxiter_init, maxiter, m, noise, lstd, ustd, iprint, iprint_init, save_grid, degree, cc, ciba)
 
   !Call header
   call header()  
 
-  print*, "filename = '",trim(filename),"'"
+  print*, "filename = '",trim(params%filename),"'"
 
-  !Load data
-  call read_cube(filename, data)
-  call read_array(filename_wavelength, wavelength)
-  call read_map(filename_color, color)
+  ! !Load data
+  call read_cube(params%filename, data)
+  call read_array(params%filename_wavelength, wavelength)
+  call read_map(params%filename_color, color)
 
   ! !Test fft
   ! call read_map(filename_fBm, test_fft)
@@ -139,13 +84,13 @@ program ROHSA
   ! stop
   ! !
 
-  if (noise .eqv. .false.) then
+  if (params%noise .eqv. .false.) then
      print*, "no .false. option for rohsa-mbb, please provide a rms cube."
      stop
   end if
-  call read_cube(filename_noise, std_cube)
+  call read_cube(params%filename_noise, std_cube)
 
-  call read_cube(filename_NHI, NHI)
+  call read_cube(params%filename_NHI, NHI)
 
   ! !Check if n_mbb == number of NHI maps
   ! dim_NHI = shape(NHI)
@@ -155,11 +100,13 @@ program ROHSA
   ! end if
   
   !Call ROHSA subroutine
-  call main_rohsa(data, wavelength, std_cube, NHI, fileout, timeout, n_mbb, lambda_tau, lambda_beta, lambda_Td, &
-       lambda_var_tau, lambda_var_beta, lambda_var_Td, lambda_stefan, tau_init, beta_init, Td_init, &
-       tau_init_cib, beta_init_cib, Td_init_cib, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, &
-       lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, l0, maxiter_init, maxiter, &
-       m, noise, lstd, ustd, iprint, iprint_init, save_grid, color, degree, cc, ciba)  
+  call main_rohsa(data, wavelength, std_cube, NHI, params%fileout, params%timeout, params%n_mbb, params%lambda_tau, &
+       params%lambda_beta, params%lambda_Td, params%lambda_var_tau, params%lambda_var_beta, params%lambda_var_Td, &
+       params%lambda_stefan, params%tau_init, params%beta_init, params%Td_init, params%tau_init_cib, params%beta_init_cib, &
+       params%Td_init_cib, params%lb_tau, params%ub_tau, params%lb_beta, params%ub_beta, params%lb_Td, params%ub_Td, &
+       params%lb_tau_cib, params%ub_tau_cib, params%lb_beta_cib, params%ub_beta_cib, params%lb_Td_cib, params%ub_Td_cib, &
+       params%l0, params%maxiter_init, params%maxiter, params%m, params%noise, params%lstd, params%ustd, params%iprint, &
+       params%iprint_init, params%save_grid, color, params%degree, params%cc, params%ciba)  
 
   call ender()
 
