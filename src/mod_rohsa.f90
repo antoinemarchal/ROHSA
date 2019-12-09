@@ -111,64 +111,6 @@ contains
     integer :: j     !! loop index
     integer :: k     !! loop index
         
-    print*, "fileout = '",trim(fileout),"'"
-    print*, "timeout = '",trim(timeout),"'"
-    
-    print*, " "
-    print*, "______Parameters_____"
-    print*, "n_mbb = ", n_mbb
-
-    print*, "lambda_tau = ", lambda_tau
-    print*, "lambda_beta = ", lambda_beta
-    print*, "lambda_Td = ", lambda_Td
-
-    print*, " "
-    print*, "lambda_var_tau = ", lambda_var_tau
-    print*, "lambda_var_beta = ", lambda_var_beta
-    print*, "lambda_var_Td = ", lambda_var_Td
-    print*, "lambda_stefan = ", lambda_stefan
-
-    print*, " "
-    print*, "tau_init = ", tau_init
-    print*, "beta_init = ", beta_init
-    print*, "Td_init = ", Td_init
-
-    print*, " "
-    print*, "tau_init_cib = ", tau_init_cib
-    print*, "beta_init_cib = ", beta_init_cib
-    print*, "Td_init_cib = ", Td_init_cib
-
-    print*, " "
-    print*, "lb_tau = ", lb_tau
-    print*, "ub_tau = ", ub_tau
-    print*, "lb_beta = ", lb_beta
-    print*, "ub_beta = ", ub_beta
-    print*, "lb_Td = ", lb_Td
-    print*, "ub_Td = ", ub_Td
-
-    print*, " "
-    print*, "lb_tau_cib = ", lb_tau_cib
-    print*, "ub_tau_cib = ", ub_tau_cib
-    print*, "lb_beta_cib = ", lb_beta_cib
-    print*, "ub_beta_cib = ", ub_beta_cib
-    print*, "lb_Td_cib = ", lb_Td_cib
-    print*, "ub_Td_cib = ", ub_Td_cib
-
-    print*, " "
-    print*, "l0 = ", l0
-
-    print*, " "
-    print*, "maxiter_init = ", maxiter_init
-    print*, "maxiter = ", maxiter
-    print*, "lstd = ", lstd
-    print*, "ustd = ", ustd
-    print*, "noise = ", noise
-    print*, "save_grid = ", save_grid
-    print*, "cc = ", cc
-    print*, "ciba = ", ciba
-
-    print*, " "
-    
     allocate(kernel(3, 3))
     
     kernel(1,1) = 0._xp

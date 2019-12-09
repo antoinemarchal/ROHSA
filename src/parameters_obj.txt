@@ -21,7 +21,7 @@
    ,params%lambda_stefan = 0.d0    		       !! lambda for dispersion variance parameter
 
    ,params%tau_init = 1.d0         		       !! dispersion of additional Gaussian
-   ,params%beta_init = 1.d0         		       !! dispersion of additional Gaussian
+   ,params%beta_init = 1.4d0         		       !! dispersion of additional Gaussian
    ,params%Td_init = 15.d0         		       !! dispersion of additional Gaussian
 
    ,params%tau_init_cib = 0.d0        		       !! dispersion of additional Gaussian
