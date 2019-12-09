@@ -18,5 +18,37 @@ module mod_constants
   real(xp), parameter, public :: gammag  = 5._xp / 3._xp             !adiabatic coefficient
   real(xp), parameter, public :: thomson = 6.6524587158e-25_xp       !thomson cross-section in cgs 
   real(xp), parameter, public :: h       = 6.62607004e-27_xp         !planck constant in cgs
+
+  type parameters
+     integer  :: n_mbb
+
+     integer  :: m 
+     integer  :: lstd, ustd
+     integer  :: iprint, iprint_init
+     integer  :: maxiter, maxiter_init
+
+     real(xp) :: lambda_tau, lambda_beta, lambda_Td
+     real(xp) :: lambda_var_tau, lambda_var_beta, lambda_var_Td
+     real(xp) :: lambda_stefan
+
+     real(xp) :: tau_init, beta_init, Td_init
+     real(xp) :: tau_init_cib, beta_init_cib, Td_init_cib
+
+     real(xp) :: lb_tau, ub_tau
+     real(xp) :: lb_beta, ub_beta
+     real(xp) :: lb_Td, ub_Td
+
+     real(xp) :: lb_tau_cib, ub_tau_cib
+     real(xp) :: lb_beta_cib, ub_beta_cib
+     real(xp) :: lb_Td_cib, ub_Td_cib
+
+     real(xp) :: l0
+     integer  :: degree
+     logical  :: noise, save_grid
+     logical  :: cc
+     logical  :: ciba
+
+     character(len=512) :: filename, filename_NHI, filename_wavelength, filename_color, fileout, timeout, filename_noise
+  end type parameters
  
 end module mod_constants

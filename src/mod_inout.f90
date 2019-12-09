@@ -5,12 +5,32 @@ module mod_inout
   use mod_convert
   
   implicit none
+
+  type(parameters) :: params
   
   private
   
-  public :: read_cube, read_map, read_array, read_parameters, save_process
+  public :: read_cube, read_map, read_array, read_parameters, save_process, params, get_parameters
 
 contains
+
+  subroutine get_parameters(filename_parameters)
+    implicit none 
+    
+    character(len=512), intent(in) :: filename_parameters
+    integer :: ios=0
+
+    namelist /user_parameters/ params 
+
+    open(unit=11, file=filename_parameters, status="old", iostat=ios)
+    if (ios /= 0) stop "opening file error"
+    
+    read(11, user_parameters)
+    
+    close(11)
+        
+  end subroutine get_parameters
+
   
   subroutine read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, &
        fileout, timeout, filename_noise, n_mbb, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, &

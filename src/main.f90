@@ -100,50 +100,7 @@ program ROHSA
 
   !Print header and get filename in argument
   call get_command_argument(1, filename_parameters)
-
-  !Default user parameters
-  n_mbb = 1
-
-  lambda_tau = 1._xp
-  lambda_beta = 1._xp
-  lambda_Td = 1._xp
-
-  lambda_var_tau = 0._xp
-  lambda_var_beta = 0._xp
-  lambda_var_Td = 0._xp
-  lambda_stefan = 1._xp
-
-  tau_init = 1._xp
-  beta_init = 1.7_xp
-  Td_init = 17._xp
-
-  tau_init_cib = 1._xp
-  beta_init_cib = 1._xp
-  Td_init_cib = 17._xp
-
-  lb_tau = 0._xp     
-  ub_tau = 100._xp
-  lb_beta = 1._xp
-  ub_beta = 2.5_xp
-  lb_Td = 8.2_xp       		   
-  ub_Td = 50._xp       
-
-  lb_tau_cib = -100._xp     
-  ub_tau_cib = 100._xp
-  lb_beta_cib = 1._xp
-  ub_beta_cib = 2.5_xp
-  lb_Td_cib = 8.2_xp       		   
-  ub_Td_cib = 50._xp       
-
-  maxiter_init = 15000
-  maxiter = 800
-  m = 10
-  noise = .false.
-  lstd = 1; ustd = 20
-  iprint = -1
-  iprint_init = -1
-  save_grid = .true.
-  cc = .false.
+  ! call get_parameters(filename_parameters)
  
   !Read parameters
   call read_parameters(filename_parameters, filename, filename_NHI, filename_wavelength, filename_color, fileout, &
