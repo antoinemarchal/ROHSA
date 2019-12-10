@@ -12,7 +12,7 @@ cflags= -lm -g -O2 #-lcfitsio -openmp -llapack
 
 OUT=ROHSA
 
-all: blas.o lbfgsb.o linpack.o timer.o fftpack5_1d.o mod_constants.o mod_random.o mod_math.o mod_convert.o  mod_array.o mod_fft.o mod_read_parameters.o mod_rw_data.o mod_color.o mod_model.o mod_optimize.o mod_minimize.o mod_functions.o mod_start.o mod_rohsa.o main.o
+all: blas.o lbfgsb.o linpack.o timer.o fftpack5_1d.o mod_constants.o mod_random.o mod_math.o mod_convert.o  mod_array.o mod_fft.o mod_read_parameters.o mod_rw_data.o mod_color.o mod_model.o mod_optimize.o mod_minimize.o mod_functions.o mod_start.o mod_test.o mod_rohsa.o main.o
 	$(FC) $^ $(CFLAGS) -o $(OUT)
 
 main.o: main.f90
@@ -73,6 +73,9 @@ mod_functions.o: mod_functions.f90
 	$(FC) $(GFLAGS) -c $^
 
 mod_start.o: mod_start.f90
+	$(FC) $(GFLAGS) -c $^
+
+mod_test.o: mod_test.f90
 	$(FC) $(GFLAGS) -c $^
 
 mod_rohsa.o: mod_rohsa.f90

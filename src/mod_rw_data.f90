@@ -7,28 +7,25 @@ module mod_rw_data
   
   implicit none
 
-  real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
-  real(xp), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
-  real(xp), dimension(:,:), allocatable   :: color       !! polynomial coefficient for color correction
-  real(xp), dimension(:,:,:), allocatable :: std_cube    !! standard deviation cube
-  real(xp), dimension(:,:,:), allocatable :: NHI         !! initial fits data NHI
+  type(indata) :: data
 
   private
   
-  public :: get_data, read_cube, read_map, read_array, save_process, data, wavelength, color, std_cube, NHI
+  public :: get_data, read_cube, read_map, read_array, save_process, data
 
 contains
 
   subroutine get_data()
     implicit none
     
-    call read_cube(params%filename, data)
-    call read_array(params%filename_wavelength, wavelength)
-    call read_map(params%filename_color, color)
-    call read_cube(params%filename_noise, std_cube)
-    call read_cube(params%filename_NHI, NHI)
+    call read_cube(params%filename, data%cube)
+    call read_array(params%filename_wavelength, data%wavelength)
+    call read_map(params%filename_color, data%color)
+    call read_cube(params%filename_noise, data%std_cube)
+    call read_cube(params%filename_NHI, data%NHI)
     
   end subroutine get_data
+
 
   subroutine read_cube(filename, cube)
     implicit none

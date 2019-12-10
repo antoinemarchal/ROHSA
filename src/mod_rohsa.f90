@@ -18,19 +18,13 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, wavelength, std_cube, data_HI, color)
+  subroutine main_rohsa()
     
     implicit none
     
     integer :: nside        !! size of the reshaped data \(2^{nside}\)
     integer :: n            !! loop index
     integer :: power        !! loop index
-
-    real(xp), intent(in), dimension(:,:,:), allocatable :: data          !! initial fits data
-    real(xp), intent(in), dimension(:,:,:), allocatable :: data_HI       !! initial fits data data_HI
-    real(xp), intent(in), dimension(:,:), allocatable   :: color         !! polynomial coefficient for color correction
-    real(xp), intent(in), dimension(:), allocatable     :: wavelength    !! wavelength Planck + IRAS
-    real(xp), intent(in), dimension(:,:,:), allocatable :: std_cube      !! standard deviation cube
 
     real(xp), dimension(:,:,:), allocatable :: cube            !! reshape data with nside --> cube
     real(xp), dimension(:,:,:), allocatable :: cube_HI         !! reshape data with nside --> cube
@@ -39,6 +33,7 @@ contains
     real(xp), dimension(:,:,:), allocatable :: fit_params      !! parameters to optimize with cube mean at each iteration
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:,:), allocatable :: std_cube_mean   !! standard deviation cube
+
     real(xp), dimension(:), allocatable :: b_params            !! unknow average tauma
     real(xp), dimension(:), allocatable :: c_params            !! unknow average beta
     real(xp), dimension(:), allocatable :: d_params            !! unknow average Td
@@ -70,8 +65,8 @@ contains
     kernel(3,2) = -0.25_xp
     kernel(3,3) = 0._xp
         
-    dim_data = shape(data)
-    dim_data_HI = shape(data_HI)
+    dim_data = shape(data%cube)
+    dim_data_HI = shape(data%NHI)
     
     write(*,*) "dim_v, dim_y, dim_x = ", dim_data
     write(*,*) ""
@@ -100,8 +95,8 @@ contains
     allocate(d_params(params%n_mbb))
     allocate(stefan_params(params%n_mbb))
 
-    call reshape_up(data, cube, dim_data, dim_cube)
-    call reshape_up(data_HI, cube_HI, dim_data_HI, dim_cube_HI)
+    call reshape_up(data%cube, cube, dim_data, dim_cube)
+    call reshape_up(data%NHI, cube_HI, dim_data_HI, dim_cube_HI)
     
     !Allocate memory for parameters grids
     allocate(grid_params(3*params%n_mbb, dim_data(2), dim_data(3)))
@@ -128,9 +123,9 @@ contains
        allocate(cube_HI_mean(dim_cube_HI(1), power, power))
        allocate(std_cube_mean(dim_cube(1),power, power))          
        
-       call mean_array(power, cube, cube_mean)
-       call mean_array(power, cube_HI, cube_HI_mean)
-       call mean_array(power, std_cube, std_cube_mean)           
+       call mean_array(power, data%cube, cube_mean)
+       call mean_array(power, data%NHI, cube_HI_mean)
+       call mean_array(power, data%std_cube, std_cube_mean)           
        
        if (n == 0) then
           print*, "Init mean spectrum"        
@@ -148,8 +143,8 @@ contains
              fit_params(3,1,1) = params%Td_init_cib
           end if
           
-          call init_spectrum(fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), wavelength, &
-               color, std_cube_mean(:,1,1))
+          call init_spectrum(fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), data%wavelength, &
+               data%color, std_cube_mean(:,1,1))
 
           !Init b_params
           do i=1, params%n_mbb       
@@ -163,14 +158,15 @@ contains
               
        if (n == 0) then                
           print*,  "Update level", n
-          call upgrade(cube_mean, fit_params, wavelength, power, dim_cube(1), color, std_cube_mean)
+          call upgrade(cube_mean, fit_params, data%wavelength, power, dim_cube(1), data%color, &
+               std_cube_mean)
        end if
               
        if (n > 0 .and. n < nside) then          
           ! Update parameters 
           print*,  "Update level", n, ">", power
-          call update(cube_mean, cube_HI_mean, wavelength, fit_params, b_params, c_params, d_params, &
-               stefan_params, dim_cube(1), power, power, kernel, std_cube_mean, color)
+          call update(cube_mean, cube_HI_mean, data%wavelength, fit_params, b_params, c_params, d_params, &
+               stefan_params, dim_cube(1), power, power, kernel, std_cube_mean, data%color)
           
        end if
        
@@ -214,8 +210,8 @@ contains
     print*, " "
     
         
-    call update(data, data_HI, wavelength, grid_params, b_params, c_params, d_params, stefan_params, &
-         dim_data(1), dim_data(2), dim_data(3), kernel, std_cube, color)       
+    call update(data%cube, data%NHI, data%wavelength, grid_params, b_params, c_params, d_params, stefan_params, &
+         dim_data(1), dim_data(2), dim_data(3), kernel, data%std_cube, data%color)       
     
     print*, " "
     print*, "_____ Write output file _____"
@@ -225,30 +221,7 @@ contains
     open(unit=12, file=params%fileout, action="write", iostat=ios)
     if (ios /= 0) stop "opening file error"
     
-    write(12,fmt=*) "# "
-    write(12,fmt=*) "# ______Parameters_____"
-    write(12,fmt=*) "# "
-    ! write(12,fmt=*) "# params%n_mbb = ", params%n_mbb
-    ! write(12,fmt=*) "# lambda_tau = ", lambda_tau
-    ! write(12,fmt=*) "# lambda_beta = ", lambda_beta
-    ! write(12,fmt=*) "# lambda_Td = ", lambda_Td
-    ! write(12,fmt=*) "# lambda_var_tau = ", lambda_var_tau
-    ! write(12,fmt=*) "# lambda_var_beta = ", lambda_var_beta
-    ! write(12,fmt=*) "# lambda_var_Td = ", lambda_var_Td
-    ! write(12,fmt=*) "# lambda_stefan = ", lambda_stefan
-    ! write(12,fmt=*) "# tau_init = ", tau_init
-    ! write(12,fmt=*) "# beta_init = ", beta_init
-    ! write(12,fmt=*) "# Td_init = ", Td_init
-    ! write(12,fmt=*) "# lb_tau = ", lb_tau
-    ! write(12,fmt=*) "# ub_tau = ", ub_tau
-    ! write(12,fmt=*) "# lb_beta = ", lb_beta
-    ! write(12,fmt=*) "# ub_beta = ", ub_beta
-    ! write(12,fmt=*) "# lb_Td = ", lb_Td
-    ! write(12,fmt=*) "# ub_Td = ", ub_Td
-    ! write(12,fmt=*) "# maxiter_itit = ", maxiter_init
-    ! write(12,fmt=*) "# maxiter = ", maxiter
-    write(12,fmt=*) "# "
-    
+    call print_parameters_unit(12)
     write(12,fmt=*) "# i, j, Td, beta, Td"
 
     do i=1, dim_data(2)

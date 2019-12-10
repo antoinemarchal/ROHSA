@@ -50,5 +50,11 @@ module mod_constants
 
      character(len=512) :: filename, filename_NHI, filename_wavelength, filename_color, fileout, timeout, filename_noise
   end type parameters
+
+  type indata
+     real(xp), dimension(:,:,:), allocatable :: cube, std_cube, NHI  
+     real(xp), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
+     real(xp), dimension(:,:), allocatable   :: color       !! polynomial coefficient for color correction
+  end type indata
  
 end module mod_constants

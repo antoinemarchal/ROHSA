@@ -10,7 +10,7 @@ module mod_read_parameters
   
   private
   
-  public :: get_parameters, params
+  public :: get_parameters, print_parameters, print_parameters_unit, params
 
 contains
 
@@ -28,6 +28,14 @@ contains
     close(11)
 
     ! Display parameters
+    call print_parameters()
+        
+  end subroutine get_parameters
+
+
+  subroutine print_parameters()
+    implicit none 
+
     print*, "filename = '",trim(params%filename),"'"
 
     print*, "fileout = '",trim(params%fileout),"'"
@@ -87,7 +95,75 @@ contains
     print*, "ciba = ", params%ciba
 
     print*, " "
-        
-  end subroutine get_parameters
+    
+  end subroutine print_parameters
+
+  subroutine print_parameters_unit(unit)
+    implicit none 
+
+    integer, intent(in) :: unit
+
+    write(unit,fmt=*) "filename = '",trim(params%filename),"'"
+
+    write(unit,fmt=*) "fileout = '",trim(params%fileout),"'"
+    write(unit,fmt=*) "timeout = '",trim(params%timeout),"'"
+    
+    write(unit,fmt=*) " "
+    write(unit,fmt=*) "______Parameters_____"
+    write(unit,fmt=*) "n_mbb = ", params%n_mbb
+
+    write(unit,fmt=*) "lambda_tau = ", params%lambda_tau
+    write(unit,fmt=*) "lambda_beta = ", params%lambda_beta
+    write(unit,fmt=*) "lambda_Td = ", params%lambda_Td
+
+    write(unit,fmt=*) " "
+    write(unit,fmt=*) "lambda_var_tau = ", params%lambda_var_tau
+    write(unit,fmt=*) "lambda_var_beta = ", params%lambda_var_beta
+    write(unit,fmt=*) "lambda_var_Td = ", params%lambda_var_Td
+    write(unit,fmt=*) "lambda_stefan = ", params%lambda_stefan
+
+    write(unit,fmt=*) " "
+    write(unit,fmt=*) "tau_init = ", params%tau_init
+    write(unit,fmt=*) "beta_init = ", params%beta_init
+    write(unit,fmt=*) "Td_init = ", params%Td_init
+
+    write(unit,fmt=*) " "
+    write(unit,fmt=*) "tau_init_cib = ", params%tau_init_cib
+    write(unit,fmt=*) "beta_init_cib = ", params%beta_init_cib
+    write(unit,fmt=*) "Td_init_cib = ", params%Td_init_cib
+
+    write(unit,fmt=*) " "
+    write(unit,fmt=*) "lb_tau = ", params%lb_tau
+    write(unit,fmt=*) "ub_tau = ", params%ub_tau
+    write(unit,fmt=*) "lb_beta = ", params%lb_beta
+    write(unit,fmt=*) "ub_beta = ", params%ub_beta
+    write(unit,fmt=*) "lb_Td = ", params%lb_Td
+    write(unit,fmt=*) "ub_Td = ", params%ub_Td
+
+    write(unit,fmt=*) " "
+    write(unit,fmt=*) "lb_tau_cib = ", params%lb_tau_cib
+    write(unit,fmt=*) "ub_tau_cib = ", params%ub_tau_cib
+    write(unit,fmt=*) "lb_beta_cib = ", params%lb_beta_cib
+    write(unit,fmt=*) "ub_beta_cib = ", params%ub_beta_cib
+    write(unit,fmt=*) "lb_Td_cib = ", params%lb_Td_cib
+    write(unit,fmt=*) "ub_Td_cib = ", params%ub_Td_cib
+
+    write(unit,fmt=*) " "
+    write(unit,fmt=*) "l0 = ", params%l0
+
+    write(unit,fmt=*) " "
+    write(unit,fmt=*) "maxiter_init = ", params%maxiter_init
+    write(unit,fmt=*) "maxiter = ", params%maxiter
+    write(unit,fmt=*) "lstd = ", params%lstd
+    write(unit,fmt=*) "ustd = ", params%ustd
+    write(unit,fmt=*) "noise = ", params%noise
+    write(unit,fmt=*) "save_grid = ", params%save_grid
+    write(unit,fmt=*) "cc = ", params%cc
+    write(unit,fmt=*) "ciba = ", params%ciba
+
+    write(unit,fmt=*) " "
+    
+  end subroutine print_parameters_unit
+
 
 end Module mod_read_parameters
