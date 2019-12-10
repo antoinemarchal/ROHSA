@@ -28,10 +28,13 @@ contains
 
     real(xp), dimension(:,:,:), allocatable :: cube            !! reshape data with nside --> cube
     real(xp), dimension(:,:,:), allocatable :: cube_HI         !! reshape data with nside --> cube
+
     real(xp), dimension(:,:,:), allocatable :: cube_mean       !! mean cube over spatial axis
     real(xp), dimension(:,:,:), allocatable :: cube_HI_mean    !! mean cube over spatial axis
+
     real(xp), dimension(:,:,:), allocatable :: fit_params      !! parameters to optimize with cube mean at each iteration
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
+
     real(xp), dimension(:,:,:), allocatable :: std_cube_mean   !! standard deviation cube
 
     real(xp), dimension(:), allocatable :: b_params            !! unknow average tauma
