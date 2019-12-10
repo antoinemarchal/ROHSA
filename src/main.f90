@@ -5,7 +5,8 @@ program ROHSA
   use mod_start
   use mod_array
   use mod_fft
-  use mod_inout
+  use mod_read_parameters
+  use mod_rw_data
   use mod_rohsa
   use mod_optimize
   use mod_color
@@ -14,15 +15,12 @@ program ROHSA
   implicit none
 
   character(len=512) :: filename_parameters !! name of the parameters file (default parameters.txt)
+  real(xp)           :: start, finish
+  integer, dimension(3) :: dim_data !! number of frequencies
+  integer, dimension(3) :: dim_NHI !! number of NHI maps
+
+  !
   character(len=512) :: filename_fBm="fBm.dat"
-
-  real(xp) :: start, finish
-
-  real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
-  real(xp), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
-  real(xp), dimension(:,:), allocatable   :: color       !! polynomial coefficient for color correction
-  real(xp), dimension(:,:,:), allocatable :: std_cube    !! standard deviation cube
-  real(xp), dimension(:,:,:), allocatable :: NHI         !! initial fits data NHI
 
   real(xp), dimension(:,:), allocatable    :: test_fft !! test fft
   real(xp), dimension(:,:), allocatable    :: tapper !! test fft
@@ -37,9 +35,6 @@ program ROHSA
   real(xp), dimension(:,:), allocatable :: yy
   real(xp), dimension(:,:), allocatable :: kmat
   !
-  !
-  integer, dimension(3) :: dim_data !! number of frequencies
-  integer, dimension(3) :: dim_NHI !! number of NHI maps
 
   call cpu_time(start)
 
@@ -51,11 +46,7 @@ program ROHSA
   call get_parameters(filename_parameters) 
 
   !Load data
-  call read_cube(params%filename, data)
-  call read_array(params%filename_wavelength, wavelength)
-  call read_map(params%filename_color, color)
-  call read_cube(params%filename_noise, std_cube)
-  call read_cube(params%filename_NHI, NHI)
+  call get_data()
 
   ! !Test fft
   ! call read_map(filename_fBm, test_fft)

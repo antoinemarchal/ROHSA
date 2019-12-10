@@ -7,7 +7,8 @@ module mod_rohsa
   use mod_functions
   use mod_start
   use mod_optimize
-  use mod_inout
+  use mod_read_parameters
+  use mod_rw_data
 
   implicit none
 

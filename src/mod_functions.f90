@@ -6,7 +6,7 @@ module mod_functions
   use mod_optimize
   use mod_array
   use mod_model
-  use mod_inout
+  use mod_read_parameters
   
   implicit none
 
