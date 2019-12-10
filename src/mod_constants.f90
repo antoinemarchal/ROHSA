@@ -56,5 +56,9 @@ module mod_constants
      real(xp), dimension(:), allocatable     :: wavelength  !! wavelength Planck + IRAS
      real(xp), dimension(:,:), allocatable   :: color       !! polynomial coefficient for color correction
   end type indata
+
+  type model
+     real(xp), dimension(:,:,:), allocatable :: tau, beta, t
+  end type model
  
 end module mod_constants
