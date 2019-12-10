@@ -28,6 +28,8 @@ contains
     close(11)
 
     ! Display parameters
+    print*, "filename = '",trim(params%filename),"'"
+
     print*, "fileout = '",trim(params%fileout),"'"
     print*, "timeout = '",trim(params%timeout),"'"
     

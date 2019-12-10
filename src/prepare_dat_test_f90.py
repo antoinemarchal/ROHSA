@@ -7,16 +7,18 @@ from ROHSApy import ROHSA
 import marchalib as ml
 
 #Open data GNILC_IRIS-SFD_adim
-fitsname = "/mnt/raid-cita/amarchal/SIMUSED/data/simu_mamd_sed/intensity_adim_mamd.fits"
+# fitsname = "/mnt/raid-cita/amarchal/SIMUSED/data/simu_mamd_grid/intensity_adim_mamd.fits"
+fitsname = "/mnt/raid-cita/amarchal/SIMUSED/data/intensity_adim.fits"
 hdu = fits.open(fitsname)
 hdr = hdu[0].header
-cube = hdu[0].data *1.e6
+cube = hdu[0].data #*1.e6
 
 NHI = np.ones((1,cube.shape[1],cube.shape[2]))
 rms_cube = np.full((cube.shape[0],cube.shape[1],cube.shape[2]), 1.)
 
 #Open color correction file
 color = fits.open("/home/amarchal/ROHSA/data/col_cor_iras_hfi_DX9v2_poly.fits")[0].data
+# color = fits.open("/mnt/raid-cita/amarchal/PLANCK/col_cor_iras_hfi_DX9v2_poly_order_7.fits")[0].data
 
 core_cube = ROHSA(cube)
 core_NHI = ROHSA(NHI)

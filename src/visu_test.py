@@ -17,7 +17,7 @@ reload(mod_opt)
 
 
 #Open data GNILC_IRIS-SFD_adim
-fitsname = "/mnt/raid-cita/amarchal/SIMUSED/data/simu_mamd_sed/intensity_adim_mamd.fits"
+fitsname = "/mnt/raid-cita/amarchal/SIMUSED/data/intensity_adim.fits"
 hdu = fits.open(fitsname)
 hdr = hdu[0].header
 cube = hdu[0].data
@@ -35,6 +35,8 @@ color = fits.open("/mnt/raid-cita/amarchal/PLANCK/col_cor_iras_hfi_DX9v2_poly.fi
 
 gaussian = core_cube.read_gaussian("./SED_mbb_run_0.dat")
 gaussian[1::3] += 1. #ATTENTION beta -1
+
+stop
 
 #Plot
 pathout="/mnt/raid-cita/amarchal/SIMUSED/output/plot/"
@@ -58,7 +60,7 @@ img = ax.imshow(gaussian[1], **ml.imkw_cubehelix)
 colorbar_ax = fig.add_axes([0.89, 0.1, 0.02, 0.8])
 cbar = fig.colorbar(img, cax=colorbar_ax, extend='both')
 cbar.ax.tick_params(labelsize=14.) 
-cbar.set_label(r"$\tau$ / [1.10$^{-6}$]", fontsize=18.)
+cbar.set_label(r"$\beta$", fontsize=18.)
 plt.savefig(pathout+ "beta_simu_mamd.png", format='png', bbox_inches='tight', pad_inches=0.02)
 
 pathout="/mnt/raid-cita/amarchal/SIMUSED/output/plot/"
@@ -70,8 +72,23 @@ img = ax.imshow(gaussian[2], **ml.imkw_afmhot)
 colorbar_ax = fig.add_axes([0.89, 0.1, 0.02, 0.8])
 cbar = fig.colorbar(img, cax=colorbar_ax, extend='both')
 cbar.ax.tick_params(labelsize=14.) 
-cbar.set_label(r"$\tau$ / [1.10$^{-6}$]", fontsize=18.)
+cbar.set_label(r"T$_{dust}$ [K]", fontsize=18.)
 plt.savefig(pathout+ "T_simu_mamd.png", format='png', bbox_inches='tight', pad_inches=0.02)
+
+
+pathout="./"
+hdu = fits.PrimaryHDU([gaussian[0]])
+hdulist = fits.HDUList([hdu])
+hdulist.writeto(pathout + "tau_simu_mamd.fits", overwrite=True)
+
+hdu = fits.PrimaryHDU([gaussian[1]])
+hdulist = fits.HDUList([hdu])
+hdulist.writeto(pathout + "beta_simu_mamd.fits", overwrite=True)
+
+hdu = fits.PrimaryHDU([gaussian[2]])
+hdulist = fits.HDUList([hdu])
+hdulist.writeto(pathout + "Td_simu_mamd.fits", overwrite=True)
+
 
 stop
 

@@ -6,6 +6,7 @@ module mod_functions
   use mod_optimize
   use mod_array
   use mod_model
+  use mod_inout
   
   implicit none
 
@@ -171,67 +172,41 @@ contains
   end subroutine go_up_level
 
   
-  subroutine init_spectrum(n_mbb, params, dim_v, line, wavelength, lb_tau, ub_tau, lb_beta, ub_beta, &
-       lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, l0, &
-       maxiter, m, iprint, color, degree, std, cc, ciba)
+  subroutine init_spectrum(pars, dim_v, line, wavelength, color, std)
     !! Initialization of the mean sprectrum with N Gaussian
     implicit none
     
-    integer, intent(in) :: n_mbb !! number of Gaussian
     integer, intent(in) :: dim_v !! dimension along v axis
-    integer, intent(in) :: maxiter !! Max number of iteration
-    integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
-    integer, intent(in) :: iprint !! print option
 
     real(xp), intent(in), dimension(dim_v) :: line !! spectrum
     real(xp), intent(in), dimension(dim_v)  :: wavelength  !! wavelength Planck + IRAS
     real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in), dimension(:) :: std
 
-    real(xp), intent(in) :: lb_tau !! lower bound tauma
-    real(xp), intent(in) :: ub_tau !! upper bound tauma
-    real(xp), intent(in) :: lb_beta !! lower bound beta
-    real(xp), intent(in) :: ub_beta !! upper bound beta
-    real(xp), intent(in) :: lb_Td !! lower bound Td
-    real(xp), intent(in) :: ub_Td !! upper bound Td
-
-    real(xp), intent(in) :: lb_tau_cib !! lower bound tauma
-    real(xp), intent(in) :: ub_tau_cib !! upper bound tauma
-    real(xp), intent(in) :: lb_beta_cib !! lower bound beta
-    real(xp), intent(in) :: ub_beta_cib !! upper bound beta
-    real(xp), intent(in) :: lb_Td_cib !! lower bound Td
-    real(xp), intent(in) :: ub_Td_cib !! upper bound Td
-
-    real(xp), intent(in) :: l0 !! reference wavelength
-    integer, intent(in) :: degree
-    logical, intent(in) :: cc !! if true --> apply colour correction PLANCK+IRAS
-    logical, intent(in) :: ciba !! if true --> apply model CIBA
-
-    real(xp), intent(inout), dimension(3*n_mbb)  :: params !! params to optimize
+    real(xp), intent(inout), dimension(3*params%n_mbb)  :: pars !! params to optimize
 
     integer :: i
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(dim_v) :: model, residual
     real(xp), dimension(:), allocatable :: x
 
-    allocate(lb(3*n_mbb), ub(3*n_mbb))
-    allocate(x(3*n_mbb))
+    allocate(lb(3*params%n_mbb), ub(3*params%n_mbb))
+    allocate(x(3*params%n_mbb))
     model = 0._xp
     residual = 0._xp
     lb = 0._xp; ub=0._xp
     x = 0._xp
             
-    do i=1, 3*n_mbb
-       x(i) = params(i)
+    do i=1, 3*params%n_mbb
+       x(i) = pars(i)
     end do
 
-    call init_bounds(n_mbb, lb, ub, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, &
-         lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, ciba)   
-    call minimize_spec(3*n_mbb, m, x, lb, ub, line, wavelength, dim_v, n_mbb, l0, maxiter, &
-         iprint, color, degree, std, cc)
+    call init_bounds(lb, ub)   
+    call minimize_spec(3*params%n_mbb, params%m, x, lb, ub, line, wavelength, dim_v, params%maxiter, &
+         params%iprint, color, std)
 
-    do i=1, 3*n_mbb
-       params(i) = x(i)
+    do i=1, 3*params%n_mbb
+       pars(i) = x(i)
     end do
     
     deallocate(x)
@@ -239,69 +214,48 @@ contains
   end subroutine init_spectrum
   
 
-  subroutine init_bounds(n_mbb, lb, ub, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, &
-       lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, ciba)
+  subroutine init_bounds(lb, ub)
     !! Initialize parameters bounds for optimization
     implicit none
-    
-    integer, intent(in) :: n_mbb !! number of Gaussian
 
-    real(xp), intent(in) :: lb_tau !! lower bound tauma
-    real(xp), intent(in) :: ub_tau !! upper bound tauma
-    real(xp), intent(in) :: lb_beta !! lower bound beta
-    real(xp), intent(in) :: ub_beta !! upper bound beta
-    real(xp), intent(in) :: lb_Td !! lower bound Td
-    real(xp), intent(in) :: ub_Td !! upper bound Td
-
-    real(xp), intent(in) :: lb_tau_cib !! lower bound tauma
-    real(xp), intent(in) :: ub_tau_cib !! upper bound tauma
-    real(xp), intent(in) :: lb_beta_cib !! lower bound beta
-    real(xp), intent(in) :: ub_beta_cib !! upper bound beta
-    real(xp), intent(in) :: lb_Td_cib !! lower bound Td
-    real(xp), intent(in) :: ub_Td_cib !! upper bound Td
-
-    real(xp), intent(inout), dimension(3*n_mbb) :: lb !! lower bounds
-    real(xp), intent(inout), dimension(3*n_mbb) :: ub !! upper bounds
-
-    logical, intent(in) :: ciba            !! if true --> apply model CIBA
+    real(xp), intent(inout), dimension(3*params%n_mbb) :: lb !! lower bounds
+    real(xp), intent(inout), dimension(3*params%n_mbb) :: ub !! upper bounds
     
     integer :: i
     
-    do i=1, n_mbb       
+    do i=1, params%n_mbb       
        ! tau bounds
-       lb(1+(3*(i-1))) = lb_tau
-       ub(1+(3*(i-1))) = ub_tau
+       lb(1+(3*(i-1))) = params%lb_tau
+       ub(1+(3*(i-1))) = params%ub_tau
 
        ! beta bounds 
-       lb(2+(3*(i-1))) = lb_beta
-       ub(2+(3*(i-1))) = ub_beta
+       lb(2+(3*(i-1))) = params%lb_beta
+       ub(2+(3*(i-1))) = params%ub_beta
 
        ! Td bounds 
-       lb(3+(3*(i-1))) = lb_Td
-       ub(3+(3*(i-1))) = ub_Td
+       lb(3+(3*(i-1))) = params%lb_Td
+       ub(3+(3*(i-1))) = params%ub_Td
        ! end if
     end do
 
-    if (ciba .eqv. .true.) then
+    if (params%ciba .eqv. .true.) then
           ! tau bounds cib
-          lb(1) = lb_tau_cib
-          ub(1) = ub_tau_cib
+          lb(1) = params%lb_tau_cib
+          ub(1) = params%ub_tau_cib
 
           ! beta bounds cib
-          lb(2) = lb_beta_cib
-          ub(2) = ub_beta_cib
+          lb(2) = params%lb_beta_cib
+          ub(2) = params%ub_beta_cib
 
           ! Td bounds cib
-          lb(3) = lb_Td_cib
-          ub(3) = ub_Td_cib
+          lb(3) = params%lb_Td_cib
+          ub(3) = params%ub_Td_cib
     end if
 
   end subroutine init_bounds
 
 
-  subroutine upgrade(cube, params, wavelength, power, n_mbb, dim_v, lb_tau, ub_tau, lb_beta, ub_beta, &
-       lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, l0, &
-       maxiter, m, iprint, color, degree, std_cube, cc, ciba)
+  subroutine upgrade(cube, pars, wavelength, power, dim_v, color, std_cube)
     !! Upgrade parameters (spectra to spectra) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
 
@@ -310,33 +264,10 @@ contains
     real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in), dimension(:,:,:), allocatable :: std_cube !! standard deviation cube
 
-    real(xp), intent(in) :: lb_tau !! lower bound tauma
-    real(xp), intent(in) :: ub_tau !! upper bound tauma
-    real(xp), intent(in) :: lb_beta !! lower bound beta
-    real(xp), intent(in) :: ub_beta !! upper bound beta
-    real(xp), intent(in) :: lb_Td !! lower bound Td
-    real(xp), intent(in) :: ub_Td !! upper bound Td
-
-    real(xp), intent(in) :: lb_tau_cib !! lower bound tauma
-    real(xp), intent(in) :: ub_tau_cib !! upper bound tauma
-    real(xp), intent(in) :: lb_beta_cib !! lower bound beta
-    real(xp), intent(in) :: ub_beta_cib !! upper bound beta
-    real(xp), intent(in) :: lb_Td_cib !! lower bound Td
-    real(xp), intent(in) :: ub_Td_cib !! upper bound Td
-
     integer, intent(in) :: power !! nside of the cube
-    integer, intent(in) :: n_mbb !! number of Gaussian
     integer, intent(in) :: dim_v !! dimension along v axis
-    integer, intent(in) :: maxiter !! max number of iteration
-    integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
-    integer, intent(in) :: iprint !! print option
-    logical, intent(in) :: cc
-    logical, intent(in) :: ciba !! if true --> apply model CIBA
 
-    real(xp), intent(in) :: l0 !! reference wavelength
-    integer, intent(in):: degree
-
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! cube parameters to update
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: pars !! cube parameters to update
 
     integer :: i,j
     real(xp), dimension(:), allocatable :: line
@@ -348,18 +279,17 @@ contains
        do j=1, power
           ! print*, (i-1)*power+j, " / ", power*power
           allocate(line(dim_v))
-          allocate(x(3*n_mbb), lb(3*n_mbb), ub(3*n_mbb))
+          allocate(x(3*params%n_mbb), lb(3*params%n_mbb), ub(3*params%n_mbb))
 
           line = cube(:,i,j)
-          x = params(:,i,j)
+          x = pars(:,i,j)
           std = std_cube(:,i,j)
           
-          call init_bounds(n_mbb, lb, ub, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, &
-               lb_tau_cib, ub_tau_cib, lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, ciba)
-          call minimize_spec(3*n_mbb, m, x, lb, ub, line, wavelength, dim_v, n_mbb, l0, maxiter, &
-               iprint, color, degree, std, cc)
+          call init_bounds(lb, ub)
+          call minimize_spec(3*params%n_mbb, params%m, x, lb, ub, line, wavelength, dim_v, params%maxiter_init, &
+               params%iprint_init, color, std)
           
-          params(:,i,j) = x
+          pars(:,i,j) = x
           
           deallocate(line)
           deallocate(x, lb, ub)
@@ -368,11 +298,8 @@ contains
   end subroutine upgrade
 
 
-  subroutine update(cube, cube_HI, wavelength, params, b_params, c_params, d_params, stefan_params, &
-       n_mbb, dim_v, dim_y, dim_x, lambda_tau, lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, &
-       lambda_var_Td, lambda_stefan, lb_tau, ub_tau, lb_beta, ub_beta, lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, &
-       lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, l0, maxiter, m, kernel, &
-       iprint, std_cube, color, degree, cc, ciba)
+  subroutine update(cube, cube_HI, wavelength, pars, b_pars, c_pars, d_pars, stefan_pars, &
+       dim_v, dim_y, dim_x, kernel, std_cube, color)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
@@ -382,47 +309,16 @@ contains
     real(xp), intent(in), dimension(:,:), allocatable   :: color       !! polynomial coefficient for color correction
     real(xp), intent(in), dimension(:,:,:), allocatable :: std_cube    !! Standard deviation cube
     real(xp), intent(in), dimension(:,:), allocatable :: kernel !! convolution kernel
+
     integer, intent(in) :: dim_v !! dimension along v axis
     integer, intent(in) :: dim_y !! dimension along spatial axis y 
     integer, intent(in) :: dim_x !! dimension along spatial axis x
-    integer, intent(in) :: n_mbb !! Number of Gaussian
-    integer, intent(in) :: maxiter !! max number of iteration
-    integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
-    integer, intent(in) :: iprint !! print option
 
-    real(xp), intent(in) :: lambda_tau !! lambda for taulitude parameter
-    real(xp), intent(in) :: lambda_beta !! lambda for mean position parameter
-    real(xp), intent(in) :: lambda_Td !! lambda for dispersion parameter
-
-    real(xp), intent(in) :: lambda_var_tau !! lambda for tau dispersion parameter
-    real(xp), intent(in) :: lambda_var_beta  !! lambda for mean position dispersion parameter
-    real(xp), intent(in) :: lambda_var_Td  !! lambda for mean position dispersion parameter
-    real(xp), intent(in) :: lambda_stefan !! lambda for variance dispersion parameter
-
-    real(xp), intent(in) :: lb_tau !! lower bound tauma
-    real(xp), intent(in) :: ub_tau !! upper bound tauma
-    real(xp), intent(in) :: lb_beta !! lower bound beta
-    real(xp), intent(in) :: ub_beta !! upper bound beta
-    real(xp), intent(in) :: lb_Td !! lower bound Td
-    real(xp), intent(in) :: ub_Td !! upper bound Td
-
-    real(xp), intent(in) :: lb_tau_cib !! lower bound tauma
-    real(xp), intent(in) :: ub_tau_cib !! upper bound tauma
-    real(xp), intent(in) :: lb_beta_cib !! lower bound beta
-    real(xp), intent(in) :: ub_beta_cib !! upper bound beta
-    real(xp), intent(in) :: lb_Td_cib !! lower bound Td
-    real(xp), intent(in) :: ub_Td_cib !! upper bound Td
-
-    real(xp), intent(in) :: l0 !! reference wavelength
-    integer, intent(in) :: degree
-    logical, intent(in) :: cc
-    logical, intent(in) :: ciba !! if true --> apply model CIBA
-
-    real(xp), intent(inout), dimension(:), allocatable :: b_params !! unknown average Tdma
-    real(xp), intent(inout), dimension(:), allocatable :: c_params !! unknown average Tdma
-    real(xp), intent(inout), dimension(:), allocatable :: d_params !! unknown average Tdma
-    real(xp), intent(inout), dimension(:), allocatable :: stefan_params !! 
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
+    real(xp), intent(inout), dimension(:), allocatable :: b_pars !! unknown average Tdma
+    real(xp), intent(inout), dimension(:), allocatable :: c_pars !! unknown average Tdma
+    real(xp), intent(inout), dimension(:), allocatable :: d_pars !! unknown average Tdma
+    real(xp), intent(inout), dimension(:), allocatable :: stefan_pars !! 
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: pars !! parameters cube to update
     
     integer :: i,j
     integer :: n_beta
@@ -432,75 +328,72 @@ contains
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(:), allocatable :: beta
 
-    n_beta = (3*n_mbb * dim_y * dim_x) + (4*n_mbb)
-    n_cube = (3*n_mbb * dim_y * dim_x)
+    n_beta = (3*params%n_mbb * dim_y * dim_x) + (4*params%n_mbb)
+    n_cube = (3*params%n_mbb * dim_y * dim_x)
 
     allocate(lb(n_beta), ub(n_beta), beta(n_beta))
-    allocate(lb_3D(3*n_mbb,dim_y,dim_x), ub_3D(3*n_mbb,dim_y,dim_x))
+    allocate(lb_3D(3*params%n_mbb,dim_y,dim_x), ub_3D(3*params%n_mbb,dim_y,dim_x))
 
     !Bounds
     do j=1, dim_x
        do i=1, dim_y
-          call init_bounds(n_mbb, lb_3D(:,i,j), ub_3D(:,i,j), lb_tau, ub_tau, &
-               lb_beta, ub_beta, lb_Td, ub_Td, lb_tau_cib, ub_tau_cib, &
-               lb_beta_cib, ub_beta_cib, lb_Td_cib, ub_Td_cib, ciba)
+          call init_bounds(lb_3D(:,i,j), ub_3D(:,i,j))
        end do
     end do
     
-    call ravel_3D(lb_3D, lb, 3*n_mbb, dim_y, dim_x)
-    call ravel_3D(ub_3D, ub, 3*n_mbb, dim_y, dim_x)
-    call ravel_3D(params, beta, 3*n_mbb, dim_y, dim_x)
+    call ravel_3D(lb_3D, lb, 3*params%n_mbb, dim_y, dim_x)
+    call ravel_3D(ub_3D, ub, 3*params%n_mbb, dim_y, dim_x)
+    call ravel_3D(pars, beta, 3*params%n_mbb, dim_y, dim_x)
 
-    do i=1,n_mbb
-       lb(n_cube+(0*n_mbb)+i) = lb_tau
-       ub(n_cube+(0*n_mbb)+i) = ub_tau
+    do i=1,params%n_mbb
+       lb(n_cube+(0*params%n_mbb)+i) = params%lb_tau
+       ub(n_cube+(0*params%n_mbb)+i) = params%ub_tau
 
-       lb(n_cube+(1*n_mbb)+i) = lb_tau !FIXME MAYBE
-       ub(n_cube+(1*n_mbb)+i) = ub_tau !FIXME MAYBE
+       lb(n_cube+(1*params%n_mbb)+i) = params%lb_tau !FIXME MAYBE
+       ub(n_cube+(1*params%n_mbb)+i) = params%ub_tau !FIXME MAYBE
 
-       lb(n_cube+(2*n_mbb)+i) = lb_beta
-       ub(n_cube+(2*n_mbb)+i) = ub_beta
+       lb(n_cube+(2*params%n_mbb)+i) = params%lb_beta
+       ub(n_cube+(2*params%n_mbb)+i) = params%ub_beta
 
-       lb(n_cube+(3*n_mbb)+i) = lb_Td
-       ub(n_cube+(3*n_mbb)+i) = ub_Td
+       lb(n_cube+(3*params%n_mbb)+i) = params%lb_Td
+       ub(n_cube+(3*params%n_mbb)+i) = params%ub_Td
 
-       beta(n_cube+(0*n_mbb)+i) = b_params(i)
-       beta(n_cube+(1*n_mbb)+i) = stefan_params(i)
-       beta(n_cube+(2*n_mbb)+i) = c_params(i)
-       beta(n_cube+(3*n_mbb)+i) = d_params(i)
+       beta(n_cube+(0*params%n_mbb)+i) = b_pars(i)
+       beta(n_cube+(1*params%n_mbb)+i) = stefan_pars(i)
+       beta(n_cube+(2*params%n_mbb)+i) = c_pars(i)
+       beta(n_cube+(3*params%n_mbb)+i) = d_pars(i)
     end do
 
-    if (ciba .eqv. .true.) then
-       lb(n_cube+(0*n_mbb)+1) = lb_tau_cib
-       ub(n_cube+(0*n_mbb)+1) = ub_tau_cib
+    if (params%ciba .eqv. .true.) then
+       lb(n_cube+(0*params%n_mbb)+1) = params%lb_tau_cib
+       ub(n_cube+(0*params%n_mbb)+1) = params%ub_tau_cib
 
-       lb(n_cube+(1*n_mbb)+1) = lb_tau_cib
-       ub(n_cube+(1*n_mbb)+1) = ub_tau_cib
+       lb(n_cube+(1*params%n_mbb)+1) = params%lb_tau_cib
+       ub(n_cube+(1*params%n_mbb)+1) = params%ub_tau_cib
 
-       lb(n_cube+(2*n_mbb)+1) = lb_beta_cib
-       ub(n_cube+(2*n_mbb)+1) = ub_beta_cib
+       lb(n_cube+(2*params%n_mbb)+1) = params%lb_beta_cib
+       ub(n_cube+(2*params%n_mbb)+1) = params%ub_beta_cib
 
-       lb(n_cube+(3*n_mbb)+1) = lb_Td_cib
-       ub(n_cube+(3*n_mbb)+1) = ub_Td_cib
+       lb(n_cube+(3*params%n_mbb)+1) = params%lb_Td_cib
+       ub(n_cube+(3*params%n_mbb)+1) = params%ub_Td_cib
     end if
 
-    call minimize(n_beta, m, beta, lb, ub, cube, cube_HI, n_mbb, dim_v, dim_y, dim_x, lambda_tau, &
-         lambda_beta, lambda_Td, lambda_var_tau, lambda_var_beta, lambda_var_Td, lambda_stefan, l0, &
-         maxiter, kernel, iprint, std_cube, wavelength, color, degree, cc)
+    call minimize(n_beta, params%m, beta, lb, ub, cube, cube_HI, dim_v, dim_y, dim_x, params%maxiter, &
+         kernel, params%iprint, std_cube, wavelength, color)
 
     !Unravel data
-    call unravel_3D(beta, params, 3*n_mbb, dim_y, dim_x)
-    do i=1,n_mbb
-       b_params(i) = beta(n_cube+(0*n_mbb)+i)
-       stefan_params(i) = beta(n_cube+(1*n_mbb)+i)
-       c_params(i) = beta(n_cube+(2*n_mbb)+i)       
-       d_params(i) = beta(n_cube+(3*n_mbb)+i)       
+    call unravel_3D(beta, pars, 3*params%n_mbb, dim_y, dim_x)
+    do i=1,params%n_mbb
+       b_pars(i) = beta(n_cube+(0*params%n_mbb)+i)
+       stefan_pars(i) = beta(n_cube+(1*params%n_mbb)+i)
+       c_pars(i) = beta(n_cube+(2*params%n_mbb)+i)       
+       d_pars(i) = beta(n_cube+(3*params%n_mbb)+i)       
     end do        
 
-    ! print*, b_params
-    ! print*, stefan_params
-    ! print*, c_params
-    ! print*, d_params
+    ! print*, b_pars
+    ! print*, stefan_pars
+    ! print*, c_pars
+    ! print*, d_pars
 
     deallocate(lb, ub, beta)
     deallocate(lb_3D, ub_3D)
@@ -612,11 +505,11 @@ contains
   end subroutine mean_spectrum  
 
 
-  subroutine init_grid_params(params, guess_spectrum, dim_y, dim_x)
+  subroutine init_grid_params(pars, guess_spectrum, dim_y, dim_x)
     !! Set up a grid params array with std spectrum at each spatial position
     implicit none
  
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! grid of paramters
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: pars !! grid of paramters
     real(xp), intent(in), dimension(:), allocatable :: guess_spectrum !! std spectrum of the observation
     integer, intent(in) :: dim_y !! dimension along spatial axis y 
     integer, intent(in) :: dim_x !! dimension along spatial axis x
@@ -626,7 +519,7 @@ contains
 
     do j=1, dim_x
        do i=1, dim_y
-          params(:,i,j) = guess_spectrum
+          pars(:,i,j) = guess_spectrum
        end do
     end do
 
