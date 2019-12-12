@@ -97,7 +97,7 @@ contains
     print*, "fileout = '",trim(fileout),"'"
     print*, "timeout = '",trim(timeout),"'"
     
-    print*,
+    print*, " "
     print*, "______Parameters_____"
     print*, "n_gauss = ", n_gauss
     print*, "n_gauss_add = ", n_gauss_add
@@ -130,7 +130,7 @@ contains
 
     print*, "lym = ", lym
 
-    print*,
+    print*, " "
 
     ! Check n_gauss = 2 for Lym akpha mode
     if (lym .eqv. .true.) then
@@ -142,7 +142,7 @@ contains
        ! end if
     end if
 
-    print*,
+    print*, " "
     
     allocate(kernel(3, 3))
     
@@ -172,10 +172,10 @@ contains
     allocate(cube(dim_cube(1), dim_cube(2), dim_cube(3)))
     
     !Reshape the data (new cube of size nside)
-    print*,
+    print*, " "
     write(*,*) "Reshape cube, new dimensions :"
     write(*,*) "dim_v, dim_y, dim_x = ", dim_cube
-    print*, 
+    print*, " "
     
     print*, "Compute mean and std spectrum"
     allocate(std_spect(dim_data(1)))
@@ -206,7 +206,7 @@ contains
     end if
     
     print*, "                    Start iteration"
-    print*,
+    print*, " "
     
     if (descent .eqv. .true.) then
        print*, "Start hierarchical descent"
@@ -310,12 +310,12 @@ contains
 
           ! Propagate solution on new grid (higher resolution)
           call go_up_level(fit_params)
-          write(*,*) ""
+          write(*,*) " "
           write(*,*) "Interpolate parameters level ", n!, ">", power
 
        enddo
        
-       print*,
+       print*, " "
        write(*,*) "Reshape cube, restore initial dimensions :"
        write(*,*) "dim_v, dim_y, dim_x = ", dim_data
               
@@ -350,9 +350,9 @@ contains
     end if
     
     !Update last level
-    print*,
+    print*, " "
     print*, "Start updating last level."
-    print*,
+    print*, " "
     
     allocate(std_map(dim_data(2), dim_data(3)))
     allocate(std_map_abs(dim_data(2), dim_data(3)))
@@ -381,9 +381,9 @@ contains
 
     end if
     
-    print*,
+    print*, " "
     print*, "_____ Write output file _____"
-    print*,
+    print*, " "
     
     ! Open file
     open(unit=12, file=fileout, action="write", iostat=ios)
