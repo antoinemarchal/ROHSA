@@ -93,6 +93,7 @@ contains
     print*, "save_grid = ", params%save_grid
     print*, "cc = ", params%cc
     print*, "ciba = ", params%ciba
+    print*, "radius_tapper = ", params%radius_tapper
 
     print*, " "
     
@@ -160,6 +161,7 @@ contains
     write(unit,fmt=*) "#save_grid = ", params%save_grid
     write(unit,fmt=*) "#cc = ", params%cc
     write(unit,fmt=*) "#ciba = ", params%ciba
+    write(unit,fmt=*) "#radius_tapper = ", params%radius_tapper
 
     write(unit,fmt=*) "# "
     

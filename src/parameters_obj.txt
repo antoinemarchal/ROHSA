@@ -54,4 +54,5 @@
    ,params%save_grid = .true.     	!! if true --> save fitted parameters at each iteration of the multiresolution process
    ,params%cc = .true.                  !! if true --> activate colour corrections PLANCK+IRAS
    ,params%ciba = .false.               !! if true --> a CIBA component is fitted
+   ,params%radius_tapper = 0.86d0       !! radius used for apodization
    /

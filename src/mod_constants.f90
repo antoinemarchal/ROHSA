@@ -47,6 +47,7 @@ module mod_constants
      logical  :: noise, save_grid
      logical  :: cc
      logical  :: ciba
+     real(xp) :: radius_tapper
 
      character(len=512) :: filename, filename_NHI, filename_wavelength, filename_color, fileout, timeout, filename_noise
   end type parameters
@@ -58,7 +59,7 @@ module mod_constants
   end type indata
 
   type model
-     real(xp), dimension(:,:,:), allocatable :: tau, beta, t
+     real(xp), dimension(:,:), allocatable :: tau, beta, t
   end type model
  
 end module mod_constants

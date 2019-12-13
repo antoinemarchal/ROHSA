@@ -2,7 +2,9 @@
 module mod_minimize
   !! This module contains optimization subroutine and parametric model
   use mod_constants
+  use mod_read_parameters
   use mod_array
+  use mod_fft
   use mod_optimize
 
   implicit none
@@ -109,6 +111,9 @@ contains
     real(xp), intent(in), dimension(:,:), allocatable :: color
 
     real(xp), intent(in), dimension(:), allocatable :: x
+
+    real(xp), dimension(:,:), allocatable :: tapper 
+    real(xp), dimension(:,:), allocatable :: kmat
     
     real(xp), parameter    :: factr  = 1.0d+7, pgtol  = 1.0d-5
     
@@ -124,6 +129,13 @@ contains
     allocate(nbd(n), g(n))
     allocate(iwa(3*n))
     allocate(wa(2*m*n + 5*n + 11*m*m + 8*m))
+    
+    allocate(tapper(dim_y,dim_x))
+    allocate(kmat(dim_y,dim_x))
+
+    !Compute tapper and kmat
+    call kgrid(dim_y,dim_x,kmat)
+    call apodize(tapper, params%radius_tapper,dim_y,dim_x)
 
     f = 0._xp
     g = 0._xp
@@ -143,7 +155,8 @@ contains
        
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
-          call f_g_cube_fast(f, g, cube, cube_HI, x, dim_v, dim_y, dim_x, kernel, std_cube, wavelength, color)
+          call f_g_cube_fast(f, g, cube, cube_HI, x, dim_v, dim_y, dim_x, kernel, std_cube, wavelength, color, &
+               tapper, kmat)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations

@@ -6,6 +6,7 @@ module mod_optimize
   use mod_model
   use mod_color
   use mod_read_parameters
+  use mod_fft
 
   implicit none
   
@@ -137,7 +138,7 @@ contains
   
   ! Compute the objective function for a cube and the gradient of the obkective function
   subroutine f_g_cube_fast(f, g, cube, cube_HI, beta, dim_v, dim_y, dim_x, kernel, std_cube, &
-       wavelength, color)
+       wavelength, color, tapper, kmat)
     implicit none
 
     integer, intent(in) :: dim_v, dim_y, dim_x
@@ -148,6 +149,8 @@ contains
     real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
     real(xp), intent(in), dimension(:,:,:), allocatable :: std_cube
+    real(xp), intent(in), dimension(:,:), allocatable :: tapper 
+    real(xp), intent(in), dimension(:,:), allocatable :: kmat
 
     real(xp), intent(inout) :: f
     real(xp), intent(inout), dimension(:), allocatable :: g
@@ -169,6 +172,10 @@ contains
     real(xp), dimension(:), allocatable :: model
     real(xp) :: gauss
 
+    real(xp), dimension(:,:), allocatable :: tau_ciba
+    complex(xp), dimension(:,:), allocatable :: c_tau_ciba
+    complex(xp), dimension(:,:), allocatable :: tf_tau_ciba
+
     allocate(deriv(3*params%n_mbb, dim_y, dim_x))
     allocate(residual(dim_v, dim_y, dim_x))
     allocate(b_pars(params%n_mbb))
@@ -179,7 +186,8 @@ contains
     allocate(conv_tau(dim_y, dim_x), conv_beta(dim_y, dim_x), conv_Td(dim_y, dim_x))
     allocate(conv_conv_tau(dim_y, dim_x), conv_conv_beta(dim_y, dim_x), conv_conv_Td(dim_y, dim_x))
     allocate(image_tau(dim_y, dim_x), image_beta(dim_y, dim_x), image_Td(dim_y, dim_x))
-    allocate(model(dim_v))
+    allocate(model(dim_v))    
+    allocate(tau_ciba(dim_y,dim_x), c_tau_ciba(dim_y,dim_x))
     
     deriv = 0._xp
     f = 0._xp
@@ -224,26 +232,37 @@ contains
        conv_tau = 0._xp; conv_beta = 0._xp; conv_Td = 0._xp
        conv_conv_tau = 0._xp; conv_conv_beta = 0._xp; conv_conv_Td = 0._xp
        image_tau = 0._xp; image_beta = 0._xp; image_Td = 0._xp
+       tau_ciba = 0._xp
        
        image_tau = pars(1+(3*(i-1)),:,:)
        image_beta = pars(2+(3*(i-1)),:,:)
        image_Td = pars(3+(3*(i-1)),:,:)
-       
+
+       !CIBA FIXME
+       if (params%ciba .eqv. .true. .and. dim_y .gt. 4 .and. i .eq. 1) then
+          !Shift real image
+          call shift(image_tau, tau_ciba)
+          !Prepare complex array
+          c_tau_ciba = cmplx(tau_ciba,0._xp,xp)
+          !Compute  centered FFT using fftpack
+          call cfft2d(dim_y,dim_x,c_tau_ciba,tf_tau_ciba)
+       end if
+
        call convolution_2D_mirror(image_tau, conv_tau, dim_y, dim_x, kernel, 3)
        call convolution_2D_mirror(image_beta, conv_beta, dim_y, dim_x, kernel, 3)
        call convolution_2D_mirror(image_Td, conv_Td, dim_y, dim_x, kernel, 3)
        
        call convolution_2D_mirror(conv_tau, conv_conv_tau, dim_y, dim_x, kernel, 3)
        call convolution_2D_mirror(conv_beta, conv_conv_beta, dim_y, dim_x, kernel, 3)
-       call convolution_2D_mirror(conv_Td, conv_conv_Td, dim_y, dim_x, kernel, 3)
+       call convolution_2D_mirror(conv_Td, conv_conv_Td, dim_y, dim_x, kernel, 3)       
+
        
        do l=1, dim_x
           do j=1, dim_y
-             !Regularization
+             !Regularization function
              f = f + (0.5_xp * params%lambda_tau * conv_tau(j,l)**2._xp) 
              f = f + (0.5_xp * params%lambda_beta * conv_beta(j,l)**2._xp)
              f = f + (0.5_xp * params%lambda_Td * conv_Td(j,l)**2._xp) 
-
              
              f = f + (0.5_xp * params%lambda_var_tau * (image_tau(j,l) - b_pars(i))**2._xp)
              f = f + (0.5_xp * params%lambda_var_beta * (image_beta(j,l) - c_pars(i))**2._xp)
@@ -254,6 +273,7 @@ contains
                      (lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i))**2._xp)
              end if
              
+             !Regularization gradient
              g(n_cube+(0*params%n_mbb)+i) = g(n_cube+(0*params%n_mbb)+i) - (params%lambda_var_tau * (image_tau(j,l) - b_pars(i)))                     
              g(n_cube+(2*params%n_mbb)+i) = g(n_cube+(2*params%n_mbb)+i) - (params%lambda_var_beta * (image_beta(j,l) - c_pars(i)))                     
              g(n_cube+(3*params%n_mbb)+i) = g(n_cube+(3*params%n_mbb)+i) - (params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))                     
