@@ -110,7 +110,7 @@ contains
     return
   end subroutine cfft2d
 
-  subroutine icfft2d(l,m,data,icfft) !Attention check unitary transform normalization for backward transform
+  subroutine icfft2d(l,m,data,icfft)
     implicit none
     
     complex(xp), intent(in), allocatable, dimension(:,:) :: data
