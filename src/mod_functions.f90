@@ -408,6 +408,8 @@ contains
        d_pars(i) = beta(n_cube+(3*params%n_mbb)+i)       
     end do        
 
+    ! print*, sum(pars(4,:,:))/size(pars(2,:,:))
+
     ! print*, b_pars
     ! print*, stefan_pars
     ! print*, c_pars

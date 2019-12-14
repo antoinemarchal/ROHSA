@@ -8,11 +8,11 @@
    ,params%fileout = 'SED_mbb_run_0.dat'               !! name of the output result
    ,params%timeout = 'timestep.dat'                    !! write output time step
 
-   ,params%n_mbb = 2   	                               !! number of mmb dust to fit
+   ,params%n_mbb = 1   	                               !! number of mmb dust to fit
 
    ,params%degree = 5                                  !! degree of the pokynomial used to apply colour corrections
 
-   ,params%lambda_tau_ciba = 0.d-5	               !! lambda for tau parameter
+   ,params%lambda_tau_ciba = 0.d0	               !! lambda for tau parameter
 
    ,params%lambda_tau = 0.d0	                       !! lambda for tau parameter
    ,params%lambda_beta = 0.d0	                       !! lamnda for mean position parameter
@@ -26,21 +26,21 @@
    ,params%beta_init = 1.4d0         		       !! dispersion of additional Gaussian
    ,params%Td_init = 15.d0         		       !! dispersion of additional Gaussian
 
-   ,params%tau_init_cib = 0.d0        		       !! dispersion of additional Gaussian
-   ,params%beta_init_cib = 1.d0        	               !! dispersion of additional Gaussian
-   ,params%Td_init_cib = 14.d0         	               !! dispersion of additional Gaussian
+   ,params%tau_init_cib = 1.d0        		       !! dispersion of additional Gaussian
+   ,params%beta_init_cib = 1.4d0        	       !! dispersion of additional Gaussian
+   ,params%Td_init_cib = 15.d0         	               !! dispersion of additional Gaussian
 
-   ,params%lb_tau = 1.d-10         		       !! upper bound Td
-   ,params%ub_tau = 1000.d0         		       !! upper bound Td
+   ,params%lb_tau = 0.d0         		       !! upper bound Td
+   ,params%ub_tau = 100.d0         		       !! upper bound Td
    ,params%lb_beta = 1.d0         		       !! upper bound Td
    ,params%ub_beta = 2.5d0         		       !! upper bound Td
    ,params%lb_Td = 8.2d0         		       !! upper bound Td
    ,params%ub_Td = 50.d0         		       !! upper bound Td
 
-   ,params%lb_tau_cib = -100.d0           	       !! upper bound Td
+   ,params%lb_tau_cib = 0.d0             	       !! upper bound Td
    ,params%ub_tau_cib = 100.d0        	               !! upper bound Td
-   ,params%lb_beta_cib = 0.5d0         	               !! upper bound Td
-   ,params%ub_beta_cib = 1.5d0         	               !! upper bound Td
+   ,params%lb_beta_cib = 1.d0         	               !! upper bound Td
+   ,params%ub_beta_cib = 2.5d0         	               !! upper bound Td
    ,params%lb_Td_cib = 8.2d0         		       !! upper bound Td
    ,params%ub_Td_cib = 50.d0         		       !! upper bound Td
 
@@ -55,6 +55,6 @@
    ,params%iprint_init = 1              !! print option init
    ,params%save_grid = .true.     	!! if true --> save fitted parameters at each iteration of the multiresolution process
    ,params%cc = .true.                  !! if true --> activate colour corrections PLANCK+IRAS
-   ,params%ciba = .true.                !! if true --> a CIBA component is fitted
-   ,params%radius_tapper = 0.97d0       !! radius used for apodization
+   ,params%ciba = .false.               !! if true --> a CIBA component is fitted
+   ,params%radius_tapper = 0.87d0       !! radius used for apodization
    /

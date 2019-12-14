@@ -265,9 +265,14 @@ contains
              f = f + (0.5_xp * params%lambda_Td * conv_Td(j,l)**2._xp) 
              
              !Variance
-             f = f + (0.5_xp * params%lambda_var_tau * (image_tau(j,l) - b_pars(i))**2._xp)
-             f = f + (0.5_xp * params%lambda_var_beta * (image_beta(j,l) - c_pars(i))**2._xp)
-             f = f + (0.5_xp * params%lambda_var_Td * (image_Td(j,l) - d_pars(i))**2._xp)
+             if (params%ciba .eqv. .true.) then 
+                if (i .eq. 1) then             
+                   f = f + (0.5_xp * params%lambda_var_tau * (image_tau(j,l))**2._xp)
+                end if
+             end if
+             ! f = f + (0.5_xp * params%lambda_var_tau * (image_tau(j,l) - b_pars(i))**2._xp)
+             ! f = f + (0.5_xp * params%lambda_var_beta * (image_beta(j,l) - c_pars(i))**2._xp)
+             ! f = f + (0.5_xp * params%lambda_var_Td * (image_Td(j,l) - d_pars(i))**2._xp)
 
              !Stefan
              if (params%lambda_stefan .ne. 0._xp) then                          
@@ -280,14 +285,16 @@ contains
                 if (dim_y .gt. 4 .and. i .eq. 1) then
                    f = f + (0.5_xp * params%lambda_tau_ciba * filter(j,l)**2._xp * &
                         abs(tf_tau_ciba(j,l))**2._xp)   
+                   ! print*, abs(tf_tau_ciba(j,l))
+                   ! stop
                 end if
              end if
 
              !Regularization gradient
              !Variance
-             g(n_cube+(0*params%n_mbb)+i) = g(n_cube+(0*params%n_mbb)+i) - (params%lambda_var_tau * (image_tau(j,l) - b_pars(i)))  
-             g(n_cube+(2*params%n_mbb)+i) = g(n_cube+(2*params%n_mbb)+i) - (params%lambda_var_beta * (image_beta(j,l) - c_pars(i))) 
-             g(n_cube+(3*params%n_mbb)+i) = g(n_cube+(3*params%n_mbb)+i) - (params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))   
+             ! g(n_cube+(0*params%n_mbb)+i) = g(n_cube+(0*params%n_mbb)+i) - (params%lambda_var_tau * (image_tau(j,l) - b_pars(i)))  
+             ! g(n_cube+(2*params%n_mbb)+i) = g(n_cube+(2*params%n_mbb)+i) - (params%lambda_var_beta * (image_beta(j,l) - c_pars(i))) 
+             ! g(n_cube+(3*params%n_mbb)+i) = g(n_cube+(3*params%n_mbb)+i) - (params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))   
 
              !Stefan
              if (params%lambda_stefan .ne. 0._xp) then
@@ -348,9 +355,15 @@ contains
              deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params%lambda_Td * conv_conv_Td(j,l)) 
 
              !Variance
-             deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau * (image_tau(j,l) - b_pars(i)))
-             deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params%lambda_var_beta * (image_beta(j,l) - c_pars(i)))
-             deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))
+             if (params%ciba .eqv. .true.) then 
+                if (i .eq. 1) then
+                   deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau * (image_tau(j,l)))
+                end if
+             end if
+
+             ! deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau * (image_tau(j,l) - b_pars(i)))
+             ! deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params%lambda_var_beta * (image_beta(j,l) - c_pars(i)))
+             ! deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))
 
              !Stefan
              if (params%lambda_stefan .ne. 0._xp) then
