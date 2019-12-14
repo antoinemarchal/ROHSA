@@ -237,15 +237,17 @@ contains
        image_tau = pars(1+(3*(i-1)),:,:)
        image_beta = pars(2+(3*(i-1)),:,:)
        image_Td = pars(3+(3*(i-1)),:,:)
-
+       
        !CIBA FIXME
-       if (params%ciba .eqv. .true. .and. dim_y .gt. 4 .and. i .eq. 1) then
-          !Shift real image
-          call shift(image_tau, tau_ciba)
-          !Prepare complex array
-          c_tau_ciba = cmplx(tau_ciba,0._xp,xp)
-          !Compute  centered FFT using fftpack
-          call cfft2d(dim_y,dim_x,c_tau_ciba,tf_tau_ciba)
+       if (params%ciba .eqv. .true.) then 
+          if (dim_y .gt. 4 .and. i .eq. 1) then
+             !Shift real image
+             call shift(image_tau, tau_ciba)
+             !Prepare complex array
+             c_tau_ciba = cmplx(tau_ciba,0._xp,xp)
+             !Compute  centered FFT using fftpack
+             call cfft2d(dim_y,dim_x,c_tau_ciba,tf_tau_ciba)
+          end if
        end if
 
        call convolution_2D_mirror(image_tau, conv_tau, dim_y, dim_x, kernel, 3)
