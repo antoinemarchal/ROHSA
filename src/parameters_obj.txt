@@ -8,7 +8,7 @@
    ,params%fileout = 'SED_mbb_run_0.dat'               !! name of the output result
    ,params%timeout = 'timestep.dat'                    !! write output time step
 
-   ,params%n_mbb = 1   	                               !! number of mmb dust to fit
+   ,params%n_mbb = 2   	                               !! number of mmb dust to fit
 
    ,params%degree = 5                                  !! degree of the pokynomial used to apply colour corrections
 
@@ -53,6 +53,6 @@
    ,params%iprint_init = 1              !! print option init
    ,params%save_grid = .true.     	!! if true --> save fitted parameters at each iteration of the multiresolution process
    ,params%cc = .true.                  !! if true --> activate colour corrections PLANCK+IRAS
-   ,params%ciba = .false.               !! if true --> a CIBA component is fitted
+   ,params%ciba = .true.               !! if true --> a CIBA component is fitted
    ,params%radius_tapper = 0.86d0       !! radius used for apodization
    /
