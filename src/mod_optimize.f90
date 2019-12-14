@@ -176,6 +176,7 @@ contains
     real(xp), dimension(:,:), allocatable :: tau_ciba
     complex(xp), dimension(:,:), allocatable :: c_tau_ciba
     complex(xp), dimension(:,:), allocatable :: tf_tau_ciba
+    complex(xp), dimension(:,:), allocatable :: itf_tau_ciba
 
     allocate(deriv(3*params%n_mbb, dim_y, dim_x))
     allocate(residual(dim_v, dim_y, dim_x))
@@ -188,7 +189,7 @@ contains
     allocate(conv_conv_tau(dim_y, dim_x), conv_conv_beta(dim_y, dim_x), conv_conv_Td(dim_y, dim_x))
     allocate(image_tau(dim_y, dim_x), image_beta(dim_y, dim_x), image_Td(dim_y, dim_x))
     allocate(model(dim_v))    
-    allocate(tau_ciba(dim_y,dim_x), c_tau_ciba(dim_y,dim_x), tf_tau_ciba(dim_y,dim_x))
+    allocate(tau_ciba(dim_y,dim_x), c_tau_ciba(dim_y,dim_x), tf_tau_ciba(dim_y,dim_x), itf_tau_ciba(dim_y,dim_x))
     
     deriv = 0._xp
     f = 0._xp
@@ -244,6 +245,7 @@ contains
              c_tau_ciba = cmplx(tapper*tau_ciba,0._xp,xp)
              !Compute centered FFT with unitary transform using fftpack
              call cfft2d(dim_y,dim_x,c_tau_ciba,tf_tau_ciba)
+             ! call icfft2d(dim_y,dim_x,filter*abs(tf_tau_ciba)) !fixme
           end if
        end if
 

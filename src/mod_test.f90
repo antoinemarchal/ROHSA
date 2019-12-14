@@ -28,6 +28,7 @@ contains
     real(xp), dimension(:,:), allocatable    :: test_fft_shift 
     complex(xp), dimension(:,:), allocatable :: c_test_fft 
     complex(xp), dimension(:,:), allocatable :: c_test_fft2 
+    complex(xp), dimension(:,:), allocatable :: c_test_fft3
     real(xp), dimension(:,:), allocatable :: kmat
 
     call read_map(filename_fBm, test_fft)
@@ -38,6 +39,9 @@ contains
     c_test_fft = cmplx(test_fft_shift,0._xp,xp)
 
     call cfft2d(64,64,c_test_fft,c_test_fft2)
+    call icfft2d(64,64,c_test_fft2,c_test_fft3)    
+    ! print*, c_test_fft(1,:)
+    ! print*, real(c_test_fft3(1,:),xp)
 
     allocate(kmat(64,64))
     call kgrid(64,64,kmat)

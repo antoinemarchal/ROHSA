@@ -151,7 +151,7 @@ contains
     call cfft2b(ldim, l, m, c, wsave, lensav, work, lenwrk, ier)
 
     !normalization unitary transforms
-    c = c * sqrt(real((l*m),xp))
+    c = c / sqrt(real((l*m),xp))
 
     !working complex array c in output cfft
     icfft = c
