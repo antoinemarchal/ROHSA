@@ -97,8 +97,8 @@ contains
 
     call cfft2f(ldim, l, m, c, wsave, lensav, work, lenwrk, ier)
 
-    !no normalization
-    ! c = c * real((l*m),xp)
+    !normalization unitary transforms
+    c = c * sqrt(real((l*m),xp))
 
     !working complex array c in output cfft
     cfft = c
@@ -110,7 +110,7 @@ contains
     return
   end subroutine cfft2d
 
-  subroutine icfft2d(l,m,data,icfft)
+  subroutine icfft2d(l,m,data,icfft) !Attention check unitary transform normalization for backward transform
     implicit none
     
     complex(xp), intent(in), allocatable, dimension(:,:) :: data
@@ -150,8 +150,8 @@ contains
 
     call cfft2b(ldim, l, m, c, wsave, lensav, work, lenwrk, ier)
 
-    !no normalization
-    ! c = c * real((l*m),xp)
+    !normalization unitary transforms
+    c = c * sqrt(real((l*m),xp))
 
     !working complex array c in output cfft
     icfft = c

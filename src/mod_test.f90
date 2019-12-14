@@ -45,6 +45,10 @@ contains
     allocate(tapper(34,64))
     call apodize(tapper, 0.86_xp, 34,64)
 
+    !test normalized FFT unity transform
+    ! print*, c_test_fft2(1,:)
+    ! print*, tapper(1,:)
+
     call butterworth(butter,kmat,1._xp,1._xp,2._xp)
 
   end subroutine test

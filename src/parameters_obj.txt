@@ -12,6 +12,8 @@
 
    ,params%degree = 5                                  !! degree of the pokynomial used to apply colour corrections
 
+   ,params%lambda_tau_ciba = 0.d-5	               !! lambda for tau parameter
+
    ,params%lambda_tau = 0.d0	                       !! lambda for tau parameter
    ,params%lambda_beta = 0.d0	                       !! lamnda for mean position parameter
    ,params%lambda_Td = 0.d0                            !! lambda for dispersion parameter absorption
@@ -35,8 +37,8 @@
    ,params%lb_Td = 8.2d0         		       !! upper bound Td
    ,params%ub_Td = 50.d0         		       !! upper bound Td
 
-   ,params%lb_tau_cib = -1000.d0        	       !! upper bound Td
-   ,params%ub_tau_cib = 1000.d0        	               !! upper bound Td
+   ,params%lb_tau_cib = -100.d0           	       !! upper bound Td
+   ,params%ub_tau_cib = 100.d0        	               !! upper bound Td
    ,params%lb_beta_cib = 0.5d0         	               !! upper bound Td
    ,params%ub_beta_cib = 1.5d0         	               !! upper bound Td
    ,params%lb_Td_cib = 8.2d0         		       !! upper bound Td
@@ -54,5 +56,5 @@
    ,params%save_grid = .true.     	!! if true --> save fitted parameters at each iteration of the multiresolution process
    ,params%cc = .true.                  !! if true --> activate colour corrections PLANCK+IRAS
    ,params%ciba = .true.                !! if true --> a CIBA component is fitted
-   ,params%radius_tapper = 0.86d0       !! radius used for apodization
+   ,params%radius_tapper = 0.97d0       !! radius used for apodization
    /

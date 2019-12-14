@@ -27,6 +27,8 @@ module mod_constants
      integer  :: iprint, iprint_init
      integer  :: maxiter, maxiter_init
 
+     real(xp) :: lambda_tau_ciba
+
      real(xp) :: lambda_tau, lambda_beta, lambda_Td
      real(xp) :: lambda_var_tau, lambda_var_beta, lambda_var_Td
      real(xp) :: lambda_stefan

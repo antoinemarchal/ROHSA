@@ -122,6 +122,7 @@ contains
     do n=0,nside-1
        power = 2**n
        
+       !mean arrays
        allocate(cube_mean(dim_cube(1), power, power))
        allocate(cube_HI_mean(dim_cube_HI(1), power, power))
        allocate(std_cube_mean(dim_cube(1),power, power))          

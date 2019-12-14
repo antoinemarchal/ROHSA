@@ -7,6 +7,7 @@ module mod_functions
   use mod_array
   use mod_model
   use mod_read_parameters
+  use mod_fft
   
   implicit none
 
@@ -328,6 +329,10 @@ contains
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(:), allocatable :: beta
 
+    real(xp), dimension(:,:), allocatable :: tapper 
+    real(xp), dimension(:,:), allocatable :: kmat
+    real(xp), dimension(:,:), allocatable :: butter, filter
+
     n_beta = (3*params%n_mbb * dim_y * dim_x) + (4*params%n_mbb)
     n_cube = (3*params%n_mbb * dim_y * dim_x)
 
@@ -378,8 +383,21 @@ contains
        ub(n_cube+(3*params%n_mbb)+1) = params%ub_Td_cib
     end if
 
+    !Compute tapper and kmat
+    allocate(tapper(dim_y,dim_x))
+    allocate(kmat(dim_y,dim_x))
+    
+    !Compute tapper and kmat
+    call kgrid(dim_y,dim_x,kmat)
+    call apodize(tapper, params%radius_tapper,dim_y,dim_x)
+
+    !compute butterworth map and filter
+    call butterworth(butter,kmat,1._xp,1._xp,0.5_xp)
+    filter = 1._xp / butter
+
+    !run minimization
     call minimize(n_beta, params%m, beta, lb, ub, cube, cube_HI, dim_v, dim_y, dim_x, params%maxiter, &
-         kernel, params%iprint, std_cube, wavelength, color)
+         kernel, params%iprint, std_cube, wavelength, color, filter, tapper)
 
     !Unravel data
     call unravel_3D(beta, pars, 3*params%n_mbb, dim_y, dim_x)

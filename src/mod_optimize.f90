@@ -138,7 +138,7 @@ contains
   
   ! Compute the objective function for a cube and the gradient of the obkective function
   subroutine f_g_cube_fast(f, g, cube, cube_HI, beta, dim_v, dim_y, dim_x, kernel, std_cube, &
-       wavelength, color, tapper, kmat)
+       wavelength, color, filter, tapper)
     implicit none
 
     integer, intent(in) :: dim_v, dim_y, dim_x
@@ -149,8 +149,9 @@ contains
     real(xp), intent(in), dimension(:,:), allocatable :: color
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
     real(xp), intent(in), dimension(:,:,:), allocatable :: std_cube
-    real(xp), intent(in), dimension(:,:), allocatable :: tapper 
-    real(xp), intent(in), dimension(:,:), allocatable :: kmat
+
+    real(xp), intent(in), dimension(:,:), allocatable :: filter
+    real(xp), intent(in), dimension(:,:), allocatable :: tapper
 
     real(xp), intent(inout) :: f
     real(xp), intent(inout), dimension(:), allocatable :: g
@@ -187,7 +188,7 @@ contains
     allocate(conv_conv_tau(dim_y, dim_x), conv_conv_beta(dim_y, dim_x), conv_conv_Td(dim_y, dim_x))
     allocate(image_tau(dim_y, dim_x), image_beta(dim_y, dim_x), image_Td(dim_y, dim_x))
     allocate(model(dim_v))    
-    allocate(tau_ciba(dim_y,dim_x), c_tau_ciba(dim_y,dim_x))
+    allocate(tau_ciba(dim_y,dim_x), c_tau_ciba(dim_y,dim_x), tf_tau_ciba(dim_y,dim_x))
     
     deriv = 0._xp
     f = 0._xp
@@ -208,11 +209,6 @@ contains
        d_pars(i) = beta(n_cube+(3*params%n_mbb)+i)
     end do
 
-    ! print*, b_pars
-    ! print*, c_pars
-    ! print*, d_pars
-    ! print*, stefan_pars
-
     ! Compute the objective function and the gradient
     do j=1, dim_x
        do i=1, dim_y
@@ -221,6 +217,7 @@ contains
           call myresidual(pars(:,i,j), cube(:,i,j), residual_1D, dim_v, wavelength, &
                color, std_cube(:,i,j))
           residual(:,i,j) = residual_1D
+          !Attache aux donnees
           f = f + (myfunc_spec(residual_1D))
           deallocate(residual_1D)
        end do
@@ -244,8 +241,8 @@ contains
              !Shift real image
              call shift(image_tau, tau_ciba)
              !Prepare complex array
-             c_tau_ciba = cmplx(tau_ciba,0._xp,xp)
-             !Compute  centered FFT using fftpack
+             c_tau_ciba = cmplx(tapper*tau_ciba,0._xp,xp)
+             !Compute centered FFT with unitary transform using fftpack
              call cfft2d(dim_y,dim_x,c_tau_ciba,tf_tau_ciba)
           end if
        end if
@@ -262,30 +259,43 @@ contains
        do l=1, dim_x
           do j=1, dim_y
              !Regularization function
+             !Smoothmess
              f = f + (0.5_xp * params%lambda_tau * conv_tau(j,l)**2._xp) 
              f = f + (0.5_xp * params%lambda_beta * conv_beta(j,l)**2._xp)
              f = f + (0.5_xp * params%lambda_Td * conv_Td(j,l)**2._xp) 
              
+             !Variance
              f = f + (0.5_xp * params%lambda_var_tau * (image_tau(j,l) - b_pars(i))**2._xp)
              f = f + (0.5_xp * params%lambda_var_beta * (image_beta(j,l) - c_pars(i))**2._xp)
              f = f + (0.5_xp * params%lambda_var_Td * (image_Td(j,l) - d_pars(i))**2._xp)
 
+             !Stefan
              if (params%lambda_stefan .ne. 0._xp) then                          
                 f = f + (0.5_xp * params%lambda_stefan * &
                      (lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i))**2._xp)
              end if
-             
-             !Regularization gradient
-             g(n_cube+(0*params%n_mbb)+i) = g(n_cube+(0*params%n_mbb)+i) - (params%lambda_var_tau * (image_tau(j,l) - b_pars(i)))                     
-             g(n_cube+(2*params%n_mbb)+i) = g(n_cube+(2*params%n_mbb)+i) - (params%lambda_var_beta * (image_beta(j,l) - c_pars(i)))                     
-             g(n_cube+(3*params%n_mbb)+i) = g(n_cube+(3*params%n_mbb)+i) - (params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))                     
 
+             !CIBA
+             if (params%ciba .eqv. .true.) then 
+                if (dim_y .gt. 4 .and. i .eq. 1) then
+                   f = f + (0.5_xp * params%lambda_tau_ciba * filter(j,l)**2._xp * &
+                        abs(tf_tau_ciba(j,l))**2._xp)   
+                end if
+             end if
+
+             !Regularization gradient
+             !Variance
+             g(n_cube+(0*params%n_mbb)+i) = g(n_cube+(0*params%n_mbb)+i) - (params%lambda_var_tau * (image_tau(j,l) - b_pars(i)))  
+             g(n_cube+(2*params%n_mbb)+i) = g(n_cube+(2*params%n_mbb)+i) - (params%lambda_var_beta * (image_beta(j,l) - c_pars(i))) 
+             g(n_cube+(3*params%n_mbb)+i) = g(n_cube+(3*params%n_mbb)+i) - (params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))   
+
+             !Stefan
              if (params%lambda_stefan .ne. 0._xp) then
                 g(n_cube+(1*params%n_mbb)+i) = g(n_cube+(1*params%n_mbb)+i) - params%lambda_stefan * ( &
                      lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i))
              end if
              
-             !
+             !Attache aux donnees
              if (params%cc .eqv. .true.) then
                 do k=1, dim_v                          
                    deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + ( &
@@ -332,15 +342,17 @@ contains
              end if
 
 
+             !Smoothness
              deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_tau * conv_conv_tau(j,l))
              deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params%lambda_beta * conv_conv_beta(j,l))
              deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params%lambda_Td * conv_conv_Td(j,l)) 
 
-
+             !Variance
              deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau * (image_tau(j,l) - b_pars(i)))
              deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params%lambda_var_beta * (image_beta(j,l) - c_pars(i)))
              deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))
 
+             !Stefan
              if (params%lambda_stefan .ne. 0._xp) then
                 deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + params%lambda_stefan * ( &
                      d_lumi_cst_dtau(image_beta(j,l),image_Td(j,l),params%l0) * &
@@ -355,6 +367,14 @@ contains
                      d_lumi_cst_dTd(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) * &
                      (lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i)) &
                      )
+             end if
+
+             !CIBA
+             if (params%ciba .eqv. .true.) then 
+                if (dim_y .gt. 4 .and. i .eq. 1) then
+                   deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_tau_ciba * &
+                        filter(j,l)**2._xp * abs(tf_tau_ciba(j,l)))             
+                end if
              end if
              
           end do

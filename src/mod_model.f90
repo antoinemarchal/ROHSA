@@ -25,7 +25,7 @@ contains
     real(xp), intent(in) :: k0
     real(xp), intent(in) :: n
 
-    butter = H0 / (1. + (k/k0)**(2*n))
+    butter = H0 / sqrt((1. + (k/k0)**(2*n)))
     
   end subroutine butterworth
   

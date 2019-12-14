@@ -49,6 +49,8 @@ contains
     print*, "lambda_beta = ", params%lambda_beta
     print*, "lambda_Td = ", params%lambda_Td
 
+    print*, "lambda_tau_ciba = ", params%lambda_tau_ciba
+
     print*, " "
     print*, "lambda_var_tau = ", params%lambda_var_tau
     print*, "lambda_var_beta = ", params%lambda_var_beta

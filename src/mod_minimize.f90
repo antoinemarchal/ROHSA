@@ -93,7 +93,7 @@ contains
 
   ! Minimize algorithn for a cube with regularization
   subroutine minimize(n, m, x, lb, ub, cube, cube_HI, dim_v, dim_y, dim_x, maxiter, kernel, iprint, &
-       std_cube, wavelength, color)
+       std_cube, wavelength, color, filter, tapper)
     implicit none      
 
     integer, intent(in) :: n
@@ -112,8 +112,8 @@ contains
 
     real(xp), intent(in), dimension(:), allocatable :: x
 
-    real(xp), dimension(:,:), allocatable :: tapper 
-    real(xp), dimension(:,:), allocatable :: kmat
+    real(xp), intent(in), dimension(:,:), allocatable :: filter
+    real(xp), intent(in), dimension(:,:), allocatable :: tapper
     
     real(xp), parameter    :: factr  = 1.0d+7, pgtol  = 1.0d-5
     
@@ -130,13 +130,6 @@ contains
     allocate(iwa(3*n))
     allocate(wa(2*m*n + 5*n + 11*m*m + 8*m))
     
-    allocate(tapper(dim_y,dim_x))
-    allocate(kmat(dim_y,dim_x))
-
-    !Compute tapper and kmat
-    call kgrid(dim_y,dim_x,kmat)
-    call apodize(tapper, params%radius_tapper,dim_y,dim_x)
-
     f = 0._xp
     g = 0._xp
 
@@ -156,7 +149,7 @@ contains
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
           call f_g_cube_fast(f, g, cube, cube_HI, x, dim_v, dim_y, dim_x, kernel, std_cube, wavelength, color, &
-               tapper, kmat)
+               filter, tapper)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations
