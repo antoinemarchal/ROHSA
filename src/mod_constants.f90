@@ -51,6 +51,11 @@ module mod_constants
      logical  :: ciba
      real(xp) :: radius_tapper
 
+     !Butterworth filter
+     real(xp) :: h0
+     real(xp) :: k0
+     real(xp) :: order
+
      character(len=512) :: filename, filename_NHI, filename_wavelength, filename_color, fileout, timeout, filename_noise
   end type parameters
 

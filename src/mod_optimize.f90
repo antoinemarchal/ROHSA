@@ -247,7 +247,8 @@ contains
              !Shift real image
              call shift(image_tau, tau_ciba)
              !Prepare complex array
-             c_tau_ciba = cmplx(tapper*tau_ciba,0._xp,xp)
+             ! c_tau_ciba = cmplx(tapper*tau_ciba,0._xp,xp)
+             c_tau_ciba = cmplx(tau_ciba,0._xp,xp)
              !Compute centered FFT with unitary transform using fftpack
              call cfft2d(dim_y,dim_x,c_tau_ciba,tf_tau_ciba)
              filtered_tf = filter * tf_tau_ciba

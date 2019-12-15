@@ -392,8 +392,8 @@ contains
     call apodize(tapper, params%radius_tapper,dim_y,dim_x)
 
     !compute butterworth map and filter
-    call butterworth(butter,kmat,1._xp,1._xp,0.5_xp)
-    filter = 1._xp / butter
+    call butterworth(butter,kmat,params%h0,params%k0,params%order)
+    filter = butter
 
     !run minimization
     call minimize(n_beta, params%m, beta, lb, ub, cube, cube_HI, dim_v, dim_y, dim_x, params%maxiter, &
