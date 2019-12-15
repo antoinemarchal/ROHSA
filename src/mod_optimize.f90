@@ -175,8 +175,11 @@ contains
 
     real(xp), dimension(:,:), allocatable :: tau_ciba
     complex(xp), dimension(:,:), allocatable :: c_tau_ciba
-    complex(xp), dimension(:,:), allocatable :: tf_tau_ciba
-    complex(xp), dimension(:,:), allocatable :: itf_tau_ciba
+    complex(xp), dimension(:,:), allocatable :: tf_tau_ciba    
+    complex(xp), dimension(:,:), allocatable :: filtered_tf
+    complex(xp), dimension(:,:), allocatable :: filtered_itf
+    complex(xp), dimension(:,:), allocatable :: d_filtered_tf
+    complex(xp), dimension(:,:), allocatable :: d_filtered_itf
 
     allocate(deriv(3*params%n_mbb, dim_y, dim_x))
     allocate(residual(dim_v, dim_y, dim_x))
@@ -189,7 +192,9 @@ contains
     allocate(conv_conv_tau(dim_y, dim_x), conv_conv_beta(dim_y, dim_x), conv_conv_Td(dim_y, dim_x))
     allocate(image_tau(dim_y, dim_x), image_beta(dim_y, dim_x), image_Td(dim_y, dim_x))
     allocate(model(dim_v))    
-    allocate(tau_ciba(dim_y,dim_x), c_tau_ciba(dim_y,dim_x), tf_tau_ciba(dim_y,dim_x), itf_tau_ciba(dim_y,dim_x))
+    allocate(tau_ciba(dim_y,dim_x), c_tau_ciba(dim_y,dim_x), tf_tau_ciba(dim_y,dim_x))
+    allocate(filtered_tf(dim_y,dim_x), filtered_itf(dim_y,dim_x))
+    allocate(d_filtered_tf(dim_y,dim_x), d_filtered_itf(dim_y,dim_x))
     
     deriv = 0._xp
     f = 0._xp
@@ -245,7 +250,10 @@ contains
              c_tau_ciba = cmplx(tapper*tau_ciba,0._xp,xp)
              !Compute centered FFT with unitary transform using fftpack
              call cfft2d(dim_y,dim_x,c_tau_ciba,tf_tau_ciba)
-             ! call icfft2d(dim_y,dim_x,filter*abs(tf_tau_ciba)) !fixme
+             filtered_tf = filter * tf_tau_ciba
+             d_filtered_tf = filter**2._xp * tf_tau_ciba
+             call icfft2d(dim_y,dim_x,filtered_tf,filtered_itf)
+             call icfft2d(dim_y,dim_x,d_filtered_tf,d_filtered_itf)
           end if
        end if
 
@@ -285,8 +293,7 @@ contains
              !CIBA
              if (params%ciba .eqv. .true.) then 
                 if (dim_y .gt. 4 .and. i .eq. 1) then
-                   f = f + (0.5_xp * params%lambda_tau_ciba * filter(j,l)**2._xp * &
-                        abs(tf_tau_ciba(j,l))**2._xp)   
+                   f = f + (0.5_xp * params%lambda_tau_ciba * abs(filtered_itf(j,l))**2._xp)   
                    ! print*, abs(tf_tau_ciba(j,l))
                    ! stop
                 end if
@@ -388,7 +395,7 @@ contains
              if (params%ciba .eqv. .true.) then 
                 if (dim_y .gt. 4 .and. i .eq. 1) then
                    deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_tau_ciba * &
-                        filter(j,l)**2._xp * abs(tf_tau_ciba(j,l)))             
+                        abs(d_filtered_itf(j,l)))             
                 end if
              end if
              
