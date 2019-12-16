@@ -32,6 +32,8 @@ module mod_constants
      real(xp) :: lambda_tau, lambda_beta, lambda_Td
      real(xp) :: lambda_var_tau, lambda_var_beta, lambda_var_Td
      real(xp) :: lambda_stefan
+     real(xp) :: lambda_var_tau_cib
+     real(xp) :: lambda_cross
 
      real(xp) :: tau_init, beta_init, Td_init
      real(xp) :: tau_init_cib, beta_init_cib, Td_init_cib

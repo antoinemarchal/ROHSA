@@ -17,14 +17,19 @@ reload(mod_opt)
 
 
 #Open data GNILC_IRIS-SFD_adim
-fitsname = "/mnt/raid-cita/amarchal/SIMUSED/data/intensity_adim.fits"
+fitsname = "/mnt/raid-cita/amarchal/DUST/data/CIBA/intensity_adim.fits"
 hdu = fits.open(fitsname)
 hdr = hdu[0].header
-cube = hdu[0].data
+cube = hdu[0].data[:,:256,:256] *1.e6
 
 core_cube = ROHSA(cube)
 
-NHI = np.ones((1,cube.shape[1],cube.shape[2]))
+fitsname_hi = "/mnt/raid-cita/amarchal/DUST/data/CIBA/NHI_HI4PI_glon140_glat85.fits"
+hdu_hi = fits.open(fitsname_hi)
+hdr_hi = hdu_hi[0].header
+cube_hi = hdu_hi[0].data[:256,:256]
+NHI = np.ones((2,cube.shape[1],cube.shape[2]))
+NHI[1] = cube_hi
 
 freq = np.array([np.full((cube.shape[0],cube.shape[1]),i) for i in np.array([3000,857,545,353])])*u.GHz
 wavelength = (const.c / freq).to(u.micron)

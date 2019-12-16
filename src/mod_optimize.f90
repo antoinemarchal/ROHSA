@@ -181,6 +181,10 @@ contains
     complex(xp), dimension(:,:), allocatable :: d_filtered_tf
     complex(xp), dimension(:,:), allocatable :: d_filtered_itf
 
+    !Cross correlation
+    complex(xp), dimension(:,:), allocatable :: a, b, c, d, e, z    
+    complex(xp), dimension(:,:), allocatable :: ffta, fftb, fftc, fftd, iffte, ifftz    
+
     allocate(deriv(3*params%n_mbb, dim_y, dim_x))
     allocate(residual(dim_v, dim_y, dim_x))
     allocate(b_pars(params%n_mbb))
@@ -195,6 +199,13 @@ contains
     allocate(tau_ciba(dim_y,dim_x), c_tau_ciba(dim_y,dim_x), tf_tau_ciba(dim_y,dim_x))
     allocate(filtered_tf(dim_y,dim_x), filtered_itf(dim_y,dim_x))
     allocate(d_filtered_tf(dim_y,dim_x), d_filtered_itf(dim_y,dim_x))
+
+    allocate(a(dim_y,dim_x),ffta(dim_y,dim_x))
+    allocate(b(dim_y,dim_x),fftb(dim_y,dim_x))
+    allocate(c(dim_y,dim_x),fftc(dim_y,dim_x))
+    allocate(d(dim_y,dim_x),fftd(dim_y,dim_x))
+    allocate(e(dim_y,dim_x), iffte(dim_y,dim_x))
+    allocate(z(dim_y,dim_x), ifftz(dim_y,dim_x))
     
     deriv = 0._xp
     f = 0._xp
@@ -215,6 +226,9 @@ contains
        d_pars(i) = beta(n_cube+(3*params%n_mbb)+i)
     end do
 
+    ! print*, b_pars
+    ! print*, sum(pars(1,:,:))/size(pars(1,:,:))
+    
     ! Compute the objective function and the gradient
     do j=1, dim_x
        do i=1, dim_y
@@ -242,21 +256,21 @@ contains
        image_Td = pars(3+(3*(i-1)),:,:)
        
        !CIBA FIXME
-       if (params%ciba .eqv. .true.) then 
-          if (dim_y .gt. 4 .and. i .eq. 1) then
-             !Shift real image
-             call shift(image_tau, tau_ciba)
-             !Prepare complex array
-             ! c_tau_ciba = cmplx(tapper*tau_ciba,0._xp,xp)
-             c_tau_ciba = cmplx(tau_ciba,0._xp,xp)
-             !Compute centered FFT with unitary transform using fftpack
-             call cfft2d(dim_y,dim_x,c_tau_ciba,tf_tau_ciba)
-             filtered_tf = filter * tf_tau_ciba
-             d_filtered_tf = filter**2._xp * tf_tau_ciba
-             call icfft2d(dim_y,dim_x,filtered_tf,filtered_itf)
-             call icfft2d(dim_y,dim_x,d_filtered_tf,d_filtered_itf)
-          end if
-       end if
+       ! if (params%ciba .eqv. .true.) then 
+       !    if (dim_y .gt. 4 .and. i .eq. 1) then
+       !       !Shift real image
+       !       call shift(image_tau, tau_ciba)
+       !       !Prepare complex array
+       !       ! c_tau_ciba = cmplx(tapper*tau_ciba,0._xp,xp)
+       !       c_tau_ciba = cmplx(tau_ciba,0._xp,xp)
+       !       !Compute centered FFT with unitary transform using fftpack
+       !       call cfft2d(dim_y,dim_x,c_tau_ciba,tf_tau_ciba)
+       !       filtered_tf = filter * tf_tau_ciba
+       !       d_filtered_tf = filter**2._xp * tf_tau_ciba
+       !       call icfft2d(dim_y,dim_x,filtered_tf,filtered_itf)
+       !       call icfft2d(dim_y,dim_x,d_filtered_tf,d_filtered_itf)
+       !    end if
+       ! end if
 
        call convolution_2D_mirror(image_tau, conv_tau, dim_y, dim_x, kernel, 3)
        call convolution_2D_mirror(image_beta, conv_beta, dim_y, dim_x, kernel, 3)
@@ -265,7 +279,6 @@ contains
        call convolution_2D_mirror(conv_tau, conv_conv_tau, dim_y, dim_x, kernel, 3)
        call convolution_2D_mirror(conv_beta, conv_conv_beta, dim_y, dim_x, kernel, 3)
        call convolution_2D_mirror(conv_Td, conv_conv_Td, dim_y, dim_x, kernel, 3)       
-
        
        do l=1, dim_x
           do j=1, dim_y
@@ -276,14 +289,23 @@ contains
              f = f + (0.5_xp * params%lambda_Td * conv_Td(j,l)**2._xp) 
              
              !Variance
-             if (params%ciba .eqv. .true.) then 
-                if (i .eq. 1) then             
-                   f = f + (0.5_xp * params%lambda_var_tau * (image_tau(j,l))**2._xp)
-                end if
-             end if
+             ! if (params%ciba .eqv. .true.) then 
+             !    if (i .eq. 1) then             
+             !       f = f + (0.5_xp * params%lambda_var_tau_cib * (image_tau(j,l))**2._xp)
+             !    end if
+             ! end if
+
              ! f = f + (0.5_xp * params%lambda_var_tau * (image_tau(j,l) - b_pars(i))**2._xp)
              ! f = f + (0.5_xp * params%lambda_var_beta * (image_beta(j,l) - c_pars(i))**2._xp)
              ! f = f + (0.5_xp * params%lambda_var_Td * (image_Td(j,l) - d_pars(i))**2._xp)
+
+             !Correlation HI
+             if (i .eq. 1) then
+                f = f + (0.5_xp * params%lambda_var_tau_cib * ((image_tau(j,l)))**2._xp)
+                ! f = f + (0.5_xp * params%lambda_var_tau_cib * ((image_tau(j,l)) - b_pars(i))**2._xp)
+             else
+                f = f + (0.5_xp * params%lambda_var_tau * ((image_tau(j,l)/cube_HI(i,j,l)) - b_pars(i))**2._xp)                
+             end if
 
              !Stefan
              if (params%lambda_stefan .ne. 0._xp) then                          
@@ -292,17 +314,24 @@ contains
              end if
 
              !CIBA
-             if (params%ciba .eqv. .true.) then 
-                if (dim_y .gt. 4 .and. i .eq. 1) then
-                   f = f + (0.5_xp * params%lambda_tau_ciba * abs(filtered_itf(j,l))**2._xp)   
-                   ! print*, abs(tf_tau_ciba(j,l))
-                   ! stop
-                end if
-             end if
+             ! if (params%ciba .eqv. .true.) then 
+             !    if (dim_y .gt. 4 .and. i .eq. 1) then
+             !       f = f + (0.5_xp * params%lambda_tau_ciba * abs(filtered_itf(j,l))**2._xp)   
+             !       ! print*, abs(tf_tau_ciba(j,l))
+             !       ! stop
+             !    end if
+             ! end if
 
              !Regularization gradient
              !Variance
-             ! g(n_cube+(0*params%n_mbb)+i) = g(n_cube+(0*params%n_mbb)+i) - (params%lambda_var_tau * (image_tau(j,l) - b_pars(i)))  
+             if (i .eq. 1) then
+                g(n_cube+(0*params%n_mbb)+i) = 0.
+                ! g(n_cube+(0*params%n_mbb)+i) = g(n_cube+(0*params%n_mbb)+i) - &
+                !      (params%lambda_var_tau_cib * (image_tau(j,l) - b_pars(i)))  
+             else
+                g(n_cube+(0*params%n_mbb)+i) = g(n_cube+(0*params%n_mbb)+i) - &
+                     (params%lambda_var_tau * (image_tau(j,l)/cube_HI(i,j,l) - b_pars(i))) 
+             end if
              ! g(n_cube+(2*params%n_mbb)+i) = g(n_cube+(2*params%n_mbb)+i) - (params%lambda_var_beta * (image_beta(j,l) - c_pars(i))) 
              ! g(n_cube+(3*params%n_mbb)+i) = g(n_cube+(3*params%n_mbb)+i) - (params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))   
 
@@ -365,10 +394,21 @@ contains
              deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params%lambda_Td * conv_conv_Td(j,l)) 
 
              !Variance
-             if (params%ciba .eqv. .true.) then 
-                if (i .eq. 1) then
-                   deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau * (image_tau(j,l)))
-                end if
+             ! if (params%ciba .eqv. .true.) then 
+             !    if (i .eq. 1) then
+             !       deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau_cib * (image_tau(j,l)))
+             !    end if
+             ! end if
+
+             !Correlation HI
+             if (i .eq. 1) then
+                deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau_cib * &
+                     (image_tau(j,l)))
+                ! deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau_cib * &
+                !      (image_tau(j,l) - b_pars(i)))
+             else
+                deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau * &
+                     (image_tau(j,l)/cube_HI(i,j,l) - b_pars(i)))                
              end if
 
              ! deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau * (image_tau(j,l) - b_pars(i)))
@@ -393,17 +433,43 @@ contains
              end if
 
              !CIBA
-             if (params%ciba .eqv. .true.) then 
-                if (dim_y .gt. 4 .and. i .eq. 1) then
-                   deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_tau_ciba * &
-                        abs(d_filtered_itf(j,l)))             
-                end if
-             end if
+             ! if (params%ciba .eqv. .true.) then 
+             !    if (dim_y .gt. 4 .and. i .eq. 1) then
+             !       deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_tau_ciba * &
+             !            abs(d_filtered_itf(j,l)))             
+             !    end if
+             ! end if
              
           end do
           !
        end do
     end do        
+
+    ! !CROSS CORRELATION
+    ! !function
+    ! a = cmplx(pars(1,:,:),0._xp,xp)
+    ! b = cmplx(pars(4,:,:),0._xp,xp)
+    ! call cfft2d(dim_y,dim_x,a,ffta)
+    ! call cfft2d(dim_y,dim_x,b,fftb)
+    ! c = conjg(ffta) * fftb
+    ! call icfft2d(dim_y,dim_x,c,d)
+
+    ! ! !gradient
+    ! e = conjg(ffta) * ffta * fftb
+    ! z = conjg(ffta) * fftb * conjg(fftb)
+    ! call icfft2d(dim_y,dim_x,e,iffte) !and take the real part
+    ! call icfft2d(dim_y,dim_x,z,ifftz) !and take the real part    
+
+    ! do l=1, dim_x
+    !    do j=1, dim_y
+    !       f = f + (0.5_xp * params%lambda_cross * real(d(j,l),xp)**2._xp) 
+    !       deriv(1,j,l) = deriv(1,j,l) + (params%lambda_cross * &
+    !            (real(ifftz(j,l),xp)))
+    !       deriv(4,j,l) = deriv(4,j,l) + (params%lambda_cross * &
+    !            (real(iffte(j,l),xp)))     
+    !    end do
+    ! end do
+    ! !    
     
     call ravel_3D(deriv, g, 3*params%n_mbb, dim_y, dim_x)
 
