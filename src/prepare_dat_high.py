@@ -15,7 +15,7 @@ cube = hdu[0].data[:,:256,:256] *1.e6
 fitsname_noise = "/mnt/raid-cita/amarchal/DUST/data/CIBA/intensity_adim_noise.fits"
 hdu_noise = fits.open(fitsname_noise)
 hdr_noise = hdu_noise[0].header
-rms_cube = hdu_noise[0].data[:,:256,:256]  *1.e6
+rms_cube = hdu_noise[0].data[:,:256,:256] *1.e6
 # rms_cube = np.full((cube.shape[0],cube.shape[1],cube.shape[2]), 1.)
 
 fitsname_hi = "/mnt/raid-cita/amarchal/DUST/data/CIBA/NHI_HI4PI_glon140_glat85.fits"
