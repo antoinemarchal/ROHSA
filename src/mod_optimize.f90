@@ -182,8 +182,7 @@ contains
     complex(xp), dimension(:,:), allocatable :: d_filtered_itf
 
     !Cross correlation
-    complex(xp), dimension(:,:), allocatable :: a, b, c, d, e, z    
-    complex(xp), dimension(:,:), allocatable :: ffta, fftb, fftc, fftd, iffte, ifftz    
+    real(xp), dimension(:,:), allocatable :: corr, ra, rb, corr_grad
 
     allocate(deriv(3*params%n_mbb, dim_y, dim_x))
     allocate(residual(dim_v, dim_y, dim_x))
@@ -199,13 +198,7 @@ contains
     allocate(tau_ciba(dim_y,dim_x), c_tau_ciba(dim_y,dim_x), tf_tau_ciba(dim_y,dim_x))
     allocate(filtered_tf(dim_y,dim_x), filtered_itf(dim_y,dim_x))
     allocate(d_filtered_tf(dim_y,dim_x), d_filtered_itf(dim_y,dim_x))
-
-    allocate(a(dim_y,dim_x),ffta(dim_y,dim_x))
-    allocate(b(dim_y,dim_x),fftb(dim_y,dim_x))
-    allocate(c(dim_y,dim_x),fftc(dim_y,dim_x))
-    allocate(d(dim_y,dim_x),fftd(dim_y,dim_x))
-    allocate(e(dim_y,dim_x), iffte(dim_y,dim_x))
-    allocate(z(dim_y,dim_x), ifftz(dim_y,dim_x))
+    allocate(corr(dim_y,dim_x), corr_grad(dim_y,dim_x), ra(dim_y,dim_x), rb(dim_y,dim_x))
     
     deriv = 0._xp
     f = 0._xp
@@ -226,7 +219,8 @@ contains
        d_pars(i) = beta(n_cube+(3*params%n_mbb)+i)
     end do
 
-    ! print*, b_pars
+    ! print*, c_pars
+    ! print*, d_pars
     ! print*, sum(pars(1,:,:))/size(pars(1,:,:))
     
     ! Compute the objective function and the gradient
@@ -282,81 +276,6 @@ contains
        
        do l=1, dim_x
           do j=1, dim_y
-             !Regularization function
-             !Smoothmess
-             if (i .eq. 1) then             
-                f = f + (0.5_xp * params%lambda_tau_cib * conv_tau(j,l)**2._xp) 
-                f = f + (0.5_xp * params%lambda_beta_cib * conv_beta(j,l)**2._xp)
-                f = f + (0.5_xp * params%lambda_Td_cib * conv_Td(j,l)**2._xp) 
-             else
-                f = f + (0.5_xp * params%lambda_tau * conv_tau(j,l)**2._xp) 
-                f = f + (0.5_xp * params%lambda_beta * conv_beta(j,l)**2._xp)
-                f = f + (0.5_xp * params%lambda_Td * conv_Td(j,l)**2._xp) 
-             end if
-                
-             !Variance
-             ! if (params%ciba .eqv. .true.) then 
-             !    if (i .eq. 1) then             
-             !       f = f + (0.5_xp * params%lambda_var_tau_cib * (image_tau(j,l))**2._xp)
-             !    end if
-             ! end if
-
-             ! f = f + (0.5_xp * params%lambda_var_tau * (image_tau(j,l) - b_pars(i))**2._xp)
-             
-             if (i .eq. 1) then
-                f = f + (0.5_xp * params%lambda_var_beta * (image_beta(j,l) - 1._xp)**2._xp)
-             else
-                f = f + (0.5_xp * params%lambda_var_beta * (image_beta(j,l) - c_pars(i))**2._xp)
-             end if
-             ! f = f + (0.5_xp * params%lambda_var_Td * (image_Td(j,l) - d_pars(i))**2._xp)
-
-             !Correlation HI
-             if (i .eq. 1) then
-                f = f + (0.5_xp * params%lambda_var_tau_cib * ((image_tau(j,l)))**2._xp)
-                ! f = f + (0.5_xp * params%lambda_var_tau_cib * ((image_tau(j,l)) - b_pars(i))**2._xp)
-             else
-                f = f + (0.5_xp * params%lambda_var_tau * ((image_tau(j,l)/cube_HI(i,j,l)) - b_pars(i))**2._xp)                
-             end if
-
-             !Stefan
-             if (params%lambda_stefan .ne. 0._xp) then                          
-                f = f + (0.5_xp * params%lambda_stefan * &
-                     (lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i))**2._xp)
-             end if
-
-             !CIBA
-             ! if (params%ciba .eqv. .true.) then 
-             !    if (dim_y .gt. 4 .and. i .eq. 1) then
-             !       f = f + (0.5_xp * params%lambda_tau_ciba * abs(filtered_itf(j,l))**2._xp)   
-             !       ! print*, abs(tf_tau_ciba(j,l))
-             !       ! stop
-             !    end if
-             ! end if
-
-             !Regularization gradient
-             !Variance
-             if (i .eq. 1) then
-                g(n_cube+(0*params%n_mbb)+i) = 0.
-                g(n_cube+(2*params%n_mbb)+i) = g(n_cube+(2*params%n_mbb)+i) - (params%lambda_var_beta * (image_beta(j,l) - 1._xp)) 
-                ! g(n_cube+(0*params%n_mbb)+i) = g(n_cube+(0*params%n_mbb)+i) - &
-                !      (params%lambda_var_tau_cib * (image_tau(j,l) - b_pars(i)))  
-             else
-                g(n_cube+(0*params%n_mbb)+i) = g(n_cube+(0*params%n_mbb)+i) - &
-                     (params%lambda_var_tau * (image_tau(j,l)/cube_HI(i,j,l) - b_pars(i))) 
-                g(n_cube+(2*params%n_mbb)+i) = g(n_cube+(2*params%n_mbb)+i) - &
-                     (params%lambda_var_beta * (image_beta(j,l) - c_pars(i)))
-             end if
-             ! g(n_cube+(2*params%n_mbb)+i) = g(n_cube+(2*params%n_mbb)+i) - &
-             !(params%lambda_var_beta * (image_beta(j,l) - c_pars(i))) 
-             ! g(n_cube+(3*params%n_mbb)+i) = g(n_cube+(3*params%n_mbb)+i) - &
-             !(params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))   
-
-             !Stefan
-             if (params%lambda_stefan .ne. 0._xp) then
-                g(n_cube+(1*params%n_mbb)+i) = g(n_cube+(1*params%n_mbb)+i) - params%lambda_stefan * ( &
-                     lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i))
-             end if
-             
              !Attache aux donnees
              if (params%cc .eqv. .true.) then
                 do k=1, dim_v                          
@@ -403,60 +322,108 @@ contains
                 end do
              end if
 
+             !Regularization function
+             if (i .eq. 1) then 
+                !Smoothmess 
+                f = f + (0.5_xp * params%lambda_tau_cib * conv_tau(j,l)**2._xp) 
+                f = f + (0.5_xp * params%lambda_beta_cib * conv_beta(j,l)**2._xp)
+                f = f + (0.5_xp * params%lambda_Td_cib * conv_Td(j,l)**2._xp) 
 
-             !Smoothness
+                !Variance
+                ! f = f + (0.5_xp * params%lambda_var_beta * (image_beta(j,l) - 1._xp)**2._xp)
+                f = f + (0.5_xp * params%lambda_var_tau_cib * ((image_tau(j,l)))**2._xp)
+                f = f + (0.5_xp * params%lambda_var_beta_cib * (image_beta(j,l) - c_pars(i))**2._xp)
+                f = f + (0.5_xp * params%lambda_var_Td_cib * (image_Td(j,l) - d_pars(i))**2._xp)
+
+             else
+                !Smoothmess DUST
+                f = f + (0.5_xp * params%lambda_tau * conv_tau(j,l)**2._xp) 
+                f = f + (0.5_xp * params%lambda_beta * conv_beta(j,l)**2._xp)
+                f = f + (0.5_xp * params%lambda_Td * conv_Td(j,l)**2._xp) 
+
+                !Correlation HI + variance beta and T
+                ! f = f + (0.5_xp * params%lambda_var_tau_cib * ((image_tau(j,l)) - b_pars(i))**2._xp)
+                f = f + (0.5_xp * params%lambda_var_tau * ((image_tau(j,l)/cube_HI(i,j,l)) - b_pars(i))**2._xp)                
+                f = f + (0.5_xp * params%lambda_var_beta * (image_beta(j,l) - c_pars(i))**2._xp)
+                f = f + (0.5_xp * params%lambda_var_Td * (image_Td(j,l) - d_pars(i))**2._xp)
+             end if
+                
+             !Regularization gradient
+             !Variance
              if (i .eq. 1) then
                 deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_tau_cib * conv_conv_tau(j,l))
                 deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params%lambda_beta_cib * conv_conv_beta(j,l))
                 deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params%lambda_Td_cib * conv_conv_Td(j,l)) 
+
+                !Variance
+                ! deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau_cib * (image_tau(j,l) - b_pars(i)))
+                deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau_cib * (image_tau(j,l)))
+                deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params%lambda_var_beta_cib * (image_beta(j,l) - c_pars(i)))
+                deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params%lambda_var_Td_cib * (image_Td(j,l) - d_pars(i)))
+
+                g(n_cube+(0*params%n_mbb)+i) = 0.
+                g(n_cube+(2*params%n_mbb)+i) = g(n_cube+(2*params%n_mbb)+i) - (params%lambda_var_beta_cib &
+                     * (image_beta(j,l) - c_pars(i)))
+                g(n_cube+(3*params%n_mbb)+i) = g(n_cube+(3*params%n_mbb)+i) - (params%lambda_var_Td_cib &
+                * (image_Td(j,l) - d_pars(i)))                   
+                ! g(n_cube+(0*params%n_mbb)+i) = g(n_cube+(0*params%n_mbb)+i) - &
+                !(params%lambda_var_tau_cib * (image_tau(j,l) - b_pars(i)))  
              else
                 deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_tau * conv_conv_tau(j,l))
                 deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params%lambda_beta * conv_conv_beta(j,l))
                 deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params%lambda_Td * conv_conv_Td(j,l)) 
+
+                !Correlation HI + variance
+                deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau * &
+                     (image_tau(j,l)/cube_HI(i,j,l) - b_pars(i)))                
+                deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params%lambda_var_beta * (image_beta(j,l) - c_pars(i)))
+                deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))
+
+                g(n_cube+(0*params%n_mbb)+i) = g(n_cube+(0*params%n_mbb)+i) - (params%lambda_var_tau &
+                     * (image_tau(j,l)/cube_HI(i,j,l) - b_pars(i))) 
+                g(n_cube+(2*params%n_mbb)+i) = g(n_cube+(2*params%n_mbb)+i) - (params%lambda_var_beta &
+                     * (image_beta(j,l) - c_pars(i)))
+                g(n_cube+(3*params%n_mbb)+i) = g(n_cube+(3*params%n_mbb)+i) - (params%lambda_var_Td &
+                * (image_Td(j,l) - d_pars(i)))                   
              end if
 
-             !Variance
+             ! !Stefan
+             ! if (params%lambda_stefan .ne. 0._xp) then                          
+             !    f = f + (0.5_xp * params%lambda_stefan * &
+             !         (lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i))**2._xp)
+             ! end if
+
+             !CIBA
              ! if (params%ciba .eqv. .true.) then 
-             !    if (i .eq. 1) then
-             !       deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau_cib * (image_tau(j,l)))
+             !    if (dim_y .gt. 4 .and. i .eq. 1) then
+             !       f = f + (0.5_xp * params%lambda_tau_ciba * abs(filtered_itf(j,l))**2._xp)   
+             !       ! print*, abs(tf_tau_ciba(j,l))
+             !       ! stop
              !    end if
              ! end if
 
-             !Correlation HI
-             if (i .eq. 1) then
-                deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau_cib * &
-                     (image_tau(j,l)))
-                ! deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau_cib * &
-                !      (image_tau(j,l) - b_pars(i)))
-             else
-                deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau * &
-                     (image_tau(j,l)/cube_HI(i,j,l) - b_pars(i)))                
-             end if
-
-             ! deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau * (image_tau(j,l) - b_pars(i)))
-             if (i .eq. 1) then
-                deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params%lambda_var_beta * (image_beta(j,l) - 1._xp))
-                ! deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))
-             else
-                deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params%lambda_var_beta * (image_beta(j,l) - c_pars(i)))
-             end if
-
-             !Stefan
-             if (params%lambda_stefan .ne. 0._xp) then
-                deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + params%lambda_stefan * ( &
-                     d_lumi_cst_dtau(image_beta(j,l),image_Td(j,l),params%l0) * &
-                     (lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i)) &
-                     )
+             ! !Stefan
+             ! if (params%lambda_stefan .ne. 0._xp) then
+             !    g(n_cube+(1*params%n_mbb)+i) = g(n_cube+(1*params%n_mbb)+i) - params%lambda_stefan * ( &
+             !         lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i))
+             ! end if
+             
+             ! !Stefan
+             ! if (params%lambda_stefan .ne. 0._xp) then
+             !    deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + params%lambda_stefan * ( &
+             !         d_lumi_cst_dtau(image_beta(j,l),image_Td(j,l),params%l0) * &
+             !         (lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i)) &
+             !         )
                 
-                deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + params%lambda_stefan * ( &
-                     d_lumi_cst_dbeta(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) * &
-                     (lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i)) &
-                     )
-                deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + params%lambda_stefan * ( &
-                     d_lumi_cst_dTd(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) * &
-                     (lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i)) &
-                     )
-             end if
+             !    deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + params%lambda_stefan * ( &
+             !         d_lumi_cst_dbeta(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) * &
+             !         (lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i)) &
+             !         )
+             !    deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + params%lambda_stefan * ( &
+             !         d_lumi_cst_dTd(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) * &
+             !         (lumi_cst(image_tau(j,l),image_beta(j,l),image_Td(j,l),params%l0) - stefan_pars(i)) &
+             !         )
+             ! end if
 
              !CIBA
              ! if (params%ciba .eqv. .true.) then 
@@ -472,23 +439,15 @@ contains
     end do        
 
     ! !CROSS CORRELATION
-    !function
-    a = cmplx(cube_HI(2,:,:)-(sum(cube_HI(2,:,:))/size(cube_HI(2,:,:))),0._xp,xp)
-    b = cmplx(pars(1,:,:),0._xp,xp)
-    call cfft2d(dim_y,dim_x,a,ffta)
-    call cfft2d(dim_y,dim_x,b,fftb)
-    c = conjg(ffta) * fftb
-    call icfft2d(dim_y,dim_x,c,d)
-
-    ! !gradient    
-    z = ffta * conjg(ffta) * fftb
-    call icfft2d(dim_y,dim_x,z,ifftz) !and take the real part    
-
-    do l=1, dim_x
-       do j=1, dim_y
-          f = f + (0.5_xp * params%lambda_cross * real(d(j,l),xp)**2._xp) 
-          deriv(1,j,l) = deriv(1,j,l) + (params%lambda_cross * &
-               (real(ifftz(j,l),xp)))
+    ra = cube_HI(2,:,:)-(sum(cube_HI(2,:,:))/size(cube_HI(2,:,:)))
+    do i=1,1 !FIXME FOR EACH CIBA PARAMETER MAP BTW 1 AND 3
+       rb = pars(i,:,:)
+       call crosscorrel(ra,rb,corr,corr_grad)
+       do l=1, dim_x
+          do j=1, dim_y
+             f = f + (0.5_xp * params%lambda_cross * corr(j,l)**2._xp) 
+             deriv(i,j,l) = deriv(i,j,l) + (params%lambda_cross * corr_grad(j,l))
+          end do
        end do
     end do
     !    

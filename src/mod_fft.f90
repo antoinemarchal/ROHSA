@@ -9,9 +9,46 @@ module mod_fft
   
   private
 
-  public :: cfft2d, icfft2d, kgrid
+  public :: cfft2d, icfft2d, kgrid, crosscorrel
 
 contains
+
+  subroutine crosscorrel(a, b, corr, corr_grad)
+    implicit none
+
+    real(xp), intent(in), dimension(:,:), allocatable :: a, b 
+    real(xp), intent(inout), dimension(:,:), allocatable :: corr 
+    real(xp), intent(inout), dimension(:,:), allocatable :: corr_grad 
+
+    complex(xp), dimension(:,:), allocatable :: ca, cb
+    complex(xp), dimension(:,:), allocatable :: fftca, fftcb
+    complex(xp), dimension(:,:), allocatable :: cross, ifftcross
+    complex(xp), dimension(:,:), allocatable :: cross_grad, ifftcross_grad
+
+    integer :: dimy, dimx
+
+    dimy = size(a,1)
+    dimx = size(a,2)
+
+    allocate(ca(dimy,dimx),cb(dimy,dimx),fftca(dimy,dimx),fftcb(dimy,dimx))
+    allocate(cross(dimy,dimx), ifftcross(dimy,dimx))
+
+    ca = cmplx(a,0._xp,xp)
+    cb = cmplx(b,0._xp,xp)
+
+    call cfft2d(dimy,dimx,ca,fftca)
+    call cfft2d(dimy,dimx,cb,fftcb)
+
+    cross = conjg(fftca) * fftcb
+    cross_grad = fftca * conjg(fftca) * fftcb
+
+    call icfft2d(dimy,dimx,cross,ifftcross)
+    call icfft2d(dimy,dimx,cross_grad,ifftcross_grad)
+    
+    corr = real(ifftcross,xp)
+    corr_grad = real(ifftcross_grad,xp)
+    
+  end subroutine crosscorrel
 
   subroutine kgrid(nx,ny,kmat)
     implicit none

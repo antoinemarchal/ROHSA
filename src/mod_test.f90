@@ -23,6 +23,7 @@ contains
     character(len=512) :: filename_fBm="fBm.dat"
     
     real(xp), dimension(:,:), allocatable    :: test_fft
+    real(xp), dimension(:,:), allocatable    :: corr
     real(xp), dimension(:,:), allocatable    :: tapper 
     real(xp), dimension(:,:), allocatable    :: butter 
     real(xp), dimension(:,:), allocatable    :: test_fft_shift 

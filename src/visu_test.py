@@ -23,7 +23,7 @@ hdr = hdu[0].header
 cube = hdu[0].data[:,:256,:256] *1.e6
 
 core_cube = ROHSA(cube)
-# core_cube = ROHSA(np.zeros((cube.shape[0],128,128)))
+core_cube = ROHSA(np.zeros((cube.shape[0],64,64)))
 
 fitsname_hi = "/mnt/raid-cita/amarchal/DUST/data/CIBA/NHI_HI4PI_glon140_glat85.fits"
 hdu_hi = fits.open(fitsname_hi)
@@ -39,8 +39,8 @@ wavelength_full = np.array([np.full((cube.shape[1],cube.shape[2]),i) for i in np
 #Open color correction file
 color = fits.open("/mnt/raid-cita/amarchal/PLANCK/col_cor_iras_hfi_DX9v2_poly.fits")[0].data
 
-gaussian = core_cube.read_gaussian("./SED_mbb_run_0.dat")
-# gaussian = core_cube.read_gaussian("./SED_mbb_run_0_nside_7.dat")
+# gaussian = core_cube.read_gaussian("./SED_mbb_run_0.dat")
+gaussian = core_cube.read_gaussian("./SED_mbb_run_0_nside_6.dat")
 gaussian[1::3] += 1. #ATTENTION beta -1
 
 stop
