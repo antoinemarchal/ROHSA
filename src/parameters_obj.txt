@@ -14,8 +14,8 @@
    ,params%lambda_tau_cib = 10.d0	               !! lambda for tau parameter
    ,params%lambda_beta_cib = 10.d0	               !! lamnda for mean position parameter
    ,params%lambda_Td_cib = 0.1d0    		       !! lambda for dispersion parameter absorption
-   ,params%lambda_var_tau_cib = 1.d0                   !! lambda for dispersion tau parameter
-   ,params%lambda_var_beta_cib = 0.1d0   	       !! lambda for dispersion mean position parameter   
+   ,params%lambda_var_tau_cib = 1.d0                  !! lambda for dispersion tau parameter
+   ,params%lambda_var_beta_cib = 1.d0   	       !! lambda for dispersion mean position parameter   
    ,params%lambda_var_Td_cib = 0.1d0  		       !! lambda for dispersion mean position parameter   
 
    ,params%lambda_tau = 10.d0	                       !! lambda for tau parameter
@@ -26,15 +26,15 @@
    ,params%lambda_var_Td = 0.1d0  		       !! lambda for dispersion mean position parameter   
 
    ,params%lambda_stefan = 0.d0    		       !! lambda for dispersion variance parameter
-   ,params%lambda_cross = 10.d0    		       !! lambda for dispersion variance parameter
+   ,params%lambda_cross = 1.d0    		       !! lambda for dispersion variance parameter
 
    ,params%tau_init = 1.d0         		       !! dispersion of additional Gaussian
-   ,params%beta_init = 1.4d0         		       !! dispersion of additional Gaussian
-   ,params%Td_init = 15.d0         		       !! dispersion of additional Gaussian
+   ,params%beta_init = 1.6d0         		       !! dispersion of additional Gaussian
+   ,params%Td_init = 18.d0         		       !! dispersion of additional Gaussian
 
    ,params%tau_init_cib = 0.d0        		       !! dispersion of additional Gaussian
    ,params%beta_init_cib = 1.d0            	       !! dispersion of additional Gaussian
-   ,params%Td_init_cib = 15.d0         	               !! dispersion of additional Gaussian
+   ,params%Td_init_cib = 12.d0         	               !! dispersion of additional Gaussian
 
    ,params%lb_tau = 0.d0         		       !! upper bound Td
    ,params%ub_tau = 100.d0         		       !! upper bound Td
@@ -45,8 +45,8 @@
 
    ,params%lb_tau_cib = -100.d0             	       !! upper bound Td
    ,params%ub_tau_cib = 100.d0        	               !! upper bound Td
-   ,params%lb_beta_cib = 1.d0         	               !! upper bound Td
-   ,params%ub_beta_cib = 2.5d0         	               !! upper bound Td
+   ,params%lb_beta_cib = 0.5d0         	               !! upper bound Td
+   ,params%ub_beta_cib = 1.5d0         	               !! upper bound Td
    ,params%lb_Td_cib = 8.2d0         		       !! upper bound Td
    ,params%ub_Td_cib = 50.d0         		       !! upper bound Td
 
