@@ -378,7 +378,7 @@ contains
 
                 !Correlation HI + variance
                 deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (params%lambda_var_tau * &
-                     (image_tau(j,l)/cube_HI(i,j,l) - b_pars(i)))                
+                     (image_tau(j,l)/cube_HI(i,j,l) - b_pars(i)) / cube_HI(i,j,l))                
                 deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params%lambda_var_beta * (image_beta(j,l) - c_pars(i)))
                 deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params%lambda_var_Td * (image_Td(j,l) - d_pars(i)))
 
@@ -443,7 +443,7 @@ contains
 
     ! !CROSS CORRELATION
     ra = cube_HI(2,:,:)-(sum(cube_HI(2,:,:))/size(cube_HI(2,:,:)))
-    do i=1,1 !FIXME FOR EACH CIBA PARAMETER MAP BTW 1 AND 3
+    do i=1,3 !FIXME FOR EACH CIBA PARAMETER MAP BTW 1 AND 3
        rb = pars(i,:,:)
        call crosscorrel(ra,rb,corr,corr_grad)
        do l=1, dim_x
