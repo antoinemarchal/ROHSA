@@ -69,7 +69,7 @@ def d_MBB_l_cc_d_tau(l,tau,beta,td,l0,color,degree):
     cc = colorcorr(color,l,beta,td,degree) 
     mbb = MBB_l(l,tau,beta,td,l0)
     d_mbb_d_tau = d_MBB_l_d_tau(l,tau,beta,td,l0)    
-    return  np.array([mbb[i] + cc[i]*d_mbb_d_tau[i] for i in np.arange(len(color))])
+    return  np.array([cc[i]*d_mbb_d_tau[i] for i in np.arange(len(color))])
 
 def d_MBB_l_cc_d_beta(l,tau,beta,td,l0,color,degree):    
     cc = colorcorr(color,l,beta,td,degree) 
