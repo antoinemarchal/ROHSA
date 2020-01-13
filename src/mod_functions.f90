@@ -217,6 +217,7 @@ contains
        end do
        
        x(2+(3*(i-1))) = minloc(residual, dim_v)
+       ! x(2+(3*(i-1))) = dim_v/2
        x(1+(3*(i-1))) = line(int(x(2+(3*(i-1))))) * amp_fact_init
        x(3+(3*(i-1))) = sig_init;
        

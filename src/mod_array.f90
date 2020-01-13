@@ -6,10 +6,26 @@ module mod_array
 
   private
 
-  public :: convolution_2D_mirror, ravel_2D, ravel_3D, unravel_3D, mean, std, std_2D, mean_2D, max_2D, ravel_3D_abs, unravel_3D_abs
+  public :: convolution_2D_mirror, ravel_2D, ravel_3D, unravel_3D, mean, std, std_2D, mean_2D, max_2D, &
+       ravel_3D_abs, unravel_3D_abs, linspace
   
   
 contains
+
+  subroutine linspace(vec,a,b)
+    implicit none
+    
+    real(xp), intent(in) :: a,b
+    real(xp), intent(inout), dimension(:) :: vec
+    real(xp) :: h
+    integer :: n
+    integer :: i
+
+    n=size(vec)
+
+    h=(b-a)/(n-1)
+    vec=a+h*(/(i,i=0,n-1)/)
+  end subroutine linspace
 
   subroutine convolution_2D_mirror(image, conv, dim_y, dim_x, kernel, dim_k)
     implicit none

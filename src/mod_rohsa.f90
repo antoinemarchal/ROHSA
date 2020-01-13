@@ -81,6 +81,8 @@ contains
 
     real(xp) :: c_lym=1._xp !! minimized the variance of the ratio between dispersion 1 and dispersion of a 2-Gaussian model for Lym alpha nebula
 
+    real(xp), dimension(:), allocatable :: dist_sig
+
     integer, dimension(3) :: dim_data !! dimension of original data
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
     
@@ -258,7 +260,16 @@ contains
           if (regul .eqv. .true.) then
              if (n == 0) then                
                 print*,  "Update level", n
-                call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
+                ! call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
+                !New init
+                allocate(dist_sig(n_gauss))
+                call linspace(dist_sig,1.1_xp,12._xp)
+                do i=1,n_gauss
+                   fit_params(1+(3*(i-1)),:,:) = 1._xp
+                   fit_params(2+(3*(i-1)),:,:) = dim_data(1)/2
+                   fit_params(3+(3*(i-1)),:,:) = dist_sig(i)
+                   b_params(i) = dist_sig(i)
+                end do
              end if
             
              ! if (n .eq. 2) then 

@@ -161,6 +161,8 @@ contains
        b_params(i) = beta((n_beta-n_gauss)+i)
     end do
 
+    print*, b_params
+
     ! Compute the objective function and the gradient
     do j=1, dim_x
        do i=1, dim_y
