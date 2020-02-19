@@ -361,7 +361,7 @@ contains
     allocate(std_map_abs(dim_data(2), dim_data(3)))
     
     if (noise .eqv. .true.) then
-       std_map = std_cube
+       std_map = std_data
     else   
        call set_stdmap(std_map, data, lstd, ustd)
     end if
