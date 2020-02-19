@@ -169,8 +169,9 @@ contains
     
     call dim_data2dim_cube(nside, dim_data, dim_cube)
     
-    !Allocate moemory for cube
+    !Allocate memory for cube
     allocate(cube(dim_cube(1), dim_cube(2), dim_cube(3)))
+    allocate(std_cube(dim_cube(2), dim_cube(3)))
     
     !Reshape the data (new cube of size nside)
     print*, " "
