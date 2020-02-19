@@ -72,7 +72,6 @@ contains
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:), allocatable :: std_cube          !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
-    real(xp), dimension(:,:), allocatable :: std_map_abs       !! standard deviation map fo the absorp cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: b_params            !! unknow average sigma
     real(xp), dimension(:), allocatable :: std_spect           !! std spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect           !! max spectrum of the observation
@@ -358,7 +357,6 @@ contains
     print*, " "
     
     allocate(std_map(dim_data(2), dim_data(3)))
-    allocate(std_map_abs(dim_data(2), dim_data(3)))
     
     if (noise .eqv. .true.) then
        std_map = std_data
