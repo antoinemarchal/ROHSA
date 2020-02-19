@@ -16,7 +16,7 @@ module mod_rohsa
 
 contains
 
-  subroutine main_rohsa(data, std_cube, fileout, timeout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
+  subroutine main_rohsa(data, std_data, fileout, timeout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
        lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, amp_fact_init, sig_init, lb_sig_init, &
        ub_sig_init, lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
        iprint, iprint_init, save_grid, lym)
@@ -64,12 +64,13 @@ contains
     integer :: power        !! loop index
 
     real(xp), intent(in), dimension(:,:,:), allocatable :: data        !! initial fits data
-    real(xp), intent(in), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
+    real(xp), intent(in), dimension(:,:), allocatable   :: std_data    !! standard deviation map fo the cube is given by the user 
 
     real(xp), dimension(:,:,:), allocatable :: cube            !! reshape data with nside --> cube
     real(xp), dimension(:,:,:), allocatable :: cube_mean       !! mean cube over spatial axis
     real(xp), dimension(:,:,:), allocatable :: fit_params      !! parameters to optimize with cube mean at each iteration
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
+    real(xp), dimension(:,:), allocatable :: std_cube          !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:,:), allocatable :: std_map_abs       !! standard deviation map fo the absorp cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: b_params            !! unknow average sigma
@@ -269,6 +270,7 @@ contains
                 allocate(std_map(power, power))
                 
                 if (noise .eqv. .true.) then
+                   call reshape_noise_up(std_data, std_cube, dim_data, dim_cube)
                    call mean_map(power, std_cube, std_map)           
                 else
                    call set_stdmap(std_map, cube_mean, lstd, ustd)

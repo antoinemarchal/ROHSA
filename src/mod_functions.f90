@@ -11,7 +11,8 @@ module mod_functions
   private
   
   public :: mean_array, mean_map, dim2nside, dim_data2dim_cube, reshape_up, reshape_down, go_up_level, init_spectrum, &
-       upgrade, update, set_stdmap, std_spectrum, mean_spectrum, max_spectrum, init_grid_params, init_new_gauss
+       upgrade, update, set_stdmap, std_spectrum, mean_spectrum, max_spectrum, init_grid_params, init_new_gauss, &
+       reshape_noise_up
 
 contains
     
@@ -54,6 +55,24 @@ contains
     offset_h = (dim_cube(3) - dim_data(3)) / 2
     cube(:, offset_w+1:offset_w+dim_data(2), offset_h+1:offset_h+dim_data(3)) = data
   end subroutine reshape_up
+
+
+  subroutine reshape_noise_up(data, noise, dim_data, dim_cube)
+  !! Reshape the noise data in a grid of \( 2^{nside} \)
+    implicit none
+    
+    real(xp), intent(in), dimension(:,:), allocatable    :: data  !! original map
+    real(xp), intent(inout), dimension(:,:), allocatable :: noise !! reshape map
+    integer, intent(in), dimension(3) :: dim_data  !! original cube dimension
+    integer, intent(in), dimension(3) :: dim_cube !! new cube dimension
+ 
+    integer :: offset_w, offset_h
+ 
+    offset_w = (dim_cube(2) - dim_data(2)) / 2
+    offset_h = (dim_cube(3) - dim_data(3)) / 2
+    noise(offset_w+1:offset_w+dim_data(2), offset_h+1:offset_h+dim_data(3)) = data
+  end subroutine reshape_noise_up
+
 
   subroutine reshape_down(cube, data, dim_cube, dim_data)
     !! Reshape the cube (\( 2^{nside} \)) into a grid with original dimension (opposite of reshape_up)
