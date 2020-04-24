@@ -1,0 +1,5135 @@
+ -------------------------------------------------------------------------
+29 January 2019   2:16:54.954 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_0.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  F
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+29 January 2019   4:08:14.956 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+29 January 2019   8:46:01.459 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_3.dat'
+
+ ______Parameters_____
+ n_gauss =            3
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  F
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+29 January 2019   9:25:54.434 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+29 January 2019   9:12:16.946 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_2.dat'
+
+ ______Parameters_____
+ n_gauss =            2
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  F
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+29 January 2019   9:28:05.416 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+29 January 2019   8:46:24.478 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_5.dat'
+
+ ______Parameters_____
+ n_gauss =            5
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  F
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+29 January 2019   9:30:38.304 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+29 January 2019   8:46:12.757 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_4.dat'
+
+ ______Parameters_____
+ n_gauss =            4
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  F
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+29 January 2019   9:41:16.454 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+29 January 2019   8:46:55.812 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_7.dat'
+
+ ______Parameters_____
+ n_gauss =            7
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  F
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+29 January 2019  10:08:50.354 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+29 January 2019   8:46:38.806 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_6.dat'
+
+ ______Parameters_____
+ n_gauss =            6
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  F
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+29 January 2019  10:13:24.229 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+ 9 February 2019   8:23:56.465 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_8.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+ 9 February 2019   9:52:33.529 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+ 9 February 2019  11:38:26.783 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_10.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    100.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+ 9 February 2019  11:56:01.619 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+ 9 February 2019  11:38:52.257 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_11.dat'
+
+ ______Parameters_____
+ n_gauss =            6
+ n_gauss_add =            0
+ lambda_amp =    1000.0000000000000     
+ lambda_mu =    1000.0000000000000     
+ lambda_sig =    1000.0000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    100.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019   0:01:34.566 AM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+ 9 February 2019  11:38:08.629 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_9.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    1000.0000000000000     
+ lambda_mu =    1000.0000000000000     
+ lambda_sig =    1000.0000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    100.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019   0:31:23.318 AM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019  10:53:11.413 AM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_13.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    100000.00000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019  11:29:45.629 AM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019  10:52:54.508 AM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_12.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    10000.000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019  11:33:15.820 AM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019  10:54:06.141 AM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_15.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    10000.000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019  11:51:08.176 AM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019  10:53:37.645 AM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_14.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    100000.00000000000     
+ lambda_mu =    100000.00000000000     
+ lambda_sig =    100000.00000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    100000.00000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019  12:24:49.305 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019  10:54:21.159 AM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_16.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019  12:34:06.580 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019   1:27:31.479 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_18.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    100.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019   1:53:58.245 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019   1:27:11.251 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_17.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000000.0000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019   2:23:07.018 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019   1:27:44.281 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_19.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    10.000000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019   3:02:26.211 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019   1:47:07.127 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_20.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1.0000000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019   3:16:24.570 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019   4:05:48.538 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_21.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    500.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019   5:15:50.401 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019   4:06:41.597 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_24.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    800.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019   5:32:41.480 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019   4:06:07.373 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_22.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    500.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019   5:33:03.485 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+10 February 2019   4:06:27.601 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_23.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    800.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+10 February 2019   5:38:03.234 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+11 February 2019  12:49:54.936 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_26.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    100000.00000000000     
+ lambda_mu =    100000.00000000000     
+ lambda_sig =    100000.00000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    600.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000     
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+11 February 2019   1:14:12.384 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+11 February 2019  12:50:40.464 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_28.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    50000.000000000000     
+ lambda_mu =    50000.000000000000     
+ lambda_sig =    50000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    700.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000     
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+11 February 2019   2:08:22.784 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+11 February 2019  12:50:08.625 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_27.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    100000.00000000000     
+ lambda_mu =    100000.00000000000     
+ lambda_sig =    100000.00000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    800.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000     
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+11 February 2019   2:19:50.170 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+11 February 2019  12:49:31.190 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_25.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    20000.000000000000     
+ lambda_mu =    20000.000000000000     
+ lambda_sig =    20000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    800.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000     
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+11 February 2019   2:20:38.646 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+11 February 2019   4:00:25.141 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_29.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    20000.000000000000     
+ lambda_mu =    20000.000000000000     
+ lambda_sig =    20000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    800.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+11 February 2019   4:17:30.625 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+11 February 2019   4:03:29.088 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_30.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    8000.0000000000000     
+ lambda_mu =    8000.0000000000000     
+ lambda_sig =    8000.0000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    700.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+11 February 2019   5:34:28.404 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+12 February 2019   7:26:02.193 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_31.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+12 February 2019   9:01:35.904 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+ -------------------------------------------------------------------------
+14 February 2019   9:08:13.904 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_32.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    800.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+14 February 2019  10:51:49.597 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+15 February 2019  12:54:26.626 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_33.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    1.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+15 February 2019   2:52:22.890 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+15 February 2019  12:54:40.512 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_34.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+15 February 2019   3:03:24.858 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+15 February 2019  12:54:53.811 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_35.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    400.00000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+ ##################################################################
+15 February 2019   3:04:17.919 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   1:40:01.479 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_36.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_36_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            1
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   1:51:25.356 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   1:40:12.894 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_37.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_37_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            2
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   2:11:01.406 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   1:40:27.397 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_38.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_38_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            3
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   2:16:36.283 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   1:40:37.392 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_39.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_39_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            4
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   2:49:14.628 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   1:40:54.971 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_40.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_40_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            5
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   3:01:34.418 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   1:41:05.732 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_41.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_41_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            6
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   3:17:44.354 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   3:27:28.676 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_35.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_35_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            1
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   3:38:47.147 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   3:27:40.072 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_36.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_36_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            2
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   3:59:19.385 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   3:27:49.981 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_37.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_37_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            3
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   4:03:48.138 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   3:28:01.379 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_38.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_38_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            4
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   4:37:09.780 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   3:28:11.408 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_39.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_39_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            5
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   4:55:14.222 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   3:28:26.229 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_40.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_40_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            6
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   5:07:32.516 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   3:28:36.627 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_41.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_41_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            7
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   5:17:51.981 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
+ -------------------------------------------------------------------------
+13 March 2019   3:28:55.453 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ filename = '/data/amarchal/ROHSA_paper/DAT/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2.dat'
+ fileout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_42.dat'
+ timeout = '/data/amarchal/ROHSA_paper/ROHSA/Tb_reso_0.8km.s-1_Tmin_0_Tmax_inf_ROHSA_noise_0.05_K_beam_0_2_2_gauss_run_42_timestep.dat'
+
+ ______Parameters_____
+ n_gauss =            8
+ n_gauss_add =            0
+ lambda_amp =    10000.000000000000     
+ lambda_mu =    10000.000000000000     
+ lambda_sig =    10000.000000000000     
+ lambda_var_amp =    0.0000000000000000     
+ lambda_var_mu =    0.0000000000000000     
+ lambda_var_sig =    1000.0000000000000     
+ amp_fact_init =   0.66000000000000003     
+ sig_init =    2.0000000000000000     
+ lb_sig_init =    1.0000000000000000E-003
+ ub_sig_init =    100.00000000000000     
+ lb_sig =    1.0000000000000000E-003
+ ub_sig =    100.00000000000000     
+ init_option = mean    
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ regul =  T
+ descent =  T
+ save_grid =  T
+
+ dim_v, dim_y, dim_x =          101         256         256
+ 
+ number of los =        65536
+ nside =            8
+
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Compute mean and std spectrum
+                     Start iteration
+
+ Start hierarchical descent
+ Init mean spectrum
+ Update level           0
+ Save grid parameters
+ 
+ Interpolate parameters level            0
+ Update level           1 >           2
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            1
+ Update level           2 >           4
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            2
+ Update level           3 >           8
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            3
+ Update level           4 >          16
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            4
+ Update level           5 >          32
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            5
+ Update level           6 >          64
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            6
+ Update level           7 >         128
+ Save grid parameters
+         101
+ 
+ Interpolate parameters level            7
+
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          101         256         256
+
+ Start updating last level.
+
+
+ _____ Write output file _____
+
+         101
+ ##################################################################
+13 March 2019   5:36:16.370 PM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
