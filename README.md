@@ -17,7 +17,7 @@ Check out the [online documentation](https://antoinemarchal.github.io/ROHSA/list
 ## Getting started
 A google colab notebook is available [here!](https://github.com/antoinemarchal/ROHSA/blob/master/ROHSApy.ipynb) It shows how to install, compile, run and read ROHSA's output.
 
-Please note that if you are not using ROHSA for separating phases of 21cm observation, the hyper-paramters _lambda_var_sig_** should be set to 0. 
+Please note that if you are not using ROHSA for separating phases of 21cm observation, the hyper-paramters _"lambda_var_sig"_** should be set to 0. 
 
 ## CONTACT 
 If you have any queries or questions related to ROHSA, please do not hesitate to contact us [here](amarchal@cita.utoronto.ca). Your feedback is welcome and important to us. 
