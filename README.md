@@ -15,6 +15,6 @@ Check out the [`online documentation`](https://antoinemarchal.github.io/ROHSA/in
 A google colab notebook is available [`here!`](https://github.com/antoinemarchal/ROHSA/blob/master/ROHSApy.ipynb) that shows how to install, compile, run, and read the output of ROHSA. 
 
 ## CONTACT 
-If you have any queries or questions related to ROHSA, please do not hesitate to contact us [here](amarchal@cita.utoronto.ca). Your feedback is welcome and important to us. 
+If you have any queries or questions related to ROHSA, please do not hesitate to contact us [`here`](amarchal@cita.utoronto.ca). Your feedback is welcome and important to us. 
 
 
