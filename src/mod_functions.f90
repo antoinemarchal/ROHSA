@@ -334,7 +334,7 @@ contains
     implicit none
     
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube 
-    real(xp), intent(in), dimension(:,:), allocatable :: std_map !! Standard deviation map 
+    real(xp), intent(in), dimension(:,:,:), allocatable :: std_map !! Standard deviation map 
     real(xp), intent(in), dimension(:,:), allocatable :: kernel !! convolution kernel
     integer, intent(in) :: dim_v !! dimension along v axis
     integer, intent(in) :: dim_y !! dimension along spatial axis y 

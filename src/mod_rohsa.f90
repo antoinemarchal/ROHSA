@@ -64,14 +64,14 @@ contains
     integer :: power        !! loop index
 
     real(xp), intent(in), dimension(:,:,:), allocatable :: data        !! initial fits data
-    real(xp), intent(in), dimension(:,:), allocatable   :: std_data    !! standard deviation map fo the cube is given by the user 
+    real(xp), intent(in), dimension(:,:,:), allocatable   :: std_data    !! standard deviation map fo the cube is given by the user 
 
     real(xp), dimension(:,:,:), allocatable :: cube            !! reshape data with nside --> cube
     real(xp), dimension(:,:,:), allocatable :: cube_mean       !! mean cube over spatial axis
     real(xp), dimension(:,:,:), allocatable :: fit_params      !! parameters to optimize with cube mean at each iteration
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
-    real(xp), dimension(:,:), allocatable :: std_cube          !! standard deviation map fo the cube computed by ROHSA with lb and ub
-    real(xp), dimension(:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
+    real(xp), dimension(:,:,:), allocatable :: std_cube          !! standard deviation map fo the cube computed by ROHSA with lb and ub
+    real(xp), dimension(:,:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: b_params            !! unknow average sigma
     real(xp), dimension(:), allocatable :: std_spect           !! std spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect           !! max spectrum of the observation
@@ -170,7 +170,7 @@ contains
     
     !Allocate memory for cube
     allocate(cube(dim_cube(1), dim_cube(2), dim_cube(3)))
-    allocate(std_cube(dim_cube(2), dim_cube(3)))
+    allocate(std_cube(dim_cube(1), dim_cube(2), dim_cube(3)))
     
     !Reshape the data (new cube of size nside)
     print*, " "
@@ -267,13 +267,14 @@ contains
              ! end if
 
              if (n > 0 .and. n < nside) then
-                allocate(std_map(power, power))
+                allocate(std_map(dim_cube(1), power, power))
                 
                 if (noise .eqv. .true.) then
-                   call reshape_noise_up(std_data, std_cube, dim_data, dim_cube)
-                   call mean_map(power, std_cube, std_map)           
+                   call reshape_up(std_data, std_cube, dim_data, dim_cube)
+                   call mean_array(power, std_cube, std_map)           
                 else
-                   call set_stdmap(std_map, cube_mean, lstd, ustd)
+                   print*, "no noise = .false. in this branch"
+                   stop
                 end if
 
                 ! Update parameters 
@@ -281,12 +282,6 @@ contains
                 call update(cube_mean, fit_params, b_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
                      lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, &
                      m, kernel, iprint, std_map, lym, c_lym)        
-
-                if (n_gauss_add .ne. 0) then !FIXME
-                   ! Add new Gaussian if one reduced chi square > 1 
-                   call init_new_gauss(cube_mean, fit_params, std_map, n_gauss, dim_cube(1), power, power, amp_fact_init, &
-                        sig_init)
-                end if
 
                 deallocate(std_map)
              end if
@@ -356,30 +351,19 @@ contains
     print*, "Start updating last level."
     print*, " "
     
-    allocate(std_map(dim_data(2), dim_data(3)))
+    allocate(std_map(dim_data(1), dim_data(2), dim_data(3)))
     
     if (noise .eqv. .true.) then
        std_map = std_data
     else   
-       call set_stdmap(std_map, data, lstd, ustd)
+       print*, "no noise = .false. in this branch"
+       stop
     end if
     
     if (regul .eqv. .true.) then
        call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
             lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
             kernel, iprint, std_map, lym, c_lym)
-       
-       if (n_gauss_add .ne. 0) then !FIXME KEYWORD
-          do l=1,n_gauss_add
-             ! Add new Gaussian if at least one reduced chi square of the field is > 1 
-             call init_new_gauss(data, grid_params, std_map, n_gauss, dim_data(1), dim_data(2), dim_data(3), amp_fact_init, &
-                  sig_init)
-             call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-                  lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
-                  kernel, iprint, std_map, lym, c_lym)
-          end do
-       end if
-
     end if
     
     print*, " "

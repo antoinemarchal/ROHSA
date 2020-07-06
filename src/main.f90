@@ -50,7 +50,7 @@ program ROHSA
   real(xp) :: start, finish
 
   real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
-  real(xp), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
+  real(xp), dimension(:,:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
 
   call cpu_time(start)
 
@@ -108,7 +108,7 @@ program ROHSA
      if (filename_noise == " ") then
         print*, "--> noise = .true. (no input rms map)"
      end if
-     call read_map(filename_noise, std_cube)
+     call read_cube(filename_noise, std_cube)
   end if
 
   !Call ROHSA subroutine

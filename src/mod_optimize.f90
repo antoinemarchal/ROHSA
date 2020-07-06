@@ -120,7 +120,7 @@ contains
     real(xp), intent(in), dimension(:), allocatable :: beta
     real(xp), intent(in), dimension(:,:,:), allocatable :: cube
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
-    real(xp), intent(in), dimension(:,:), allocatable :: std_map
+    real(xp), intent(in), dimension(:,:,:), allocatable :: std_map
     real(xp), intent(inout) :: f
     real(xp), intent(inout), dimension(:), allocatable :: g
 
@@ -128,6 +128,7 @@ contains
     integer :: n_beta
     real(xp), dimension(:,:,:), allocatable :: residual
     real(xp), dimension(:), allocatable :: residual_1D
+    real(xp), dimension(:), allocatable :: residual_noise
     real(xp), dimension(:,:,:), allocatable :: params
     real(xp), dimension(:), allocatable :: b_params
     real(xp), dimension(:,:), allocatable :: conv_amp, conv_mu, conv_sig
@@ -165,13 +166,16 @@ contains
     do j=1, dim_x
        do i=1, dim_y
           allocate(residual_1D(dim_v))
+          allocate(residual_noise(dim_v))
           residual_1D = 0._xp
           call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v)
           residual(:,i,j) = residual_1D
-          if (std_map(i,j) > 0._xp) then
-             f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2._xp)
+          if (SUM(std_map(:,i,j)) > 0._xp) then
+             residual_noise = residual_1D / std_map(:,i,j)
+             f = f + (myfunc_spec(residual_noise))
           end if
           deallocate(residual_1D)
+          deallocate(residual_noise)
        end do
     end do
 
@@ -205,21 +209,21 @@ contains
              
              !
              do k=1, dim_v                          
-                if (std_map(j,l) > 0._xp) then
+                if (SUM(std_map(:,j,l)) > 0._xp) then
                    deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) &
                         / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))) &
-                        * (residual(k,j,l)/std_map(j,l)**2._xp) 
+                        * (residual(k,j,l)/std_map(k,j,l)**2._xp) 
 
                    deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params(1+(3*(i-1)),j,l) * &
                         ( real(k,xp) - params(2+(3*(i-1)),j,l) ) / (params(3+(3*(i-1)),j,l)**2._xp) * &
                         exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) &
                         / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))) &
-                        * (residual(k,j,l)/std_map(j,l)**2._xp) 
+                        * (residual(k,j,l)/std_map(k,j,l)**2._xp) 
 
                    deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params(1+(3*(i-1)),j,l) * &
                         ( real(k,xp) - params(2+(3*(i-1)),j,l) )**2._xp / (params(3+(3*(i-1)),j,l)**3._xp) * &
                         exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))) &
-                        * (residual(k,j,l)/std_map(j,l)**2._xp)
+                        * (residual(k,j,l)/std_map(k,j,l)**2._xp)
                 end if
              end do
 
