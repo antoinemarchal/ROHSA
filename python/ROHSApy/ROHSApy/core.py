@@ -4,6 +4,8 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
+from scipy import ndimage
+from scipy import optimize
 
 plt.ion()
 cm = plt.get_cmap('inferno')
@@ -230,14 +232,82 @@ if __name__ == '__main__':
     filename = "GHIGLS_DFN_Tb.fits"
     hdu = fits.open(filename)
     hdr = hdu[0].header
-    cube = hdu[0].data[0][150:350,:32,:32]
+    cube = hdu[0].data[0][150:350,:4,:4]
 
     #Call ROHSApy
     core = ROHSA(cube, hdr=hdr, filename=filename)
     core.cube2dat()
     # core.rms_map_const()
-    core.gen_parameters(filename="mycube.dat", save_grid=".false.")
-    # core.run("parameters.txt", nohup=False)
+    rms = np.std(cube[0:19,:,:], 0)
+    core.rms_map(rms, filename="rms_map.dat")
+    core.gen_parameters(filename="GHIGLS_DFN_Tb.dat", save_grid=".false.", iprint=1, 
+                        lambda_var_sig=0, filename_noise="rms_map.dat", noise=".true.",
+                        )
+    core.run("parameters.txt", nohup=False)
     gaussian = core.read_gaussian("result.dat")
     # foo = core.write_fits(gaussian)
     # core.plot_spect(gaussian, 14, 14)
+
+    def update_level(params, cube, std_map, n_gauss, lambda_amp, lambda_mu, lambda_sig, lambda_var_sig):
+        bounds_inf = np.zeros(params.shape)
+        bounds_sup = np.zeros(params.shape)
+        
+        for i in range(cube.shape[1]):
+            for j in range(cube.shape[2]):
+                for k in np.arange(params.shape[0]/3):
+                    bounds_A = [0., np.max(cube[:,i,j])]
+                    bounds_mu = [0., len(cube[:,i,j])]
+                    bounds_sigma = [1., 100.]
+                    
+                    bounds_inf[int(0+(3*k)),i,j] = bounds_A[0]
+                    bounds_inf[int(1+(3*k)),i,j] = bounds_mu[0]
+                    bounds_inf[int(2+(3*k)),i,j] = bounds_sigma[0]
+                    
+                    bounds_sup[int(0+(3*k)),i,j] = bounds_A[1]
+                    bounds_sup[int(1+(3*k)),i,j] = bounds_mu[1]
+                    bounds_sup[int(2+(3*k)),i,j] = bounds_sigma[1]
+                
+        bounds = [(bounds_inf.ravel()[i], bounds_sup.ravel()[i]) for i in np.arange(len(bounds_sup.ravel()))]
+        result = optimize.minimize(cost, params.ravel(), method="L-BFGS-B", jac=False, args=(cube, std_map, n_gauss, lambda_amp, 
+                                                                                             lambda_mu, lambda_sig, lambda_var_sig), 
+                                   bounds=bounds, options={'maxiter': 2})
+        return result
+
+
+    def gauss(x, A, mu, sigma):
+        return A * np.exp(-((x - mu)**2)/(2. * sigma**2))
+
+
+    def cost(pars, data, std_map, n_gauss, lambda_amp, lambda_mu, lambda_sig, lambda_var_sig):
+        params = np.reshape(pars, (3*n_gauss, data.shape[1], data.shape[2]))
+        
+        x = np.arange(data.shape[0])
+        
+        model = np.zeros(data.shape)
+        
+        for i in np.arange(data.shape[1]):
+            for j in np.arange(data.shape[2]):
+                for k in np.arange(n_gauss):
+                    line = gauss(x, params[0+(k*3),i,j], params[1+(k*3),i,j], params[2+(k*3),i,j])
+                    model[:,i,j] += line
+
+        J = np.sum((((model - data)/std_map).ravel())**2)
+        
+        kernel = np.array([[0, -1, 0], [-1, 4, -1], [0, -1, 0]]) / 4.
+        
+        R = 0.
+        for k in np.arange(n_gauss):
+            conv_amp = ndimage.convolve(params[0+(k*3),:,:], kernel, mode='reflect')
+            conv_mu = ndimage.convolve(params[1+(k*3),:,:], kernel, mode='reflect')
+            conv_sig = ndimage.convolve(params[2+(k*3),:,:], kernel, mode='reflect')
+
+            R += lambda_amp * np.sum(conv_amp**2)
+            R += lambda_mu * np.sum(conv_mu**2)
+            R += lambda_sig * np.sum(conv_sig**2)
+            # R += lambda_var_sig * np.sum((params[2+(k*3),:,:] - np.mean(params[2+(k*3),:,:]))**2)
+            
+        return 0.5*J + 0.5*R
+
+    result = update_level(gaussian, cube, rms, 3, 1000,1000, 1000, 0)
+    hess_inv = result.hess_inv.todense()
+    err = np.sqrt(np.diag(hess_inv)) / cost(gaussian, cube, std_map, 3, 1000,1000, 1000., 0)  

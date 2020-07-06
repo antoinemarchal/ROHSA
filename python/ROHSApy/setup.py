@@ -9,7 +9,7 @@ with open('LICENSE') as f:
     
 setup(
     name='ROHSApy',
-    version='0.1.9',
+    version='0.2.0',
     description='python interface package for ROHSA software',
     long_description=readme,
     classifiers=[
