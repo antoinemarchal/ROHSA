@@ -70,7 +70,7 @@ program ROHSA
   lambda_var_sig = 1._xp
 
   lambda_lym_sig = 0._xp
-
+!!!
   amp_fact_init = 2._xp/3._xp
   sig_init = 5._xp
   lb_sig_init = 0.001_xp
