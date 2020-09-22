@@ -17,7 +17,7 @@ program ROHSA
   call get_command_argument(1, filename_parameters)
   call get_parameters(filename_parameters) 
   call get_data()
-  ! call main_rohsa() 
+  call main_rohsa() 
   call ender()
 
   call cpu_time(finish)

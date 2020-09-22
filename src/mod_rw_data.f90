@@ -20,7 +20,7 @@ contains
     
     call read_cube(params%filename_q, data%q)
     call read_cube(params%filename_u, data%u)
-    call read_cube(params%filename_noise, data%std_cube)
+    call read_map(params%filename_noise, data%rms)
     
   end subroutine get_data
 

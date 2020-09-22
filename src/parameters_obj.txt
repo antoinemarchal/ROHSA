@@ -27,5 +27,5 @@
    ,params%noise = .false.
    ,params%iprint = 1                   !! print option 
    ,params%iprint_init = -1             !! print option init
-   ,params%save_grid = .true.     	!! if true --> save fitted parameters at each iteration of the multiresolution process
+   ,params%save_grid = .false.     	!! if true --> save fitted parameters at each iteration of the multiresolution process
    /

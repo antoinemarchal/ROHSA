@@ -40,11 +40,11 @@ module mod_constants
   type indata
      real(xp), dimension(:,:,:), allocatable :: q
      real(xp), dimension(:,:,:), allocatable :: u
-     real(xp), dimension(:,:,:), allocatable :: std_cube
+     real(xp), dimension(:,:), allocatable :: rms
   end type indata
 
   type model
-     real(xp), dimension(:,:), allocatable :: amp, mu
+     real(xp), dimension(:,:,:), allocatable :: amp, mu
   end type model
   
 end module mod_constants
