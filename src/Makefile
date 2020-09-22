@@ -10,9 +10,9 @@ GFLAGS= -O2 -I/usr/local/include -ffixed-line-length-none #-fbounds-check
 CFLAGS= -lm -g -O2 #-lcfitsio -openmp -llapack
 # -L/Users/antoinemarchal/mylib/cfitsio-master
 
-OUT=ROHSA
+OUT=ROHSA-RM
 
-all: blas.o lbfgsb.o linpack.o timer.o mod_constants.o mod_convert.o mod_inout.o mod_array.o mod_optimize.o mod_optimize_lym.o mod_minimize.o mod_functions.o mod_start.o mod_rohsa.o main.o
+all: blas.o lbfgsb.o linpack.o timer.o mod_constants.o mod_convert.o mod_rw_data.o mod_array.o mod_read_parameters.o mod_optimize.o mod_minimize.o mod_functions.o mod_start.o mod_rohsa.o main.o
 	$(FC) $^ $(CFLAGS) -o $(OUT)
 
 main.o: main.f90
@@ -35,16 +35,16 @@ mod_constants.o: mod_constants.f90
 mod_convert.o: mod_convert.f90
 	$(FC) $(GFLAGS) -c $^
 
-mod_inout.o: mod_inout.f90
+mod_read_parameters.o: mod_read_parameters.f90
+	$(FC) $(GFLAGS) -c $^
+
+mod_rw_data.o: mod_rw_data.f90
 	$(FC) $(GFLAGS) -c $^
 
 mod_array.o: mod_array.f90
 	$(FC) $(GFLAGS) -c $^
 
 mod_optimize.o: mod_optimize.f90
-	$(FC) $(GFLAGS) -c $^
-
-mod_optimize_lym.o: mod_optimize_lym.f90
 	$(FC) $(GFLAGS) -c $^
 
 mod_minimize.o: mod_minimize.f90

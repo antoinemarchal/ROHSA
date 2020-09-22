@@ -17,5 +17,33 @@ module mod_constants
   real(xp), parameter, public :: R       = 8.3144598e7_xp !gas cst in csg = Boltzmann cst over proton mass
   real(xp), parameter, public :: gammag  = 5._xp / 3._xp !adiabatic coefficient
   real(xp), parameter, public :: thomson = 6.6524587158e-25_xp !thomson cross-section in cgs
+
+  type parameters
+     integer  :: n
+
+     integer  :: m 
+     integer  :: lstd, ustd
+     integer  :: iprint, iprint_init
+     integer  :: maxiter, maxiter_init
+
+     real(xp) :: lambda_amp, lambda_mu
+
+     real(xp) :: amp_init, mu_init
+     real(xp) :: lb_amp, ub_amp
+     real(xp) :: lb_mu, ub_mu
+
+     logical  :: noise, save_grid
+
+     character(len=512) :: filename_r, filename_i,fileout, timeout, filename_noise
+  end type parameters
+
+  type indata
+     real(xp), dimension(:,:,:), allocatable :: cube_r, std_cube_r
+     real(xp), dimension(:,:,:), allocatable :: cube_i, std_cube_i
+  end type indata
+
+  type model
+     real(xp), dimension(:,:), allocatable :: amp, mu
+  end type model
   
 end module mod_constants

@@ -1,0 +1,31 @@
+3&user_parameters
+   params%filename_r = 'filename_r.dat'                        
+   ,params%filename_i = 'filename_i.dat'                  
+   ,params%filename_noise = 'rms.dat'          
+
+   ,params%fileout = 'fileout_run_0.dat'           
+   ,params%timeout = 'timestep.dat'             
+
+   ,params%n = 2   				
+
+   ,params%lambda_amp = 1.d0       
+   ,params%lambda_mu = 1.d0	
+
+   ,params%amp_init = 1.d0     
+   ,params%mu_init = 1.d0 
+
+   ,params%lb_amp = -100.d0      
+   ,params%ub_amp = 100.d0         					
+   ,params%lb_mu = 1.d0         						
+   ,params%ub_mu = 100.d0         										
+
+   ,params%maxiter_init = 15000         !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
+   ,params%maxiter = 800                !! max iteration for L-BFGS-B alogorithm
+   ,params%m = 10                       !! number of corrections used in the limited memory matrix by LBFGS-B
+   ,params%lstd = 1                	!! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
+   ,params%ustd = 10                    !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
+   ,params%noise = .false.
+   ,params%iprint = 1                   !! print option 
+   ,params%iprint_init = -1             !! print option init
+   ,params%save_grid = .true.     	!! if true --> save fitted parameters at each iteration of the multiresolution process
+   /

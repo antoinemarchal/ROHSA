@@ -3,7 +3,8 @@ program ROHSA
 
   use mod_constants
   use mod_start
-  use mod_inout
+  use mod_read_parameters
+  use mod_rw_data
   use mod_rohsa
   
   implicit none
@@ -14,7 +15,6 @@ program ROHSA
   logical :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
   logical :: lym             !! if true --> activate 2-Gaussian decomposition for Lyman alpha nebula emission
   integer :: n_gauss         !! number of gaussian to fit
-  integer :: n_gauss_add     !! number of gaussian to add at each step
   integer :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
   integer :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
   integer :: ustd            !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
@@ -53,13 +53,14 @@ program ROHSA
   real(xp), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
 
   call cpu_time(start)
-
-  !Print header and get filename in argument
+  call header()  
   call get_command_argument(1, filename_parameters)
-    
+  call get_parameters(filename_parameters) 
+
+  stop
+
   !Default user parameters
   n_gauss = 6
-  n_gauss_add = 0
 
   lambda_amp = 1._xp
   lambda_mu = 1._xp
@@ -91,13 +92,10 @@ program ROHSA
   lym = .false.
  
   !Read parameters
-  call read_parameters(filename_parameters, filename, fileout, timeout, filename_noise, n_gauss, n_gauss_add, &
+  call read_parameters(filename_parameters, filename, fileout, timeout, filename_noise, n_gauss, &
        lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, &
        amp_fact_init, sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, &
        m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid, lym)
-
-  !Call header
-  call header()  
 
   print*, "filename = '",trim(filename),"'"
 
@@ -112,7 +110,7 @@ program ROHSA
   end if
 
   !Call ROHSA subroutine
-  call main_rohsa(data, std_cube, fileout, timeout, n_gauss, n_gauss_add, lambda_amp, lambda_mu, lambda_sig, &
+  call main_rohsa(data, std_cube, fileout, timeout, n_gauss, lambda_amp, lambda_mu, lambda_sig, &
        lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, amp_fact_init, sig_init, lb_sig_init, &
        ub_sig_init, lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
        iprint, iprint_init, save_grid, lym)  
