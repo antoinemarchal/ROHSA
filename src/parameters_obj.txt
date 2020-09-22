@@ -1,6 +1,6 @@
 3&user_parameters
-   params%filename_r = 'filename_r.dat'                        
-   ,params%filename_i = 'filename_i.dat'                  
+   params%filename_q = 'cube_q.dat'                        
+   ,params%filename_u = 'cube_u.dat'                  
    ,params%filename_noise = 'rms.dat'          
 
    ,params%fileout = 'fileout_run_0.dat'           

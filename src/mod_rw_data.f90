@@ -3,14 +3,27 @@ module mod_rw_data
   !! This module read the input user parameters (parameters.txt file / data / noise if true)
   use mod_constants
   use mod_convert
+  use mod_read_parameters
   
   implicit none
+
+  type(indata) :: data
   
   private
   
-  public :: read_cube, read_map, save_process
+  public :: get_data, read_cube, read_map, save_process, data
 
 contains
+
+  subroutine get_data()
+    implicit none
+    
+    call read_cube(params%filename_q, data%q)
+    call read_cube(params%filename_u, data%u)
+    call read_cube(params%filename_noise, data%std_cube)
+    
+  end subroutine get_data
+
 
   subroutine read_cube(filename, cube)
     implicit none

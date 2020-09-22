@@ -34,12 +34,13 @@ module mod_constants
 
      logical  :: noise, save_grid
 
-     character(len=512) :: filename_r, filename_i,fileout, timeout, filename_noise
+     character(len=512) :: filename_q, filename_u,fileout, timeout, filename_noise
   end type parameters
 
   type indata
-     real(xp), dimension(:,:,:), allocatable :: cube_r, std_cube_r
-     real(xp), dimension(:,:,:), allocatable :: cube_i, std_cube_i
+     real(xp), dimension(:,:,:), allocatable :: q
+     real(xp), dimension(:,:,:), allocatable :: u
+     real(xp), dimension(:,:,:), allocatable :: std_cube
   end type indata
 
   type model
