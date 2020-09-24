@@ -26,12 +26,10 @@ contains
     integer :: power        !! loop index
 
     type(indata) :: cube, cube_mean
+    type(indata_s) :: mean
 
     real(xp), dimension(:,:,:), allocatable :: fit_params      !! parameters to optimize with cube mean at each iteration
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
-
-    real(xp), dimension(:), allocatable :: mean_q
-    real(xp), dimension(:), allocatable :: mean_u
 
     integer, dimension(3) :: dim_data !! dimension of original data
     integer, dimension(3) :: dim_cube !! dimension of reshape cube
@@ -81,11 +79,12 @@ contains
     print*, " "
     
     print*, "Compute mean and std spectrum"
-    allocate(mean_q(dim_data(1)))
-    allocate(mean_u(dim_data(1)))
+    allocate(mean%q(dim_data(1)))
+    allocate(mean%u(dim_data(1)))
 
-    call mean_spectrum(data%q, mean_q, dim_data(1), dim_data(2), dim_data(3))    
-    call mean_spectrum(data%u, mean_u, dim_data(1), dim_data(2), dim_data(3))    
+    call mean_spectrum(data%q, mean%q, dim_data(1), dim_data(2), dim_data(3))    
+    call mean_spectrum(data%u, mean%u, dim_data(1), dim_data(2), dim_data(3))    
+
     call reshape_up(data%q, cube%q, dim_data, dim_cube)
     call reshape_up(data%u, cube%u, dim_data, dim_cube)
     call reshape_noise_up(data%rms, cube%rms, dim_data, dim_cube)
@@ -121,8 +120,14 @@ contains
        
        if (n == 0) then
           print*, "Init mean spectrum"        
-       !    call init_spectrum(params%n, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_init, &
-       !         lb_amp_init, ub_amp_init, maxiter_init, m, iprint_init)
+
+          do i=1, params%n
+             fit_params(1+(2*(i-1)),1,1) = params%amp_init
+             fit_params(2+(2*(i-1)),1,1) = params%mu_init
+          end do
+
+          call init_spectrum(fit_params(:,1,1), mean, dim_cube(1))
+          stop
        !    print*,  "Update level", n
        !    call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
        end if

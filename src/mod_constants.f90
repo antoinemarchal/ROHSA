@@ -32,6 +32,16 @@ module mod_constants
      real(xp) :: lb_amp, ub_amp
      real(xp) :: lb_mu, ub_mu
 
+     real(xp) :: freq_min
+     real(xp) :: freq_max
+     real(xp) :: freq_step
+     integer :: freq_n
+
+     real(xp) :: cdelt3
+     real(xp) :: crval3
+     real(xp) :: crpix3
+     integer :: rm_n
+
      logical  :: noise, save_grid
 
      character(len=512) :: filename_q, filename_u,fileout, timeout, filename_noise
@@ -43,8 +53,13 @@ module mod_constants
      real(xp), dimension(:,:), allocatable :: rms
   end type indata
 
-  type model
-     real(xp), dimension(:,:,:), allocatable :: amp, mu
-  end type model
+  type indata_s
+     real(xp), dimension(:), allocatable :: q
+     real(xp), dimension(:), allocatable :: u
+  end type indata_s
+
+  ! type model
+  !    real(xp), dimension(:,:,:), allocatable :: amp, mu
+  ! end type model
   
 end module mod_constants

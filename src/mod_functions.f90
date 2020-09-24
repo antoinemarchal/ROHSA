@@ -5,14 +5,14 @@ module mod_functions
   use mod_minimize
   use mod_optimize
   use mod_array
+  use mod_read_parameters
   
   implicit none
 
   private
   
   public :: mean_array, mean_map, dim2nside, dim_data2dim_cube, reshape_up, reshape_down, go_up_level, init_spectrum, &
-       upgrade, update, set_stdmap, std_spectrum, mean_spectrum, max_spectrum, init_grid_params, init_new_gauss, &
-       reshape_noise_up
+       update, set_stdmap, std_spectrum, mean_spectrum, max_spectrum, init_grid_params, reshape_noise_up
 
 contains
     
@@ -189,145 +189,65 @@ contains
   end subroutine go_up_level
 
   
-  subroutine init_spectrum(n_gauss, params, dim_v, line, amp_fact_init, sig_init, lb_sig, ub_sig, maxiter, m, iprint)
+  subroutine init_spectrum(pars, line, dim_v)
     !! Initialization of the mean sprectrum with N Gaussian
     implicit none
     
-    integer, intent(in) :: n_gauss !! number of Gaussian
     integer, intent(in) :: dim_v !! dimension along v axis
-    integer, intent(in) :: maxiter !! Max number of iteration
-    integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
-    integer, intent(in) :: iprint !! print option
 
-    real(xp), intent(in), dimension(dim_v) :: line !! spectrum
-    real(xp), intent(in) :: amp_fact_init !! times max amplitude of additional Gaussian
-    real(xp), intent(in) :: sig_init !! dispersion of additional Gaussian
-    real(xp), intent(in) :: lb_sig !! lower bound sigma
-    real(xp), intent(in) :: ub_sig !! upper bound sigma
+    type(indata_s), intent(in) :: line
+    real(xp), intent(inout), dimension(2*params%n) :: pars !! params to optimize
 
-    real(xp), intent(inout), dimension(3*n_gauss)  :: params !! params to optimize
-
-    integer :: i, j, k, p
+    integer :: i
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(dim_v) :: model, residual
     real(xp), dimension(:), allocatable :: x
     
-    do i=1, n_gauss
-       allocate(lb(3*i), ub(3*i))
-       model = 0._xp
-       residual = 0._xp
-       lb = 0._xp; ub=0._xp
-       
-       call init_bounds(line, i, dim_v, lb, ub, lb_sig, ub_sig)
-
-       do j=1, i
-          do k=1, dim_v
-             model(k) = model(k) + gaussian(k, params(1+(3*(j-1))), params(2+(3*(j-1))), params(3+(3*(j-1))))
-          end do
-       enddo
-
-       residual = model - line
-       
-       allocate(x(3*i))
-       x = 0._xp
-       
-       do p=1, 3*(i-1)
-          x(p) = params(p);
-       end do
-       
-       x(2+(3*(i-1))) = minloc(residual, dim_v)
-       x(1+(3*(i-1))) = line(int(x(2+(3*(i-1))))) * amp_fact_init
-       x(3+(3*(i-1))) = sig_init;
-       
-       call minimize_spec(3*i, m, x, lb, ub, line, dim_v, i, maxiter, iprint)
-       
-       do p=1, 3*i   
-          params(p) = x(p);
-       end do
-       
-       deallocate(x)
-       deallocate(lb, ub)
-    enddo
-  end subroutine init_spectrum
+    allocate(lb(2*params%n), ub(2*params%n))
+    allocate(x(2*params%n))
+    model = 0._xp
+    residual = 0._xp
+    lb = 0._xp; ub=0._xp
+    x = 0._xp
+            
+    do i=1, 2*params%n
+       x(i) = pars(i);
+    end do
+    
+    call init_bounds(lb, ub)    
+    call minimize_spec(2*params%n, params%m, x, lb, ub, line, dim_v, params%maxiter, params%iprint)
+    
+    do i=i, 2*params%n   
+       pars(i) = x(i);
+    end do
+    
+    deallocate(x)
+    deallocate(lb, ub)
+end subroutine init_spectrum
   
 
-  subroutine init_bounds(line, n_gauss, dim_v, lb, ub, lb_sig, ub_sig)
+  subroutine init_bounds(lb, ub)
     !! Initialize parameters bounds for optimization
     implicit none
     
-    integer, intent(in) :: n_gauss !! number of Gaussian
-    integer, intent(in) :: dim_v !! dimension along v axis
-    real(xp), intent(in) :: lb_sig !! lower bound sigma
-    real(xp), intent(in) :: ub_sig !! upper bound sigma
-    real(xp), intent(in), dimension(dim_v) :: line !! spectrum   
-    real(xp), intent(inout), dimension(3*n_gauss) :: lb !! lower bounds
-    real(xp), intent(inout), dimension(3*n_gauss) :: ub !! upper bounds
-    
+    real(xp), intent(inout), dimension(2*params%n) :: lb !! lower bounds
+    real(xp), intent(inout), dimension(2*params%n) :: ub !! upper bounds
+       
     integer :: i
-    real(xp) :: max_line
-
-    max_line = 0._xp
-    max_line = maxval(line)
-    
-    do i=1, n_gauss       
+ 
+    do i=1, params%n
        ! amplitude bounds
-       lb(1+(3*(i-1))) = 0._xp;
-       ub(1+(3*(i-1))) = max_line;
+       lb(1+(2*(i-1))) = params%lb_amp;
+       ub(1+(2*(i-1))) = params%ub_amp;
        
        ! mean bounds 
-       lb(2+(3*(i-1))) = 0._xp;
-       ub(2+(3*(i-1))) = dim_v;
-       
-       ! sigma bounds 
-       lb(3+(3*(i-1))) = lb_sig;
-       ub(3+(3*(i-1))) = ub_sig;
+       lb(2+(2*(i-1))) = params%lb_mu;
+       ub(2+(2*(i-1))) = params%ub_mu;       
     end do
   end subroutine init_bounds
 
 
-  subroutine upgrade(cube, params, power, n_gauss, dim_v, lb_sig, ub_sig, maxiter, m, iprint)
-    !! Upgrade parameters (spectra to spectra) using minimize function (here based on L-BFGS-B optimization module)
-    implicit none
-
-    real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube
-    real(xp), intent(in) :: lb_sig !! lower bound sigma
-    real(xp), intent(in) :: ub_sig !! upper bound sigma
-    integer, intent(in) :: power !! nside of the cube
-    integer, intent(in) :: n_gauss !! number of Gaussian
-    integer, intent(in) :: dim_v !! dimension along v axis
-    integer, intent(in) :: maxiter !! max number of iteration
-    integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
-    integer, intent(in) :: iprint !! print option
-
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! cube parameters to update
-
-    integer :: i,j
-    real(xp), dimension(:), allocatable :: line
-    real(xp), dimension(:), allocatable :: x
-    real(xp), dimension(:), allocatable :: lb, ub
-
-    do i=1, power
-       do j=1, power
-          ! print*, (i-1)*power+j, " / ", power*power
-          allocate(line(dim_v))
-          allocate(x(3*n_gauss), lb(3*n_gauss), ub(3*n_gauss))
-
-          line = cube(:,i,j)
-          x = params(:,i,j)
-          
-          call init_bounds(line, n_gauss, dim_v, lb, ub, lb_sig, ub_sig)
-          call minimize_spec(3*n_gauss, m, x, lb, ub, line, dim_v, n_gauss, maxiter, iprint)
-          
-          params(:,i,j) = x
-          
-          deallocate(line)
-          deallocate(x, lb, ub)
-       end do
-    end do
-  end subroutine upgrade
-
-
-  subroutine update(cube, params, b_params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
+  subroutine update(cube, pars, b_pars, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
        lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, kernel, &
        iprint, std_map, lym, c_lym)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
@@ -359,12 +279,12 @@ contains
 
     logical, intent(in) :: lym !! if true --> activate 2-Gaussian decomposition for Lyman alpha nebula emission
 
-    real(xp), intent(inout), dimension(:), allocatable :: b_params !! unknown average sigma
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
+    real(xp), intent(inout), dimension(:), allocatable :: b_pars !! unknown average sigma
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: pars !! parameters cube to update
 
     real(xp) :: c_lym
     
-    integer :: i,j
+    integer :: i
     integer :: n_beta
     real(xp), dimension(:,:,:), allocatable :: lb_3D, ub_3D
     real(xp), dimension(:), allocatable :: lb, ub
@@ -375,32 +295,32 @@ contains
     allocate(lb(n_beta), ub(n_beta), beta(n_beta))
     allocate(lb_3D(3*n_gauss,dim_y,dim_x), ub_3D(3*n_gauss,dim_y,dim_x))
 
-    !Bounds
-    do j=1, dim_x
-       do i=1, dim_y
-          call init_bounds(cube(:,i,j), n_gauss, dim_v, lb_3D(:,i,j), ub_3D(:,i,j), lb_sig, ub_sig)
-       end do
-    end do
+    ! !Bounds
+    ! do j=1, dim_x
+    !    do i=1, dim_y
+    !       call init_bounds(cube(:,i,j), n_gauss, dim_v, lb_3D(:,i,j), ub_3D(:,i,j), lb_sig, ub_sig)
+    !    end do
+    ! end do FIXMEEEEEEEEEEE
 
     call ravel_3D(lb_3D, lb, 3*n_gauss, dim_y, dim_x)
     call ravel_3D(ub_3D, ub, 3*n_gauss, dim_y, dim_x)
-    call ravel_3D(params, beta, 3*n_gauss, dim_y, dim_x)
+    call ravel_3D(pars, beta, 3*n_gauss, dim_y, dim_x)
 
     do i=1,n_gauss
        lb((n_beta-n_gauss)+i) = lb_sig
        ub((n_beta-n_gauss)+i) = ub_sig
-       beta((n_beta-n_gauss)+i) = b_params(i)
+       beta((n_beta-n_gauss)+i) = b_pars(i)
     end do
     
     call minimize(n_beta, m, beta, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
          lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, maxiter, kernel, iprint, std_map, lym, c_lym)
 
-    call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)
+    call unravel_3D(beta, pars, 3*n_gauss, dim_y, dim_x)
     do i=1,n_gauss
-       b_params(i) = beta((n_beta-n_gauss)+i)
+       b_pars(i) = beta((n_beta-n_gauss)+i)
     end do        
 
-    ! print*, b_params
+    ! print*, b_pars
     ! print*, c_lym
 
     deallocate(lb, ub, beta)
@@ -513,11 +433,11 @@ contains
   end subroutine mean_spectrum  
 
 
-  subroutine init_grid_params(params, guess_spectrum, dim_y, dim_x)
-    !! Set up a grid params array with std spectrum at each spatial position
+  subroutine init_grid_params(pars, guess_spectrum, dim_y, dim_x)
+    !! Set up a grid pars array with std spectrum at each spatial position
     implicit none
  
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! grid of paramters
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: pars !! grid of paramters
     real(xp), intent(in), dimension(:), allocatable :: guess_spectrum !! std spectrum of the observation
     integer, intent(in) :: dim_y !! dimension along spatial axis y 
     integer, intent(in) :: dim_x !! dimension along spatial axis x
@@ -527,76 +447,10 @@ contains
 
     do j=1, dim_x
        do i=1, dim_y
-          params(:,i,j) = guess_spectrum
+          pars(:,i,j) = guess_spectrum
        end do
     end do
 
   end subroutine init_grid_params
-
-
-  subroutine init_new_gauss(cube, params, std_map, n_gauss, dim_v, dim_y, dim_x, amp_fact_init, sig_init) !fixme to remove
-    implicit none
-    
-    real(xp), intent(in), dimension(:,:,:), allocatable :: cube   !! mean cube over spatial axis
-    real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters to optimize with cube mean at each iteration
-    real(xp), intent(in), dimension(:,:), allocatable :: std_map !! standard deviation map fo the cube computed by ROHSA with lb and ub
-    real(xp), intent(in) :: amp_fact_init !! times max amplitude of additional Gaussian
-    real(xp), intent(in) :: sig_init !! dispersion of additional Gaussian
-
-    integer, intent(inout) :: n_gauss
-    integer, intent(in) :: dim_v, dim_y, dim_x
-
-    real(xp), dimension(:,:), allocatable :: redchi2
-    real(xp), dimension(:,:,:), allocatable :: residual
-    real(xp), dimension(:), allocatable :: residual_1D
-    logical :: new_gauss
-
-    integer :: i, j
-
-    allocate(residual(dim_v, dim_y, dim_x))
-    residual = 0._xp    
-
-    new_gauss = .false.
-
-    !Compute the residual function
-    allocate(redchi2(dim_y, dim_x))
-    redchi2 = 0._xp    
-    do j=1, dim_x
-       do i=1, dim_y
-          allocate(residual_1D(dim_v))
-          residual_1D = 0._xp
-
-          call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v)
-          residual(:,i,j) = residual_1D
-
-          redchi2(i,j) = sum((residual_1D / std_map(i,j))**2._xp) / (dim_v - (3*n_gauss))                    
-
-          if (redchi2(i,j) .gt. 1._xp) then
-             new_gauss = .true.
-          end if
-          deallocate(residual_1D)
-       end do
-    end do
-
-    if (new_gauss .eqv. .true.) then
-       ! Add new Gaussian
-       n_gauss = n_gauss + 1
-
-       do j=1, dim_x
-          do i=1, dim_y
-             ! Set new values if redchi2 > 1
-             if (redchi2(i,j) .gt. 1._xp) then
-                params(2+(3*(n_gauss-1)),i,j) = minloc(residual(:,i,j), dim_v)
-                params(1+(3*(n_gauss-1)),i,j) = cube(int(params(2+(3*(n_gauss-1)),i,j)),i,j) * amp_fact_init
-                params(3+(3*(n_gauss-1)),i,j) = sig_init;
-             end if
-          end do
-       end do
-    end if
-
-    deallocate(redchi2)    
-
-  end subroutine init_new_gauss
-
 
 end module mod_functions

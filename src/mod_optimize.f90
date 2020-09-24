@@ -3,50 +3,72 @@ module mod_optimize
   !! This module contains optimization subroutine and parametric model
   use mod_constants
   use mod_array
+  use mod_read_parameters
 
   implicit none
   
   private
 
-  public :: gaussian, myfunc_spec, myresidual, mygrad_spec, f_g_cube_fast
+  public :: rmsf_q, rmsf_u, myfunc_spec, myresidual, mygrad_spec, f_g_cube_fast
   
 contains
   
-  pure function gaussian(x, a, m, s)
+  pure function rmsf_q(x, a, mu, wavelength)
     !! Gaussian function   
     implicit none
     
-    integer, intent(in) :: x
-    real(xp), intent(in) :: a, m, s
-    real(xp) :: gaussian
+    real(xp), intent(in) :: x
+    real(xp), intent(in), dimension(:) :: wavelength
+    real(xp), intent(in) :: a, mu
+    real(xp) :: rmsf_q
 
-    gaussian = a * exp(-( (real(x,xp) - m)**2 ) / (2._xp * s**2) );
-  end function gaussian
+    rmsf_q = a / params%freq_n * sum(cos(-2_xp*(x-mu)*wl**2_xp));
+  end function rmsf_q
+
+
+  pure function rmsf_u(x, a, mu, wavelength)
+    !! Gaussian function   
+    implicit none
+    
+    real(xp), intent(in) :: x
+    real(xp), intent(in), dimension(:) :: wavelength
+    real(xp), intent(in) :: a, mu
+    real(xp) :: rmsf_u
+
+    rmsf_u = a / params%freq_n * sum(sin(-2_xp*(x-mu)*wl**2_xp));
+  end function rmsf_u
+
   
   ! Compute the residual between model and data
-  subroutine myresidual(params, line, residual, n_gauss, dim_v)
+  subroutine myresidual(pars, line, residual, dim_v)
     implicit none
 
-    integer, intent(in) :: dim_v, n_gauss
-    real(xp), intent(in), dimension(dim_v) :: line
-    real(xp), intent(in), dimension(3*n_gauss) :: params
-    real(xp), intent(inout), dimension(:), allocatable :: residual
+    integer, intent(in) :: dim_v
+    type(indata_s), intent(in) :: line
+    real(xp), intent(in), dimension(2*params%n) :: pars
+
+    type(indata_s), intent(inout) :: residual
 
     integer :: i, k
-    real(xp) :: g    
-    real(xp), dimension(dim_v) :: model
+    type(indata_s) :: model
 
-    g = 0._xp
-    model = 0._xp
+    allocate(model%q(dim_v),model%u(dim_v))
+
+    model%q = 0._xp; model%u = 0._xp
     
-    do i=1, n_gauss
+    do i=1, params%n
        do k=1, dim_v
-          g = gaussian(k, params(1+(3*(i-1))), params(2+(3*(i-1))), params(3+(3*(i-1))))
-          model(k) = model(k) + g
+          model%q(k) = model%q(k) + rmsf_q(rm(k), pars(1+(2*(i-1))), pars(2+(2*(i-1))), wl)
+          model%u(k) = model%u(k) + rmsf_u(rm(k), pars(1+(2*(i-1))), pars(2+(2*(i-1))), wl)
        enddo
     enddo
 
-    residual = model - line
+    print*, model%q
+    print*, "fixme model Q and U"
+    stop
+
+    residual%q = model%q - line%q
+    residual%u = model%u - line%u
   end subroutine myresidual
 
 
@@ -166,7 +188,7 @@ contains
        do i=1, dim_y
           allocate(residual_1D(dim_v))
           residual_1D = 0._xp
-          call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v)
+          ! call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v) #FIXMEEEEEEEE
           residual(:,i,j) = residual_1D
           if (std_map(i,j) > 0._xp) then
              f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2._xp)
@@ -244,145 +266,5 @@ contains
 
   end subroutine f_g_cube_fast
 
-
- ! Compute the objective function for a cube and the gradient of the obkective function
-  subroutine f_g_cube(f, g, cube, beta, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)
-    implicit none
-
-    integer, intent(in) :: n_gauss
-    integer, intent(in) :: dim_v, dim_y, dim_x
-    real(xp), intent(in) :: lambda_amp, lambda_mu, lambda_sig
-    real(xp), intent(in) :: lambda_var_amp, lambda_var_mu, lambda_var_sig
-    real(xp), intent(in), dimension(:), allocatable :: beta
-    real(xp), intent(in), dimension(:,:,:), allocatable :: cube
-    real(xp), intent(in), dimension(:,:), allocatable :: kernel
-    real(xp), intent(in), dimension(:,:), allocatable :: std_map
-    real(xp), intent(inout) :: f
-    real(xp), intent(inout), dimension(:), allocatable :: g
-
-    integer :: i, j, k, l
-    integer :: n_beta
-    real(xp), dimension(:,:,:), allocatable :: residual
-    real(xp), dimension(:), allocatable :: residual_1D
-    real(xp), dimension(:,:,:), allocatable :: params
-    real(xp), dimension(:), allocatable :: b_params
-    real(xp), dimension(:,:), allocatable :: conv_amp, conv_mu, conv_sig
-    real(xp), dimension(:,:), allocatable :: conv_conv_amp, conv_conv_mu, conv_conv_sig
-    real(xp), dimension(:,:), allocatable :: image_amp, image_mu, image_sig
-    real(xp), dimension(:,:,:), allocatable :: g_3D
-    real(xp), dimension(:,:,:,:), allocatable :: dF_over_dB
-    real(xp), dimension(:,:,:), allocatable :: dR_over_dB
-    real(xp), dimension(:,:,:), allocatable :: deriv
-
-    allocate(dR_over_dB(3*n_gauss, dim_y, dim_x))
-    allocate(dF_over_dB(3*n_gauss, dim_v, dim_y, dim_x))
-    allocate(deriv(3*n_gauss, dim_y, dim_x))
-    allocate(g_3D(3*n_gauss, dim_y, dim_x))
-    allocate(residual(dim_v, dim_y, dim_x))
-    allocate(b_params(n_gauss))
-    allocate(params(3*n_gauss, dim_y, dim_x))
-    allocate(conv_amp(dim_y, dim_x), conv_mu(dim_y, dim_x), conv_sig(dim_y, dim_x))
-    allocate(conv_conv_amp(dim_y, dim_x), conv_conv_mu(dim_y, dim_x), conv_conv_sig(dim_y, dim_x))
-    allocate(image_amp(dim_y, dim_x), image_mu(dim_y, dim_x), image_sig(dim_y, dim_x))
-    
-    dR_over_dB = 0._xp
-    dF_over_dB = 0._xp
-    deriv = 0._xp
-    f = 0._xp
-    g = 0._xp
-    g_3D = 0._xp
-    residual = 0._xp    
-    params = 0._xp
-    
-    n_beta = (3*n_gauss * dim_y * dim_x) + n_gauss
-
-    call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)    
-    do i=1,n_gauss
-       b_params(i) = beta((n_beta-n_gauss)+i)
-    end do
-
-    ! Compute the objective function and the gradient
-    do j=1, dim_x
-       do i=1, dim_y
-          allocate(residual_1D(dim_v))
-          residual_1D = 0._xp
-          call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v)
-          residual(:,i,j) = residual_1D
-          if (std_map(i,j) > 0._xp) then
-             f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2._xp)
-          end if
-          deallocate(residual_1D)
-       end do
-    end do
-
-    do l=1, dim_x
-       do j=1, dim_y
-          do i=1, n_gauss
-             do k=1, dim_v          
-                dF_over_dB(1+(3*(i-1)),k,j,l) = dF_over_dB(1+(3*(i-1)),k,j,l) +&
-                     exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))
-                
-                dF_over_dB(2+(3*(i-1)),k,j,l) = dF_over_dB(2+(3*(i-1)),k,j,l) +&
-                     params(1+(3*(i-1)),j,l) * ( real(k,xp) - params(2+(3*(i-1)),j,l) ) / (params(3+(3*(i-1)),j,l)**2._xp) *&
-                     exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))
-                
-                dF_over_dB(3+(3*(i-1)),k,j,l) = dF_over_dB(3+(3*(i-1)),k,j,l) +&
-                     params(1+(3*(i-1)),j,l) * ( real(k,xp) - params(2+(3*(i-1)),j,l) )**2._xp / (params(3+(3*(i-1)),j,l)**3._xp) *&
-                     exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))
-             enddo
-          enddo
-       end do
-    end do
-    
-    do k=1, dim_v
-       do j=1, dim_x
-          do i=1, dim_y
-             do l=1, 3*n_gauss
-                if (std_map(i,j) > 0._xp) then
-                   deriv(l,i,j) = deriv(l,i,j) + dF_over_dB(l,k,i,j) * (residual(k,i,j)/std_map(i,j)**2._xp)
-                end if
-             end do
-          end do
-       end do
-    end do
-    
-    do k=1, n_gauss
-       conv_amp = 0._xp; conv_mu = 0._xp; conv_sig = 0._xp
-       conv_conv_amp = 0._xp; conv_conv_mu = 0._xp; conv_conv_sig = 0._xp
-       image_amp = 0._xp; image_mu = 0._xp; image_sig = 0._xp
-
-       image_amp = params(1+(3*(k-1)),:,:)
-       image_mu = params(2+(3*(k-1)),:,:)
-       image_sig = params(3+(3*(k-1)),:,:)
-       
-       call convolution_2D_mirror(image_amp, conv_amp, dim_y, dim_x, kernel, 3)
-       call convolution_2D_mirror(image_mu, conv_mu, dim_y, dim_x, kernel, 3)
-       call convolution_2D_mirror(image_sig, conv_sig, dim_y, dim_x, kernel, 3)
-
-       call convolution_2D_mirror(conv_amp, conv_conv_amp, dim_y, dim_x, kernel, 3)
-       call convolution_2D_mirror(conv_mu, conv_conv_mu, dim_y, dim_x, kernel, 3)
-       call convolution_2D_mirror(conv_sig, conv_conv_sig, dim_y, dim_x, kernel, 3)
-
-       do j=1, dim_x
-          do i=1, dim_y
-             f = f + (0.5_xp * lambda_amp * conv_amp(i,j)**2)
-             f = f + (0.5_xp * lambda_mu * conv_mu(i,j)**2)
-             f = f + (0.5_xp * lambda_sig * conv_sig(i,j)**2) + (0.5_xp * lambda_var_sig * (image_sig(i,j) - b_params(k))**2._xp)
-                          
-             dR_over_dB(1+(3*(k-1)),i,j) = lambda_amp * conv_conv_amp(i,j)
-             dR_over_dB(2+(3*(k-1)),i,j) = lambda_mu * conv_conv_mu(i,j)
-             dR_over_dB(3+(3*(k-1)),i,j) = lambda_sig * conv_conv_sig(i,j) + (lambda_var_sig * (image_sig(i,j) - b_params(k)))
-
-             g((n_beta-n_gauss)+k) = g((n_beta-n_gauss)+k) - (lambda_var_sig * (image_sig(i,j) - b_params(k)))        
-             ! g((n_beta-n_gauss)+k) = - lambda_var_sig * (image_sig(i,j) - b_params(k))
-          end do
-       end do       
-    end do
-    
-    g_3D = deriv + dR_over_dB
-    call ravel_3D(g_3D, g, 3*n_gauss, dim_y, dim_x)
-
-  end subroutine f_g_cube
 
 end module mod_optimize

@@ -4,6 +4,7 @@ module mod_minimize
   use mod_constants
   use mod_array
   use mod_optimize
+  use mod_read_parameters
 
   implicit none
   
@@ -13,18 +14,18 @@ module mod_minimize
   
 contains
 
-  subroutine minimize_spec(n, m, x, lb, ub, line, dim_v, n_gauss, maxiter, iprint)
+  subroutine minimize_spec(n, m, x, lb, ub, line, dim_v, maxiter, iprint)
     !! Minimize algorithn for a specturm
     implicit none      
 
     integer, intent(in) :: n
     integer, intent(in) :: m
     integer, intent(in) :: dim_v
-    integer, intent(in) :: n_gauss, maxiter
+    integer, intent(in) :: maxiter
     integer, intent(in) :: iprint
 
     real(xp), intent(in), dimension(:), allocatable :: lb, ub
-    real(xp), intent(in), dimension(dim_v) :: line
+    type(indata_s), intent(in) :: line
 
     real(xp), intent(in), dimension(:), allocatable :: x
     
@@ -38,15 +39,15 @@ contains
     integer,  dimension(:), allocatable  :: nbd, iwa
     real(xp), dimension(:), allocatable  :: g, wa
 
-    real(xp), dimension(:), allocatable  :: residual
+    type(indata_s) :: residual
     
     !     Allocate dynamic arrays
     allocate(nbd(n), g(n))
     allocate(iwa(3*n))
     allocate(wa(2*m*n + 5*n + 11*m*m + 8*m))
 
-    allocate(residual(dim_v))
-    residual = 0._xp
+    allocate(residual%q(dim_v),residual%u(dim_v))
+    residual%q = 0._xp; residual%u = 0._xp
 
     ! Init nbd
     nbd = 2
@@ -59,13 +60,14 @@ contains
     do while(task(1:2).eq.'FG'.or. task.eq.'NEW_X' .or. task.eq.'START') 
        
        !     This is the call to the L-BFGS-B code.
-       call setulb (n, m, x, lb, ub, nbd, f, g, factr, pgtol, wa, iwa, task, iprint, csave, lsave, isave, dsave)
+       call setulb (n, m, x, lb, ub, nbd, f, g, factr, pgtol, wa, iwa, task, params%iprint, csave, lsave, isave, dsave)
        
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.
-          call myresidual(x, line, residual, n_gauss, dim_v)
-          f = myfunc_spec(residual)          
-          call mygrad_spec(n_gauss, g, residual, x, dim_v)
+    
+          call myresidual(x, line, residual, dim_v)
+          ! f = myfunc_spec(residual)          
+          ! call mygrad_spec(params%n, g, residual, x, dim_v)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations
@@ -83,7 +85,7 @@ contains
     deallocate(nbd, g)
     deallocate(iwa)
     deallocate(wa)
-    deallocate(residual)
+    deallocate(residual%q,residual%u)
   end subroutine minimize_spec
 
   ! Minimize algorithn for a cube with regularization
