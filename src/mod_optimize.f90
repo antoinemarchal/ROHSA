@@ -63,10 +63,6 @@ contains
        enddo
     enddo
 
-    print*, model%q
-    print*, "fixme model Q and U"
-    stop
-
     residual%q = model%q - line%q
     residual%u = model%u - line%u
   end subroutine myresidual
@@ -76,12 +72,12 @@ contains
   pure function  myfunc_spec(residual)
     implicit none
     
-    real(xp), intent(in), dimension(:), allocatable :: residual
+    type(indata_s), intent(in) :: residual
     real(xp) :: myfunc_spec
     
     myfunc_spec = 0._xp
     
-    myfunc_spec = 0.5_xp * sum(residual**2._xp)    
+    myfunc_spec = 0.5_xp * (sum(residual%q**2._xp) + sum(residual%u**2._xp))
   end function  myfunc_spec
 
   
@@ -188,10 +184,10 @@ contains
        do i=1, dim_y
           allocate(residual_1D(dim_v))
           residual_1D = 0._xp
-          ! call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v) #FIXMEEEEEEEE
+          ! call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v) !FIXMEEEEEEEE
           residual(:,i,j) = residual_1D
           if (std_map(i,j) > 0._xp) then
-             f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2._xp)
+             ! f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2._xp) !FIXMEEEEEEEEEEE
           end if
           deallocate(residual_1D)
        end do

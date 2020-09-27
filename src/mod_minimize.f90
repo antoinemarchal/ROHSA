@@ -66,7 +66,9 @@ contains
           !     Compute function f and gradient g for the sample problem.
     
           call myresidual(x, line, residual, dim_v)
-          ! f = myfunc_spec(residual)          
+          f = myfunc_spec(residual)          
+          print*, "fixme gradient"
+          stop
           ! call mygrad_spec(params%n, g, residual, x, dim_v)
           
        elseif (task(1:5) .eq. 'NEW_X') then

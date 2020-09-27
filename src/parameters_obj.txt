@@ -6,7 +6,7 @@
    ,params%fileout = 'fileout_run_0.dat'           
    ,params%timeout = 'timestep.dat'             
 
-   ,params%n = 2   				
+   ,params%n = 1   				
 
    ,params%lambda_amp = 1.d0       
    ,params%lambda_mu = 1.d0	
