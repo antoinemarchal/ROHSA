@@ -82,47 +82,49 @@ contains
 
   
   ! Griadient of the objective function to minimize for a spectrum
-  subroutine mygrad_spec(n_gauss, gradient, residual, params, dim_v)
+  subroutine mygrad_spec(gradient, residual, pars, dim_v)
     implicit none
 
-    integer, intent(in) :: n_gauss, dim_v
-    real(xp), intent(in), dimension(3*n_gauss) :: params
-    real(xp), intent(in), dimension(:), allocatable :: residual
-    real(xp), intent(inout), dimension(3*n_gauss) :: gradient
+    integer, intent(in) :: dim_v
+    real(xp), intent(in), dimension(2*params%n) :: pars
+    type(indata_s), intent(inout) :: residual
+    real(xp), intent(inout), dimension(2*params%n) :: gradient
 
     integer :: i, k
     real(xp) :: g
 
-    real(xp), dimension(:,:), allocatable :: dF_over_dB
+    real(xp), dimension(:,:), allocatable :: dLq, dLu
 
-    allocate(dF_over_dB(3*n_gauss, dim_v))
+    allocate(dLq(2*params%n, dim_v))
+    allocate(dLu(2*params%n, dim_v))
 
     g = 0._xp
-    dF_over_dB = 0._xp
+    dLq = 0._xp; dLu = 0._xp
     gradient = 0._xp
-
-    do i=1, n_gauss
+    
+    do i=1, params%n
        do k=1, dim_v          
-          dF_over_dB(1+(3*(i-1)),k) = dF_over_dB(1+(3*(i-1)),k) +&
-               exp( ( -(real(k,xp) - params(2+(3*(i-1))))**2._xp) / (2._xp * params(3+(3*(i-1)))**2._xp))
+          dLq(1+(2*(i-1)),k) = dLq(1+(2*(i-1)),k) +&
+               sum(cos(-2._xp*(rm(k) - pars(2+(2*(i-1))))*wl**2_xp)) / params%freq_n
 
-          dF_over_dB(2+(3*(i-1)),k) = dF_over_dB(2+(3*(i-1)),k) +&
-               params(1+(3*(i-1))) * ( real(k,xp) - params(2+(3*(i-1))) ) / (params(3+(3*(i-1)))**2._xp) *&
-               exp( ( -(real(k,xp) - params(2+(3*(i-1))))**2._xp) / (2._xp * params(3+(3*(i-1)))**2._xp))
-          
-          dF_over_dB(3+(3*(i-1)),k) = dF_over_dB(3+(3*(i-1)),k) +&
-               params(1+(3*(i-1))) * ( real(k,xp) - params(2+(3*(i-1))) )**2._xp / (params(3+(3*(i-1)))**3._xp) *&
-               exp( ( -(real(k,xp) - params(2+(3*(i-1))))**2._xp) / (2._xp * params(3+(3*(i-1)))**2._xp))
+          dLq(2+(2*(i-1)),k) = dLq(2+(2*(i-1)),k) +&
+               (pars(1+(2*(i-1))) * sum(-2._xp * wl**2_xp * sin(-2._xp*(rm(k) - pars(2+(2*(i-1)))) * wl**2_xp)) / params%freq_n)
+
+          dLu(1+(2*(i-1)),k) = dLu(1+(2*(i-1)),k) +&
+               sum(sin(-2._xp*(rm(k) - pars(2+(2*(i-1))))*wl**2_xp)) / params%freq_n
+
+          dLu(2+(2*(i-1)),k) = dLu(2+(2*(i-1)),k) +&
+               (pars(1+(2*(i-1))) * sum(2._xp * wl**2_xp * cos(-2._xp*(rm(k) - pars(2+(2*(i-1)))) * wl**2_xp)) / params%freq_n)
        enddo
     enddo
     
     do i=1, dim_v
-       do k=1, 3*n_gauss
-          gradient(k) = gradient(k) + dF_over_dB(k,i) * residual(i)
+       do k=1, 2*params%n
+          gradient(k) = gradient(k) + (dLq(k,i) * residual%q(i) + dLu(k,i) * residual%u(i))
        end do
     end do
 
-    deallocate(dF_over_dB)
+    deallocate(dLq,dLu)
   end subroutine mygrad_spec
 
   

@@ -60,8 +60,9 @@ contains
   subroutine print_parameters()
     implicit none 
 
-    print*, "filename_r = '",trim(params%filename_q),"'"
-    print*, "filename_i = '",trim(params%filename_u),"'"
+    print*, "filename_q = '",trim(params%filename_q),"'"
+    print*, "filename_u = '",trim(params%filename_u),"'"
+    print*, "filename_p = '",trim(params%filename_p),"'"
 
     print*, "fileout = '",trim(params%fileout),"'"
     print*, "timeout = '",trim(params%timeout),"'"
@@ -105,8 +106,9 @@ contains
 
     integer, intent(in) :: unit
 
-    write(unit,fmt=*) "#filename_r = '",trim(params%filename_q),"'"
-    write(unit,fmt=*) "#filename_i = '",trim(params%filename_u),"'"
+    write(unit,fmt=*) "#filename_q = '",trim(params%filename_q),"'"
+    write(unit,fmt=*) "#filename_u = '",trim(params%filename_u),"'"
+    write(unit,fmt=*) "#filename_p = '",trim(params%filename_p),"'"
 
     write(unit,fmt=*) "#fileout = '",trim(params%fileout),"'"
     write(unit,fmt=*) "#timeout = '",trim(params%timeout),"'"

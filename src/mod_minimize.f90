@@ -67,9 +67,7 @@ contains
     
           call myresidual(x, line, residual, dim_v)
           f = myfunc_spec(residual)          
-          print*, "fixme gradient"
-          stop
-          ! call mygrad_spec(params%n, g, residual, x, dim_v)
+          call mygrad_spec(g, residual, x, dim_v)
           
        elseif (task(1:5) .eq. 'NEW_X') then
           !        1) Terminate if the total number of f and g evaluations
