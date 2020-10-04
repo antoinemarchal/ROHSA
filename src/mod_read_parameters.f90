@@ -7,12 +7,10 @@ module mod_read_parameters
   implicit none
 
   type(parameters) :: params
-  real(xp), dimension(:), allocatable :: wl !wavelength
-  real(xp), dimension(:), allocatable :: rm !rm axis
-  
+
   private
   
-  public :: get_parameters, print_parameters, print_parameters_unit, params, wl, rm
+  public :: get_parameters, print_parameters, print_parameters_unit, params
 
 contains
 
@@ -21,9 +19,6 @@ contains
     
     character(len=512), intent(in) :: filename_parameters
     integer :: ios=0
-    real(xp), dimension(:), allocatable :: freq
-
-    integer :: i
 
     namelist /user_parameters/ params 
 
@@ -32,30 +27,10 @@ contains
     read(11, user_parameters)    
     close(11)
 
-    !Compute wavelength array
-    params%freq_n = floor((params%freq_max - params%freq_min) / params%freq_step + 1)
-
-    allocate(freq(params%freq_n))
-    do i=1,params%freq_n
-       freq(i) = (params%freq_min + ((i-1)*params%freq_step)) * 1e6_xp
-    end do
-
-    allocate(wl(params%freq_n))
-    wl = c / 100_xp / freq !attention c divided by 100 because cgs to metric
-
-    !Compute RM range
-    allocate(rm(params%rm_n))
-    do i=1,params%rm_n
-       rm(i) = params%crval3 + params%cdelt3 * ((i-1) - params%crpix3)
-    end do
-
     ! Display parameters
     call print_parameters()
-    print*, 'largest Faraday scale = ', pi/minval(wl**2), 'rad/m2'
-    print*, ""
-        
-  end subroutine get_parameters
 
+  end subroutine get_parameters
 
   subroutine print_parameters()
     implicit none 

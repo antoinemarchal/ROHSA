@@ -4,41 +4,16 @@ module mod_optimize
   use mod_constants
   use mod_array
   use mod_read_parameters
+  use mod_model
 
   implicit none
   
   private
 
-  public :: rmsf_q, rmsf_u, myfunc_spec, myresidual, mygrad_spec, f_g_cube_fast
+  public :: myfunc_spec, myresidual, mygrad_spec, f_g_cube_fast
   
 contains
-  
-  pure function rmsf_q(x, a, mu, wavelength)
-    !! Gaussian function   
-    implicit none
     
-    real(xp), intent(in) :: x
-    real(xp), intent(in), dimension(:) :: wavelength
-    real(xp), intent(in) :: a, mu
-    real(xp) :: rmsf_q
-
-    rmsf_q = a / params%freq_n * sum(cos(-2_xp*(x-mu)*wl**2_xp));
-  end function rmsf_q
-
-
-  pure function rmsf_u(x, a, mu, wavelength)
-    !! Gaussian function   
-    implicit none
-    
-    real(xp), intent(in) :: x
-    real(xp), intent(in), dimension(:) :: wavelength
-    real(xp), intent(in) :: a, mu
-    real(xp) :: rmsf_u
-
-    rmsf_u = a / params%freq_n * sum(sin(-2_xp*(x-mu)*wl**2_xp));
-  end function rmsf_u
-
-  
   ! Compute the residual between model and data
   subroutine myresidual(pars, line, residual, dim_v)
     implicit none
@@ -58,8 +33,8 @@ contains
     
     do i=1, params%n
        do k=1, dim_v
-          model%q(k) = model%q(k) + rmsf_q(rm(k), pars(1+(2*(i-1))), pars(2+(2*(i-1))), wl)
-          model%u(k) = model%u(k) + rmsf_u(rm(k), pars(1+(2*(i-1))), pars(2+(2*(i-1))), wl)
+          model%q(k) = model%q(k) !+ rmsf_q(rm(k), pars(1+(2*(i-1))), pars(2+(2*(i-1))), wl)
+          model%u(k) = model%u(k) !+ rmsf_u(rm(k), pars(1+(2*(i-1))), pars(2+(2*(i-1))), wl)
        enddo
     enddo
 
@@ -104,17 +79,17 @@ contains
     
     do i=1, params%n
        do k=1, dim_v          
-          dLq(1+(2*(i-1)),k) = dLq(1+(2*(i-1)),k) +&
-               sum(cos(-2._xp*(rm(k) - pars(2+(2*(i-1))))*wl**2_xp)) / params%freq_n
+          dLq(1+(2*(i-1)),k) = dLq(1+(2*(i-1)),k) !+&
+               !sum(cos(-2._xp*(rm(k) - pars(2+(2*(i-1))))*wl**2_xp)) / params%freq_n
 
-          dLq(2+(2*(i-1)),k) = dLq(2+(2*(i-1)),k) +&
-               (pars(1+(2*(i-1))) * sum(-2._xp * wl**2_xp * sin(-2._xp*(rm(k) - pars(2+(2*(i-1)))) * wl**2_xp)) / params%freq_n)
+          dLq(2+(2*(i-1)),k) = dLq(2+(2*(i-1)),k) !+&
+               !(pars(1+(2*(i-1))) * sum(-2._xp * wl**2_xp * sin(-2._xp*(rm(k) - pars(2+(2*(i-1)))) * wl**2_xp)) / params%freq_n)
 
-          dLu(1+(2*(i-1)),k) = dLu(1+(2*(i-1)),k) +&
-               sum(sin(-2._xp*(rm(k) - pars(2+(2*(i-1))))*wl**2_xp)) / params%freq_n
+          dLu(1+(2*(i-1)),k) = dLu(1+(2*(i-1)),k) !+&
+               !sum(sin(-2._xp*(rm(k) - pars(2+(2*(i-1))))*wl**2_xp)) / params%freq_n
 
-          dLu(2+(2*(i-1)),k) = dLu(2+(2*(i-1)),k) +&
-               (pars(1+(2*(i-1))) * sum(2._xp * wl**2_xp * cos(-2._xp*(rm(k) - pars(2+(2*(i-1)))) * wl**2_xp)) / params%freq_n)
+          dLu(2+(2*(i-1)),k) = dLu(2+(2*(i-1)),k) !+&
+               !(pars(1+(2*(i-1))) * sum(2._xp * wl**2_xp * cos(-2._xp*(rm(k) - pars(2+(2*(i-1)))) * wl**2_xp)) / params%freq_n)
        enddo
     enddo
     
