@@ -6,6 +6,7 @@ module mod_functions
   use mod_optimize
   use mod_array
   use mod_read_parameters
+  use mod_model
   
   implicit none
 
@@ -192,50 +193,67 @@ contains
   subroutine init_spectrum(pars, line, dim_v)
     !! Initialization of the mean sprectrum with N Gaussian
     implicit none
-    
+
     integer, intent(in) :: dim_v !! dimension along v axis
 
     type(indata_s), intent(in) :: line
     real(xp), intent(inout), dimension(2*params%n) :: pars !! params to optimize
 
-    integer :: i
+    integer :: i,j,k,p
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(dim_v) :: model, residual
     real(xp), dimension(:), allocatable :: x
+    integer :: loc_min
     
-    allocate(lb(2*params%n), ub(2*params%n))
-    allocate(x(2*params%n))
-    model = 0._xp
-    residual = 0._xp
-    lb = 0._xp; ub=0._xp
-    x = 0._xp
-            
-    do i=1, 2*params%n
-       x(i) = pars(i);
-    end do
-    
-    call init_bounds(lb, ub)    
-    call minimize_spec(2*params%n, params%m, x, lb, ub, line, dim_v, params%maxiter, params%iprint)
-    
-    do i=i, 2*params%n   
-       pars(i) = x(i);
-    end do
-    
-    deallocate(x)
-    deallocate(lb, ub)
-end subroutine init_spectrum
+    do i=1, params%n
+       allocate(lb(2*i), ub(2*i))
+       allocate(x(2*i))
+       x = 0._xp
+       model = 0._xp
+       residual = 0._xp
+       lb = 0._xp; ub=0._xp
+       
+       call init_bounds(lb, ub, i)
+
+       do j=1, i
+          do k=1, dim_v
+             model(k) = model(k) + f_rmsf(rm(real(k,xp)), pars(1+(2*(j-1))), pars(2+(2*(j-1))), coeff)
+          end do
+       enddo
+
+       residual = model - line%p
+              
+       do p=1, 2*(i-1)
+          x(p) = pars(p);
+       end do
+       
+       loc_min = int(minloc(residual, dim_v))
+       x(1+(2*(i-1))) = line%p(loc_min) * 0.666
+       x(2+(2*(i-1))) = rm(loc_min)
+       
+       call minimize_spec(2*i, params%m, x, lb, ub, line, dim_v, params%maxiter_init, params%iprint_init, i)
+       
+       do p=1, 2*i   
+          pars(p) = x(p);
+       end do
+       
+       deallocate(x)
+       deallocate(lb, ub)
+    enddo
+  end subroutine init_spectrum
   
 
-  subroutine init_bounds(lb, ub)
+  subroutine init_bounds(lb, ub, n)
     !! Initialize parameters bounds for optimization
     implicit none
-    
+
+    integer, intent(in) :: n
     real(xp), intent(inout), dimension(2*params%n) :: lb !! lower bounds
     real(xp), intent(inout), dimension(2*params%n) :: ub !! upper bounds
        
     integer :: i
  
-    do i=1, params%n
+    do i=1, n
        ! amplitude bounds
        lb(1+(2*(i-1))) = params%lb_amp;
        ub(1+(2*(i-1))) = params%ub_amp;
@@ -247,81 +265,44 @@ end subroutine init_spectrum
   end subroutine init_bounds
 
 
-  subroutine update(cube, pars, b_pars, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-       lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, kernel, &
-       iprint, std_map, lym, c_lym)
+  subroutine update(cube, pars, dim_v, dim_y, dim_x, std_map, kernel)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
-    real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube 
-    real(xp), intent(in), dimension(:,:), allocatable :: std_map !! Standard deviation map 
-    real(xp), intent(in), dimension(:,:), allocatable :: kernel !! convolution kernel
+    type(indata), intent(in) :: cube
     integer, intent(in) :: dim_v !! dimension along v axis
     integer, intent(in) :: dim_y !! dimension along spatial axis y 
     integer, intent(in) :: dim_x !! dimension along spatial axis x
-    integer, intent(in) :: n_gauss !! Number of Gaussian
-    integer, intent(in) :: maxiter !! max number of iteration
-    integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
-    integer, intent(in) :: iprint !! print option
-
-    real(xp), intent(in) :: lambda_amp !! lambda for amplitude parameter
-    real(xp), intent(in) :: lambda_mu !! lambda for mean position parameter
-    real(xp), intent(in) :: lambda_sig !! lambda for dispersion parameter
-
-    real(xp), intent(in) :: lambda_var_amp !! lambda for amp dispersion parameter
-    real(xp), intent(in) :: lambda_var_mu  !! lambda for mean position dispersion parameter
-    real(xp), intent(in) :: lambda_var_sig !! lambda for variance dispersion parameter
-
-    real(xp), intent(in) :: lambda_lym_sig !! lambda for difference dispersion parameter (2-gaussaian)
-
-    real(xp), intent(in) :: lb_sig !! lower bound sigma
-    real(xp), intent(in) :: ub_sig !! upper bound sigma
-
-    logical, intent(in) :: lym !! if true --> activate 2-Gaussian decomposition for Lyman alpha nebula emission
-
-    real(xp), intent(inout), dimension(:), allocatable :: b_pars !! unknown average sigma
+    real(xp), intent(in), dimension(:,:), allocatable :: kernel
+    real(xp), intent(in), dimension(:,:), allocatable :: std_map !! Standard deviation map 
     real(xp), intent(inout), dimension(:,:,:), allocatable :: pars !! parameters cube to update
-
-    real(xp) :: c_lym
     
-    integer :: i
+    integer :: i, j
     integer :: n_beta
     real(xp), dimension(:,:,:), allocatable :: lb_3D, ub_3D
     real(xp), dimension(:), allocatable :: lb, ub
     real(xp), dimension(:), allocatable :: beta
 
-    n_beta = (3*n_gauss * dim_y * dim_x) + n_gauss
+    n_beta = (2*params%n * dim_y * dim_x)
 
     allocate(lb(n_beta), ub(n_beta), beta(n_beta))
-    allocate(lb_3D(3*n_gauss,dim_y,dim_x), ub_3D(3*n_gauss,dim_y,dim_x))
+    allocate(lb_3D(2*params%n,dim_y,dim_x), ub_3D(2*params%n,dim_y,dim_x))
 
     ! !Bounds
-    ! do j=1, dim_x
-    !    do i=1, dim_y
-    !       call init_bounds(cube(:,i,j), n_gauss, dim_v, lb_3D(:,i,j), ub_3D(:,i,j), lb_sig, ub_sig)
-    !    end do
-    ! end do FIXMEEEEEEEEEEE
-
-    call ravel_3D(lb_3D, lb, 3*n_gauss, dim_y, dim_x)
-    call ravel_3D(ub_3D, ub, 3*n_gauss, dim_y, dim_x)
-    call ravel_3D(pars, beta, 3*n_gauss, dim_y, dim_x)
-
-    do i=1,n_gauss
-       lb((n_beta-n_gauss)+i) = lb_sig
-       ub((n_beta-n_gauss)+i) = ub_sig
-       beta((n_beta-n_gauss)+i) = b_pars(i)
+    do j=1, dim_x
+       do i=1, dim_y
+          call init_bounds(lb_3D(:,i,j), ub_3D(:,i,j), params%n)
+       end do
     end do
+
+    call ravel_3D(lb_3D, lb, 2*params%n, dim_y, dim_x)
+    call ravel_3D(ub_3D, ub, 2*params%n, dim_y, dim_x)
+    call ravel_3D(pars, beta, 2*params%n, dim_y, dim_x)
     
-    call minimize(n_beta, m, beta, lb, ub, cube, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
-         lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, maxiter, kernel, iprint, std_map, lym, c_lym)
+    call minimize(n_beta, params%m, beta, lb, ub, cube, dim_v, dim_y, dim_x, std_map, &
+         kernel, params%iprint, params%maxiter)
 
-    call unravel_3D(beta, pars, 3*n_gauss, dim_y, dim_x)
-    do i=1,n_gauss
-       b_pars(i) = beta((n_beta-n_gauss)+i)
-    end do        
-
-    ! print*, b_pars
-    ! print*, c_lym
+    call unravel_3D(beta, pars, 2*params%n, dim_y, dim_x)
 
     deallocate(lb, ub, beta)
     deallocate(lb_3D, ub_3D)
@@ -454,3 +435,60 @@ end subroutine init_spectrum
   end subroutine init_grid_params
 
 end module mod_functions
+
+
+!   subroutine fit_rmsf(pars, line, dim_v)
+!     !! Initialization of the mean sprectrum with N Gaussian
+!     implicit none
+    
+!     integer, intent(in) :: dim_v !! dimension along v axis
+
+!     real(xp), intent(in), dimension(:), allocatable :: line
+!     real(xp), intent(inout), dimension(2*params%n_rmsf) :: pars !! params to optimize
+
+!     integer :: i
+!     real(xp), dimension(:), allocatable :: lb, ub
+!     real(xp), dimension(dim_v) :: model, residual
+!     real(xp), dimension(:), allocatable :: x
+    
+!     allocate(lb(2*params%n_rmsf), ub(2*params%n_rmsf))
+!     allocate(x(2*params%n_rmsf))
+!     model = 0._xp
+!     residual = 0._xp
+!     lb = 0._xp; ub=0._xp
+!     x = 0._xp
+            
+!     do i=1, 2*params%n_rmsf
+!        x(i) = pars(i);
+!     end do
+    
+!     call init_bounds_rmsf(lb, ub)
+!     call minimize_rmsf(2*params%n_rmsf, params%m, x, lb, ub, line, dim_v, 15000, params%iprint)
+
+!     do i=i, 2*params%n_rmsf   
+!        pars(i) = x(i);
+!     end do
+    
+!     deallocate(x)
+!     deallocate(lb, ub)
+! end subroutine fit_rmsf
+
+  ! subroutine init_bounds_rmsf(lb, ub)
+  !   !! Initialize parameters bounds for optimization
+  !   implicit none
+    
+  !   real(xp), intent(inout), dimension(2*params%n_rmsf) :: lb !! lower bounds
+  !   real(xp), intent(inout), dimension(2*params%n_rmsf) :: ub !! upper bounds
+       
+  !   integer :: i
+ 
+  !   do i=1, params%n_rmsf
+  !      ! amplitude bounds
+  !      lb(1+(2*(i-1))) = params%lb_amp;
+  !      ub(1+(2*(i-1))) = params%ub_amp;
+    
+  !      ! dispersion bounds 
+  !      lb(2+(2*(i-1))) = 0.001_xp;
+  !      ub(2+(2*(i-1))) = 10._xp;       
+  !   end do
+  ! end subroutine init_bounds_rmsf

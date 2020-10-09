@@ -11,7 +11,7 @@ module mod_rw_data
   
   private
   
-  public :: get_data, read_cube, read_map, save_process, data
+  public :: get_data, read_cube, read_map, read_array, save_process, data
 
 contains
 
@@ -22,6 +22,7 @@ contains
     call read_cube(params%filename_u, data%u)
     call read_cube(params%filename_p, data%p)
     call read_map(params%filename_noise, data%rms)
+    call read_array(params%filename_coeff, coeff)
     
   end subroutine get_data
 
@@ -79,6 +80,31 @@ contains
     
     close(11)
   end subroutine read_map
+
+
+  subroutine read_array(filename, array)
+    implicit none
+    integer           :: ios=0, i
+    integer           :: nl
+    real(xp)          :: val
+    character(len=512), intent(in) :: filename
+    real(xp), intent(inout), dimension(:), allocatable :: array
+
+    open(unit=11, file=filename, action="read", status="old", iostat=ios)
+    if (ios /= 0) stop "opening file error"
+    
+    read(11,fmt=*) nl
+
+    allocate(array(nl))
+
+    do i=1,nl
+       read(11,fmt=*) val
+       array(i) = val
+    enddo
+    
+    close(11)
+  end subroutine read_array
+
   
   subroutine save_process(nside, n_gauss, grid, dim_yx, fileout)
     implicit none

@@ -70,6 +70,7 @@ contains
     !Allocate memory for cube
     allocate(cube%q(dim_cube(1), dim_cube(2), dim_cube(3)))
     allocate(cube%u(dim_cube(1), dim_cube(2), dim_cube(3)))
+    allocate(cube%p(dim_cube(1), dim_cube(2), dim_cube(3)))
     allocate(cube%rms(dim_cube(2), dim_cube(3)))
     
     !Reshape the data (new cube of size nside)
@@ -81,12 +82,15 @@ contains
     print*, "Compute mean and std spectrum"
     allocate(mean%q(dim_data(1)))
     allocate(mean%u(dim_data(1)))
+    allocate(mean%p(dim_data(1)))
 
     call mean_spectrum(data%q, mean%q, dim_data(1), dim_data(2), dim_data(3))    
     call mean_spectrum(data%u, mean%u, dim_data(1), dim_data(2), dim_data(3))    
+    call mean_spectrum(data%p, mean%p, dim_data(1), dim_data(2), dim_data(3))    
 
     call reshape_up(data%q, cube%q, dim_data, dim_cube)
     call reshape_up(data%u, cube%u, dim_data, dim_cube)
+    call reshape_up(data%p, cube%p, dim_data, dim_cube)
     call reshape_noise_up(data%rms, cube%rms, dim_data, dim_cube)
     
     !Allocate memory for parameters grids
@@ -112,10 +116,12 @@ contains
        
        allocate(cube_mean%q(dim_cube(1), power, power))
        allocate(cube_mean%u(dim_cube(1), power, power))
+       allocate(cube_mean%p(dim_cube(1), power, power))
        allocate(cube_mean%rms(power, power))
        
        call mean_array(power, cube%q, cube_mean%q)
        call mean_array(power, cube%u, cube_mean%u)
+       call mean_array(power, cube%p, cube_mean%p)
        call mean_map(power, cube%rms, cube_mean%rms)                     
        
        if (n == 0) then
@@ -127,22 +133,17 @@ contains
           end do
 
           call init_spectrum(fit_params(:,1,1), mean, dim_cube(1))
-          stop
-       !    print*,  "Update level", n
-       !    call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
        end if
                      
        if (n > 0 .and. n < nside) then          
           ! Update parameters 
           print*,  "Update level", n, ">", power
-          ! call update(cube_mean, fit_params, b_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
-          !      lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, &
-          !      m, kernel, iprint, cube_mean%rms, lym, c_lym)        
-          
+          call update(cube_mean, fit_params, dim_cube(1), power, power, cube_mean%rms, kernel)                  
        end if
        
        deallocate(cube_mean%q)
        deallocate(cube_mean%u)
+       deallocate(cube_mean%p)
        deallocate(cube_mean%rms)
        
        ! Save grid in file
@@ -179,9 +180,7 @@ contains
     print*, "Start updating last level."
     print*, " "
         
-    ! call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-    !      lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
-    !      kernel, iprint, data%rms, lym, c_lym)       
+    call update(data, grid_params, dim_cube(1), dim_data(2), dim_data(3), data%rms, kernel)                  
     
     print*, " "
     print*, "_____ Write output file _____"
