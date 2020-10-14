@@ -8,14 +8,14 @@
    ,params%fileout = 'fileout_run_0.dat'           
    ,params%timeout = 'timestep.dat'             
 
-   ,params%n = 2
+   ,params%n = 4
    ,params%n_rmsf = 4
 
    ,params%amp_init = 1.d0     
    ,params%mu_init = 0.d0 
 
    ,params%lambda_amp = 1.d0       
-   ,params%lambda_mu = 1.d0	
+   ,params%lambda_mu = 100.d0	
 
    ,params%lb_amp = 0.d0      
    ,params%ub_amp = 100.d0         					
@@ -26,10 +26,10 @@
    ,params%freq_max = 200  !! MHz
    ,params%freq_step = 0.1 !! MHz
 
-   ,params%crpix3 = -149
-   ,params%crval3 = -50
+   ,params%crpix3 = 0   !-149
+   ,params%crval3 = -25.25    !-50
    ,params%cdelt3 = 0.25
-   ,params%rm_n = 100     !201
+   ,params%rm_n = 201     !100
 
    ,params%maxiter_init = 15000         !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
    ,params%maxiter = 800                !! max iteration for L-BFGS-B alogorithm

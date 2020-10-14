@@ -144,9 +144,9 @@ contains
     write(unit,fmt=*) "#ub_mu = ", params%ub_mu
 
     write(unit,fmt=*) "# "
-    write(unit,fmt=*) "freq_min = ", params%freq_min
-    write(unit,fmt=*) "freq_max = ", params%freq_max
-    write(unit,fmt=*) "freq_step = ", params%freq_step
+    write(unit,fmt=*) "#freq_min = ", params%freq_min
+    write(unit,fmt=*) "#freq_max = ", params%freq_max
+    write(unit,fmt=*) "#freq_step = ", params%freq_step
 
     write(unit,fmt=*) "# "
     write(unit,fmt=*) "#maxiter_init = ", params%maxiter_init

@@ -61,7 +61,7 @@ contains
     do while(task(1:2).eq.'FG'.or. task.eq.'NEW_X' .or. task.eq.'START') 
        
        !     This is the call to the L-BFGS-B code.
-       call setulb (n, m, x, lb, ub, nbd, f, g, factr, pgtol, wa, iwa, task, params%iprint, csave, lsave, isave, dsave)
+       call setulb (n, m, x, lb, ub, nbd, f, g, factr, pgtol, wa, iwa, task, iprint, csave, lsave, isave, dsave)
        
        if (task(1:2) .eq. 'FG') then          
           !     Compute function f and gradient g for the sample problem.

@@ -18,8 +18,8 @@ contains
   subroutine get_data()
     implicit none
     
-    call read_cube(params%filename_q, data%q)
-    call read_cube(params%filename_u, data%u)
+    ! call read_cube(params%filename_q, data%q)
+    ! call read_cube(params%filename_u, data%u)
     call read_cube(params%filename_p, data%p)
     call read_map(params%filename_noise, data%rms)
     call read_array(params%filename_coeff, coeff)

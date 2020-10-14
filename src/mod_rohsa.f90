@@ -55,7 +55,7 @@ contains
     kernel(3,2) = -0.25_xp
     kernel(3,3) = 0._xp
         
-    dim_data = shape(data%q)
+    dim_data = shape(data%p)
     
     write(*,*) "dim_v, dim_y, dim_x = ", dim_data
     write(*,*) ""
@@ -68,8 +68,8 @@ contains
     call dim_data2dim_cube(nside, dim_data, dim_cube)
     
     !Allocate memory for cube
-    allocate(cube%q(dim_cube(1), dim_cube(2), dim_cube(3)))
-    allocate(cube%u(dim_cube(1), dim_cube(2), dim_cube(3)))
+    ! allocate(cube%q(dim_cube(1), dim_cube(2), dim_cube(3)))
+    ! allocate(cube%u(dim_cube(1), dim_cube(2), dim_cube(3)))
     allocate(cube%p(dim_cube(1), dim_cube(2), dim_cube(3)))
     allocate(cube%rms(dim_cube(2), dim_cube(3)))
     
@@ -80,16 +80,16 @@ contains
     print*, " "
     
     print*, "Compute mean and std spectrum"
-    allocate(mean%q(dim_data(1)))
-    allocate(mean%u(dim_data(1)))
+    ! allocate(mean%q(dim_data(1)))
+    ! allocate(mean%u(dim_data(1)))
     allocate(mean%p(dim_data(1)))
 
-    call mean_spectrum(data%q, mean%q, dim_data(1), dim_data(2), dim_data(3))    
-    call mean_spectrum(data%u, mean%u, dim_data(1), dim_data(2), dim_data(3))    
+    ! call mean_spectrum(data%q, mean%q, dim_data(1), dim_data(2), dim_data(3))    
+    ! call mean_spectrum(data%u, mean%u, dim_data(1), dim_data(2), dim_data(3))    
     call mean_spectrum(data%p, mean%p, dim_data(1), dim_data(2), dim_data(3))    
 
-    call reshape_up(data%q, cube%q, dim_data, dim_cube)
-    call reshape_up(data%u, cube%u, dim_data, dim_cube)
+    ! call reshape_up(data%q, cube%q, dim_data, dim_cube)
+    ! call reshape_up(data%u, cube%u, dim_data, dim_cube)
     call reshape_up(data%p, cube%p, dim_data, dim_cube)
     call reshape_noise_up(data%rms, cube%rms, dim_data, dim_cube)
     
@@ -114,13 +114,13 @@ contains
     do n=0,nside-1
        power = 2**n
        
-       allocate(cube_mean%q(dim_cube(1), power, power))
-       allocate(cube_mean%u(dim_cube(1), power, power))
+       ! allocate(cube_mean%q(dim_cube(1), power, power))
+       ! allocate(cube_mean%u(dim_cube(1), power, power))
        allocate(cube_mean%p(dim_cube(1), power, power))
        allocate(cube_mean%rms(power, power))
        
-       call mean_array(power, cube%q, cube_mean%q)
-       call mean_array(power, cube%u, cube_mean%u)
+       ! call mean_array(power, cube%q, cube_mean%q)
+       ! call mean_array(power, cube%u, cube_mean%u)
        call mean_array(power, cube%p, cube_mean%p)
        call mean_map(power, cube%rms, cube_mean%rms)                     
        
@@ -141,8 +141,8 @@ contains
           call update(cube_mean, fit_params, dim_cube(1), power, power, cube_mean%rms, kernel)                  
        end if
        
-       deallocate(cube_mean%q)
-       deallocate(cube_mean%u)
+       ! deallocate(cube_mean%q)
+       ! deallocate(cube_mean%u)
        deallocate(cube_mean%p)
        deallocate(cube_mean%rms)
        
