@@ -23,6 +23,7 @@ contains
     call read_cube(params%filename_p, data%p)
     call read_map(params%filename_noise, data%rms)
     call read_array(params%filename_coeff, coeff)
+    call read_array(params%filename_init, init)
     
   end subroutine get_data
 

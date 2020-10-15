@@ -133,6 +133,8 @@ contains
           end do
 
           call init_spectrum(fit_params(:,1,1), mean, dim_cube(1))
+          ! print*, fit_params(:,1,1)
+          ! stop
        end if
                      
        if (n > 0 .and. n < nside) then          

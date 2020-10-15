@@ -19,6 +19,7 @@ module mod_constants
   real(xp), parameter, public :: thomson = 6.6524587158e-25_xp !thomson cross-section in cgs
 
   real(xp), dimension(:), allocatable :: coeff
+  real(xp), dimension(:), allocatable :: init
 
   type parameters
      integer  :: n, n_rmsf
@@ -47,7 +48,8 @@ module mod_constants
      logical  :: noise, save_grid
 
      character(len=512) :: filename_q, filename_u, filename_p
-     character(len=512) :: fileout, timeout, filename_noise, filename_coeff
+     character(len=512) :: fileout, timeout, filename_noise
+     character(len=512) :: filename_coeff, filename_init
   end type parameters
 
   type indata

@@ -227,9 +227,12 @@ contains
           x(p) = pars(p);
        end do
        
-       loc_min = int(minloc(residual, dim_v))
-       x(1+(2*(i-1))) = line%p(loc_min) * 0.666
-       x(2+(2*(i-1))) = rm(loc_min)
+       ! loc_min = int(minloc(residual, dim_v))
+       ! x(1+(2*(i-1))) = line%p(loc_min) * 0.666
+       ! x(2+(2*(i-1))) = rm(loc_min)
+
+       x(1+(2*(i-1))) = init(1+(2*(i-1)))
+       x(2+(2*(i-1))) = init(2+(2*(i-1)))
        
        call minimize_spec(2*i, params%m, x, lb, ub, line, dim_v, params%maxiter_init, params%iprint_init, i)
        
