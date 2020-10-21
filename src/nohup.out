@@ -1,0 +1,101 @@
+ -------------------------------------------------------------------------
+20 October 2020   9:25:43.854 PM
+ 
+   ____     ___    _   _   ____       _    
+  |  _ \   / _ \  | | | | / ___|     / \   
+  | |_) | | | | | | |_| | \___ \    / _ \  
+  |  _ <  | |_| | |  _  |  ___) |  / ___ \ 
+  |_| \_\  \___/  |_| |_| |____/  /_/   \_\ 
+ 
+  Version 1.2.1
+  ROHSA is released as open source code
+  Check out the documentation: https://antoinemarchal.github.io/ROHSA/
+ 
+ run: ./ROHSA parameters.txt
+ -------------------------------------------------------------------------
+ largest Faraday scale =    1.2486251410156561      rad/m2
+ 
+ filename_q = 'cube_q.dat'
+ filename_u = 'cube_u.dat'
+ filename_p = 'cube_p.dat'
+ fileout = 'fileout_run_0_LOFAR.dat'
+ timeout = 'timestep.dat'
+  
+ ______Parameters_____
+ n =            3
+ n_rmsf =            4
+ lambda_amp =    1.0000000000000000     
+ lambda_mu =    1000.0000000000000     
+  
+ amp_init =    1.0000000000000000     
+ mu_init =    0.0000000000000000     
+  
+ lb_amp =    0.0000000000000000     
+ ub_amp =    100.00000000000000     
+ lb_mu =   -150.00000000000000     
+ ub_mu =    150.00000000000000     
+  
+ freq_min =    115.00000000000000     
+ freq_max =    189.00000000000000     
+ freq_step =   0.10000000000000001     
+  
+ maxiter_init =        15000
+ maxiter =          800
+ lstd =            1
+ ustd =           10
+ noise =  F
+ save_grid =  F
+  
+ dim_v, dim_y, dim_x =          201         256         256
+ 
+ number of los =        65536
+ nside =            8
+  
+ Reshape cube, new dimensions :
+ dim_v, dim_y, dim_x =          201         256         256
+  
+ Compute mean and std spectrum
+                     Start iteration
+  
+ Start hierarchical descent
+ Init mean spectrum
+  
+ Interpolate parameters level            0
+ Update level           1 >           2
+  
+ Interpolate parameters level            1
+ Update level           2 >           4
+  
+ Interpolate parameters level            2
+ Update level           3 >           8
+  
+ Interpolate parameters level            3
+ Update level           4 >          16
+  
+ Interpolate parameters level            4
+ Update level           5 >          32
+  
+ Interpolate parameters level            5
+ Update level           6 >          64
+  
+ Interpolate parameters level            6
+ Update level           7 >         128
+  
+ Interpolate parameters level            7
+  
+ Reshape cube, restore initial dimensions :
+ dim_v, dim_y, dim_x =          201         256         256
+  
+ Start updating last level.
+  
+  
+ _____ Write output file _____
+  
+         201
+ ##################################################################
+21 October 2020   5:04:42.673 AM
+  Terminate
+                         ROHSA ALGORITHM
+ 
+ ##################################################################
+Time = ****** seconds.
