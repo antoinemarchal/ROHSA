@@ -3,13 +3,13 @@
    ,params%filename_u = 'cube_u.dat'                  
    ,params%filename_p = 'cube_p.dat'                  
    ,params%filename_noise = 'rms.dat'          
-   ,params%filename_coeff = 'coeff_LOFAR.dat'          
-   ,params%filename_init = 'init_pars_LOFAR.dat'          
+   ,params%filename_coeff = 'coeff.dat'          
+   ,params%filename_init = 'init_pars.dat'          
 
-   ,params%fileout = 'fileout_run_0_LOFAR.dat'           
+   ,params%fileout = 'fileout_run_0.dat'           
    ,params%timeout = 'timestep.dat'             
 
-   ,params%n = 3
+   ,params%n = 2
    ,params%n_rmsf = 4
 
    ,params%amp_init = 1.d0     
@@ -19,18 +19,18 @@
    ,params%lambda_mu = 1000.d0	
 
    ,params%lb_amp = 0.d0      
-   ,params%ub_amp = 100.d0         					
+   ,params%ub_amp = 300.d0         					
    ,params%lb_mu = -150.d0         						
-   ,params%ub_mu = 150.d0         										
-
+   ,params%ub_mu = 150.d0        
+			
    ,params%freq_min = 115  !! MHz
-   ,params%freq_max = 189  !! MHz
-   ,params%freq_step = 0.1 !! MHz
+   ,params%freq_max = 150  !! MHz
+   ,params%freq_step = 0.183 !! MHz
 
-   ,params%crpix3 = 0
-   ,params%crval3 = -25.25
+   ,params%crpix3 = -149
+   ,params%crval3 = -50
    ,params%cdelt3 = 0.25
-   ,params%rm_n = 201
+   ,params%rm_n = 100
 
    ,params%maxiter_init = 15000         !! max iteration for L-BFGS-B alogorithm (init mean spectrum)
    ,params%maxiter = 800                !! max iteration for L-BFGS-B alogorithm
@@ -38,7 +38,7 @@
    ,params%lstd = 1                	!! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
    ,params%ustd = 10                    !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
    ,params%noise = .false.
-   ,params%iprint = -1                   !! print option 
+   ,params%iprint = -1                  !! print option 
    ,params%iprint_init = -1             !! print option init
    ,params%save_grid = .false.     	!! if true --> save fitted parameters at each iteration of the multiresolution process
    /
