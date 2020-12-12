@@ -325,30 +325,37 @@ contains
             (/ 3*n_gauss, dim_data(2), dim_data(3)/))       
 
        else
-          allocate(guess_spect(3*(n_gauss+n_gauss_add)))
-          if (init_option .eq. "mean") then
-             print*, "Use of the mean spectrum to initialize each los"
-             call init_spectrum(n_gauss, guess_spect, dim_cube(1), mean_spect, amp_fact_init, sig_init, &
-                  lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
-          else if (init_option .eq. "std") then
-             print*, "Use of the std spectrum to initialize each los"
-             call init_spectrum(n_gauss, guess_spect, dim_cube(1), std_spect, amp_fact_init, sig_init, &
-                  lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
-          else if (init_option .eq. "max") then
-             print*, "Use of the max spectrum to initialize each los"
-             call init_spectrum(n_gauss, guess_spect, dim_cube(1), max_spect, amp_fact_init, sig_init, &
-                  lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
-          else if (init_option .eq. "maxnorm") then
-             print*, "Use of the std spectrum to initialize each los"
-             call init_spectrum(n_gauss, guess_spect, dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
-                  lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
-          else
-             print*, "init_option keyword should be 'mean' or 'std' or 'max'"
-             stop
-          end if
-          call init_grid_params(grid_params, guess_spect, dim_data(2), dim_data(3))
+          do j=1, dim_data(2)
+             do i=1, dim_data(3)
+                   call init_spectrum_max(n_gauss, grid_params(:,i,j), dim_cube(1), data(:,i,j), amp_fact_init, sig_init, &
+                        lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+             end do
+          end do
+          ! allocate(guess_spect(3*(n_gauss+n_gauss_add)))
+          ! if (init_option .eq. "mean") then
+          !    print*, "Use of the mean spectrum to initialize each los"
+          !    call init_spectrum(n_gauss, guess_spect, dim_cube(1), mean_spect, amp_fact_init, sig_init, &
+          !         lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+          ! else if (init_option .eq. "std") then
+          !    print*, "Use of the std spectrum to initialize each los"
+          !    call init_spectrum(n_gauss, guess_spect, dim_cube(1), std_spect, amp_fact_init, sig_init, &
+          !         lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+          ! else if (init_option .eq. "max") then
+          !    print*, "Use of the max spectrum to initialize each los"
+          !    call init_spectrum(n_gauss, guess_spect, dim_cube(1), max_spect, amp_fact_init, sig_init, &
+          !         lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+          ! else if (init_option .eq. "maxnorm") then
+          !    print*, "Use of the std spectrum to initialize each los"
+          !    call init_spectrum(n_gauss, guess_spect, dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
+          !         lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+          ! else
+          !    print*, "init_option keyword should be 'mean' or 'std' or 'max'"
+          !    stop
+          ! end if
+          ! call init_grid_params(grid_params, guess_spect, dim_data(2), dim_data(3))
 
-          deallocate(guess_spect)      
+          ! deallocate(guess_spect) 
+          
     end if
     
     !Update last level
@@ -368,18 +375,6 @@ contains
        call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
             lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
             kernel, iprint, std_map, lym, c_lym)
-       
-       if (n_gauss_add .ne. 0) then !FIXME KEYWORD
-          do l=1,n_gauss_add
-             ! Add new Gaussian if at least one reduced chi square of the field is > 1 
-             call init_new_gauss(data, grid_params, std_map, n_gauss, dim_data(1), dim_data(2), dim_data(3), amp_fact_init, &
-                  sig_init)
-             call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
-                  lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
-                  kernel, iprint, std_map, lym, c_lym)
-          end do
-       end if
-
     end if
     
     print*, " "

@@ -12,7 +12,7 @@ module mod_functions
   
   public :: mean_array, mean_map, dim2nside, dim_data2dim_cube, reshape_up, reshape_down, go_up_level, init_spectrum, &
        upgrade, update, set_stdmap, std_spectrum, mean_spectrum, max_spectrum, init_grid_params, init_new_gauss, &
-       reshape_noise_up
+       reshape_noise_up, init_spectrum_max
 
 contains
     
@@ -250,6 +250,48 @@ contains
     enddo
   end subroutine init_spectrum
   
+
+  subroutine init_spectrum_max(n_gauss, params, dim_v, line, amp_fact_init, sig_init, lb_sig, ub_sig, maxiter, m, iprint)
+    !! Initialization of the mean sprectrum with N Gaussian
+    implicit none
+    
+    integer, intent(in) :: n_gauss !! number of Gaussian
+    integer, intent(in) :: dim_v !! dimension along v axis
+    integer, intent(in) :: maxiter !! Max number of iteration
+    integer, intent(in) :: m !! number of corrections used in the limited memory matrix by LBFGS-B
+    integer, intent(in) :: iprint !! print option
+
+    real(xp), intent(in), dimension(dim_v) :: line !! spectrum
+    real(xp), intent(in) :: amp_fact_init !! times max amplitude of additional Gaussian
+    real(xp), intent(in) :: sig_init !! dispersion of additional Gaussian
+    real(xp), intent(in) :: lb_sig !! lower bound sigma
+    real(xp), intent(in) :: ub_sig !! upper bound sigma
+
+    real(xp), intent(inout), dimension(3*n_gauss)  :: params !! params to optimize
+
+    integer :: i, j, k, p
+    real(xp) :: max_line
+    integer :: max_loc
+
+    max_line = 0._xp
+    max_loc = 0
+
+    max_loc = maxloc(line, dim_v)
+    max_line = maxval(line)
+        
+    do i=1, n_gauss      
+       params(2+(3*(i-1))) = max_loc
+       if (i .eq. 1) then
+          params(3+(3*(i-1))) = 1._xp;
+          params(1+(3*(i-1))) = max_line * amp_fact_init
+       else
+          params(3+(3*(i-1))) = 8._xp;          
+          params(1+(3*(i-1))) = 0.5 * max_line * amp_fact_init
+       end if
+     end do
+    
+  end subroutine init_spectrum_max
+
 
   subroutine init_bounds(line, n_gauss, dim_v, lb, ub, lb_sig, ub_sig)
     !! Initialize parameters bounds for optimization
