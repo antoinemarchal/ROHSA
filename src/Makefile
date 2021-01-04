@@ -10,7 +10,7 @@ GFLAGS= -O2 -I/usr/local/include -ffixed-line-length-none #-fbounds-check
 CFLAGS= -lm -g -O2 #-lcfitsio -openmp -llapack
 # -L/Users/antoinemarchal/mylib/cfitsio-master
 
-OUT=ROHSA
+OUT=ROHSA-3D
 
 all: blas.o lbfgsb.o linpack.o timer.o mod_constants.o mod_convert.o mod_inout.o mod_array.o mod_optimize.o mod_optimize_lym.o mod_minimize.o mod_functions.o mod_start.o mod_rohsa.o main.o
 	$(FC) $^ $(CFLAGS) -o $(OUT)
