@@ -8,21 +8,21 @@ module mod_inout
   
   private
   
-  public :: read_cube, read_map, read_parameters, save_process
+  public :: read_cube, read_output, read_map, read_parameters, save_process
 
 contains
   
   subroutine read_parameters(filename_parameters, filename, fileout, timeout, filename_noise, n_gauss, &
-       n_gauss_add, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, &
+       lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, &
        amp_fact_init, sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, noise, &
-       regul, descent, lstd, ustd, iprint, iprint_init, save_grid, lym)
+       regul, descent, lstd, ustd, iprint, iprint_init, save_grid, lym, init_grid, fileinit)
     implicit none
 
     integer :: ios=0
 
     character(len=512), intent(in) :: filename_parameters
 
-    integer, intent(inout) :: n_gauss, n_gauss_add
+    integer, intent(inout) :: n_gauss
     integer, intent(inout) :: m 
     integer, intent(inout) :: lstd, ustd
     integer, intent(inout) :: iprint, iprint_init
@@ -35,17 +35,19 @@ contains
     real(xp), intent(inout) :: lb_sig_init, lb_sig
     logical, intent(inout) :: noise, regul, descent, save_grid
     logical, intent(inout) :: lym
+    logical, intent(inout) :: init_grid
 
     character(len=512), intent(inout) :: filename
     character(len=512), intent(inout) :: fileout
     character(len=512), intent(inout) :: timeout
     character(len=512), intent(inout) :: filename_noise
     character(len=8), intent(inout) :: init_option
+    character(len=512), intent(inout) :: fileinit
 
-    namelist /user_parameters/ filename, fileout, timeout, filename_noise, n_gauss, n_gauss_add, lambda_amp, lambda_mu, &
+    namelist /user_parameters/ filename, fileout, timeout, filename_noise, n_gauss, lambda_amp, lambda_mu, &
          lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, amp_fact_init, sig_init, lb_sig_init, &
          ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, &
-         iprint_init, save_grid, lym
+         iprint_init, save_grid, lym, init_grid, fileinit
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
     if (ios /= 0) stop "opening file error"
@@ -81,6 +83,33 @@ contains
     
     close(11)
   end subroutine read_cube
+
+
+  subroutine read_output(filename, cube, n_gauss, dim_data)
+    implicit none
+    integer, intent(in) :: n_gauss
+    character(len=512), intent(in) :: filename
+    integer, intent(in), dimension(3) :: dim_data !! dimension of original data
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: cube
+
+    integer           :: ios=0, i, j, k
+    integer           :: y, x 
+
+    open(unit=11, file=filename, action="read", status="old", iostat=ios)
+    if (ios /= 0) stop "opening file error"
+    
+    allocate(cube(3*n_gauss,dim_data(2),dim_data(3)))
+
+    do i=1, dim_data(2)
+       do j=1, dim_data(3)
+          do k=1, n_gauss
+             read(11,fmt=*) y, x, cube(1+((k-1)*3),i,j), cube(2+((k-1)*3),i,j), cube(3+((k-1)*3),i,j)
+          enddo
+       enddo
+    enddo
+    
+    close(11)
+  end subroutine read_output
 
   
   subroutine read_map(filename, map)
