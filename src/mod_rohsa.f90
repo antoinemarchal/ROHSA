@@ -272,6 +272,7 @@ contains
                 if (noise .eqv. .true.) then
                    call reshape_up(std_data, std_cube, dim_data, dim_cube)
                    call mean_array(power, std_cube, std_map)           
+                   std_map = std_map / sqrt(real(2**(2*(nside-n)),xp))
                 else
                    print*, "no noise = .false. in this branch"
                    stop
