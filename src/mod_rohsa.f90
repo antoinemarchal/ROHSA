@@ -286,7 +286,7 @@ contains
                    if (noise .eqv. .true.) then
                       call reshape_noise_up(std_data, std_cube, dim_data, dim_cube)
                       call mean_map(power, std_cube, std_map) 
-                      std_map = std_map / sqrt(real(2**(2*(nside-n)),xp))
+                      ! std_map = std_map / sqrt(real(2**(2*(nside-n)),xp))
                    else
                       call set_stdmap(std_map, cube_mean, lstd, ustd)
                    end if
