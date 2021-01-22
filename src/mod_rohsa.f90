@@ -72,6 +72,7 @@ contains
     real(xp), dimension(:,:,:), allocatable :: grid_params     !! parameters to optimize at final step (dim of initial cube)
     real(xp), dimension(:,:,:), allocatable :: std_cube          !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:,:,:), allocatable :: std_map           !! standard deviation map fo the cube computed by ROHSA with lb and ub
+    real(xp), dimension(:,:,:), allocatable :: std_map_2           !! standard deviation map fo the cube computed by ROHSA with lb and ub
     real(xp), dimension(:), allocatable :: b_params            !! unknow average sigma
     real(xp), dimension(:), allocatable :: std_spect           !! std spectrum of the observation
     real(xp), dimension(:), allocatable :: max_spect           !! max spectrum of the observation
@@ -271,8 +272,8 @@ contains
                 
                 if (noise .eqv. .true.) then
                    call reshape_up(std_data, std_cube, dim_data, dim_cube)
-                   call mean_array(power, std_cube, std_map)           
-                   ! std_map = std_map / sqrt(real(2**(2*(nside-n)),xp)) !FALSE not a white noise
+                   call sum_array_square(power, std_cube, std_map)
+                   std_map = sqrt(std_map) / real(2**(2*(nside-n)),xp)
                 else
                    print*, "no noise = .false. in this branch"
                    stop

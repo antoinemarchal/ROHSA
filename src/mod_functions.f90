@@ -10,9 +10,9 @@ module mod_functions
 
   private
   
-  public :: mean_array, mean_map, dim2nside, dim_data2dim_cube, reshape_up, reshape_down, go_up_level, init_spectrum, &
-       upgrade, update, set_stdmap, std_spectrum, mean_spectrum, max_spectrum, init_grid_params, init_new_gauss, &
-       reshape_noise_up
+  public :: mean_array, sum_array_square, mean_map, dim2nside, dim_data2dim_cube, reshape_up, reshape_down, go_up_level, &
+       init_spectrum, upgrade, update, set_stdmap, std_spectrum, mean_spectrum, max_spectrum, init_grid_params, &
+       init_new_gauss, reshape_noise_up
 
 contains
     
@@ -122,6 +122,38 @@ contains
 
     deallocate(spectrum)
   end subroutine mean_array
+
+
+  subroutine sum_array_square(nside, cube, cube_mean)
+    !! Average cube along spatial axis depending on level n 
+    implicit none
+
+    integer, intent(in) :: nside !! nside of the cube
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: cube_mean !! average cube
+
+    integer :: i, j, k, l, n
+    real(xp), dimension(:), allocatable :: spectrum
+
+    allocate(spectrum(size(cube,dim=1)))
+    spectrum = 0.
+    
+    n = size(cube, dim=2) / nside
+
+    do i=1,size(cube_mean,dim=2)
+       do j=1,size(cube_mean,dim=3)
+          do k=1,n
+             do l=1,n
+                spectrum = spectrum + cube(:,k+((i-1)*n),l+((j-1)*n))**2._xp
+             enddo
+          enddo
+          cube_mean(:,i,j) = spectrum
+          spectrum = 0.
+       enddo
+    enddo
+
+    deallocate(spectrum)
+  end subroutine sum_array_square
 
   
   subroutine mean_map(nside, map, map_mean)
