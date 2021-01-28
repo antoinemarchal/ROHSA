@@ -5,10 +5,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
 
-plt.ion()
-cm = plt.get_cmap('inferno')
-cm.set_bad(color='black')
-imkw = dict(origin='lower', interpolation='none', cmap=cm)
+# plt.ion()
+# cm = plt.get_cmap('inferno')
+# cm.set_bad(color='black')
+# imkw = dict(origin='lower', interpolation='none', cmap=cm)
 
 class ROHSA(object):
     def __init__(self, cube, hdr=None, filename=None):
@@ -16,7 +16,26 @@ class ROHSA(object):
         self.cube = cube
         self.hdr = hdr if hdr is not None else None
         self.filename = filename if filename is not None else "cube.fits"
-        if self.hdr is not None : self.v = self.mean2vel(self.hdr["CRVAL3"]*1.e-3, self.hdr["CDELT3"]*1.e-3, self.hdr["CRPIX3"], np.arange(self.cube.shape[0]))
+        if self.hdr is not None : 
+            dv = self.hdr["CDELT3"] / 1000.
+            crval = self.hdr["CRVAL3"] / 1000.
+            ctype = self.hdr["CTYPE3"]
+            crpix = self.hdr["CRPIX3"] - 1
+            
+            naxis = cube.shape[0]
+            
+            x = np.arange(naxis)
+            if ctype == 'FELO-LSR':
+                clight = 2.99792458e5 # km/s                                                                                                                                                     
+                restfreq = self.hdr['RESTFREQ']
+                crval2 = restfreq/(crval/clight + 1)
+                df = -dv*crval2**2/(clight*restfreq)                
+                f = (x-crpix)*df+crval2                
+                self.v = clight*(restfreq - f)/f #optical definition
+                # v = clight*(restfreq - f) / restfreq  #if keyword_set(radio) then begin      
+            else:
+                self.v = (x-crpix)*dv+crval
+                # self.v = self.mean2vel(self.hdr["CRVAL3"]*1.e-3, self.hdr["CDELT3"]*1.e-3, self.hdr["CRPIX3"]-1, np.arange(self.cube.shape[0]))
 
 
     def cube2dat(self, filename=None):
@@ -46,12 +65,26 @@ class ROHSA(object):
                     line = '{:d}\t{:d}\t{:0.16f}\n'.format(k, j, rms_map[k,j])
                     f.write(line)
 
+
+    def array2dat(self, array, filename=None):
+        if not filename :
+            print("Generate array.dat file")
+        else: print("Generate " + filename + " file")
+
+        filename = filename or "myarray.dat"
         
-    def gen_parameters(self, filename_parameters=None, filename=None, fileout="result.dat", timeout="timestep.dat", filename_noise="", n_gauss=3, lambda_amp=1000, 
-                       lambda_mu=1000, lambda_sig=1000, lambda_var_amp=0, lambda_var_mu=0, lambda_var_sig=1000, lambda_lym_sig=0, amp_fact_init=0.66, sig_init = 4., 
-                       lb_sig_init=1., ub_sig_init=100., lb_sig=0.001, ub_sig=100., init_option="mean", maxiter_init=15000, maxiter=800, m=10, 
-                       noise=".false.", regul = ".true.", descent = ".true.", lstd = 1, ustd = 20, iprint = -1, iprint_init = -1, 
-                       save_grid=".true.", lym=".false."):
+        with open(filename,'w+') as f:
+            f.write('{:d}\n'.format(len(array)))
+            for k in range(len(array)):
+                line = '{:0.16f}\n'.format(array[k])
+                f.write(line)
+
+        
+    def gen_parameters(self, filename_parameters=None, filename=None, fileout="result.dat", timeout="timestep.dat", filename_noise="", filename_init_spec="", 
+                       n_gauss=3, lambda_amp=1000, lambda_mu=1000, lambda_sig=1000, lambda_var_amp=0, lambda_var_mu=0, lambda_var_sig=1000, lambda_lym_sig=0, 
+                       amp_fact_init=0.66, sig_init = 4., lb_sig_init=1., ub_sig_init=100., lb_sig=0.001, ub_sig=100., init_option="mean", maxiter_init=15000, 
+                       maxiter=800, m=10, noise=".false.", regul = ".true.", descent = ".true.", lstd = 1, ustd = 20, iprint = -1, iprint_init = -1, 
+                       save_grid=".true.", lym=".false.", init_spec=".false."):
 
         if not filename : 
             print("Need an input filename")
@@ -69,6 +102,7 @@ class ROHSA(object):
         input_file.write("    ,fileout =  "+repr(fileout)+'\n')
         input_file.write("    ,timeout =  "+repr(timeout)+'\n')
         input_file.write("    ,filename_noise =  "+repr(filename_noise)+'\n')
+        input_file.write("    ,filename_init_spec =  "+repr(filename_init_spec)+'\n')
         input_file.write("    ,n_gauss =  "+repr(n_gauss)+'\n')
         input_file.write("    ,lambda_amp =  "+repr(lambda_amp)+'d0'+'\n')
         input_file.write("    ,lambda_mu =  "+repr(lambda_mu)+'d0'+'\n')
@@ -96,6 +130,7 @@ class ROHSA(object):
         input_file.write("    ,iprint_init =  "+repr(iprint_init)+'\n')
         input_file.write("    ,save_grid =  "+save_grid+'\n')
         input_file.write("    ,lym =  "+lym+'\n')
+        input_file.write("    ,init_spec =  "+init_spec+'\n')
         input_file.write("    /"+'\n')
         input_file.close()
 
@@ -144,7 +179,7 @@ class ROHSA(object):
         output = np.zeros(gaussian.shape)
         if self.hdr is not None :
             output[0::3] = gaussian[0::3]
-            output[1::3] = self.mean2vel(self.hdr["CRVAL3"]*1.e-3, self.hdr["CDELT3"]*1.e-3, self.hdr["CRPIX3"], gaussian[1::3])
+            output[1::3] = self.mean2vel(self.hdr["CRVAL3"]*1.e-3, self.hdr["CDELT3"]*1.e-3, self.hdr["CRPIX3"]-1, gaussian[1::3])
             output[2::3] = gaussian[2::3] * np.abs(self.hdr["CDELT3"])*1.e-3
             return output
         else:
@@ -172,7 +207,7 @@ class ROHSA(object):
 
         if self.hdr is not None :
             if not self.hdr["CRVAL3"] : print("Missing CRVAL3 keyword")
-            v = self.mean2vel(self.hdr["CRVAL3"]*1.e-3, self.hdr["CDELT3"]*1.e-3, self.hdr["CRPIX3"], x)
+            v = self.mean2vel(self.hdr["CRVAL3"]*1.e-3, self.hdr["CDELT3"]*1.e-3, self.hdr["CRPIX3"]-1, x)
             if v[0] > v[1] : v = v[::-1]
             ax.step(v, self.cube[:,idy,idx], color='cornflowerblue')
             tot = np.zeros(self.cube.shape[0])

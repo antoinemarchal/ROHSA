@@ -9,7 +9,7 @@ with open('LICENSE') as f:
     
 setup(
     name='ROHSApy',
-    version='0.1.9',
+    version='0.2.2',
     description='python interface package for ROHSA software',
     long_description=readme,
     classifiers=[
@@ -18,8 +18,8 @@ setup(
         'Programming Language :: Python',
         'Topic :: Data Analysis'
     ],
-    author='Antoine Marchal and Joshua Peek',
-    author_email='antoine.marchal@ias.u-psud.fr',
+    author='Antoine Marchal',
+    author_email='amarchal@cita.utoronto.ca',
     url='https://github.com/antoinemarchal/ROHSA',
     license=license,
     packages=find_packages(exclude=('tests', 'docs')),

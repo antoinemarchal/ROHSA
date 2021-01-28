@@ -8,14 +8,14 @@ module mod_inout
   
   private
   
-  public :: read_cube, read_map, read_parameters, save_process
+  public :: read_cube, read_map, read_array, read_parameters, save_process
 
 contains
   
-  subroutine read_parameters(filename_parameters, filename, fileout, timeout, filename_noise, n_gauss, &
+  subroutine read_parameters(filename_parameters, filename, fileout, timeout, filename_noise, filename_init_spec, n_gauss, &
        n_gauss_add, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, &
        amp_fact_init, sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, noise, &
-       regul, descent, lstd, ustd, iprint, iprint_init, save_grid, lym)
+       regul, descent, lstd, ustd, iprint, iprint_init, save_grid, lym, init_spec)
     implicit none
 
     integer :: ios=0
@@ -34,18 +34,19 @@ contains
     real(xp), intent(inout) :: ub_sig_init, ub_sig
     real(xp), intent(inout) :: lb_sig_init, lb_sig
     logical, intent(inout) :: noise, regul, descent, save_grid
-    logical, intent(inout) :: lym
+    logical, intent(inout) :: lym, init_spec
 
     character(len=512), intent(inout) :: filename
     character(len=512), intent(inout) :: fileout
     character(len=512), intent(inout) :: timeout
     character(len=512), intent(inout) :: filename_noise
+    character(len=512), intent(inout) :: filename_init_spec
     character(len=8), intent(inout) :: init_option
 
-    namelist /user_parameters/ filename, fileout, timeout, filename_noise, n_gauss, n_gauss_add, lambda_amp, lambda_mu, &
-         lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, amp_fact_init, sig_init, lb_sig_init, &
-         ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, iprint, &
-         iprint_init, save_grid, lym
+    namelist /user_parameters/ filename, fileout, timeout, filename_noise, filename_init_spec, n_gauss, n_gauss_add, &
+         lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, amp_fact_init, &
+         sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, m, noise, regul, &
+         descent, lstd, ustd, iprint, iprint_init, save_grid, lym, init_spec
     
     open(unit=11, file=filename_parameters, status="old", iostat=ios)
     if (ios /= 0) stop "opening file error"
@@ -109,6 +110,31 @@ contains
     
     close(11)
   end subroutine read_map
+
+
+  subroutine read_array(filename, array)
+    implicit none
+    integer           :: ios=0, i
+    integer           :: nl
+    real(xp)          :: val
+    character(len=512), intent(in) :: filename
+    real(xp), intent(inout), dimension(:), allocatable :: array
+
+    open(unit=11, file=filename, action="read", status="old", iostat=ios)
+    if (ios /= 0) stop "opening file error"
+    
+    read(11,fmt=*) nl
+
+    allocate(array(nl))
+
+    do i=1,nl
+       read(11,fmt=*) val
+       array(i) = val
+    enddo
+    
+    close(11)
+  end subroutine read_array
+
   
   subroutine save_process(nside, n_gauss, grid, dim_yx, fileout)
     implicit none
