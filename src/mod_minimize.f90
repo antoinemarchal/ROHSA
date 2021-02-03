@@ -150,6 +150,8 @@ contains
           else
              call f_g_cube_fast(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
                   lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)
+             ! call f_g_cube_fast_new_var(f, g, cube, x, dim_v, dim_y, dim_x, n_gauss, kernel, lambda_amp, lambda_mu, lambda_sig, &
+             !      lambda_var_amp, lambda_var_mu, lambda_var_sig, std_map)
           end if
           
        elseif (task(1:5) .eq. 'NEW_X') then

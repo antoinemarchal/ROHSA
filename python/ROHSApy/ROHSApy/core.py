@@ -4,6 +4,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
+from scipy import optimize 
 
 # plt.ion()
 # cm = plt.get_cmap('inferno')
@@ -258,6 +259,144 @@ class ROHSA(object):
         hdulist = fits.HDUList([hdu])
         hdulist.writeto(fileout, overwrite=True)        
         return 0
+
+
+class fit_spec(object):
+    def __init__(self, Tb):
+        """
+        Joint fit emission and absoption spectra for GASKAP collaboration
+        author: A. Marchal
+        
+        Parameters
+        ----------
+        
+        Returns:
+        --------
+        """    
+        super(fit_spec, self).__init__()
+        self.Tb = Tb
+
+
+    def init_bounds_spectrum(self, n_gauss, lb_amp, ub_amp, lb_mu, ub_mu, lb_sig, ub_sig):
+        bounds_inf = np.zeros(3*n_gauss)
+        bounds_sup = np.zeros(3*n_gauss)
+        
+        bounds_inf[0::3] = lb_amp
+        bounds_inf[1::3] = lb_mu
+        bounds_inf[2::3] = lb_sig
+        
+        bounds_sup[0::3] = ub_amp
+        bounds_sup[1::3] = ub_mu
+        bounds_sup[2::3] = ub_sig
+        
+        return [(bounds_inf[i], bounds_sup[i]) for i in np.arange(len(bounds_sup))]
+
+
+    def f_g_spectrum(self, params, n_gauss, data, rms):
+        x = np.arange(data.shape[0])
+        
+        model = np.zeros(data.shape[0])
+        dF_over_dB = np.zeros((params.shape[0], data.shape[0]))
+        product = np.zeros((params.shape[0], data.shape[0]))
+        deriv = np.zeros((params.shape[0]))
+        
+        for k in np.arange(n_gauss):
+            model += self.gaussian(x, params[0+(k*3)], params[1+(k*3)], params[2+(k*3)])
+            
+            dF_over_dB[0+(k*3),:] += (1. 
+                                      * np.exp((-(x - params[1+(k*3)])**2)/(2.* (params[2+(k*3)])**2)))
+            dF_over_dB[1+(k*3),:] += (params[0+(k*3)] * (x - params[1+(k*3)]) / (params[2+(k*3)])**2 
+                                      * np.exp((-(x - params[1+(k*3)])**2)/(2.* (params[2+(k*3)])**2)))
+            dF_over_dB[2+(k*3),:] += (params[0+(k*3)] * (x - params[1+(k*3)])**2 / (params[2+(k*3)])**3 
+                                      * np.exp((-(x - params[1+(k*3)])**2)/(2.* (params[2+(k*3)])**2)))                
+    
+        F = (model - data) / rms
+                
+        for v in np.arange(data.shape[0]):
+            product[:,v] = dF_over_dB[:,v] * F[v]
+                        
+        deriv = np.sum(product, axis=1)
+        
+        J = 0.5*np.sum(F**2)
+        
+        return J, deriv.ravel()
+
+
+    def init_spectrum(self, params, n_gauss, data, lb_sig, ub_sig, 
+                      iprint, amp_fact_init, sig_init, maxiter, rms, vmin, vmax):
+
+        lb_amp = 0.
+        ub_amp = np.max(self.Tb)
+        lb_mu = 1
+        ub_mu = len(self.Tb)
+        mod = len(vmin)
+
+        for i in np.arange(n_gauss):
+            n = i+1
+            x = np.arange(data.shape[0])
+            # print(vmin[i%mod], vmax[i%mod])
+
+            #Bounds
+            bounds_inf = np.zeros(3*n)
+            bounds_sup = np.zeros(3*n)
+            
+            bounds_inf[0::3] = lb_amp
+            bounds_inf[2::3] = lb_sig
+            
+            bounds_sup[0::3] = ub_amp
+            bounds_sup[2::3] = ub_sig
+
+            for j in np.arange(n):
+                bounds_inf[1::3][j] = vmin[j%mod]
+                bounds_sup[1::3][j] = vmax[j%mod]
+            
+            bounds = [(bounds_inf[i], bounds_sup[i]) for i in np.arange(len(bounds_sup))]
+
+            model = np.zeros(data.shape[0])
+            
+            for k in np.arange(n):
+                model += self.gaussian(x, params[0+(k*3)], params[1+(k*3)], params[2+(k*3)])
+
+            residual = model - data
+            residual_vlim = model[vmin[i%mod]:vmax[i%mod]] - data[vmin[i%mod]:vmax[i%mod]]
+
+            F = np.zeros(model.shape)
+            F = residual / rms
+            
+            chi2 = np.sum(F**2)
+            rchi2 = chi2 / (len(model))
+
+            xx = np.zeros((3*n,1))
+            for p in np.arange(3*n):
+                xx[p] = params[p]
+                
+            # xx[1+(i*3)] = np.where(residual == np.min(residual))[0][0]   
+            xx[1+(i*3)] = np.where(residual_vlim == np.min(residual_vlim))[0][0] + vmin[i%mod]
+            xx[0+(i*3)] = data[int(xx[1+(i*3)])] * amp_fact_init
+            xx[2+(i*3)] = sig_init
+
+            result = optimize.fmin_l_bfgs_b(self.f_g_spectrum, xx, args=(n, data, rms), 
+                                        bounds=bounds, approx_grad=False, disp=iprint, maxiter=maxiter)
+    
+            for p in np.arange(3*n):
+                params[p] = result[0][p]
+            
+        return params
+
+
+    def gaussian(self, x, amp, mu, sig):
+        return amp * np.exp(-((x - mu)**2)/(2. * sig**2))
+
+
+    def model_spectrum(self, params, data, n_gauss):
+        x = np.arange(data.shape[0])
+        model = np.zeros(len(x))        
+        
+        for k in np.arange(n_gauss):
+            model += self.gaussian(x, params[0+(k*3)], params[1+(k*3)], params[2+(k*3)])
+
+        return model
+
                 
         
 if __name__ == '__main__':    
