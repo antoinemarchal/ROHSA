@@ -170,7 +170,7 @@ contains
           residual_1D = 0._xp
           call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v)
           residual(:,i,j) = residual_1D
-          if (SUM(std_map(:,i,j)) > 0._xp) then
+          if (ABS(std_map(1,i,j)) > 0._xp) then
              residual_noise = residual_1D / std_map(:,i,j)
              f = f + (myfunc_spec(residual_noise))
           end if
@@ -208,24 +208,24 @@ contains
              g((n_beta-n_gauss)+i) = g((n_beta-n_gauss)+i) - (lambda_var_sig * (image_sig(j,l) - b_params(i)))        
              
              !
-             do k=1, dim_v                          
-                if (SUM(std_map(:,j,l)) > 0._xp) then
+             if (ABS(std_map(1,j,l)) > 0._xp) then
+                do k=1, dim_v                          
                    deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) &
                         / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))) &
                         * (residual(k,j,l)/std_map(k,j,l)**2._xp) 
-
+                   
                    deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params(1+(3*(i-1)),j,l) * &
                         ( real(k,xp) - params(2+(3*(i-1)),j,l) ) / (params(3+(3*(i-1)),j,l)**2._xp) * &
                         exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) &
                         / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))) &
                         * (residual(k,j,l)/std_map(k,j,l)**2._xp) 
-
+                   
                    deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params(1+(3*(i-1)),j,l) * &
                         ( real(k,xp) - params(2+(3*(i-1)),j,l) )**2._xp / (params(3+(3*(i-1)),j,l)**3._xp) * &
                         exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))) &
                         * (residual(k,j,l)/std_map(k,j,l)**2._xp)
-                end if
-             end do
+                end do
+             end if
 
              deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (lambda_amp * conv_conv_amp(j,l))
              deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (lambda_mu * conv_conv_mu(j,l))
