@@ -19,7 +19,7 @@ contains
   subroutine main_rohsa(data, std_data, fileout, timeout, n_gauss, lambda_amp, lambda_mu, lambda_sig, &
        lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, amp_fact_init, sig_init, lb_sig_init, &
        ub_sig_init, lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
-       iprint, iprint_init, save_grid, lym, init_grid, fileinit, data_init)
+       iprint, iprint_init, save_grid, lym, init_grid, fileinit, data_init, params_init, init_spec)
     
     implicit none
     
@@ -29,6 +29,8 @@ contains
     logical, intent(in) :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
     logical, intent(in) :: lym             !! if true --> activate 2-Gaussian decomposition for Lyman alpha nebula emission
     logical, intent(in) :: init_grid       !! if true --> use fileinit to give the initialization of the last grid
+    logical, intent(in) :: init_spec       !! if true --> use params mean spectrum with input
+
     integer, intent(in) :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
     integer, intent(in) :: lstd            !! lower bound to compute the standard deviation map of the cube (if noise .eq. false)
     integer, intent(in) :: ustd            !! upper bound to compute the standrad deviation map of the cube (if noise .eq. false)
@@ -67,6 +69,7 @@ contains
     real(xp), intent(in), dimension(:,:,:), allocatable :: data        !! initial fits data
     real(xp), intent(in), dimension(:,:,:), allocatable :: data_init   !! initial fits data grid init full cube
     real(xp), intent(in), dimension(:,:), allocatable   :: std_data    !! standard deviation map fo the cube is given by the user 
+    real(xp), intent(in), dimension(:), allocatable     :: params_init !!
 
     real(xp), dimension(:,:,:), allocatable :: cube            !! reshape data with nside --> cube
     real(xp), dimension(:,:,:), allocatable :: cube_mean       !! mean cube over spatial axis
@@ -133,6 +136,7 @@ contains
 
     print*, "lym = ", lym
     print*, "init_grid = ", init_grid
+    print*, "init_spec = ", init_spec
 
     print*, " "
 
@@ -247,29 +251,35 @@ contains
              call mean_array(power, cube, cube_mean)
 
              if (n == 0) then
-                if (init_option .eq. "mean") then
-                   print*, "Init mean spectrum"        
-                   call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, sig_init, &
-                        lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
-                elseif (init_option .eq. "std") then
-                   call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, sig_init, &
-                        lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
-                elseif (init_option .eq. "max") then
-                   call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), max_spect, amp_fact_init, sig_init, &
-                        lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
-                elseif (init_option .eq. "maxnorm") then
-                   call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
-                        lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
-                else 
-                   print*, "init_option keyword should be 'mean' or 'std' or 'max' or 'maxnorm'"
-                   stop
+                if (init_spec .eqv. .true.) then
+                   fit_params(:,1,1) = params_init
+                   print*, "Use user init params"
+                else
+                   if (init_option .eq. "mean") then
+                      print*, "Init mean spectrum"        
+                      call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), cube_mean(:,1,1), amp_fact_init, sig_init, &
+                           lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+                   elseif (init_option .eq. "std") then
+                      call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), std_spect, amp_fact_init, sig_init, &
+                           lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+                   elseif (init_option .eq. "max") then
+                      call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), max_spect, amp_fact_init, sig_init, &
+                           lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+                   elseif (init_option .eq. "maxnorm") then
+                      call init_spectrum(n_gauss, fit_params(:,1,1), dim_cube(1), max_spect_norm, amp_fact_init, sig_init, &
+                           lb_sig_init, ub_sig_init, maxiter_init, m, iprint_init)
+                   else 
+                      print*, "init_option keyword should be 'mean' or 'std' or 'max' or 'maxnorm'"
+                      stop
+                   end if
                 end if
+                
                 !Init b_params
                 do i=1, n_gauss       
                    b_params(i) = fit_params(3+(3*(i-1)),1,1)
                 end do
              end if
-
+                
              if (regul .eqv. .false.) then
                 call upgrade(cube_mean, fit_params, power, n_gauss, dim_cube(1), lb_sig, ub_sig, maxiter, m, iprint)
              end if

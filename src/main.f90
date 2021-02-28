@@ -13,7 +13,9 @@ program ROHSA
   logical :: descent         !! if true --> activate hierarchical descent to initiate the optimization
   logical :: save_grid       !! save grid of fitted parameters at each step of the multiresolution process
   logical :: lym             !! if true --> activate 2-Gaussian decomposition for Lyman alpha nebula emission
+  logical :: init_spec       !! if true --> use params mean spectrum with input
   logical :: init_grid       !! if true --> use fileinit to give the initialization of the last grid
+
   integer :: n_gauss         !! number of gaussian to fit
   integer :: n_gauss_add     !! number of gaussian to add at each step
   integer :: m               !! number of corrections used in the limited memory matrix by LBFGS-B
@@ -46,6 +48,7 @@ program ROHSA
   character(len=512) :: fileout             !! name of the output result
   character(len=512) :: timeout             !! name of the output result
   character(len=512) :: filename_noise      !! name of the file with STD map (if noise .eq. true)
+  character(len=512) :: filename_init_spec
   character(len=512) :: fileinit           !! name of the file with init last grid
   character(len=8)   :: init_option !!Init ROHSA with the mean or the std spectrum    
 
@@ -54,6 +57,7 @@ program ROHSA
   real(xp), dimension(:,:,:), allocatable :: data        !! initial fits data
   real(xp), dimension(:,:,:), allocatable :: data_init   !! initial fits data init full grid
   real(xp), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
+  real(xp), dimension(:), allocatable     :: params_init     !! standard deviation map fo the cube is given by the user 
 
   call cpu_time(start)
 
@@ -92,12 +96,13 @@ program ROHSA
   save_grid = .true.
   lym = .false.
   init_grid = .false.
+  init_spec = .false.
  
   !Read parameters
-  call read_parameters(filename_parameters, filename, fileout, timeout, filename_noise, n_gauss, &
-       lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, &
+  call read_parameters(filename_parameters, filename, fileout, timeout, filename_noise, filename_init_spec, &
+       n_gauss, lambda_amp, lambda_mu, lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, &
        amp_fact_init, sig_init, lb_sig_init, ub_sig_init, lb_sig, ub_sig, init_option, maxiter_init, maxiter, &
-       m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid, lym, init_grid, fileinit)
+       m, noise, regul, descent, lstd, ustd, iprint, iprint_init, save_grid, lym, init_grid, fileinit, init_spec)
 
   !Call header
   call header()  
@@ -106,6 +111,10 @@ program ROHSA
 
   !Load data
   call read_cube(filename, data)
+
+  if (init_spec .eqv. .true.) then
+     call read_array(filename_init_spec, params_init)
+  end if
 
   !Load grid init
   if (init_grid .eqv. .true.) then
@@ -123,7 +132,7 @@ program ROHSA
   call main_rohsa(data, std_cube, fileout, timeout, n_gauss, lambda_amp, lambda_mu, lambda_sig, &
        lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, amp_fact_init, sig_init, lb_sig_init, &
        ub_sig_init, lb_sig, ub_sig, maxiter_init, maxiter, m, noise, regul, descent, lstd, ustd, init_option, &
-       iprint, iprint_init, save_grid, lym, init_grid, fileinit, data_init)  
+       iprint, iprint_init, save_grid, lym, init_grid, fileinit, data_init, params_init, init_spec)  
 
   call ender()
 
