@@ -51,6 +51,7 @@ program ROHSA
   character(len=512) :: filename_init_spec
   character(len=512) :: fileinit           !! name of the file with init last grid
   character(len=8)   :: init_option !!Init ROHSA with the mean or the std spectrum    
+  character(len=8)   :: isfits !!
 
   real(xp) :: start, finish
 
@@ -58,6 +59,12 @@ program ROHSA
   real(xp), dimension(:,:,:), allocatable :: data_init   !! initial fits data init full grid
   real(xp), dimension(:,:), allocatable   :: std_cube    !! standard deviation map fo the cube is given by the user 
   real(xp), dimension(:), allocatable     :: params_init     !! standard deviation map fo the cube is given by the user 
+
+
+  !Read FITS variable
+  integer(xp) :: stat,uni,blocksize,bitpix,naxis,naxes(3),uni2,nv
+  logical :: undef,extend,simple
+  character(len=80) comment
 
   call cpu_time(start)
 
@@ -110,8 +117,24 @@ program ROHSA
   print*, "filename = '",trim(filename),"'"
 
   !Load data
-  call read_cube(filename, data)
-
+  ! filename = "/mnt/raid-cita/amarchal/DHIGLS/data/DHIGLS_EN_Tb_512.fits"
+  isfits = filename(len(trim(filename))-3:len(trim(filename)))
+  if (isfits .eq. "fits") then
+     print*,"Read FITS file data cube"
+     call ftgiou(uni,stat)
+     call ftdkopn(uni,filename,0,blocksize,stat)  
+     call ftgkyj(uni,'NAXIS3',nv,comment,stat)
+     call ftgkyj(uni,'NAXIS1',naxes(1),comment,stat)
+     call ftgkyj(uni,'NAXIS2',naxes(2),comment,stat)
+     
+     allocate(data(naxes(1),naxes(2),nv))
+     
+     call ftgpve(uni,1,1,naxes(1)*naxes(2)*nv,0,data,undef,stat)
+     call ftclos(uni,stat)
+  else
+     call read_cube(filename, data)     
+  end if
+  
   if (init_spec .eqv. .true.) then
      call read_array(filename_init_spec, params_init)
   end if

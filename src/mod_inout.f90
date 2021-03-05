@@ -59,6 +59,31 @@ contains
   end subroutine read_parameters
 
 
+  ! subroutine read_fits_cube(filename, data)
+  !   implicit none !DOES NOT WORK
+
+  !   character(len=512), intent(in) :: filename
+  !   real(xp), intent(inout), dimension(:,:,:), allocatable :: data
+    
+  !   integer(xp) :: stat,uni,blocksize,bitpix,naxis,naxes(3),uni2,nv
+  !   logical :: undef,extend,simple
+  !   character(len=80) comment
+
+  !   print*,"Read FITS file"
+  !   call ftgiou(uni,stat)
+  !   call ftdkopn(uni,filename,0,blocksize,stat)  
+  !   call ftgkyj(uni,'NAXIS3',nv,comment,stat)
+  !   call ftgkyj(uni,'NAXIS1',naxes(1),comment,stat)
+  !   call ftgkyj(uni,'NAXIS2',naxes(2),comment,stat)
+    
+  !   allocate(data(naxes(1),naxes(2),nv))
+    
+  !   call ftgpve(uni,1,1,naxes(1)*naxes(2)*nv,0,data,undef,stat)
+  !   call ftclos(uni,stat)
+
+  ! end subroutine read_fits_cube
+
+
   subroutine read_cube(filename, cube)
     implicit none
     integer           :: ios=0, i
