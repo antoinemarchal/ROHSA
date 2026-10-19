@@ -118,8 +118,20 @@ c     jack dongarra, linpack, 3/11/78.
 c
       double precision dx(*),dy(*)
       integer i,incx,incy,ix,iy,m,mp1,n
+!$    integer omp_get_max_threads
 c
       if(n.le.0)return
+c     OpenMP: long unit-stride vectors are copied in parallel when
+c     several threads are available.
+!$    if(n.gt.100000.and.incx.eq.1.and.incy.eq.1.and.
+!$   +   omp_get_max_threads().gt.1) then
+!$omp parallel do schedule(static)
+!$      do 5 i = 1,n
+!$        dy(i) = dx(i)
+!$  5   continue
+!$omp end parallel do
+!$      return
+!$    endif
       if(incx.eq.1.and.incy.eq.1)go to 20
 c
 c        code for unequal increments or equal increments
@@ -170,10 +182,25 @@ c     jack dongarra, linpack, 3/11/78.
 c
       double precision dx(*),dy(*),dtemp
       integer i,incx,incy,ix,iy,m,mp1,n
+!$    integer omp_get_max_threads
 c
       ddot = 0.0d0
       dtemp = 0.0d0
       if(n.le.0)return
+c     OpenMP: long unit-stride vectors in parallel when several threads
+c     are available (L-BFGS-B calls this on vectors of all parameters).
+c     With one thread the unrolled serial code below is used, so the
+c     result is the same as in a serial build.
+!$    if(n.gt.100000.and.incx.eq.1.and.incy.eq.1.and.
+!$   +   omp_get_max_threads().gt.1) then
+!$omp parallel do reduction(+:dtemp) schedule(static)
+!$      do 5 i = 1,n
+!$        dtemp = dtemp + dx(i)*dy(i)
+!$  5   continue
+!$omp end parallel do
+!$      ddot = dtemp
+!$      return
+!$    endif
       if(incx.eq.1.and.incy.eq.1)go to 20
 c
 c        code for unequal increments or equal increments
@@ -222,8 +249,20 @@ c     modified 3/93 to return if incx .le. 0.
 c
       double precision da,dx(*)
       integer i,incx,m,mp1,n,nincx
+!$    integer omp_get_max_threads
 c
       if( n.le.0 .or. incx.le.0 )return
+c     OpenMP: long unit-stride vectors in parallel when several threads
+c     are available.
+!$    if(n.gt.100000.and.incx.eq.1.and.
+!$   +   omp_get_max_threads().gt.1) then
+!$omp parallel do schedule(static)
+!$      do 5 i = 1,n
+!$        dx(i) = da*dx(i)
+!$  5   continue
+!$omp end parallel do
+!$      return
+!$    endif
       if(incx.eq.1)go to 20
 c
 c        code for increment not equal to 1
