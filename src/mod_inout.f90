@@ -69,6 +69,25 @@ contains
     character(len=512), intent(in) :: filename
     real(xp), intent(inout), dimension(:,:,:), allocatable :: cube
 
+    ! A file name ending in .bin is read as a binary stream: three 4-byte
+    ! integers nv, ny, nx, then nv*ny*nx 8-byte reals in cube(v,y,x)
+    ! (Fortran) order. It is a quarter of the size of the text format and
+    ! is read in seconds; parsing the text takes about 4 minutes for a
+    ! 2048 x 2048 x 159 cube.
+    nl = len_trim(filename)
+    if (nl > 4) then
+       if (filename(nl-3:nl) == ".bin") then
+          open(unit=11, file=filename, access="stream", form="unformatted", action="read", &
+               status="old", iostat=ios)
+          if (ios /= 0) stop "opening file error"
+          read(11) nv, ny, nx
+          allocate(cube(nv,ny,nx))
+          read(11) cube
+          close(11)
+          return
+       end if
+    end if
+
     open(unit=11, file=filename, action="read", status="old", iostat=ios)
     if (ios /= 0) stop "opening file error"
     

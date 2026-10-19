@@ -34,6 +34,21 @@ class ROHSA(object):
                         f.write(line)
 
 
+    def cube2bin(self, filename=None):
+        """Write the cube in ROHSA's binary input format (file name ending in .bin).
+
+        Three int32 (nv, ny, nx) followed by the float64 values in Fortran
+        order cube(v, y, x). Much faster to write and to read than cube2dat.
+        """
+        if not filename : filename = self.filename[:-5] + ".bin" if self.filename is not None else "cube.bin"
+        if not filename.endswith(".bin"): raise ValueError("ROHSA reads the binary format only from a file name ending in .bin")
+        print("Generate " + filename + " file readable by fortran")
+        nv, ny, nx = self.cube.shape
+        with open(filename, 'wb') as f:
+            np.array([nv, ny, nx], dtype='<i4').tofile(f)
+            np.ascontiguousarray(np.transpose(self.cube, (2, 1, 0)), dtype='<f8').tofile(f)
+
+
     def rms_map(self, rms_map, filename=None):
         if not filename :
             print("Generate rms_map.dat file")
