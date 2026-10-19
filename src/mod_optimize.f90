@@ -59,7 +59,7 @@ contains
     
     myfunc_spec = 0._xp
     
-    myfunc_spec = 0.5_xp * sum(residual**2._xp)    
+    myfunc_spec = 0.5_xp * sum(residual**2)    
   end function  myfunc_spec
 
   
@@ -86,15 +86,15 @@ contains
     do i=1, n_gauss
        do k=1, dim_v          
           dF_over_dB(1+(3*(i-1)),k) = dF_over_dB(1+(3*(i-1)),k) +&
-               exp( ( -(real(k,xp) - params(2+(3*(i-1))))**2._xp) / (2._xp * params(3+(3*(i-1)))**2._xp))
+               exp( ( -(real(k,xp) - params(2+(3*(i-1))))**2) / (2._xp * params(3+(3*(i-1)))**2))
 
           dF_over_dB(2+(3*(i-1)),k) = dF_over_dB(2+(3*(i-1)),k) +&
-               params(1+(3*(i-1))) * ( real(k,xp) - params(2+(3*(i-1))) ) / (params(3+(3*(i-1)))**2._xp) *&
-               exp( ( -(real(k,xp) - params(2+(3*(i-1))))**2._xp) / (2._xp * params(3+(3*(i-1)))**2._xp))
+               params(1+(3*(i-1))) * ( real(k,xp) - params(2+(3*(i-1))) ) / (params(3+(3*(i-1)))**2) *&
+               exp( ( -(real(k,xp) - params(2+(3*(i-1))))**2) / (2._xp * params(3+(3*(i-1)))**2))
           
           dF_over_dB(3+(3*(i-1)),k) = dF_over_dB(3+(3*(i-1)),k) +&
-               params(1+(3*(i-1))) * ( real(k,xp) - params(2+(3*(i-1))) )**2._xp / (params(3+(3*(i-1)))**3._xp) *&
-               exp( ( -(real(k,xp) - params(2+(3*(i-1))))**2._xp) / (2._xp * params(3+(3*(i-1)))**2._xp))
+               params(1+(3*(i-1))) * ( real(k,xp) - params(2+(3*(i-1))) )**2 / (params(3+(3*(i-1)))**3) *&
+               exp( ( -(real(k,xp) - params(2+(3*(i-1))))**2) / (2._xp * params(3+(3*(i-1)))**2))
        enddo
     enddo
     
@@ -127,7 +127,6 @@ contains
     integer :: i, j, k, l
     integer :: n_beta
     real(xp), dimension(:,:,:), allocatable :: residual
-    real(xp), dimension(:), allocatable :: residual_1D
     real(xp), dimension(:,:,:), allocatable :: params
     real(xp), dimension(:), allocatable :: b_params
     real(xp), dimension(:,:), allocatable :: conv_amp, conv_mu, conv_sig
@@ -136,6 +135,7 @@ contains
     real(xp), dimension(:,:,:), allocatable :: deriv
     real(xp), dimension(:), allocatable :: model
     real(xp) :: gauss
+    real(xp) :: ee, rr, fr, gb
 
     allocate(deriv(3*n_gauss, dim_y, dim_x))
     allocate(residual(dim_v, dim_y, dim_x))
@@ -146,15 +146,15 @@ contains
     allocate(image_amp(dim_y, dim_x), image_mu(dim_y, dim_x), image_sig(dim_y, dim_x))
     allocate(model(dim_v))
 
+    ! params and residual are overwritten below, and ravel_3D overwrites g
+    ! except its last n_gauss entries, so only those and deriv are zeroed.
     deriv = 0._xp
     f = 0._xp
-    g = 0._xp
-    residual = 0._xp    
-    params = 0._xp
     model = 0._xp
     gauss = 0._xp
     
     n_beta = (3*n_gauss * dim_y * dim_x) + n_gauss
+    g((n_beta-n_gauss)+1:n_beta) = 0._xp
 
     call unravel_3D(beta, params, 3*n_gauss, dim_y, dim_x)    
     do i=1,n_gauss
@@ -162,26 +162,26 @@ contains
     end do
 
     ! Compute the objective function and the gradient
+    ! Same model and objective as myresidual and myfunc_spec, written into
+    ! residual directly instead of a temporary allocated per spectrum.
     do j=1, dim_x
        do i=1, dim_y
-          allocate(residual_1D(dim_v))
-          residual_1D = 0._xp
-          call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v)
-          residual(:,i,j) = residual_1D
+          model = 0._xp
+          do l=1, n_gauss
+             do k=1, dim_v
+                model(k) = model(k) + gaussian(k, params(1+(3*(l-1)),i,j), params(2+(3*(l-1)),i,j), params(3+(3*(l-1)),i,j))
+             end do
+          end do
+          residual(:,i,j) = model - cube(:,i,j)
           if (std_map(i,j) > 0._xp) then
-             f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2._xp)
+             f = f + ((0.5_xp * sum(residual(:,i,j)**2))/std_map(i,j)**2)
           end if
-          deallocate(residual_1D)
        end do
     end do
 
     ! Compute the objective function and the gradient
     do i=1, n_gauss
        !
-       conv_amp = 0._xp; conv_mu = 0._xp; conv_sig = 0._xp
-       conv_conv_amp = 0._xp; conv_conv_mu = 0._xp; conv_conv_sig = 0._xp
-       image_amp = 0._xp; image_mu = 0._xp; image_sig = 0._xp
-       
        image_amp = params(1+(3*(i-1)),:,:)
        image_mu = params(2+(3*(i-1)),:,:)
        image_sig = params(3+(3*(i-1)),:,:)
@@ -194,34 +194,33 @@ contains
        call convolution_2D_mirror(conv_mu, conv_conv_mu, dim_y, dim_x, kernel, 3)
        call convolution_2D_mirror(conv_sig, conv_conv_sig, dim_y, dim_x, kernel, 3)
        
+       ! Regularisation terms of this Gaussian are summed in fr and gb and
+       ! added to f and g once, so the loop can run in parallel with the
+       ! same result on one thread.
+       fr = 0._xp
+       gb = 0._xp
        do l=1, dim_x
           do j=1, dim_y
              !Regularization
-             f = f + (0.5_xp * lambda_amp * conv_amp(j,l)**2)
-             f = f + (0.5_xp * lambda_mu * conv_mu(j,l)**2)
-             f = f + (0.5_xp * lambda_sig * conv_sig(j,l)**2) + (0.5_xp * lambda_var_sig * (image_sig(j,l) - b_params(i))**2._xp)
+             fr = fr + (0.5_xp * lambda_amp * conv_amp(j,l)**2)
+             fr = fr + (0.5_xp * lambda_mu * conv_mu(j,l)**2)
+             fr = fr + (0.5_xp * lambda_sig * conv_sig(j,l)**2) + (0.5_xp * lambda_var_sig * (image_sig(j,l) - b_params(i))**2)
              
-             g((n_beta-n_gauss)+i) = g((n_beta-n_gauss)+i) - (lambda_var_sig * (image_sig(j,l) - b_params(i)))        
+             gb = gb - (lambda_var_sig * (image_sig(j,l) - b_params(i)))        
              
-             !
-             do k=1, dim_v                          
-                if (std_map(j,l) > 0._xp) then
-                   deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) &
-                        / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))) &
-                        * (residual(k,j,l)/std_map(j,l)**2._xp) 
-
+             ! The Gaussian (ee) and the weighted residual (rr) are computed
+             ! once per channel and shared by the three derivatives.
+             if (std_map(j,l) > 0._xp) then
+                do k=1, dim_v
+                   ee = exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2) / (2._xp * params(3+(3*(i-1)),j,l)**2))
+                   rr = residual(k,j,l)/std_map(j,l)**2
+                   deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + ee * rr
                    deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (params(1+(3*(i-1)),j,l) * &
-                        ( real(k,xp) - params(2+(3*(i-1)),j,l) ) / (params(3+(3*(i-1)),j,l)**2._xp) * &
-                        exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) &
-                        / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))) &
-                        * (residual(k,j,l)/std_map(j,l)**2._xp) 
-
+                        ( real(k,xp) - params(2+(3*(i-1)),j,l) ) / (params(3+(3*(i-1)),j,l)**2) * ee) * rr
                    deriv(3+(3*(i-1)),j,l) = deriv(3+(3*(i-1)),j,l) + (params(1+(3*(i-1)),j,l) * &
-                        ( real(k,xp) - params(2+(3*(i-1)),j,l) )**2._xp / (params(3+(3*(i-1)),j,l)**3._xp) * &
-                        exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))) &
-                        * (residual(k,j,l)/std_map(j,l)**2._xp)
-                end if
-             end do
+                        ( real(k,xp) - params(2+(3*(i-1)),j,l) )**2 / (params(3+(3*(i-1)),j,l)**3) * ee) * rr
+                end do
+             end if
 
              deriv(1+(3*(i-1)),j,l) = deriv(1+(3*(i-1)),j,l) + (lambda_amp * conv_conv_amp(j,l))
              deriv(2+(3*(i-1)),j,l) = deriv(2+(3*(i-1)),j,l) + (lambda_mu * conv_conv_mu(j,l))
@@ -230,6 +229,8 @@ contains
           end do
           !
        end do
+       f = f + fr
+       g((n_beta-n_gauss)+i) = g((n_beta-n_gauss)+i) + gb
     end do        
     
     call ravel_3D(deriv, g, 3*n_gauss, dim_y, dim_x)
@@ -310,7 +311,7 @@ contains
           call myresidual(params(:,i,j), cube(:,i,j), residual_1D, n_gauss, dim_v)
           residual(:,i,j) = residual_1D
           if (std_map(i,j) > 0._xp) then
-             f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2._xp)
+             f = f + (myfunc_spec(residual_1D)/std_map(i,j)**2)
           end if
           deallocate(residual_1D)
        end do
@@ -321,15 +322,15 @@ contains
           do i=1, n_gauss
              do k=1, dim_v          
                 dF_over_dB(1+(3*(i-1)),k,j,l) = dF_over_dB(1+(3*(i-1)),k,j,l) +&
-                     exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))
+                     exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2) / (2._xp * params(3+(3*(i-1)),j,l)**2))
                 
                 dF_over_dB(2+(3*(i-1)),k,j,l) = dF_over_dB(2+(3*(i-1)),k,j,l) +&
-                     params(1+(3*(i-1)),j,l) * ( real(k,xp) - params(2+(3*(i-1)),j,l) ) / (params(3+(3*(i-1)),j,l)**2._xp) *&
-                     exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))
+                     params(1+(3*(i-1)),j,l) * ( real(k,xp) - params(2+(3*(i-1)),j,l) ) / (params(3+(3*(i-1)),j,l)**2) *&
+                     exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2) / (2._xp * params(3+(3*(i-1)),j,l)**2))
                 
                 dF_over_dB(3+(3*(i-1)),k,j,l) = dF_over_dB(3+(3*(i-1)),k,j,l) +&
-                     params(1+(3*(i-1)),j,l) * ( real(k,xp) - params(2+(3*(i-1)),j,l) )**2._xp / (params(3+(3*(i-1)),j,l)**3._xp) *&
-                     exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2._xp) / (2._xp * params(3+(3*(i-1)),j,l)**2._xp))
+                     params(1+(3*(i-1)),j,l) * ( real(k,xp) - params(2+(3*(i-1)),j,l) )**2 / (params(3+(3*(i-1)),j,l)**3) *&
+                     exp( ( -(real(k,xp) - params(2+(3*(i-1)),j,l))**2) / (2._xp * params(3+(3*(i-1)),j,l)**2))
              enddo
           enddo
        end do
@@ -340,7 +341,7 @@ contains
           do i=1, dim_y
              do l=1, 3*n_gauss
                 if (std_map(i,j) > 0._xp) then
-                   deriv(l,i,j) = deriv(l,i,j) + dF_over_dB(l,k,i,j) * (residual(k,i,j)/std_map(i,j)**2._xp)
+                   deriv(l,i,j) = deriv(l,i,j) + dF_over_dB(l,k,i,j) * (residual(k,i,j)/std_map(i,j)**2)
                 end if
              end do
           end do
@@ -368,7 +369,7 @@ contains
           do i=1, dim_y
              f = f + (0.5_xp * lambda_amp * conv_amp(i,j)**2)
              f = f + (0.5_xp * lambda_mu * conv_mu(i,j)**2)
-             f = f + (0.5_xp * lambda_sig * conv_sig(i,j)**2) + (0.5_xp * lambda_var_sig * (image_sig(i,j) - b_params(k))**2._xp)
+             f = f + (0.5_xp * lambda_sig * conv_sig(i,j)**2) + (0.5_xp * lambda_var_sig * (image_sig(i,j) - b_params(k))**2)
                           
              dR_over_dB(1+(3*(k-1)),i,j) = lambda_amp * conv_conv_amp(i,j)
              dR_over_dB(2+(3*(k-1)),i,j) = lambda_mu * conv_conv_mu(i,j)
