@@ -44,7 +44,7 @@ contains
     !     Allocate dynamic arrays
     allocate(nbd(n), g(n))
     allocate(iwa(3*n))
-    allocate(wa(2*m*n + 5*n + 11*m*m + 8*m))
+    allocate(wa(2_8*m*n + 5_8*n + 11*m*m + 8*m)) ! 64-bit size: 2*m*n can exceed 2**31
 
     allocate(residual(dim_v))
     residual = 0._xp
@@ -124,7 +124,7 @@ contains
     !     Allocate dynamic arrays
     allocate(nbd(n), g(n))
     allocate(iwa(3*n))
-    allocate(wa(2*m*n + 5*n + 11*m*m + 8*m))
+    allocate(wa(2_8*m*n + 5_8*n + 11*m*m + 8*m)) ! 64-bit size: 2*m*n can exceed 2**31
 
     f = 0._xp
     g = 0._xp

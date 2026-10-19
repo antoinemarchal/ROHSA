@@ -55,7 +55,7 @@ c=============================================================================
       double precision f, factr, pgtol, x(n), l(n), u(n), g(n),
 c
 c-jlm-jn
-     +                 wa(2*m*n + 5*n + 11*m*m + 8*m), dsave(29)
+     +                 wa(*), dsave(29)
  
 c     ************
 c
@@ -237,40 +237,29 @@ c
 c
 c     ************
 c-jlm-jn 
-      integer   lws,lr,lz,lt,ld,lxp,lwa,
-     +          lwy,lsy,lss,lwt,lwn,lsnd
+c     The workspace offsets are 64-bit integers: 2*m*n exceeds 2**31
+c     for large problems (e.g. 8 Gaussians on a 2048 x 2048 map with
+c     m = 10), and default-integer offsets would wrap around. They are
+c     recomputed from n and m on every call instead of being kept in
+c     isave(1:16).
+      integer*8 lws,lr,lz,lt,ld,lxp,lwa,
+     +          lwy,lsy,lss,lwt,lwn,lsnd,mn,mm
 
-      if (task .eq. 'START') then
-         isave(1)  = m*n
-         isave(2)  = m**2
-         isave(3)  = 4*m**2
-         isave(4)  = 1                      ! ws      m*n
-         isave(5)  = isave(4)  + isave(1)   ! wy      m*n
-         isave(6)  = isave(5)  + isave(1)   ! wsy     m**2
-         isave(7)  = isave(6)  + isave(2)   ! wss     m**2
-         isave(8)  = isave(7)  + isave(2)   ! wt      m**2
-         isave(9)  = isave(8)  + isave(2)   ! wn      4*m**2
-         isave(10) = isave(9)  + isave(3)   ! wsnd    4*m**2
-         isave(11) = isave(10) + isave(3)   ! wz      n
-         isave(12) = isave(11) + n          ! wr      n
-         isave(13) = isave(12) + n          ! wd      n
-         isave(14) = isave(13) + n          ! wt      n
-         isave(15) = isave(14) + n          ! wxp     n
-         isave(16) = isave(15) + n          ! wa      8*m
-      endif
-      lws  = isave(4)
-      lwy  = isave(5)
-      lsy  = isave(6)
-      lss  = isave(7)
-      lwt  = isave(8)
-      lwn  = isave(9)
-      lsnd = isave(10)
-      lz   = isave(11)
-      lr   = isave(12)
-      ld   = isave(13)
-      lt   = isave(14)
-      lxp  = isave(15)
-      lwa  = isave(16)
+      mn   = int(m,8)*int(n,8)
+      mm   = int(m,8)*int(m,8)
+      lws  = 1
+      lwy  = lws  + mn
+      lsy  = lwy  + mn
+      lss  = lsy  + mm
+      lwt  = lss  + mm
+      lwn  = lwt  + mm
+      lsnd = lwn  + 4*mm
+      lz   = lsnd + 4*mm
+      lr   = lz   + n
+      ld   = lr   + n
+      lt   = ld   + n
+      lxp  = lt   + n
+      lwa  = lxp  + n
 
       call mainlb(n,m,x,l,u,nbd,f,g,factr,pgtol,
      +  wa(lws),wa(lwy),wa(lsy),wa(lss), wa(lwt),
