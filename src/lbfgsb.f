@@ -1416,6 +1416,10 @@ c     ************
      +                 f2_org
       double precision one,zero
       parameter        (one=1.0d0,zero=0.0d0)
+      include 'omp_block.h'
+      integer          ib,nb,ip(m)
+      double precision f1b(max(n-1,0)/nblk+1),
+     +                 pb(2*m,max(n-1,0)/nblk+1)
  
 c     Check the status of the variables, reset iwhere(i) if necessary;
 c       compute the Cauchy direction d and the breakpoints t; initialize
@@ -1441,11 +1445,29 @@ c     We set p to zero and build it up as we determine d.
          p(i) = zero
   20  continue 
 
-c     In the following loop we determine for each variable its bound
+c     In the following loops we determine for each variable its bound
 c        status and its breakpoint, and update p accordingly.
 c        Smallest breakpoint is identified.
+c
+c     The first loop (bound status, d, f1 and p) runs over blocks of nblk
+c        variables in parallel with OpenMP; the sums of each block are
+c        added to f1 and p in block order. The second loop builds the
+c        list of breakpoints in index order.
 
-      do 50 i = 1, n 
+      pointr = head
+      do 45 j = 1, col
+         ip(j) = pointr
+         pointr = mod(pointr,m) + 1
+  45  continue
+      nb = (n-1)/nblk + 1
+!$omp parallel do private(i,j,neggi,tl,tu,xlower,xupper)
+!$omp+ schedule(static) if(nb .gt. 1)
+      do 52 ib = 1, nb
+         f1b(ib) = zero
+         do 46 j = 1, col2
+            pb(j,ib) = zero
+  46     continue
+         do 50 i = (ib-1)*nblk + 1, min(n, ib*nblk)
          neggi = -g(i)      
          if (iwhere(i) .ne. 3 .and. iwhere(i) .ne. -1) then
 c             if x(i) is not a constant and has bounds,
@@ -1468,21 +1490,34 @@ c              reset iwhere(i).
                if (abs(neggi) .le. zero) iwhere(i) = -3
             endif
          endif 
-         pointr = head
          if (iwhere(i) .ne. 0 .and. iwhere(i) .ne. -1) then
             d(i) = zero
          else
             d(i) = neggi
-            f1 = f1 - neggi*neggi
+            f1b(ib) = f1b(ib) - neggi*neggi
 c             calculate p := p - W'e_i* (g_i).
             do 40 j = 1, col
-               p(j) = p(j) +  wy(i,pointr)* neggi
-               p(col + j) = p(col + j) + ws(i,pointr)*neggi
-               pointr = mod(pointr,m) + 1
+               pb(j,ib) = pb(j,ib) +  wy(i,ip(j))* neggi
+               pb(col + j,ib) = pb(col + j,ib) + ws(i,ip(j))*neggi
   40        continue 
+         endif
+  50     continue 
+  52  continue
+!$omp end parallel do
+      do 54 ib = 1, nb
+         f1 = f1 + f1b(ib)
+         do 53 j = 1, col2
+            p(j) = p(j) + pb(j,ib)
+  53     continue
+  54  continue
+
+      do 58 i = 1, n
+         if (iwhere(i) .eq. 0 .or. iwhere(i) .eq. -1) then
+            neggi = -g(i)
             if (nbd(i) .le. 2 .and. nbd(i) .ne. 0
      +                        .and. neggi .lt. zero) then
 c                                 x(i) + d(i) is bounded; compute t(i).
+               tl = x(i) - l(i)
                nbreak = nbreak + 1
                iorder(nbreak) = i
                t(nbreak) = tl/(-neggi)
@@ -1492,6 +1527,7 @@ c                                 x(i) + d(i) is bounded; compute t(i).
                endif
             else if (nbd(i) .ge. 2 .and. neggi .gt. zero) then
 c                                 x(i) + d(i) is bounded; compute t(i).
+               tu = u(i) - x(i)
                nbreak = nbreak + 1
                iorder(nbreak) = i
                t(nbreak) = tu/neggi
@@ -1506,7 +1542,7 @@ c                x(i) + d(i) is not bounded.
                if (abs(neggi) .gt. zero) bnded = .false.
             endif
          endif
-  50  continue 
+  58  continue 
  
 c     The indices of the nonzero components of d are now stored
 c       in iorder(1),...,iorder(nbreak) and iorder(nfree),...,iorder(n).
@@ -1752,32 +1788,45 @@ c
 c     ************
  
       integer          i,j,k,pointr
-      double precision a1,a2
+      include 'omp_block.h'
+      integer          ip(m)
+      double precision b1(m),b2(m)
 
       if (.not. cnstnd .and. col .gt. 0) then 
+!$omp parallel do schedule(static) if(n .gt. nblk)
          do 26 i = 1, n
             r(i) = -g(i)
   26     continue
+!$omp end parallel do
       else
+!$omp parallel do private(k) schedule(static) if(nfree .gt. nblk)
          do 30 i = 1, nfree
             k = index(i)
             r(i) = -theta*(z(k) - x(k)) - g(k)
   30     continue
+!$omp end parallel do
          call bmv(m,sy,wt,col,wa(2*m+1),wa(1),info)
          if (info .ne. 0) then
             info = -8
             return
          endif
+c        Loop over the variables outside, over the correction pairs
+c        inside (OpenMP); each r(i) is updated in the same order.
          pointr = head 
-         do 34 j = 1, col
-            a1 = wa(j)
-            a2 = theta*wa(col + j)
-            do 32 i = 1, nfree
-               k = index(i)
-               r(i) = r(i) + wy(k,pointr)*a1 + ws(k,pointr)*a2
-  32        continue
+         do 31 j = 1, col
+            ip(j) = pointr
+            b1(j) = wa(j)
+            b2(j) = theta*wa(col + j)
             pointr = mod(pointr,m) + 1
+  31     continue
+!$omp parallel do private(j,k) schedule(static) if(nfree .gt. nblk)
+         do 34 i = 1, nfree
+            k = index(i)
+            do 32 j = 1, col
+               r(i) = r(i) + wy(k,ip(j))*b1(j) + ws(k,ip(j))*b2(j)
+  32        continue
   34     continue
+!$omp end parallel do
       endif
 
       return
@@ -1979,9 +2028,11 @@ c
 c
 c     ************
 
-      integer          m2,ipntr,jpntr,iy,is,jy,js,is1,js1,k1,i,k,
+      integer          m2,ipntr,jpntr,iy,is,jy,js,is1,js1,i,
      +                 col2,pbegin,pend,dbegin,dend,upcl
-      double precision ddot,temp1,temp2,temp3,temp4
+      double precision ddot
+      integer          np,ja(m*m),jb(m*m)
+      double precision s1(m*m),s2(m*m),s3(m*m),s4(m*m)
       double precision one,zero
       parameter        (one=1.0d0,zero=0.0d0)
 
@@ -2011,44 +2062,41 @@ c          put new rows in blocks (1,1), (2,1) and (2,2).
          is = m + col
          ipntr = head + col - 1
          if (ipntr .gt. m) ipntr = ipntr - m    
+c          The sums over the variables are done by dotblk (OpenMP),
+c          all elements of a row or column in one pass.
          jpntr = head
          do 20 jy = 1, col
-            js = m + jy
-            temp1 = zero
-            temp2 = zero
-            temp3 = zero
-c             compute element jy of row 'col' of Y'ZZ'Y
-            do 15 k = pbegin, pend
-               k1 = ind(k)
-               temp1 = temp1 + wy(k1,ipntr)*wy(k1,jpntr)
-  15        continue
-c             compute elements jy of row 'col' of L_a and S'AA'S
-            do 16 k = dbegin, dend
-               k1 = ind(k)
-               temp2 = temp2 + ws(k1,ipntr)*ws(k1,jpntr)
-               temp3 = temp3 + ws(k1,ipntr)*wy(k1,jpntr)
-  16        continue
-            wn1(iy,jy) = temp1
-            wn1(is,js) = temp2
-            wn1(is,jy) = temp3
+            ja(jy) = ipntr
+            jb(jy) = jpntr
             jpntr = mod(jpntr,m) + 1
   20     continue
+c             compute row 'col' of Y'ZZ'Y
+         call dotblk(n,m,wy,wy,ind,pbegin,pend,col,ja,jb,s1)
+c             compute row 'col' of L_a and S'AA'S
+         call dotblk(n,m,ws,ws,ind,dbegin,dend,col,ja,jb,s2)
+         call dotblk(n,m,ws,wy,ind,dbegin,dend,col,ja,jb,s3)
+         do 21 jy = 1, col
+            js = m + jy
+            wn1(iy,jy) = s1(jy)
+            wn1(is,js) = s2(jy)
+            wn1(is,jy) = s3(jy)
+  21     continue
  
 c          put new column in block (2,1).
          jy = col       
          jpntr = head + col - 1
          if (jpntr .gt. m) jpntr = jpntr - m
          ipntr = head
+         do 25 i = 1, col
+            ja(i) = ipntr
+            jb(i) = jpntr
+            ipntr = mod(ipntr,m) + 1
+  25     continue
+c             compute column 'col' of R_z
+         call dotblk(n,m,ws,wy,ind,pbegin,pend,col,ja,jb,s1)
          do 30 i = 1, col
             is = m + i
-            temp3 = zero
-c             compute element i of column 'col' of R_z
-            do 25 k = pbegin, pend
-               k1 = ind(k)
-               temp3 = temp3 + ws(k1,ipntr)*wy(k1,jpntr)
-  25        continue 
-            ipntr = mod(ipntr,m) + 1
-            wn1(is,jy) = temp3
+            wn1(is,jy) = s1(i)
   30     continue
          upcl = col - 1
       else
@@ -2057,57 +2105,61 @@ c             compute element i of column 'col' of R_z
  
 c       modify the old parts in blocks (1,1) and (2,2) due to changes
 c       in the set of free variables.
+c       (the sums over the entering and the leaving variables are done
+c       by dotblk.)
+      np = 0
       ipntr = head      
       do 45 iy = 1, upcl
-         is = m + iy
          jpntr = head
          do 40 jy = 1, iy
-            js = m + jy
-            temp1 = zero
-            temp2 = zero
-            temp3 = zero
-            temp4 = zero
-            do 35 k = 1, nenter
-               k1 = indx2(k)
-               temp1 = temp1 + wy(k1,ipntr)*wy(k1,jpntr)
-               temp2 = temp2 + ws(k1,ipntr)*ws(k1,jpntr)
-  35        continue
-            do 36 k = ileave, n
-               k1 = indx2(k)
-               temp3 = temp3 + wy(k1,ipntr)*wy(k1,jpntr)
-               temp4 = temp4 + ws(k1,ipntr)*ws(k1,jpntr)
-  36        continue
-            wn1(iy,jy) = wn1(iy,jy) + temp1 - temp3 
-            wn1(is,js) = wn1(is,js) - temp2 + temp4 
+            np = np + 1
+            ja(np) = ipntr
+            jb(np) = jpntr
             jpntr = mod(jpntr,m) + 1
   40     continue
          ipntr = mod(ipntr,m) + 1
   45  continue
+      call dotblk(n,m,wy,wy,indx2,1,nenter,np,ja,jb,s1)
+      call dotblk(n,m,ws,ws,indx2,1,nenter,np,ja,jb,s2)
+      call dotblk(n,m,wy,wy,indx2,ileave,n,np,ja,jb,s3)
+      call dotblk(n,m,ws,ws,indx2,ileave,n,np,ja,jb,s4)
+      np = 0
+      do 47 iy = 1, upcl
+         is = m + iy
+         do 46 jy = 1, iy
+            js = m + jy
+            np = np + 1
+            wn1(iy,jy) = wn1(iy,jy) + s1(np) - s3(np) 
+            wn1(is,js) = wn1(is,js) - s2(np) + s4(np) 
+  46     continue
+  47  continue
  
 c       modify the old parts in block (2,1).
+      np = 0
       ipntr = head      
       do 60 is = m + 1, m + upcl
          jpntr = head 
          do 55 jy = 1, upcl
-            temp1 = zero
-            temp3 = zero
-            do 50 k = 1, nenter
-               k1 = indx2(k)
-               temp1 = temp1 + ws(k1,ipntr)*wy(k1,jpntr)
-  50        continue
-            do 51 k = ileave, n
-               k1 = indx2(k)
-               temp3 = temp3 + ws(k1,ipntr)*wy(k1,jpntr)
-  51        continue
-         if (is .le. jy + m) then
-               wn1(is,jy) = wn1(is,jy) + temp1 - temp3  
-            else
-               wn1(is,jy) = wn1(is,jy) - temp1 + temp3  
-            endif
+            np = np + 1
+            ja(np) = ipntr
+            jb(np) = jpntr
             jpntr = mod(jpntr,m) + 1
   55     continue
          ipntr = mod(ipntr,m) + 1
   60  continue
+      call dotblk(n,m,ws,wy,indx2,1,nenter,np,ja,jb,s1)
+      call dotblk(n,m,ws,wy,indx2,ileave,n,np,ja,jb,s3)
+      np = 0
+      do 62 is = m + 1, m + upcl
+         do 61 jy = 1, upcl
+            np = np + 1
+            if (is .le. jy + m) then
+               wn1(is,jy) = wn1(is,jy) + s1(np) - s3(np)  
+            else
+               wn1(is,jy) = wn1(is,jy) - s1(np) + s3(np)  
+            endif
+  61     continue
+  62  continue
  
 c     Form the upper triangle of WN = [D+Y' ZZ'Y/theta   -L_a'+R_z' ] 
 c                                     [-L_a +R_z        S'AA'S*theta]
@@ -2170,6 +2222,51 @@ c     Cholesky factorization of (2,2) block of wn.
       end
 
 c======================= The end of formk ==============================
+
+      subroutine dotblk(n, m, a, b, ind, k0, k1, np, ja, jb, s)
+      integer          n, m, k0, k1, np, ind(n), ja(np), jb(np)
+      double precision a(n, m), b(n, m), s(np)
+
+c     s(p) = sum of a(ind(k),ja(p))*b(ind(k),jb(p)) over k = k0,...,k1,
+c     for p = 1,...,np, in one pass over k. The k range is cut into blocks
+c     of nblk (omp_block.h) that run in parallel with OpenMP; each sum runs
+c     in k order within a block and the block sums are added in block
+c     order, so the result does not depend on the number of threads. With
+c     one block each sum is the plain sum in k order.
+
+      include 'omp_block.h'
+      integer          ib,nb,k,kk,ip
+      double precision part(max(np,1),max(k1-k0,0)/nblk+1)
+
+      do 5 ip = 1, np
+         s(ip) = 0.0d0
+   5  continue
+      if (k1 .lt. k0 .or. np .le. 0) return
+      nb = (k1-k0)/nblk + 1
+!$omp parallel do private(k,kk,ip) schedule(static) if(nb .gt. 1)
+      do 30 ib = 1, nb
+         do 10 ip = 1, np
+            part(ip,ib) = 0.0d0
+  10     continue
+         do 20 k = k0 + (ib-1)*nblk, min(k1, k0 + ib*nblk - 1)
+            kk = ind(k)
+            do 15 ip = 1, np
+               part(ip,ib) = part(ip,ib) + a(kk,ja(ip))*b(kk,jb(ip))
+  15        continue
+  20     continue
+  30  continue
+!$omp end parallel do
+      do 40 ib = 1, nb
+         do 35 ip = 1, np
+            s(ip) = s(ip) + part(ip,ib)
+  35     continue
+  40  continue
+
+      return
+
+      end
+
+c====================== The end of dotblk ==============================
 
       subroutine formt(m, wt, sy, ss, col, theta, info)
  
@@ -2496,6 +2593,7 @@ c     **********
       parameter        (one=1.0d0,zero=0.0d0,big=1.0d+10)
       double precision ftol,gtol,xtol
       parameter        (ftol=1.0d-3,gtol=0.9d0,xtol=0.1d0)
+      include 'omp_block.h'
 
       if (task(1:5) .eq. 'FG_LN') goto 556
 
@@ -2568,9 +2666,11 @@ c                               Line search is impossible.
          if (stp .eq. one) then
             call dcopy(n,z,1,x,1)
          else
+!$omp parallel do schedule(static) if(n .gt. nblk)
             do 41 i = 1, n
                x(i) = stp*d(i) + t(i)
   41        continue
+!$omp end parallel do
          endif
       else
          task = 'NEW_X'
@@ -2969,8 +3069,11 @@ c     ************
       double precision gi
       double precision one,zero
       parameter        (one=1.0d0,zero=0.0d0)
+      include 'omp_block.h'
 
       sbgnrm = zero
+!$omp parallel do private(gi) reduction(max:sbgnrm) schedule(static)
+!$omp+ if(n .gt. nblk)
       do 15 i = 1, n
         gi = g(i)
         if (nbd(i) .ne. 0) then
@@ -2982,6 +3085,7 @@ c     ************
         endif
         sbgnrm = max(sbgnrm,abs(gi))
   15  continue
+!$omp end parallel do
 
       return
 
@@ -3185,24 +3289,47 @@ c     ************
       parameter        (one=1.0d0,zero=0.0d0)
 c
       double precision dd_p
+      include 'omp_block.h'
+      integer          ib,nb,ip(m)
+      double precision part(2*m,max(nsub-1,0)/nblk+1),
+     +                 ddb(max(n-1,0)/nblk+1)
 
       if (nsub .le. 0) return
       if (iprint .ge. 99) write (6,1001)
 
 c     Compute wv = W'Zd.
 
+c     The sums over the free variables run over blocks of nblk variables
+c     in parallel with OpenMP; the block sums are added in block order.
       pointr = head 
+      do 5 i = 1, col
+         ip(i) = pointr
+         pointr = mod(pointr,m) + 1
+   5  continue
+      nb = (nsub-1)/nblk + 1
+!$omp parallel do private(i,j,k) schedule(static) if(nb .gt. 1)
+      do 12 ib = 1, nb
+         do 8 i = 1, 2*col
+            part(i,ib) = zero
+   8     continue
+         do 10 j = (ib-1)*nblk + 1, min(nsub, ib*nblk)
+            k = ind(j)
+            do 9 i = 1, col
+               part(i,ib) = part(i,ib) + wy(k,ip(i))*d(j)
+               part(col+i,ib) = part(col+i,ib) + ws(k,ip(i))*d(j)
+   9        continue
+  10     continue
+  12  continue
+!$omp end parallel do
       do 20 i = 1, col
          temp1 = zero
          temp2 = zero
-         do 10 j = 1, nsub
-            k = ind(j)
-            temp1 = temp1 + wy(k,pointr)*d(j)
-            temp2 = temp2 + ws(k,pointr)*d(j)
-  10     continue
+         do 15 ib = 1, nb
+            temp1 = temp1 + part(i,ib)
+            temp2 = temp2 + part(col+i,ib)
+  15     continue
          wv(i) = temp1
          wv(col + i) = theta*temp2
-         pointr = mod(pointr,m) + 1
   20  continue
  
 c     Compute wv:=K^(-1)wv.
@@ -3219,16 +3346,18 @@ c     Compute wv:=K^(-1)wv.
  
 c     Compute d = (1/theta)d + (1/theta**2)Z'W wv.
  
-      pointr = head
-      do 40 jy = 1, col
-         js = col + jy
-         do 30 i = 1, nsub
-            k = ind(i)
-            d(i) = d(i) + wy(k,pointr)*wv(jy)/theta     
-     +                  + ws(k,pointr)*wv(js)
+c     Loop over the variables outside, over the correction pairs inside
+c     (OpenMP); each d(i) is updated in the same order.
+!$omp parallel do private(k,jy,js) schedule(static) if(nsub .gt. nblk)
+      do 40 i = 1, nsub
+         k = ind(i)
+         do 30 jy = 1, col
+            js = col + jy
+            d(i) = d(i) + wy(k,ip(jy))*wv(jy)/theta     
+     +                  + ws(k,ip(jy))*wv(js)
   30     continue
-         pointr = mod(pointr,m) + 1
   40  continue
+!$omp end parallel do
 
       call dscal( nsub, one/theta, d, 1 )
 c 
@@ -3239,6 +3368,8 @@ c     Let us try the projection, d is the Newton direction
 
       call dcopy ( n, x, 1, xp, 1 )
 c
+!$omp parallel do private(k,dk,xk) reduction(max:iword) schedule(static)
+!$omp+ if(nsub .gt. nblk)
       do 50 i=1, nsub
          k  = ind(i)
          dk = d(i)
@@ -3267,6 +3398,7 @@ c
             x(k) = xk + dk
          end if 
  50   continue
+!$omp end parallel do
 c
       if ( iword.eq.0 ) then
          go to 911
@@ -3274,10 +3406,19 @@ c
 c
 c     check sign of the directional derivative
 c
+      nb = (n-1)/nblk + 1
+!$omp parallel do private(i) schedule(static) if(nb .gt. 1)
+      do 56 ib = 1, nb
+         ddb(ib) = zero
+         do 55 i = (ib-1)*nblk + 1, min(n, ib*nblk)
+            ddb(ib)  = ddb(ib) + (x(i) - xx(i))*gg(i)
+ 55      continue
+ 56   continue
+!$omp end parallel do
       dd_p = zero
-      do 55 i=1, n
-         dd_p  = dd_p + (x(i) - xx(i))*gg(i)
- 55   continue
+      do 57 ib = 1, nb
+         dd_p = dd_p + ddb(ib)
+ 57   continue
       if ( dd_p .gt.zero ) then
          call dcopy( n, xp, 1, x, 1 )
          if (iprint .ne. -1) then
