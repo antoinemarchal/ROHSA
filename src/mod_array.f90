@@ -26,14 +26,22 @@ contains
     ! Only the interior points are convolved: they are the only ones kept,
     ! and their neighbours are always inside the padded array, so no bounds
     ! test is needed. The terms are added in the same order as before.
+    ! Columns are independent and run in parallel with OpenMP.
     allocate(extended(dim_y+4, dim_x+4))
-    extended = 0._xp
+    ! Zero fill and interior copy are full-size array passes: OpenMP over columns.
+    !$omp parallel do schedule(static)
+    do j=1, dim_x+4
+       extended(:,j) = 0._xp
+    end do
+    !$omp end parallel do
 
+    !$omp parallel do private(i) schedule(static)
     do j=1, dim_x
        do i=1, dim_y
           extended(2+i,2+j) = image(i,j)
        end do
     end do
+    !$omp end parallel do
 
     do j=1, 2
        do i=1, dim_y
@@ -61,6 +69,7 @@ contains
     
     kc = dim_k / 2 + 1
 
+    !$omp parallel do private(i, m, n, acc) schedule(static)
     do j=1, dim_x
        do i=1, dim_y
           acc = 0._xp
@@ -72,6 +81,7 @@ contains
           conv(i,j) = acc
        end do
     end do
+    !$omp end parallel do
 
   end subroutine convolution_2D_mirror
 
