@@ -120,14 +120,28 @@ contains
     real(xp), intent(in) :: p(3*n_gauss), line(dim_v), std
     real(xp), intent(out) :: fp, d(3*n_gauss)
 
-    integer :: k, l
-    real(xp) :: rr
+    integer :: k, l, klo, khi
+    real(xp) :: rr, w
     real(xp) :: ee(dim_v, n_gauss), res(dim_v)
 
     res = 0._xp
     do l=1, n_gauss
-       do k=1, dim_v
+       ! exp() is exactly 0 for arguments below -745.2. More than 39*sigma + 2 channels from
+       ! the centre the argument is below -760, so those channels are set to 0 without calling
+       ! exp(): the vectorised exp() falls back to slow scalar code for such arguments, and for
+       ! narrow Gaussians that is most channels. The result is bit-for-bit the same.
+       klo = 1
+       khi = dim_v
+       w = 39._xp * abs(p(3+(3*(l-1)))) + 2._xp
+       if (w < real(dim_v,xp) .and. abs(p(2+(3*(l-1)))) < 1.e6_xp) then
+          klo = max(1, int(p(2+(3*(l-1))) - w))
+          khi = min(dim_v, int(p(2+(3*(l-1))) + w) + 1)
+       end if
+       ee(:,l) = 0._xp
+       do k=klo, khi
           ee(k,l) = exp( ( -(real(k,xp) - p(2+(3*(l-1))))**2) / (2._xp * p(3+(3*(l-1)))**2))
+       end do
+       do k=1, dim_v
           res(k) = res(k) + p(1+(3*(l-1))) * ee(k,l)
        end do
     end do
