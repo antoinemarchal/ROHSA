@@ -19,23 +19,29 @@ contains
     real(xp), intent(in), dimension(:,:), allocatable :: kernel
     integer, intent(in) :: dim_y, dim_x, dim_k
 
-    integer :: i, j, ii, jj, m, n, mm, nn
-    integer :: kCenterY, kCenterX
-    real(xp), dimension(:,:), allocatable :: ext_conv, extended
+    integer :: i, j, m, n, kc
+    real(xp) :: acc
+    real(xp), dimension(:,:), allocatable :: extended
 
-    allocate(ext_conv(dim_y+4, dim_x+4))
+    ! Only the interior points are convolved: they are the only ones kept,
+    ! and their neighbours are always inside the padded array, so no bounds
+    ! test is needed. The terms are added in the same order as before.
+    ! Columns are independent and run in parallel with OpenMP.
     allocate(extended(dim_y+4, dim_x+4))
+    ! Zero fill and interior copy are full-size array passes: OpenMP over columns.
+    !$omp parallel do schedule(static)
+    do j=1, dim_x+4
+       extended(:,j) = 0._xp
+    end do
+    !$omp end parallel do
 
-    ii = 0; jj = 0; mm = 0; nn = 0
-    kCenterY = 0; kCenterX = 0
-    ext_conv = 0._xp
-    extended = 0._xp
-    
+    !$omp parallel do private(i) schedule(static)
     do j=1, dim_x
        do i=1, dim_y
           extended(2+i,2+j) = image(i,j)
        end do
     end do
+    !$omp end parallel do
 
     do j=1, 2
        do i=1, dim_y
@@ -61,35 +67,22 @@ contains
        end do
     end do
     
-    kCenterY = dim_k / 2 + 1
-    kCenterX = kCenterY
+    kc = dim_k / 2 + 1
 
-    do j=1, dim_x+4
-       do i=1, dim_y+4
-          do m=1, dim_k
-             mm = dim_k - m + 1
-             
-             do n=1, dim_k
-                nn = dim_k - n + 1
-
-                ii = i + (m - kCenterY)
-                jj = j + (n - kCenterX)
-                
-                if( ii >= 1 .and. ii < dim_y+4 .and. jj >= 1 .and. jj < dim_x+4 ) then
-                   ext_conv(i,j) = ext_conv(i,j) + extended(ii,jj) * kernel(mm,nn)
-                end if
-             end do
-             
-          end do
-       end do
-    end do
-
+    !$omp parallel do private(i, m, n, acc) schedule(static)
     do j=1, dim_x
        do i=1, dim_y
-          conv(i,j) = ext_conv(2+i,2+j)
+          acc = 0._xp
+          do m=1, dim_k
+             do n=1, dim_k
+                acc = acc + extended(2+i+(m-kc), 2+j+(n-kc)) * kernel(dim_k-m+1, dim_k-n+1)
+             end do
+          end do
+          conv(i,j) = acc
        end do
-    end do    
-    
+    end do
+    !$omp end parallel do
+
   end subroutine convolution_2D_mirror
 
 

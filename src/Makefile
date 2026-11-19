@@ -10,6 +10,14 @@ GFLAGS= -O2 -I/usr/local/include -ffixed-line-length-none #-fbounds-check
 CFLAGS= -lm -g -O2 #-lcfitsio -openmp -llapack
 # -L/Users/antoinemarchal/mylib/cfitsio-master
 
+# Optional OpenMP build: make OPENMP=1. Set the number of threads with
+# OMP_NUM_THREADS. The result is bit-for-bit the same as the default serial
+# build at any number of threads.
+ifeq ($(OPENMP),1)
+GFLAGS += -fopenmp
+CFLAGS += -fopenmp
+endif
+
 OUT=ROHSA
 
 all: blas.o lbfgsb.o linpack.o timer.o mod_constants.o mod_convert.o mod_inout.o mod_array.o mod_optimize.o mod_optimize_lym.o mod_minimize.o mod_functions.o mod_start.o mod_rohsa.o main.o
@@ -19,10 +27,10 @@ main.o: main.f90
 	$(FC) $(GFLAGS) -c $^
 
 # L-BFGS-B package
-blas.o: blas.f
-	$(FC) $(GFLAGS) -c $^
-lbfgsb.o: lbfgsb.f
-	$(FC) $(GFLAGS) -c $^
+blas.o: blas.f omp_block.h
+	$(FC) $(GFLAGS) -c $<
+lbfgsb.o: lbfgsb.f omp_block.h
+	$(FC) $(GFLAGS) -c $<
 linpack.o: linpack.f
 	$(FC) $(GFLAGS) -c $^
 timer.o: timer.f
