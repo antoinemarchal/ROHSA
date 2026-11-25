@@ -242,13 +242,24 @@ contains
              call cpu_time(lctime)
           end if
 
+          !Noise map on the padded grid (padded pixels have noise 0, i.e. no data)
+          if (noise .eqv. .true.) then
+             std_cube = 0._xp
+             call reshape_noise_up(std_data, std_cube, dim_data, dim_cube)
+          end if
+
           !Start iteration
           do n=0,nside-1
              power = 2**n
 
              allocate(cube_mean(dim_cube(1), power, power))
 
-             call mean_array(power, cube, cube_mean)
+             if (noise .eqv. .true.) then
+                ! Pixels with noise 0 have no data term: leave them out of the coarse spectra
+                call mean_array_noise(power, cube, std_cube, cube_mean)
+             else
+                call mean_array(power, cube, cube_mean)
+             end if
 
              if (n == 0) then
                 if (init_spec .eqv. .true.) then
@@ -294,8 +305,7 @@ contains
                    allocate(std_map(power, power))
 
                    if (noise .eqv. .true.) then
-                      call reshape_noise_up(std_data, std_cube, dim_data, dim_cube)
-                      call mean_map(power, std_cube, std_map) 
+                      call mean_map_noise(power, std_cube, std_map)
                       ! std_map = std_map / sqrt(real(2**(2*(nside-n)),xp))
                    else
                       call set_stdmap(std_map, cube_mean, lstd, ustd)
@@ -305,7 +315,7 @@ contains
                    print*,  "Update level", n, ">", power
                    call update(cube_mean, fit_params, b_params, n_gauss, dim_cube(1), power, power, lambda_amp, lambda_mu, &
                         lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, &
-                        m, kernel, iprint, std_map, lym, c_lym)        
+                        m, kernel, iprint, std_map, lym, c_lym, noise)
                    deallocate(std_map)
                 end if
              end if
@@ -387,7 +397,7 @@ contains
     if (regul .eqv. .true.) then
        call update(data, grid_params, b_params, n_gauss, dim_data(1), dim_data(2), dim_data(3), lambda_amp, lambda_mu, &
             lambda_sig, lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, &
-            kernel, iprint, std_map, lym, c_lym)      
+            kernel, iprint, std_map, lym, c_lym, noise)
     end if
     
     print*, " "

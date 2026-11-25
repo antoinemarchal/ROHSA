@@ -12,7 +12,7 @@ module mod_functions
   
   public :: mean_array, mean_map, dim2nside, dim_data2dim_cube, reshape_up, reshape_down, go_up_level, init_spectrum, &
        upgrade, update, set_stdmap, std_spectrum, mean_spectrum, max_spectrum, init_grid_params, init_new_gauss, &
-       reshape_noise_up
+       reshape_noise_up, mean_array_noise, mean_map_noise
 
 contains
     
@@ -153,6 +153,81 @@ contains
     enddo
     
   end subroutine mean_map
+
+
+  subroutine mean_array_noise(nside, cube, std_cube, cube_mean)
+    !! Average cube along spatial axis depending on level n, over the pixels with noise > 0 only (noise = .true.).
+    !! A pixel with noise 0 has no data term at full resolution (see f_g_cube_fast), so its spectrum (usually all
+    !! zeros) must not be averaged into the parent pixel. A coarse pixel without such a child gets the spectrum 0.
+    implicit none
+
+    integer, intent(in) :: nside !! nside of the cube
+    real(xp), intent(in), dimension(:,:,:), allocatable :: cube !! cube
+    real(xp), intent(in), dimension(:,:), allocatable :: std_cube !! noise map on the grid of cube (padded pixels 0)
+    real(xp), intent(inout), dimension(:,:,:), allocatable :: cube_mean !! average cube
+
+    integer :: i, j, k, l, n, y, x, cnt
+    real(xp), dimension(:), allocatable :: spectrum
+
+    allocate(spectrum(size(cube,dim=1)))
+
+    n = size(cube, dim=2) / nside
+
+    do i=1,size(cube_mean,dim=2)
+       do j=1,size(cube_mean,dim=3)
+          spectrum = 0._xp
+          cnt = 0
+          do k=1,n
+             do l=1,n
+                y = k+((i-1)*n)
+                x = l+((j-1)*n)
+                if (.not. (std_cube(y,x) > 0._xp)) cycle
+                spectrum = spectrum + cube(:,y,x)
+                cnt = cnt + 1
+             enddo
+          enddo
+          if (cnt > 0) spectrum = spectrum / cnt
+          cube_mean(:,i,j) = spectrum
+       enddo
+    enddo
+
+    deallocate(spectrum)
+  end subroutine mean_array_noise
+
+
+  subroutine mean_map_noise(nside, map, map_mean)
+    !! Average noise map depending on level nside, over the pixels with noise > 0 only. Dividing by all n**2
+    !! would let pixels without data (noise 0) lower the coarse noise. A coarse pixel without such a child gets 0,
+    !! i.e. no data term, as at full resolution.
+    implicit none
+
+    integer, intent(in) :: nside !! nside
+    real(xp), intent(in), dimension(:,:), allocatable :: map !! map
+    real(xp), intent(inout), dimension(:,:), allocatable :: map_mean !! avarage map
+
+    integer :: i, j, k, l, n, y, x, cnt
+    real(xp) :: val
+
+    n = size(map, dim=2) / nside
+
+    do i=1,size(map_mean,dim=1)
+       do j=1,size(map_mean,dim=2)
+          val = 0._xp
+          cnt = 0
+          do k=1,n
+             do l=1,n
+                y = k+((i-1)*n)
+                x = l+((j-1)*n)
+                if (.not. (map(y,x) > 0._xp)) cycle
+                val = val + map(y,x)
+                cnt = cnt + 1
+             enddo
+          enddo
+          map_mean(i,j) = 0._xp
+          if (cnt > 0) map_mean(i,j) = val / cnt
+       enddo
+    enddo
+  end subroutine mean_map_noise
 
 
   subroutine go_up_level(cube_params)
@@ -329,7 +404,7 @@ contains
 
   subroutine update(cube, params, b_params, n_gauss, dim_v, dim_y, dim_x, lambda_amp, lambda_mu, lambda_sig, &
        lambda_var_amp, lambda_var_mu, lambda_var_sig, lambda_lym_sig, lb_sig, ub_sig, maxiter, m, kernel, &
-       iprint, std_map, lym, c_lym)
+       iprint, std_map, lym, c_lym, noise)
     !! Update parameters (entire cube) using minimize function (here based on L-BFGS-B optimization module)
     implicit none
     
@@ -358,13 +433,15 @@ contains
     real(xp), intent(in) :: ub_sig !! upper bound sigma
 
     logical, intent(in) :: lym !! if true --> activate 2-Gaussian decomposition for Lyman alpha nebula emission
+    logical, intent(in) :: noise !! if true --> std_map is a noise map and a pixel with noise 0 has no data
 
     real(xp), intent(inout), dimension(:), allocatable :: b_params !! unknown average sigma
     real(xp), intent(inout), dimension(:,:,:), allocatable :: params !! parameters cube to update
 
     real(xp) :: c_lym
+    real(xp) :: cube_max
     
-    integer :: i,j
+    integer :: i,j,k
     integer :: n_beta
     real(xp), dimension(:,:,:), allocatable :: lb_3D, ub_3D
     real(xp), dimension(:), allocatable :: lb, ub
@@ -381,6 +458,22 @@ contains
           call init_bounds(cube(:,i,j), n_gauss, dim_v, lb_3D(:,i,j), ub_3D(:,i,j), lb_sig, ub_sig)
        end do
     end do
+
+    ! init_bounds caps the amplitude at the spectrum's maximum, which is 0 for a pixel without data, so its
+    ! amplitudes would be pinned at 0 and the smoothing term would pull its neighbours towards 0. A pixel with
+    ! noise 0 has no data term; give it the level's largest cap so the smoothing term alone sets its parameters.
+    if (noise .eqv. .true.) then
+       cube_max = maxval(cube)
+       do j=1, dim_x
+          do i=1, dim_y
+             if (.not. (std_map(i,j) > 0._xp)) then
+                do k=1, n_gauss
+                   ub_3D(1+(3*(k-1)),i,j) = cube_max
+                end do
+             end if
+          end do
+       end do
+    end if
 
     call ravel_3D(lb_3D, lb, 3*n_gauss, dim_y, dim_x)
     call ravel_3D(ub_3D, ub, 3*n_gauss, dim_y, dim_x)
