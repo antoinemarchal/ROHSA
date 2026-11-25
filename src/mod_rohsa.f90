@@ -215,6 +215,10 @@ contains
        call max_spectrum(data, max_spect, dim_data(1), dim_data(2), dim_data(3))
        call max_spectrum(data, max_spect_norm, dim_data(1), dim_data(2), dim_data(3), maxval(mean_spect))
 
+       !The padded part of the grid (map size not a power of two) is not data: set it to 0, as reshape_up only fills
+       !the data part and an allocated array is not initialised
+       cube = 0._xp
+       std_cube = 0._xp
        call reshape_up(data, cube, dim_data, dim_cube)
 
        !Allocate memory for parameters grids
